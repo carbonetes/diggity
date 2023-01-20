@@ -133,6 +133,14 @@ func SourceInfo(p *model.Package) string {
 		source = "python package manifest"
 	case "rpm":
 		source = "RPM DB"
+	case "rust-crate":
+		source = "rust cargo manifest"
+	case "conan":
+		source = "conan manifest"
+	case "hackage":
+		source = "stack or cabal manifest"
+	case "pod":
+		source = "cocoapods manifest"
 	default:
 		source = ""
 	}
