@@ -1,0 +1,12 @@
+active-repositories: hackage.haskell.org:merge
+constraints: any.AC-Angle ==1.0,
+             any.ALUT ==2.4.0.3,
+             any.ANum ==0.2.0.2,
+             any.Agda ==2.6.2.2,
+             any.Allure ==0.11.0.0,
+             any.BNFC ==2.9.4,
+             any.BNFC-meta ==0.6.1,
+             any.BiobaseEnsembl ==0.2.0.1,
+             any.Blammo ==1.1.1.0,
+             any.Boolean ==0.2.4,
+             any.BoundedChan ==1.0.3.0,
