@@ -8,5 +8,8 @@ import (
 
 func saveResultToFile(result string) {
 	file, _ := os.Create(*parser.Arguments.OutputFile)
-	os.WriteFile(file.Name(), []byte(result), 0644)
+	err := os.WriteFile(file.Name(), []byte(result), 0644)
+	if err != nil {
+		panic(err)
+	}
 }

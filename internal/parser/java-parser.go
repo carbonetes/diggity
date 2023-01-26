@@ -100,11 +100,16 @@ func extractJarFile(location *model.Location) error {
 			if err != nil {
 				panic(err)
 			}
-			io.Copy(file, reader)
-			parsePomXML(model.Location{
+			_, err = io.Copy(file, reader)
+			if err != nil {
+				return err
+			}
+
+			_ = parsePomXML(model.Location{
 				Path:      file.Name(),
 				LayerHash: location.LayerHash,
 			}, location.Path)
+
 			if err := file.Close(); err != nil {
 				return err
 			}
@@ -117,9 +122,7 @@ func extractJarFile(location *model.Location) error {
 
 		if metadataFile != nil || pomPropertiesFile != nil {
 			paths := strings.Split(TrimUntilLayer(*location), string(os.PathSeparator))
-			initPackage(paths[len(paths)-1], location, metadataFile, pomPropertiesFile)
-			pomPropertiesFile = nil
-			metadataFile = nil
+			_ = initPackage(paths[len(paths)-1], location, metadataFile, pomPropertiesFile)
 		}
 	}
 
@@ -143,7 +146,7 @@ func initPackage(name string, location *model.Location, manifestFile *zip.File, 
 	splitName := strings.Split(name, "/")
 	fileName := splitName[len(splitName)-1]
 	if manifestFile != nil {
-		parseJavaManifest(manifestFile, _package)
+		_ = parseJavaManifest(manifestFile, _package)
 		parseLicenses(_package)
 	}
 
@@ -335,12 +338,17 @@ func findManifestAndPomPropertiesFromDependencyJarFile(jarFile *os.File, locatio
 			if err != nil {
 				panic(err)
 			}
-			io.Copy(file, reader)
+			_, err = io.Copy(file, reader)
+			if err != nil {
+				return err
+			}
+
 			paths := strings.Split(jarFile.Name(), "/")
-			parsePomXML(model.Location{
+			_ = parsePomXML(model.Location{
 				Path:      file.Name(),
 				LayerHash: location.LayerHash,
 			}, paths[len(paths)-1])
+
 			if err := file.Close(); err != nil {
 				return err
 			}
@@ -350,12 +358,12 @@ func findManifestAndPomPropertiesFromDependencyJarFile(jarFile *os.File, locatio
 		metadataFile, pomPropertiesFile = checkZipfile(zipFile, metadataFile, pomPropertiesFile)
 
 		if metadataFile != nil || pomPropertiesFile != nil {
-			initPackage(name, location, metadataFile, pomPropertiesFile)
+			_ = initPackage(name, location, metadataFile, pomPropertiesFile)
 			pomPropertiesFile = nil
 			metadataFile = nil
 		}
 	}
-	parseJarFiles(dependencies, location)
+	_ = parseJarFiles(dependencies, location)
 	return nil
 }
 

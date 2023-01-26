@@ -187,10 +187,8 @@ func parseMetadataFiles(m PythonMetadata, path string) error {
 					finalValue["size"] = valueSize
 				}
 				files = append(files, finalValue)
-				pathValue = ""
 				algorithm = ""
 				algorithmValue = ""
-				valueSize = ""
 			}
 
 		}
