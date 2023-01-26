@@ -42,7 +42,10 @@ func UnTar(dst string, source string, recursive bool) error {
 
 		target := filepath.Join(dst, header.Name)
 
-		// Skip gz files
+		// Skip unsafe files fo extraction
+		if strings.Contains(target, "..") {
+			continue
+		}
 		if strings.Contains(filepath.Base(target), gzFile) {
 			continue
 		}

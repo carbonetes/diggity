@@ -84,6 +84,10 @@ func extractJarFile(location *model.Location) error {
 		if zipFile == nil {
 			break
 		}
+		// Skip unsafe files fo extraction
+		if strings.Contains(zipFile.Name, "..") {
+			continue
+		}
 
 		if match := regexp.MustCompile(jarPackagesRegex).FindString(zipFile.Name); len(match) > 0 {
 			dependencies = append(dependencies, zipFile)
@@ -316,7 +320,10 @@ func findManifestAndPomPropertiesFromDependencyJarFile(jarFile *os.File, locatio
 	var pomPropertiesFile *zip.File = nil
 
 	for _, zipFile := range reader.File {
-
+		// Skip unsafe files fo extraction
+		if strings.Contains(zipFile.Name, "..") {
+			continue
+		}
 		if match := regexp.MustCompile(jarPackagesRegex).FindString(zipFile.Name); len(match) > 0 {
 			dependencies = append(dependencies, zipFile)
 		} else if strings.Contains(zipFile.Name, pomFileName) {
