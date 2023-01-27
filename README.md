@@ -108,7 +108,7 @@ diggity config [flag]
 |     Flag      |               Description                |
 | :------------ | :--------------------------------------- |
 | `-d, --display` | Displays the contents of the configuration file. |
-| `-h, --help` | Help for config.       |
+| `-h, --help` | Help for configuration.       |
 | `-p, --path` | Displays the path of the configuration file.          |
 | `-r, --reset` | Restores default configuration file.   |
 
