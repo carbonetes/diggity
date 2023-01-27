@@ -42,7 +42,10 @@ func UnTar(dst string, source string, recursive bool) error {
 
 		target := filepath.Join(dst, header.Name)
 
-		// Skip gz files
+		// Skip unsafe files fo extraction
+		if strings.Contains(target, "..") {
+			continue
+		}
 		if strings.Contains(filepath.Base(target), gzFile) {
 			continue
 		}
@@ -73,8 +76,11 @@ func processFile(tarReader *tar.Reader, target string, fileMode fs.FileMode, rec
 
 	if strings.Contains(f.Name(), "layer.tar") && recursive {
 		childDar := strings.Replace(f.Name(), "layer.tar", "", -1)
-		os.Mkdir(childDar, fs.ModePerm)
-		defer UnTar(childDar, f.Name(), true)
+		_ = os.Mkdir(childDar, fs.ModePerm)
+
+		defer func() {
+			_ = UnTar(childDar, f.Name(), true)
+		}()
 	}
 	_, err = io.Copy(f, tarReader)
 

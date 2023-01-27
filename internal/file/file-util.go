@@ -5,11 +5,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/internal/model"
 )
-
-var log = logger.GetLogger()
 
 // Exists checks if filename exists
 func Exists(filename string) bool {
