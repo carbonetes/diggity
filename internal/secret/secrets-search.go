@@ -8,7 +8,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/docker"
 	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/internal/model"
 	"github.com/carbonetes/diggity/internal/parser"
@@ -29,7 +28,6 @@ func Search() {
 	if *parser.Arguments.DisableSecretSearch {
 		secrets = nil
 	} else {
-		excluded := make([]string, 0)
 		for _, content := range file.Contents {
 
 			file, _ := os.Open(content.Path)
@@ -51,7 +49,6 @@ func Search() {
 			stat, err := file.Stat()
 
 			if isExcluded(file.Name()) {
-				excluded = append(excluded, strings.Replace(file.Name(), docker.ExtractedDir()+string(os.PathSeparator)+content.LayerHash, "", 1))
 				continue
 			}
 

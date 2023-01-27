@@ -25,7 +25,7 @@ func ParseDistro() {
 
 	var relatedOsFiles []string
 	var err error
-	os.Mkdir(docker.Dir(), fs.ModePerm)
+	_ = os.Mkdir(docker.Dir(), fs.ModePerm)
 
 	osFilesRegex := `etc\/(\S+)-release|etc\\(\S+)-release|usr\\(\S+)-release|usr\/lib\/(\S+)-release|usr\/(\S+)-release`
 	fileRegexp, _ := regexp.Compile(osFilesRegex)
