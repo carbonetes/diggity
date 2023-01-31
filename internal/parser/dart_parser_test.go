@@ -92,6 +92,15 @@ func TestParseDartPackages(t *testing.T) {
 
 }
 
+func TestParseDartPackagesLock(t *testing.T) {
+	pubspecLockPath := filepath.Join("..", "..", "docs", "references", "dart", "pubspec.lock")
+	testLocation := model.Location{Path: pubspecLockPath}
+	err := parseDartPackagesLock(&testLocation)
+	if err != nil {
+		t.Errorf("Test Failed: Error occurred while reading Dart content.")
+	}
+}
+
 func TestParseDartPURL(t *testing.T) {
 	tests := []DartPurlResult{
 		{&dartPackage1, model.PURL("pkg:dart/js_runtime@2.18.0")},
