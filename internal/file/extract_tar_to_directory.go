@@ -42,7 +42,10 @@ func UnTar(dst string, source string, recursive bool) error {
 
 		target := filepath.Join(dst, header.Name)
 
-		// Skip gz files
+		// Skip unsafe files fo extraction
+		if strings.Contains(target, "..") {
+			continue
+		}
 		if strings.Contains(filepath.Base(target), gzFile) {
 			continue
 		}
@@ -68,13 +71,20 @@ func processFile(tarReader *tar.Reader, target string, fileMode fs.FileMode, rec
 	f, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, fileMode)
 
 	if err != nil {
+		// Skip incorrect names
+		if strings.Contains(err.Error(), "The filename, directory name, or volume label syntax is incorrect.") {
+			return nil
+		}
 		return err
 	}
 
 	if strings.Contains(f.Name(), "layer.tar") && recursive {
 		childDar := strings.Replace(f.Name(), "layer.tar", "", -1)
-		os.Mkdir(childDar, fs.ModePerm)
-		defer UnTar(childDar, f.Name(), true)
+		_ = os.Mkdir(childDar, fs.ModePerm)
+
+		defer func() {
+			_ = UnTar(childDar, f.Name(), true)
+		}()
 	}
 	_, err = io.Copy(f, tarReader)
 
@@ -92,9 +102,10 @@ func processFile(tarReader *tar.Reader, target string, fileMode fs.FileMode, rec
 			break
 		}
 	}
+
 	Contents = append(Contents, &model.Location{Path: f.Name(), LayerHash: path})
 	if err := f.Close(); err != nil {
-		panic(err)
+		return err
 	}
 
 	return nil

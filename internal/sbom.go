@@ -46,6 +46,8 @@ var (
 		parser.FindGoModPackagesFromContent,
 		parser.FindGoBinPackagesFromContent,
 		parser.FindHackagePackagesFromContent,
+		parser.FindCargoPackagesFromContent,
+		parser.FindConanPackagesFromContent,
 		parser.ParseDistro,
 		parser.ParseDockerProperties,
 		secret.Search,
@@ -130,7 +132,11 @@ func extractImage(source string, arguments *model.Arguments, spinner *progressba
 	case dir:
 		dir := *arguments.Dir
 		if file.Exists(dir) {
-			file.GetFilesFromDir(dir)
+			err := file.GetFilesFromDir(dir)
+			if err != nil {
+				panic(err)
+			}
+
 			docker.CreateTempDir()
 			return "Parsing Directory..."
 		}

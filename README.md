@@ -108,7 +108,7 @@ diggity config [flag]
 |     Flag      |               Description                |
 | :------------ | :--------------------------------------- |
 | `-d, --display` | Displays the contents of the configuration file. |
-| `-h, --help` | Help for config.       |
+| `-h, --help` | Help for configuration.       |
 | `-p, --path` | Displays the path of the configuration file.          |
 | `-r, --reset` | Restores default configuration file.   |
 
@@ -172,6 +172,31 @@ registry:
   uri: "https://index.docker.io"
   username: "docker_username"
   password: "docker_password"
+  token: ""
+```
+
+### AWS ECR Credentials
+To pull images from AWS Elastic Container Registry (ECR), provide your account credentials in your diggity config. 
+The URI follows the `<aws_account_id>.dkr.ecr.<region>.amazonaws.com` format, and the username would be  `AWS`. 
+For the password, run the following command via AWS CLI to obtain your authentication token:
+
+```
+aws ecr get-login-password
+```
+
+Output:
+```
+<password>
+```
+Note that the authentication token is valid for 12 hours. 
+For more information, check this [reference](https://docs.aws.amazon.com/cli/latest/reference/ecr/get-login-password.html).
+
+Your `.diggity.yaml` should look something like this:
+```yaml
+registry:
+  uri: "<aws_account_id>.dkr.ecr.<region>.amazonaws.com"
+  username: "AWS"
+  password: "<password>"
   token: ""
 ```
 

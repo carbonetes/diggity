@@ -60,7 +60,7 @@ var (
 		Long:  `BOM Diggity's primary purpose is to ensure the security and integrity of software programs. It incorporates secret analysis allowing the user to secure crucial information before deploying any parts of the application to the public.`,
 		PreRun: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 && !flagHasArg() {
-				cmd.Help()
+				_ = cmd.Help()
 				os.Exit(0)
 			}
 			ValidateOutputArg(string(*Arguments.Output))
@@ -154,7 +154,7 @@ var (
 			}
 
 			// Show help
-			cmd.Help()
+			_ = cmd.Help()
 
 		},
 	}
@@ -190,7 +190,7 @@ func init() {
 	config.Flags().BoolVarP(&displayConfig, "display", "d", false, "Displays the contents of the configuration file")
 	config.Flags().BoolVarP(&resetConfig, "reset", "r", false, "Restores default configuration file")
 	config.Flags().BoolVarP(&getConfigPath, "path", "p", false, "Displays the path of the configuration file")
-	config.Flags().BoolVarP(&help, "help", "h", false, "Help for config")
+	config.Flags().BoolVarP(&help, "help", "h", false, "Help for configuration")
 
 	cobra.OnInitialize(setPrioritizedArg)
 

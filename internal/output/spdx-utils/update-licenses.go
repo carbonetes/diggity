@@ -48,7 +48,7 @@ func updateSPDXLicenses() {
 
 	file, err := os.Create(filename)
 	if err != nil {
-		log.GetLogger().Printf("Error occured when creating file: %+v", err)
+		log.GetLogger().Printf("Error occurred when creating file: %+v", err)
 	}
 
 	licenses := updateLicenseList(latestList.LicenseList)
@@ -61,7 +61,7 @@ func updateSPDXLicenses() {
 			Version:    latestList.Version,
 			Licenses:   licenses,
 		}); err != nil {
-		log.GetLogger().Printf("Error occured upon writing file: %+v", err)
+		log.GetLogger().Printf("Error occurred upon writing file: %+v", err)
 	}
 	log.GetLogger().Print("Successfully updated SPDX License List File.")
 }
@@ -72,11 +72,11 @@ func fetchLatestList() spdxLicenseList {
 	res, err := http.Get(LicenseURL)
 
 	if err != nil {
-		log.GetLogger().Printf("Error occured when fetching license list: %+v", err)
+		log.GetLogger().Printf("Error occurred when fetching license list: %+v", err)
 	}
 
 	if err = json.NewDecoder(res.Body).Decode(&licenseList); err != nil {
-		log.GetLogger().Printf("Error occured when decoding license list: %+v", err)
+		log.GetLogger().Printf("Error occurred when decoding license list: %+v", err)
 	}
 	defer res.Body.Close()
 

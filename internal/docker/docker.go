@@ -84,9 +84,15 @@ func ExtractImage(_arguments *model.Arguments, spinner *progressbar.ProgressBar)
 	}
 
 	extractDir = strings.Replace(tarFile.Name(), ".tar", "", -1)
-	os.Mkdir(extractDir, fs.ModePerm)
+	err = os.Mkdir(extractDir, fs.ModePerm)
+	if err != nil {
+		panic(err)
+	}
 
-	io.Copy(tarFile, reader)
+	_, err = io.Copy(tarFile, reader)
+	if err != nil {
+		panic(err)
+	}
 
 	if err = file.UnTar(extractDir, tarFile.Name(), true); err != nil {
 		log.Fatal(err.Error())
@@ -220,7 +226,10 @@ func ExtractFromDir(source *string) {
 	tempDir, _ = ioutils.TempDir("", "")
 	tarFileFolderName := "diggity-tmp-dir" + uuid.NewString()
 	extractDir = filepath.Join(tempDir, tarFileFolderName)
-	os.Mkdir(extractDir, fs.ModePerm)
+	err := os.Mkdir(extractDir, fs.ModePerm)
+	if err != nil {
+		panic(err)
+	}
 
 	if err := file.UnTar(extractDir, *source, true); err != nil {
 		log.Fatal(err.Error())

@@ -105,7 +105,7 @@ var (
 		Path:    rpmPackagesPath,
 		Locations: []model.Location{
 			{
-				Path:      rpmPackagesPath,
+				Path:      filepath.Join("var", "lib", "rpm", "Packages"),
 				LayerHash: "69a15d957a7a6f77e3fe31f330da5f4b6b582f228917a713a7a9e59449a3f413",
 			},
 		},
@@ -138,7 +138,7 @@ var (
 		Path:    rpmPackagesPath,
 		Locations: []model.Location{
 			{
-				Path:      rpmPackagesPath,
+				Path:      filepath.Join("var", "lib", "rpm", "Packages"),
 				LayerHash: "99d5c4b75475235491986963958036ff26733f018bcafa2758534f235cefeaa2",
 			},
 		},
@@ -173,7 +173,7 @@ var (
 		Path:    rpmPackagesPath,
 		Locations: []model.Location{
 			{
-				Path:      rpmPackagesPath,
+				Path:      filepath.Join("var", "lib", "rpm", "Packages"),
 				LayerHash: "d1fd2cca7a7751ca9786b088cf639e65088fa0bda34492bb5ba292c32195461a",
 			},
 		},

@@ -27,7 +27,10 @@ func RunSpinner(spinner *progressbar.ProgressBar) {
 		return
 	}
 	for {
-		spinner.Add(1)
+		err := spinner.Add(1)
+		if err != nil {
+			panic(err)
+		}
 		time.Sleep(5 * time.Millisecond)
 	}
 }
@@ -37,7 +40,11 @@ func DoneSpinner(spinner *progressbar.ProgressBar) {
 	if disabled {
 		return
 	}
-	spinner.Finish()
+	err := spinner.Finish()
+	if err != nil {
+		panic(err)
+	}
+
 	spinner.Close()
 }
 

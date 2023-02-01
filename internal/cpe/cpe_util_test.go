@@ -97,7 +97,7 @@ func TestValidateCPE(t *testing.T) {
 	for _, test := range tests {
 		err := validateCPE(test.cpe)
 		if test.isValid && err != nil {
-			t.Error("Test Failed: Error occured for valid CPE string.")
+			t.Error("Test Failed: Error occurred for valid CPE string.")
 		}
 		if !test.isValid && err == nil {
 			t.Error("Test Failed: Expected error for invalid CPE string.")
