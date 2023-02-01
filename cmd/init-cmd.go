@@ -190,7 +190,7 @@ func init() {
 	config.Flags().BoolVarP(&displayConfig, "display", "d", false, "Displays the contents of the configuration file")
 	config.Flags().BoolVarP(&resetConfig, "reset", "r", false, "Restores default configuration file")
 	config.Flags().BoolVarP(&getConfigPath, "path", "p", false, "Displays the path of the configuration file")
-	config.Flags().BoolVarP(&help, "help", "h", false, "Help for config")
+	config.Flags().BoolVarP(&help, "help", "h", false, "Help for configuration")
 
 	cobra.OnInitialize(setPrioritizedArg)
 
