@@ -79,8 +79,9 @@ func loginRegistry(_arguments *model.Arguments) {
 	}
 
 	status, err := dockerClient.RegistryLogin(context.Background(), types.AuthConfig{
-		Username: *_arguments.RegistryUsername,
-		Password: *_arguments.RegistryPassword,
+		Username:      *_arguments.RegistryUsername,
+		Password:      *_arguments.RegistryPassword,
+		ServerAddress: *_arguments.RegistryURI,
 	})
 	if err != nil {
 		log.Println("error when login to destination image registry. err: %w", err)
