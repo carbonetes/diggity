@@ -71,6 +71,10 @@ func processFile(tarReader *tar.Reader, target string, fileMode fs.FileMode, rec
 	f, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, fileMode)
 
 	if err != nil {
+		// Skip incorrect names
+		if strings.Contains(err.Error(), "The filename, directory name, or volume label syntax is incorrect.") {
+			return nil
+		}
 		return err
 	}
 
@@ -98,9 +102,10 @@ func processFile(tarReader *tar.Reader, target string, fileMode fs.FileMode, rec
 			break
 		}
 	}
+
 	Contents = append(Contents, &model.Location{Path: f.Name(), LayerHash: path})
 	if err := f.Close(); err != nil {
-		panic(err)
+		return err
 	}
 
 	return nil

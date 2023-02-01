@@ -6,6 +6,7 @@ Applicable to OS with RPM as its Package Manager such as:
 -CENT OS
 -RHEL
 -Fedora
+-openSUSE
 */
 
 import (
@@ -29,12 +30,12 @@ const (
 )
 
 var (
-	rpmPackagesPath = filepath.Join("var", "lib", "rpm", "Packages")
+	rpmPackagesPath = filepath.Join("rpm", "Packages")
 )
 
-// FindRpmPackagesFromContent Find /var/lib/rpm/Packages in the file content.
+// FindRpmPackagesFromContent Find rpm/Packages in the file content.
 func FindRpmPackagesFromContent() {
-	// Get RPM Information if /var/lib/rpm/Packages is found
+	// Get RPM Information if rpm/Packages is found
 	if parserEnabled(rpmType) {
 		for _, content := range file.Contents {
 			if strings.Contains(content.Path, rpmPackagesPath) {
@@ -48,10 +49,10 @@ func FindRpmPackagesFromContent() {
 	defer WG.Done()
 }
 
-// Read RPM package information from /var/lib/rpm/Packages
+// Read RPM package information from rpm/Packages
 func readRpmContent(location *model.Location) error {
 
-	// Open and Get /var/lib/rpm/Packages data
+	// Open and Get rpm/Packages data
 	db, err := rpmdb.Open(location.Path)
 	if err != nil {
 		return err
