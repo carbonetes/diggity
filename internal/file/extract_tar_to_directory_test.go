@@ -11,6 +11,6 @@ func TestUntar(t *testing.T) {
 	var recursive = true
 	err := UnTar(dst, source, recursive)
 	if err != nil && !recursive {
-		t.Error("Testing Failed: An error occured when processing.")
+		t.Error("Testing Failed: An error occurred when processing.")
 	}
 }
