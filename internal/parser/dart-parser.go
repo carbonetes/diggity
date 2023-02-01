@@ -6,6 +6,7 @@ import (
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/internal/model"
+	"github.com/carbonetes/diggity/internal/model/metadata"
 
 	"os"
 
@@ -18,6 +19,7 @@ import (
 
 const (
 	pubspecYaml = "pubspec.yaml"
+	pubspecLock = "pubspec.lock"
 	pub         = "pub"
 	dart        = "dart"
 )
@@ -25,12 +27,20 @@ const (
 // DartMetadata metadata
 type DartMetadata map[string]interface{}
 
+var dartlockFileMetadata metadata.PubspecLockPackage
+
 // FindDartPackagesFromContent - find dart packages from content
 func FindDartPackagesFromContent() {
 	if parserEnabled(dart) {
 		for _, content := range file.Contents {
 			if filepath.Base(content.Path) == pubspecYaml {
 				if err := parseDartPackages(content); err != nil {
+					err = errors.New("dart-parser: " + err.Error())
+					Errors = append(Errors, &err)
+				}
+			}
+			if filepath.Base(content.Path) == pubspecLock {
+				if err := parseDartPackagesLock(content); err != nil {
 					err = errors.New("dart-parser: " + err.Error())
 					Errors = append(Errors, &err)
 				}
@@ -77,8 +87,6 @@ func parseDartPackages(location *model.Location) error {
 
 	if val, ok := metadata["license"].(string); ok {
 		licenses = append(licenses, val)
-	} else {
-		licenses = append(licenses, "BSD 3-Clause")
 	}
 	_package.Licenses = licenses
 
@@ -94,6 +102,37 @@ func parseDartPackages(location *model.Location) error {
 	parseDartPURL(_package)
 	_package.Metadata = metadata
 	Packages = append(Packages, _package)
+	return nil
+}
+
+// Parse dart packages metadata - lock file
+func parseDartPackagesLock(location *model.Location) error {
+	byteValue, err := os.ReadFile(location.Path)
+	if err != nil {
+		return err
+	}
+	if err := yaml.Unmarshal([]byte(byteValue), &dartlockFileMetadata); err != nil {
+		return err
+	}
+
+	for _, cPackage := range dartlockFileMetadata.Packages {
+		_package := new(model.Package)
+		_package.ID = uuid.NewString()
+		_package.Name = cPackage.Description.Name
+		_package.Version = cPackage.Version
+		_package.Type = pub
+		_package.Path = cPackage.Description.Name
+		_package.Locations = append(_package.Locations, model.Location{
+			Path:      TrimUntilLayer(*location),
+			LayerHash: location.LayerHash,
+		})
+		cpe.NewCPE23(_package, _package.Name, _package.Name, _package.Version)
+		parseDartPURL(_package)
+		_package.Metadata = cPackage
+		if _package.Name != "" {
+			Packages = append(Packages, _package)
+		}
+	}
 	return nil
 }
 
