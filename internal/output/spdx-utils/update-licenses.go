@@ -8,7 +8,7 @@ import (
 	"text/template"
 	"time"
 
-	log "github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/logger"
 )
 
 const (
@@ -16,6 +16,8 @@ const (
 	LicenseURL = "https://spdx.org/licenses/licenses.json"
 	filename   = "licenses.go"
 )
+
+var log = logger.GetLogger()
 
 type (
 	spdxLicenseList struct {
@@ -48,7 +50,7 @@ func updateSPDXLicenses() {
 
 	file, err := os.Create(filename)
 	if err != nil {
-		log.GetLogger().Printf("Error occurred when creating file: %+v", err)
+		log.Printf("Error occurred when creating file: %+v", err)
 	}
 
 	licenses := updateLicenseList(latestList.LicenseList)
@@ -61,9 +63,9 @@ func updateSPDXLicenses() {
 			Version:    latestList.Version,
 			Licenses:   licenses,
 		}); err != nil {
-		log.GetLogger().Printf("Error occurred upon writing file: %+v", err)
+		log.Printf("Error occurred upon writing file: %+v", err)
 	}
-	log.GetLogger().Print("Successfully updated SPDX License List File.")
+	log.Print("Successfully updated SPDX License List File.")
 }
 
 // Fetch Latest SPDX License List
@@ -72,11 +74,11 @@ func fetchLatestList() spdxLicenseList {
 	res, err := http.Get(LicenseURL)
 
 	if err != nil {
-		log.GetLogger().Printf("Error occurred when fetching license list: %+v", err)
+		log.Printf("Error occurred when fetching license list: %+v", err)
 	}
 
 	if err = json.NewDecoder(res.Body).Decode(&licenseList); err != nil {
-		log.GetLogger().Printf("Error occurred when decoding license list: %+v", err)
+		log.Printf("Error occurred when decoding license list: %+v", err)
 	}
 	defer res.Body.Close()
 
@@ -91,7 +93,7 @@ func updateLicenseList(licenseList []spdxLicense) map[string]string {
 		licenseKey := strings.ToLower(license.ID)
 		if _, exists := licenses[licenseKey]; !exists {
 			licenses[strings.ToLower(license.ID)] = license.ID
-			log.GetLogger().Printf("Adding license: %+v", license.ID)
+			log.Printf("Adding license: %+v", license.ID)
 		}
 	}
 
