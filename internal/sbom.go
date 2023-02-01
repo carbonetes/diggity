@@ -45,6 +45,7 @@ var (
 		parser.FindNugetPackagesFromContent,
 		parser.FindGoModPackagesFromContent,
 		parser.FindGoBinPackagesFromContent,
+		parser.FindConanPackagesFromContent,
 		parser.ParseDistro,
 		parser.ParseDockerProperties,
 		secret.Search,
