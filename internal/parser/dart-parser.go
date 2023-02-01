@@ -111,7 +111,10 @@ func parseDartPackagesLock(location *model.Location) error {
 	if err != nil {
 		return err
 	}
-	yaml.Unmarshal([]byte(byteValue), &dartlockFileMetadata)
+	if err := yaml.Unmarshal([]byte(byteValue), &dartlockFileMetadata); err != nil {
+		return err
+	}
+
 	for _, cPackage := range dartlockFileMetadata.Packages {
 		_package := new(model.Package)
 		_package.ID = uuid.NewString()
@@ -126,7 +129,7 @@ func parseDartPackagesLock(location *model.Location) error {
 		cpe.NewCPE23(_package, _package.Name, _package.Name, _package.Version)
 		parseDartPURL(_package)
 		_package.Metadata = cPackage
-		if len(_package.Name) < 0 || _package.Name != "" {
+		if _package.Name != "" {
 			Packages = append(Packages, _package)
 		}
 	}
