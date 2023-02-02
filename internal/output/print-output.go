@@ -34,7 +34,7 @@ func PrintResults() {
 	}
 }
 
-// Select Output Type based on the User Input
+// Select Output Type based on the User Input with aliases considered
 func selectOutputType(outputTypes string) {
 	for _, output := range strings.Split(outputTypes, ",") {
 		switch output {
@@ -46,13 +46,13 @@ func selectOutputType(outputTypes string) {
 			} else {
 				fmt.Printf("%+v\n", GetResults())
 			}
-		case model.CycloneDXXML:
+		case model.CycloneDXXML, "cyclonedxxml", "cyclonedx", "cyclone":
 			printCycloneDXXML()
-		case model.CycloneDXJSON:
+		case model.CycloneDXJSON, "cyclonedxjson":
 			printCycloneDXJSON()
-		case model.SPDXJSON:
+		case model.SPDXJSON, "spdxjson":
 			printSpdxJSON()
-		case model.SPDXTagValue:
+		case model.SPDXTagValue, "spdxtagvalue", "spdx", "spdxtv":
 			printSpdxTagValue()
 		}
 	}
