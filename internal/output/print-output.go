@@ -46,7 +46,7 @@ func selectOutputType(outputTypes string) {
 			} else {
 				fmt.Printf("%+v\n", GetResults())
 			}
-		case model.CycloneDX:
+		case model.CycloneDXXML:
 			printCycloneDXXML()
 		case model.CycloneDXJSON:
 			printCycloneDXJSON()
