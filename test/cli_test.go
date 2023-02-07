@@ -18,8 +18,8 @@ var (
 
 var rootCmd = &cobra.Command{
 	Use:    "diggity [image] [flags]",
-	Short:  "Diggity SBOM Analyzer",
-	Long:   `Analyze your code SBOM.`,
+	Short:  "BOM diggity SBOM Analyzer",
+	Long:   `BOM Diggity's primary purpose is to ensure the security and integrity of software programs. It incorporates secret analysis allowing the user to secure crucial information before deploying any parts of the application to the public.`,
 	PreRun: preRun,
 }
 
