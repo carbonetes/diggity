@@ -8,8 +8,8 @@ type Package struct {
 	Version     string      `json:"version"`
 	Path        string      `json:"path"`
 	Locations   []Location  `json:"locations"`
-	Description string      `json:"description"`
-	Licenses    []string    `json:"licenses"`
+	Description string      `json:"description,omitempty"`
+	Licenses    []string    `json:"licenses,omitempty"`
 	CPEs        []string    `json:"cpes"`
 	PURL        PURL        `json:"purl"`
 	Metadata    interface{} `json:"metadata"`
