@@ -74,7 +74,7 @@ func loginRegistry(_arguments *model.Arguments) {
 
 	_, err := ping(cm, *_arguments.RegistryURI, "")
 	if err != nil {
-		log.Printf("Destination image registry is unreachable. err: %v", err)
+		log.Printf("Destination image registry is unreachable. Error:", err)
 		return
 	}
 
@@ -84,7 +84,7 @@ func loginRegistry(_arguments *model.Arguments) {
 		ServerAddress: *_arguments.RegistryURI,
 	})
 	if err != nil {
-		log.Println("error when login to destination image registry. err: %w", err)
+		log.Println("Error when login to destination image registry. Error:", err)
 		os.Exit(1)
 	}
 	if status.Status == "" {
