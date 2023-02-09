@@ -1,7 +1,6 @@
 package output
 
 import (
-	"path/filepath"
 	"sort"
 	"testing"
 
@@ -45,44 +44,6 @@ var (
 		Name:    "scanf",
 		Type:    "gem",
 		Version: "2.0.0",
-	}
-
-	resultPackage = model.Package{
-		ID:      "1891e769-cd46-494a-8b90-88a809a49104",
-		Name:    "musl",
-		Type:    "apk",
-		Version: "apk 1.2.3-r0",
-		Path:    filepath.Join("lib", "apk", "db", "installed"),
-		Locations: []model.Location{
-			{
-				Path:      filepath.Join("lib", "apk", "db", "installed"),
-				LayerHash: "9b7240956cfbfefddcd91a2195bfb2ed2cd17bdff81f21111849d643dfaf8131",
-			},
-		},
-		Description: "the musl c library (libc) implementation",
-		Licenses: []string{
-			"MIT",
-		},
-		CPEs: []string{
-			"cpe:2.3:a:musl:musl:1.2.3-r0:*:*:*:*:*:*:*",
-		},
-		PURL: model.PURL("pkg:alpine/musl@1.2.3-r0?arch=x86_64&upstream=musl&distro="),
-		Metadata: parser.AlpineManifest{
-			"Architecture":         "x86_64",
-			"BuildTimestamp":       "1649396308",
-			"GitCommitHashApk":     "ee13d43a53938d8a04ba787b9423f3270a3c14a7",
-			"License":              "MIT",
-			"Maintainer":           "Timo Teräs \u003ctimo.teras@iki.fi\u003e",
-			"PackageDescription":   "the musl c library (libc) implementation",
-			"PackageInstalledSize": "622592",
-			"PackageName":          "musl",
-			"PackageOrigin":        "cmusl",
-			"PackageSize":          "383304",
-			"PackageURL":           "https://musl.libc.org/",
-			"PackageVersion":       "1.2.3-r0",
-			"Provides":             "so:libc.musl-x86_64.so.1=1",
-			"PullChecksum":         "Q1aCu0LmUDoAFSOX49uHvkYC1WasQ=",
-		},
 	}
 )
 
