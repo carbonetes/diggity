@@ -94,7 +94,9 @@ func readConanLockContent(location *model.Location) error {
 
 	if len(conanLockMetadata.GraphLock.Nodes) > 0 {
 		for _, conanPkg := range conanLockMetadata.GraphLock.Nodes {
-			Packages = append(Packages, initConanPackage(location, conanPkg))
+			if conanPkg.Ref != "" {
+				Packages = append(Packages, initConanPackage(location, conanPkg))
+			}
 		}
 	}
 
@@ -145,8 +147,25 @@ func parseConanPackageURL(_package *model.Package) {
 }
 
 // Get Name and Version from package or node ref metadata
-func conanNameVersion(ref string) (string, string) {
-	nv := strings.Split(ref, "@")
+func conanNameVersion(ref string) (name string, version string) {
+	var nv []string
+	if strings.Contains(ref, "@") {
+		nv = strings.Split(ref, "@")
+	} else if strings.Contains(ref, "#") {
+		nv = strings.Split(ref, "#")
+	} else {
+		nv = append(nv, ref)
+	}
+
 	result := strings.Split(nv[0], "/")
-	return result[0], result[1]
+	name = result[0]
+	version = result[1]
+
+	// cleanup version
+	if strings.Contains(version, "[") && strings.Contains(version, "]") {
+		version = strings.Replace(version, "[", "", -1)
+		version = strings.Replace(version, "]", "", -1)
+	}
+
+	return name, version
 }
