@@ -1,0 +1,19 @@
+dir /usr
+dir /usr/share
+dir /usr/share/doc
+dir /usr/share/doc/gperf-3.1-r1
+obj /usr/share/doc/gperf-3.1-r1/NEWS.bz2 d862e0cf961f1377c5b5ff9ff94044a2 1671388867
+obj /usr/share/doc/gperf-3.1-r1/README.windows.bz2 86788c1f1042f75bec63ce62d6834b33 1671388867
+obj /usr/share/doc/gperf-3.1-r1/ChangeLog.bz2 fde7059ae22bb7716d2b19c6978f6946 1671388867
+obj /usr/share/doc/gperf-3.1-r1/README.vms.bz2 70619bd04864cf5d7a2b966540e65a1e 1671388867
+obj /usr/share/doc/gperf-3.1-r1/README.bz2 c7b16253df37d1728538107e6e5a0011 1671388866
+obj /usr/share/doc/gperf-3.1-r1/AUTHORS ddcc95b0e8d8baf1ae14fff3a47c5487 1671388867
+dir /usr/share/doc/gperf-3.1-r1/html
+obj /usr/share/doc/gperf-3.1-r1/html/gperf.html e8a11c9b506a7cd7ece0e966ac539af2 1671388866
+dir /usr/share/man
+dir /usr/share/man/man1
+obj /usr/share/man/man1/gperf.1.bz2 2007966aeb3930bd59db5ba39d1ee6a8 1671388866
+dir /usr/share/info
+obj /usr/share/info/gperf.info.bz2 da7edd6dd0d13b3b7afb87237ec1e35b 1671388866
+dir /usr/bin
+obj /usr/bin/gperf 75db5249d256525ed08183f89f55a783 1671388869

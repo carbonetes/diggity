@@ -141,6 +141,10 @@ func SourceInfo(p *model.Package) string {
 		source = "stack or cabal manifest"
 	case "pod":
 		source = "cocoapods manifest"
+	case "hex":
+		source = "mix o rebar3 manifest"
+	case "portage":
+		source = "Portage DB"
 	default:
 		source = ""
 	}

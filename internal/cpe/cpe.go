@@ -22,6 +22,12 @@ func NewCPE23(_package *model.Package, vendor string, product string, version st
 	baseCPE.Vendor = baseCPE.Product
 	_package.CPEs = append(_package.CPEs, cpeToString(*baseCPE))
 	_package.CPEs = RemoveDuplicateCPES(_package.CPEs)
+
+	// Retain base CPE
+	if len(_package.CPEs) == 0 {
+		_package.CPEs = append(_package.CPEs, cpeToString(*baseCPE))
+	}
+
 	return _package
 }
 
