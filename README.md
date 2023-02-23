@@ -208,8 +208,7 @@ registry:
 ```
 
 ## Attestation
-Diggity is integrated with [Cosign](https://docs.sigstore.dev/cosign/overview/) to give you the capability to sign and verify SBOM attestations to images you own. 
-To run attestations, make sure to install Cosign on your machine. Then, generate your cosign key-pair, associated with a password, using the following command:
+Diggity is integrated with [Cosign](https://docs.sigstore.dev/cosign/overview/), which allows you to sign and verify SBOM attestations on images you own. To run attestations, make sure to install Cosign on your machine. Then, generate your cosign key-pair associated with a password using the following command:
 
 ```
 cosign generate-key-pair
@@ -244,7 +243,7 @@ The attestation metadata can be saved to a file using:
 diggity attest <image> -f <filename>
 ```
 
-You can also pass in an already generated SBOM File using the **predicate** flag:
+You can also pass in an already generated SBOM file using the **predicate** flag:
 
 ```
 diggity attest <image> --predicate <path/to/bom_file>
