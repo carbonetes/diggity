@@ -161,6 +161,13 @@ registry:
   password: ""
   # access token for private registry access
   token: ""
+attestation:
+  # path to generated cosign.key
+  key: cosign.key
+  # path to generated cosign.pub
+  pub: cosign.pub
+  # password associated with the generated cosign key-pair
+  password: ""
 ```
 ## Private Registry Authentication
 ### Local Docker Credentials
@@ -200,6 +207,48 @@ registry:
   token: ""
 ```
 
+## Attestation
+Diggity is integrated with [Cosign](https://docs.sigstore.dev/cosign/overview/) to give you the capability to sign and verify SBOM attestations to images you own. 
+To run attestations, make sure to install Cosign on your machine. Then, generate your cosign key-pair, associated with a password, using the following command:
+
+```
+cosign generate-key-pair
+```
+
+This should generate the **cosign.key** and **cosign.pub** files. Specify their respective paths and password in your `.diggity.yaml` config file:
+
+```yaml
+attestation:
+  key: path/to/cosign.key
+  pub: path/to/cosign.pub
+  password: "<password>"
+```
+
+Alternatively, you could specify the information using flags.
+
+|     Flag      |               Description                |
+| :------------ | :--------------------------------------- |
+| `-k, --key` | Path to cosign.key used for the SBOM Attestation. |
+| `-p, --pub` | Path to cosign.pub used for the SBOM Attestation.       |
+| `--password` | Password for the generated cosign key-pair.          |
+
+To run an attestation, make sure that your registry is logged into your machine. Run the following command:
+
+```
+diggity attest <image>
+```
+
+The attestation metadata can be saved to a file using:
+
+```
+diggity attest <image> -f <filename>
+```
+
+You can also pass in an already generated SBOM File using the **predicate** flag:
+
+```
+diggity attest <image> --predicate <path/to/bom_file>
+```
 
 ## License
 
