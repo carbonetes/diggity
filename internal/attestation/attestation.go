@@ -15,9 +15,9 @@ import (
 )
 
 var (
-	log           = logger.GetLogger()
-	cosign        = "cosign"
-	tempBomPrefix = "diggity-bom-"
+	log        = logger.GetLogger()
+	cosign     = "cosign"
+	sbomPrefix = "diggity-sbom-"
 
 	// Arguments
 	Arguments model.Arguments
@@ -109,13 +109,13 @@ func generateBom(image string, arguments *model.Arguments, outputType string) st
 	var bomFileName string
 	switch outputType {
 	case "json", "cyclonedx-json", "spdx-json", "cyclonedxjson", "spdxjson":
-		bomFileName = tempBomPrefix + uuid.NewString() + ".json"
+		bomFileName = sbomPrefix + uuid.NewString() + ".json"
 	case "cyclonedx", "cyclonedx-xml", "cyclonedxxml", "cdx":
-		bomFileName = tempBomPrefix + uuid.NewString() + ".cdx"
+		bomFileName = sbomPrefix + uuid.NewString() + ".cdx"
 	case "spdx-tag-value", "spdxtagvalue", "spdxtv", "spdx":
-		bomFileName = tempBomPrefix + uuid.NewString() + ".spdx"
+		bomFileName = sbomPrefix + uuid.NewString() + ".spdx"
 	default:
-		bomFileName = tempBomPrefix + uuid.NewString() + ".json"
+		bomFileName = sbomPrefix + uuid.NewString() + ".json"
 	}
 
 	// Init Args
