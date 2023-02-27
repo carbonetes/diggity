@@ -164,7 +164,7 @@ func init() {
 	intializeConfiguration()
 
 	// diggity flags
-	diggity.Flags().StringArrayVarP(outputArray, "output", "o", tableOutput, "Supported output types: \n[json, table, cyclonedx, cyclonedx-json, spdx-json, spdx-tag-value]")
+	diggity.Flags().StringArrayVarP(outputArray, "output", "o", tableOutput, fmt.Sprintf("Supported output types: \n%+v", model.OutputList))
 	diggity.Flags().BoolVar(Arguments.DisableFileListing, "disable-file-listing", false, "Disables file listing from package metadata (default false)")
 	diggity.Flags().StringVar(Arguments.SecretContentRegex, "secrets-content-regex", "", "Secret content regex are searched within files that matches the provided regular expression")
 	diggity.Flags().BoolVar(Arguments.DisableSecretSearch, "disable-secret-search", false, "Disables secret search when set to true (default false)")
@@ -358,9 +358,13 @@ func setArrayArgs() {
 // ValidateOutputArg checks if output types specified are valid
 func ValidateOutputArg(outputType string) {
 	for _, output := range strings.Split(outputType, ",") {
+		// Validate from Default Output Types
 		if _, ok := model.OutputTypes[strings.ToLower(output)]; !ok {
-			log.Printf("[warning]: Invalid output type: %+v \nSupported output types: [json, table, cyclonedx, cyclonedx-json, spdx-json, spdx-tag-value]", output)
-			os.Exit(0)
+			// Validate from Output Aliases
+			if _, ok := model.OutputAliases[strings.ToLower(output)]; !ok {
+				log.Printf("[warning]: Invalid output type: %+v \nSupported output types: %+v", output, model.OutputList)
+				os.Exit(0)
+			}
 		}
 	}
 }

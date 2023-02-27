@@ -199,7 +199,41 @@ registry:
   password: "<password>"
   token: ""
 ```
+### Google Container Registry Credentials
+To pull images from Google Container Registry, provide your account credentials in your diggity config. 
+The URI follows the `gcr.io, us.gcr.io, eu.gcr.io, or asia.gcr.io` format depending on your service account, and the username would be  `oauth2accesstoken`. 
+For the password, run the following command via Google CLI tool to obtain your authentication token:
 
+```
+gcloud auth print-access-token
+```
+Note that the authentication token is valid for about an hour only. 
+For more information, check this [reference](https://cloud.google.com/container-registry/docs/advanced-authentication).
+
+Your `.diggity.yaml` should look something like this:
+```yaml
+registry:
+  uri: "gcr.io"
+  username: "oauth2accesstoken"
+  password: "<token>"
+  token: ""
+```
+### JFrog Container Registry Credentials
+To pull images from JFrog Container Registry, provide your account credentials in your diggity config. 
+The URI follows the `<server-name>.jfrog.io` format. 
+For the password, run the following command in your terminal `docker login -u[username] [server-name].jfrog.io`:
+
+Note that the authentication token is valid for about an hour only. 
+For more information, check this [reference](https://www.jfrog.com/confluence/display/JFROG/Getting+Started+with+Artifactory+as+a+Docker+Registry).
+
+Your `.diggity.yaml` should look something like this:
+```yaml
+registry:
+  uri: "diggity.jfrog.io"
+  username: "diggity@carbonetes.com"
+  password: "<token>"
+  token: ""
+```
 
 ## License
 
