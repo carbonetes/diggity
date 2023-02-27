@@ -48,6 +48,7 @@ var (
 		parser.FindHackagePackagesFromContent,
 		parser.FindCargoPackagesFromContent,
 		parser.FindConanPackagesFromContent,
+		parser.FindHexPackagesFromContent,
 		parser.FindSwiftPackagesFromContent,
 		parser.ParseDistro,
 		parser.ParseDockerProperties,
