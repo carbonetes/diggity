@@ -24,6 +24,7 @@ var ParserNames = []string{
 	"conan",
 	"hackage",
 	"pod",
+	"hex",
 }
 
 // TrimUntilLayer Returns file path without layer hash
