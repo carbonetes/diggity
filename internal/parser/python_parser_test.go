@@ -18,6 +18,17 @@ type (
 		_package *model.Package
 		expected model.PURL
 	}
+
+	ParseRequirementsResult struct {
+		input   string
+		name    string
+		version string
+	}
+
+	PoetryFileMetadataResult struct {
+		input    string
+		expected map[string]string
+	}
 )
 
 var (
@@ -40,7 +51,7 @@ var (
 		CPEs: []string{
 			"cpe:2.3:a:wsgiref:wsgiref:0.1.2:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:python/wsgiref@0.1.2"),
+		PURL: model.PURL("pkg:pypi/wsgiref@0.1.2"),
 		Metadata: PythonMetadata{
 			"Author":           "Phillip J. Eby",
 			"Author-email":     "web-sig@python.org",
@@ -70,7 +81,7 @@ var (
 		CPEs: []string{
 			"cpe:2.3:a:Python:Python:2.7.16:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:python/Python@2.7.16"),
+		PURL: model.PURL("pkg:pypi/Python@2.7.16"),
 		Metadata: PythonMetadata{
 			"Author":           "Guido van Rossum and the Python community",
 			"Author-email":     "python-dev@python.org",
@@ -133,6 +144,24 @@ func TestReadPythonContent(t *testing.T) {
 	}
 }
 
+func TestReadPoetryContent(t *testing.T) {
+	poetryPath := filepath.Join("..", "..", "docs", "references", "python", poetry)
+	poetryLocation := model.Location{Path: poetryPath}
+	err := readPoetryContent(&poetryLocation)
+	if err != nil {
+		t.Errorf("Test Failed: Error occurred while reading poetry.lock content. %v", err)
+	}
+}
+
+func TestReadRequirementsContent(t *testing.T) {
+	requirementsPath := filepath.Join("..", "..", "docs", "references", "python", "requirements.txt")
+	requirementsLocation := model.Location{Path: requirementsPath}
+	err := readRequirementsContent(&requirementsLocation)
+	if err != nil {
+		t.Errorf("Test Failed: Error occurred while reading requirements.txt content. %v", err)
+	}
+}
+
 func TestInitPythonPackages(t *testing.T) {
 	var _package1, _package2 model.Package
 	tests := []InitPythonPackages{
@@ -140,7 +169,7 @@ func TestInitPythonPackages(t *testing.T) {
 		{&_package2, pythonMetadata2, pythonLocation2, &pythonPackage2},
 	}
 	for _, test := range tests {
-		output := initPythonPackages(test._package, test.metadata, &test.location)
+		output := initPythonPackages(test.metadata, &test.location)
 		if output.Name != test.expected.Name ||
 			output.Version != test.expected.Version ||
 			output.Description != test.expected.Description ||
@@ -158,13 +187,56 @@ func TestInitPythonPackages(t *testing.T) {
 
 func TestParsePythonPackageURL(t *testing.T) {
 	tests := []PythonPurlResult{
-		{&pythonPackage1, model.PURL("pkg:python/wsgiref@0.1.2")},
-		{&pythonPackage2, model.PURL("pkg:python/Python@2.7.16")},
+		{&pythonPackage1, model.PURL("pkg:pypi/wsgiref@0.1.2")},
+		{&pythonPackage2, model.PURL("pkg:pypi/Python@2.7.16")},
 	}
 	for _, test := range tests {
 		parsePythonPackageURL(test._package)
 		if test._package.PURL != test.expected {
 			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		}
+	}
+}
+
+func TestParseRequirements(t *testing.T) {
+	tests := []ParseRequirementsResult{
+		{"test==1.0.0", "test", "1.0.0"},
+		{"test== 1.0.0", "test", "1.0.0"},
+		{"test ==1.0.0", "test", "1.0.0"},
+		{"test == 1.0.0", "test", "1.0.0"},
+		{"test==1.0.0 #Comment", "test", "1.0.0"},
+		{"Django==1.11.29", "Django", "1.11.29"},
+		{" flask == 4.0.0", "flask", "4.0.0"},
+	}
+	for _, test := range tests {
+		if name, version := parseRequirements(test.input); name != test.name || version != test.version {
+			t.Errorf("Test Failed: Expected an output of %+v and %+v, received: %v and %+v", test.name, test.version, name, version)
+		}
+	}
+}
+
+func TestPoetryFileMetadata(t *testing.T) {
+	tests := []PoetryFileMetadataResult{
+		{`{file = "attrs-21.4.0-py2.py3-none-any.whl", hash = "sha256:2d27e3784d7a565d36ab851fe94887c5eccd6a463168875832a1be79c82828b4"},`,
+			map[string]string{
+				"file": "attrs-21.4.0-py2.py3-none-any.whl",
+				"hash": "sha256:2d27e3784d7a565d36ab851fe94887c5eccd6a463168875832a1be79c82828b4",
+			}},
+		{`{file = "PyYAML-6.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:d4db7c7aef085872ef65a8fd7d6d09a14ae91f691dec3e87ee5ee0539d516f53"},`,
+			map[string]string{
+				"file": "PyYAML-6.0-cp310-cp310-macosx_10_9_x86_64.whl",
+				"hash": "sha256:d4db7c7aef085872ef65a8fd7d6d09a14ae91f691dec3e87ee5ee0539d516f53",
+			}},
+		{`{file = "urllib3-1.26.9.tar.gz", hash = "sha256:aabaf16477806a5e1dd19aa41f8c2b7950dd3c746362d7e3223dbe6de6ac448e"},`,
+			map[string]string{
+				"file": "urllib3-1.26.9.tar.gz",
+				"hash": "sha256:aabaf16477806a5e1dd19aa41f8c2b7950dd3c746362d7e3223dbe6de6ac448e",
+			}},
+	}
+	for _, test := range tests {
+		output := poetryFileMetadata(test.input)
+		if output["file"] != test.expected["file"] || output["hash"] != test.expected["hash"] {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, output)
 		}
 	}
 }

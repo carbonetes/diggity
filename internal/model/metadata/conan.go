@@ -20,13 +20,13 @@ type GraphLock struct {
 
 // ConanLockNode conan.lock packages metadata
 type ConanLockNode struct {
-	Ref            string            `json:"ref"`
-	Path           string            `json:"path,omitempty"`
-	Context        string            `json:"context,omitempty"`
-	Requires       []string          `json:"requires,omitempty"`
-	PackageID      string            `json:"package_id,omitempty"`
-	Prev           string            `json:"prev,omitempty"`
-	BuildRequires  string            `json:"build_requires,omitempty"`
-	PythonRequires string            `json:"py_requires,omitempty"`
-	Options        map[string]string `json:"options,omitempty"`
+	Ref            string      `json:"ref"`
+	Path           string      `json:"path,omitempty"`
+	Context        string      `json:"context,omitempty"`
+	Requires       []string    `json:"requires,omitempty"`
+	PackageID      string      `json:"package_id,omitempty"`
+	Prev           string      `json:"prev,omitempty"`
+	BuildRequires  string      `json:"build_requires,omitempty"`
+	PythonRequires string      `json:"py_requires,omitempty"`
+	Options        interface{} `json:"options,omitempty"`
 }

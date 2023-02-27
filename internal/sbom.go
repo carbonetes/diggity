@@ -49,6 +49,7 @@ var (
 		parser.FindCargoPackagesFromContent,
 		parser.FindConanPackagesFromContent,
 		parser.FindHexPackagesFromContent,
+		parser.FindSwiftPackagesFromContent,
 		parser.ParseDistro,
 		parser.ParseDockerProperties,
 		secret.Search,

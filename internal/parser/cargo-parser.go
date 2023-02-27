@@ -65,8 +65,8 @@ func readCargoContent(location *model.Location) error {
 
 		if strings.Contains(keyValue, "=") {
 			keyValues := strings.SplitN(keyValue, "=", 2)
-			attribute = formatCargoData(keyValues[0])
-			value = formatCargoData(keyValues[1])
+			attribute = formatLockKeyVal(keyValues[0])
+			value = formatLockKeyVal(keyValues[1])
 
 			if strings.Contains(attribute, " ") {
 				//clear attribute
@@ -166,13 +166,7 @@ func parseRustPackageURL(_package *model.Package) {
 func formatDependencies(depsString string) (deps []string) {
 	r := regexp.MustCompile(`"(.*?)"`)
 	for _, d := range r.FindAllString(depsString, -1) {
-		deps = append(deps, formatCargoData(d))
+		deps = append(deps, formatLockKeyVal(d))
 	}
 	return deps
-}
-
-// Format Cargo Data String
-func formatCargoData(data string) string {
-	trimmed := strings.TrimSpace(data)
-	return strings.Replace(trimmed, `"`, "", -1)
 }
