@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/carbonetes/diggity/internal/attestation"
 	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/internal/model"
 	"github.com/carbonetes/diggity/internal/parser"
@@ -52,6 +53,18 @@ var (
 	}
 
 	log = logger.GetLogger()
+
+	// attestation
+	attestationOptions = model.AttestationOptions{
+		Key:        new(string),
+		Pub:        new(string),
+		AttestType: new(string),
+		Predicate:  new(string),
+		Password:   new(string),
+		OutputFile: new(string),
+		OutputType: new(string),
+		BomArgs:    new(model.Arguments),
+	}
 
 	diggity = &cobra.Command{
 		Use:   "diggity",
@@ -158,6 +171,22 @@ var (
 
 		},
 	}
+
+	attest = &cobra.Command{
+		Use:   "attest",
+		Short: "Attest generated SBOM.",
+		Long:  "Generate and verify in-toto SBOM attesations with Cosign integrated with Diggity.",
+		Args:  cobra.MaximumNArgs(1),
+		PreRun: func(cmd *cobra.Command, args []string) {
+			if len(args) == 0 && !flagHasArg() {
+				_ = cmd.Help()
+				os.Exit(0)
+			}
+		},
+		Run: func(cmd *cobra.Command, args []string) {
+			attestation.Attest(args[0], &attestationOptions)
+		},
+	}
 )
 
 func init() {
@@ -192,10 +221,23 @@ func init() {
 	config.Flags().BoolVarP(&getConfigPath, "path", "p", false, "Displays the path of the configuration file")
 	config.Flags().BoolVarP(&help, "help", "h", false, "Help for configuration")
 
+	// attest flags
+	attest.Flags().StringVarP(attestationOptions.Key, "key", "k", "", "Path to cosign.key used for the SBOM Attestation")
+	attest.Flags().StringVarP(attestationOptions.Pub, "pub", "p", "", "Path to cosign.pub used for the SBOM Attestation")
+	attest.Flags().StringVarP(attestationOptions.AttestType, "type", "t", "custom", "Type used for the Attestation ([spdx, cyclonedx, custom])")
+	attest.Flags().StringVar(attestationOptions.Predicate, "predicate", "", "Path to the generated SBOM file to be attested")
+	attest.Flags().StringVar(attestationOptions.Password, "password", "", "Password for the generated cosign key-pair")
+	attest.Flags().StringVarP(attestationOptions.OutputFile, "output-file", "f", "", "Save the attestation result to the output file instead of writing to standard output")
+	attest.Flags().StringVarP(attestationOptions.OutputType, "output", "o", "json", "Supported output types: \n[json, cyclonedx, cyclonedx-json, spdx-json, spdx-tag-value]")
+	attest.Flags().BoolVarP(&help, "help", "h", false, "Help for attest")
+
 	cobra.OnInitialize(setPrioritizedArg)
+	cobra.OnInitialize(setAttestArgs)
+	attestationOptions.BomArgs = &Arguments
 
 	diggity.AddCommand(version)
 	diggity.AddCommand(config)
+	diggity.AddCommand(attest)
 	diggity.CompletionOptions.DisableDefaultCmd = true
 }
 
@@ -238,6 +280,11 @@ func createConfiguration() {
 			Excludes:    &[]string{},
 			MaxFileSize: 10485760,
 		}
+		attestationConfig := model.AttestationConfig{
+			Key:      "cosign.key",
+			Pub:      "cosign.pub",
+			Password: "",
+		}
 		DefaultConfig = model.Configuration{
 			SecretConfig:   secretConfig,
 			EnabledParsers: []string{},
@@ -250,6 +297,7 @@ func createConfiguration() {
 				Password: "",
 				Token:    "",
 			},
+			AttestationConfig: attestationConfig,
 		}
 
 		yamlDefaultConfig, err := yaml.Marshal(&DefaultConfig)
@@ -329,6 +377,32 @@ func setPrioritizedArg() {
 	}
 	if !diggity.Flags().Lookup("registry-token").Changed {
 		Arguments.RegistryToken = &DefaultConfig.Registry.Token
+	}
+}
+
+// Define args for attest
+func setAttestArgs() {
+	attestationConfig := DefaultConfig.AttestationConfig
+	if !attest.Flags().Lookup("key").Changed {
+		*attestationOptions.Key = attestationConfig.Key
+		if strings.TrimSpace(*attestationOptions.Key) == "" {
+			log.Printf("[warning]: No cosign key specified.")
+		}
+	}
+	if !attest.Flags().Lookup("pub").Changed && !*Arguments.DisableFileListing {
+		*attestationOptions.Pub = attestationConfig.Pub
+		if strings.TrimSpace(*attestationOptions.Pub) == "" {
+			log.Printf("[warning]: No cosign pub specified.")
+		}
+	}
+	if !attest.Flags().Lookup("password").Changed {
+		*attestationOptions.Password = attestationConfig.Password
+		if strings.TrimSpace(*attestationOptions.Password) == "" {
+			log.Printf("[warning]: No cosign password specified.")
+		}
+	}
+	if attest.Flags().Lookup("output").Changed {
+		ValidateOutputArg(*attestationOptions.OutputType)
 	}
 }
 
