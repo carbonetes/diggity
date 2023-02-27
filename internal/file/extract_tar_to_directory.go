@@ -13,7 +13,8 @@ import (
 )
 
 const (
-	gzFile = ".gz" // Invalid zip file
+	gzFile           = ".gz"                  // Invalid zip file
+	invalidCharRegex = `[,@<>:'"|?*#%&{}$=!]` // Invalid filename characters
 )
 
 // Contents contains the location of files
@@ -21,6 +22,7 @@ var Contents = make([]*model.Location, 0)
 
 // UnTar extract all files from source into dst (directory)
 func UnTar(dst string, source string, recursive bool) error {
+	r := regexp.MustCompile(invalidCharRegex)
 
 	reader, _ := os.Open(source)
 	defer reader.Close()
@@ -42,11 +44,10 @@ func UnTar(dst string, source string, recursive bool) error {
 
 		target := filepath.Join(dst, header.Name)
 
-		// Skip unsafe files fo extraction
-		if strings.Contains(target, "..") {
-			continue
-		}
-		if strings.Contains(filepath.Base(target), gzFile) {
+		// Skip unsafe files for extraction
+		if strings.Contains(filepath.Base(target), gzFile) ||
+			r.MatchString(filepath.Base(target)) ||
+			strings.Contains(target, "..") {
 			continue
 		}
 
