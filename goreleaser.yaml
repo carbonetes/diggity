@@ -141,6 +141,17 @@ checksum:
 
 changelog:
   sort: asc
+  abbrev: -1
+  groups:
+  - title: Features
+    regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+    order: 0
+  - title: 'Bug Fixes'
+    regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+    order: 1
+  - title: Others
+    regexp: '^.*?(refactor|chore|docs|test|style)(\([[:word:]]+\))??!?:.+$'
+    order: 999
   filters:
     exclude:
       - '^docs:'

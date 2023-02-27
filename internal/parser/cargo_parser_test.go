@@ -29,11 +29,6 @@ type (
 		input    string
 		expected []string
 	}
-
-	FormatCargoDataResult struct {
-		input    string
-		expected string
-	}
 )
 
 var (
@@ -312,24 +307,6 @@ func TestFormatDependencies(t *testing.T) {
 			if test.expected[i] != d {
 				t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected[i], d)
 			}
-		}
-	}
-}
-
-func TestFormatCargoData(t *testing.T) {
-	tests := []FormatCargoDataResult{
-		{`"test"`, "test"},
-		{` "test" `, "test"},
-		{`"name"`, "name"},
-		{`"version"`, "version"},
-		{`"checksum"`, "checksum"},
-		{` "zerofrom" `, "zerofrom"},
-		{`"zerovec-derive"`, "zerovec-derive"},
-	}
-
-	for _, test := range tests {
-		if output := formatCargoData(test.input); output != test.expected {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, output)
 		}
 	}
 }

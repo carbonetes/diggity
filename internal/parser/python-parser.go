@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
@@ -19,7 +21,14 @@ const (
 	pythonRecord  = "RECORD"
 	pythonEgg     = ".egg-info"
 	pip           = "python"
+	pypi          = "pypi"
 	unknownField  = "UNKNOWN"
+	poetry        = "poetry.lock"
+	poetryPackage = "[[package]]"
+	requirements  = "requirements"
+	txt           = ".txt"
+	poetryFiles   = "files = ["
+	fileHashKey   = "sha256"
 )
 
 // PythonMetadata  metadata
@@ -31,6 +40,19 @@ func FindPythonPackagesFromContent() {
 		for _, content := range file.Contents {
 			if strings.Contains(content.Path, pythonPackage) || strings.Contains(content.Path, pythonEgg) {
 				if err := readPythonContent(content); err != nil {
+					err = errors.New("python-parser: " + err.Error())
+					Errors = append(Errors, &err)
+				}
+			}
+			if filepath.Base(content.Path) == poetry {
+				if err := readPoetryContent(content); err != nil {
+					err = errors.New("python-parser: " + err.Error())
+					Errors = append(Errors, &err)
+				}
+			}
+			if strings.Contains(filepath.Base(content.Path), requirements) &&
+				strings.Contains(filepath.Base(content.Path), txt) {
+				if err := readRequirementsContent(content); err != nil {
 					err = errors.New("python-parser: " + err.Error())
 					Errors = append(Errors, &err)
 				}
@@ -52,7 +74,6 @@ func readPythonContent(location *model.Location) error {
 	var value string
 	var attribute string
 	var previousAttribute string
-	// reg := regexp.MustCompile(`[^\w^,^ ]`)
 
 	metadata := make(PythonMetadata)
 
@@ -80,40 +101,180 @@ func readPythonContent(location *model.Location) error {
 		previousAttribute = attribute
 	}
 	if len(metadata) > 0 && metadata["Name"] != nil {
-		_package := new(model.Package)
-		_package.ID = uuid.NewString()
-		_package.Type = pip
-		_package.Locations = append(_package.Locations, model.Location{
-			Path:      TrimUntilLayer(*location),
-			LayerHash: location.LayerHash,
-		})
-		initPythonPackages(_package, metadata, location)
-		Packages = append(Packages, _package)
+		Packages = append(Packages, initPythonPackages(metadata, location))
+	}
+
+	return nil
+}
+
+// Read poetry.lock contents
+func readPoetryContent(location *model.Location) error {
+	// Read poetry.lock file
+	file, err := os.Open(location.Path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	metadata := make(PythonMetadata)
+	scanner := bufio.NewScanner(file)
+
+	var value string
+	var attribute string
+	var previousAttribute string
+
+	isFile := false // check for file metadata
+	fileHash := []map[string]string{}
+
+	// Iterate through key value pairs
+	for scanner.Scan() {
+		keyValue := scanner.Text()
+
+		// Parse files metadata, if any
+		if !*Arguments.DisableFileListing {
+			if strings.Contains(keyValue, poetryFiles) {
+				isFile = true
+				continue
+			}
+
+			if isFile {
+				// assign file metadata and reset
+				if strings.TrimSpace(keyValue) == "]" {
+					metadata["files"] = fileHash
+					fileHash = []map[string]string{}
+					isFile = false
+					continue
+				}
+				// skip invalid key values
+				if !strings.Contains(keyValue, "file") && !strings.Contains(keyValue, "hash") {
+					continue
+				}
+
+				fileHash = append(fileHash, poetryFileMetadata(keyValue))
+				continue
+			}
+		} else if strings.Contains(keyValue, "file") {
+			continue
+		}
+
+		if strings.Contains(keyValue, "=") {
+			keyValues := strings.SplitN(keyValue, "=", 2)
+			attribute = formatLockKeyVal(keyValues[0])
+			value = formatLockKeyVal(keyValues[1])
+
+			if strings.Contains(attribute, " ") {
+				//clear attribute
+				attribute = ""
+			}
+		} else {
+			value = strings.TrimSpace(value + keyValue)
+			attribute = previousAttribute
+		}
+
+		if len(attribute) > 0 && attribute != " " {
+			metadata[attribute] = strings.Replace(value, "\r\n", "", -1)
+			metadata[attribute] = strings.Replace(value, "\r ", "", -1)
+			metadata[attribute] = strings.TrimSpace(metadata[attribute].(string))
+		}
+
+		previousAttribute = attribute
+
+		// Packages delimited by line breaks or [[package]] tag
+		if len(keyValue) <= 1 || keyValue == packageTag {
+			// cleanup python-versions metadata
+			if _, ok := metadata["python-versions"]; ok {
+				metadata["python-versions"] = strings.Replace(metadata["python-versions"].(string), "]", "", -1)
+			}
+			// init poetry data
+			if metadata["name"] != nil {
+				Packages = append(Packages, initPythonPackages(metadata, location))
+			}
+
+			// Reset metadata
+			metadata = make(PythonMetadata)
+		}
+	}
+
+	// Parse packages before EOF
+	if metadata["name"] != nil {
+		Packages = append(Packages, initPythonPackages(metadata, location))
+	}
+
+	return nil
+}
+
+// Read requirements.txt contents
+func readRequirementsContent(location *model.Location) error {
+	// Read requirements.txt file
+	file, err := os.Open(location.Path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	// Iterate through requirements
+	for scanner.Scan() {
+		req := scanner.Text()
+
+		// Remove Comments
+		if strings.Contains(req, "#") {
+			req = strings.Split(req, "#")[0]
+		}
+
+		if strings.Contains(req, "==") {
+			name, version := parseRequirements(req)
+
+			if name != "" && !strings.Contains(name, ";") {
+				metadata := make(PythonMetadata)
+				metadata["name"] = name
+				metadata["version"] = version
+				Packages = append(Packages, initPythonPackages(metadata, location))
+			}
+		}
+
 	}
 
 	return nil
 }
 
 // Initialize python package
-func initPythonPackages(p *model.Package, metadata map[string]interface{}, location *model.Location) *model.Package {
+func initPythonPackages(metadata map[string]interface{}, location *model.Location) *model.Package {
+	p := new(model.Package)
+	p.ID = uuid.NewString()
+	p.Type = pip
+	p.Locations = append(p.Locations, model.Location{
+		Path:      TrimUntilLayer(*location),
+		LayerHash: location.LayerHash,
+	})
 
-	p.Name = metadata["Name"].(string)
-	p.Version = metadata["Version"].(string)
-	p.Path = metadata["Name"].(string)
+	// parse name and version based on metadata
+	if _, ok := metadata["Name"]; ok {
+		p.Name = metadata["Name"].(string)
+		p.Version = metadata["Version"].(string)
+		p.Path = metadata["Name"].(string)
+	} else {
+		p.Name = metadata["name"].(string)
+		p.Version = metadata["version"].(string)
+		p.Path = metadata["name"].(string)
+	}
 
-	//check first if description exist in metadata
+	// check first if description exist in metadata
 	if val, ok := metadata["description"].(string); ok {
 		p.Description = val
 	}
 
-	//check first if license exist in metadata
+	// check first if license exist in metadata
 	if val, ok := metadata["License"]; ok {
 		p.Licenses = append(p.Licenses, val.(string))
+	} else {
+		p.Licenses = []string{}
 	}
 
 	p.Type = pip
 
-	//parseURL
+	// parse PURL
 	parsePythonPackageURL(p)
 	filesPath := strings.Split(location.Path, pythonPackage)[0]
 	filesPath = filesPath + pythonRecord
@@ -129,7 +290,7 @@ func initPythonPackages(p *model.Package, metadata map[string]interface{}, locat
 	}
 	p.Metadata = metadata
 
-	//parse CPE
+	// parse CPE
 	if val, ok := metadata["Author"].(string); ok {
 		if val == unknownField {
 			val = p.Name
@@ -199,5 +360,33 @@ func parseMetadataFiles(m PythonMetadata, path string) error {
 
 // Parse PURL
 func parsePythonPackageURL(_package *model.Package) {
-	_package.PURL = model.PURL(scheme + ":" + pip + "/" + _package.Name + "@" + _package.Version)
+	_package.PURL = model.PURL(scheme + ":" + pypi + "/" + _package.Name + "@" + _package.Version)
+}
+
+// Parse requirements metadata
+func parseRequirements(req string) (name string, version string) {
+	reqMetadata := strings.Split(req, "==")
+	versionMetadata := strings.TrimSpace(reqMetadata[1])
+
+	name = strings.TrimSpace(reqMetadata[0])
+	version = strings.Split(versionMetadata, " ")[0]
+
+	return name, version
+}
+
+// Parse poetry file
+func poetryFileMetadata(file string) map[string]string {
+	fileHash := make(map[string]string)
+	r := regexp.MustCompile(`"(.*?)"`)
+
+	for _, fh := range r.FindAllString(file, -1) {
+		// assign to hash if contains sha256
+		if strings.Contains(fh, fileHashKey) {
+			fileHash["hash"] = strings.Replace(fh, `"`, "", -1)
+		} else {
+			fileHash["file"] = strings.Replace(fh, `"`, "", -1)
+		}
+	}
+
+	return fileHash
 }

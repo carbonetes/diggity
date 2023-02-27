@@ -24,6 +24,11 @@ type (
 		e        string
 		expected bool
 	}
+
+	FormatLockKeyValResult struct {
+		input    string
+		expected string
+	}
 )
 
 func TestTrimUntilLayer(t *testing.T) {
@@ -103,6 +108,24 @@ func TestStringSliceContains(t *testing.T) {
 
 	for _, test := range tests {
 		if output := stringSliceContains(test.s, test.e); output != test.expected {
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, output)
+		}
+	}
+}
+
+func TestFormatLockKeyVal(t *testing.T) {
+	tests := []FormatLockKeyValResult{
+		{`"test"`, "test"},
+		{` "test" `, "test"},
+		{`"name"`, "name"},
+		{`"version"`, "version"},
+		{`"checksum"`, "checksum"},
+		{` "zerofrom" `, "zerofrom"},
+		{`"zerovec-derive"`, "zerovec-derive"},
+	}
+
+	for _, test := range tests {
+		if output := formatLockKeyVal(test.input); output != test.expected {
 			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, output)
 		}
 	}
