@@ -161,6 +161,13 @@ registry:
   password: ""
   # access token for private registry access
   token: ""
+attestation:
+  # path to generated cosign.key
+  key: cosign.key
+  # path to generated cosign.pub
+  pub: cosign.pub
+  # password associated with the generated cosign key-pair
+  password: ""
 ```
 ## Private Registry Authentication
 ### Local Docker Credentials
@@ -203,7 +210,6 @@ registry:
 To pull images from Google Container Registry, provide your account credentials in your diggity config. 
 The URI follows the `gcr.io, us.gcr.io, eu.gcr.io, or asia.gcr.io` format depending on your service account, and the username would be  `oauth2accesstoken`. 
 For the password, run the following command via Google CLI tool to obtain your authentication token:
-
 ```
 gcloud auth print-access-token
 ```
@@ -233,6 +239,47 @@ registry:
   username: "diggity@carbonetes.com"
   password: "<token>"
   token: ""
+ ```
+## Attestation
+Diggity is integrated with [Cosign](https://docs.sigstore.dev/cosign/overview/), which allows you to sign and verify SBOM attestations on images you own. To run attestations, make sure to install Cosign on your machine. Then, generate your cosign key-pair associated with a password using the following command:
+
+```
+cosign generate-key-pair
+```
+
+This should generate the **cosign.key** and **cosign.pub** files. Specify their respective paths and password in your `.diggity.yaml` config file:
+
+```yaml
+attestation:
+  key: path/to/cosign.key
+  pub: path/to/cosign.pub
+  password: "<password>"
+```
+
+Alternatively, you could specify the information using flags.
+
+|     Flag      |               Description                |
+| :------------ | :--------------------------------------- |
+| `-k, --key` | Path to cosign.key used for the SBOM Attestation. |
+| `-p, --pub` | Path to cosign.pub used for the SBOM Attestation.       |
+| `--password` | Password for the generated cosign key-pair.          |
+
+To run an attestation, make sure that your registry is logged into your machine. Run the following command:
+
+```
+diggity attest <image>
+```
+
+The attestation metadata can be saved to a file using:
+
+```
+diggity attest <image> -f <filename>
+```
+
+You can also pass in an already generated SBOM file using the **predicate** flag:
+
+```
+diggity attest <image> --predicate <path/to/bom_file>
 ```
 
 ## License
