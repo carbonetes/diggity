@@ -86,14 +86,6 @@ func printSpdxTagValue() {
 	}
 }
 
-func stringSliceToString(slice []string) string {
-	result := ""
-	for _, s := range slice {
-		result += fmt.Sprintln(s)
-	}
-	return result
-}
-
 // GetSpdxTagValues Parse SPDX-TAG_VALUE format
 func GetSpdxTagValues() (spdxTagValues []string) {
 	// Init Document Creation Information
@@ -157,4 +149,13 @@ func GetSpdxTagValues() (spdxTagValues []string) {
 	}
 
 	return spdxTagValues
+}
+
+// convert spdx-tag-values to single string
+func stringSliceToString(slice []string) string {
+	result := ""
+	for _, s := range slice {
+		result += fmt.Sprintln(s)
+	}
+	return result
 }
