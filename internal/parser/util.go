@@ -54,6 +54,7 @@ func parserEnabled(parser string) bool {
 	return false
 }
 
+// Return index of a string from a slice
 func indexOf(array []string, s string) int {
 	for idx, a := range array {
 		if s == a {
@@ -63,6 +64,7 @@ func indexOf(array []string, s string) int {
 	return -1
 }
 
+// Check if a string slice contains specified string
 func stringSliceContains(s []string, e string) bool {
 	for _, a := range s {
 		if a == e {
@@ -72,6 +74,13 @@ func stringSliceContains(s []string, e string) bool {
 	return false
 }
 
+// return if source is dir
 func sourceIsDir() bool {
 	return len(*Arguments.Dir) > 0
+}
+
+// format .lock Key Value Data String
+func formatLockKeyVal(kv string) string {
+	trimmed := strings.TrimSpace(kv)
+	return strings.Replace(trimmed, `"`, "", -1)
 }

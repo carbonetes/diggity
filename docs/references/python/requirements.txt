@@ -1,0 +1,4 @@
+# this file is only used for testing the cli
+
+Django==1.11.29
+django-rest-auth==0.9.0
