@@ -117,7 +117,7 @@ var (
 			"cpe:2.3:a:centos:lzo:2.08-14.el8:*:*:*:*:*:*:*",
 			"cpe:2.3:a:lzo:lzo:2.08-14.el8:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:rpm/lzo@2.08-14.el8arch=x86_64"),
+		PURL: model.PURL("pkg:rpm/lzo@2.08-14.el8?arch=x86_64"),
 		Metadata: metadata.RPMMetadata{
 			Release:      "14.el8",
 			Architecture: "x86_64",
@@ -152,7 +152,7 @@ var (
 			"cpe:2.3:a:fedoraproject:p11_kit_trust:0.23.15-2.fc29:*:*:*:*:*:*:*",
 			"cpe:2.3:a:p11-kit-trust:p11-kit-trust:0.23.15-2.fc29:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:rpm/p11-kit-trust@0.23.15-2.fc29arch=x86_64"),
+		PURL: model.PURL("pkg:rpm/p11-kit-trust@0.23.15-2.fc29?arch=x86_64"),
 		Metadata: metadata.RPMMetadata{
 			Release:      "2.fc29",
 			Architecture: "x86_64",
@@ -185,7 +185,7 @@ var (
 			"cpe:2.3:a:redhat:hardlink:3\\:1.0-19.el7:*:*:*:*:*:*:*",
 			"cpe:2.3:a:hardlink:hardlink:3\\:1.0-19.el7:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:rpm/hardlink@1.0-19.el7arch=x86_64"),
+		PURL: model.PURL("pkg:rpm/hardlink@1.0-19.el7?arch=x86_64"),
 		Metadata: metadata.RPMMetadata{
 			Release:      "19.el7",
 			Architecture: "x86_64",
@@ -282,9 +282,9 @@ func TestParseRpmPackageURL(t *testing.T) {
 	}
 
 	tests := []RpmPurlResult{
-		{&_package1, rpmdb1.Arch, model.PURL("pkg:rpm/lzo@2.08-14.el8arch=x86_64")},
-		{&_package2, rpmdb2.Arch, model.PURL("pkg:rpm/p11-kit-trust@0.23.15-2.fc29arch=x86_64")},
-		{&_package3, rpmdb3.Arch, model.PURL("pkg:rpm/hardlink@1.0-19.el7arch=x86_64")},
+		{&_package1, rpmdb1.Arch, model.PURL("pkg:rpm/lzo@2.08-14.el8?arch=x86_64")},
+		{&_package2, rpmdb2.Arch, model.PURL("pkg:rpm/p11-kit-trust@0.23.15-2.fc29?arch=x86_64")},
+		{&_package3, rpmdb3.Arch, model.PURL("pkg:rpm/hardlink@1.0-19.el7?arch=x86_64")},
 	}
 
 	for _, test := range tests {
