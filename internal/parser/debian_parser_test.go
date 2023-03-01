@@ -54,7 +54,7 @@ var (
 		CPEs: []string{
 			"cpe:2.3:a:libpcre2-8-0:libpcre2-8-0:10.36-2:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:deb/libpcre2-8-0@10.36-2arch=s390x"),
+		PURL: model.PURL("pkg:deb/libpcre2-8-0@10.36-2?arch=s390x"),
 		Metadata: DebianMetadata{
 			"Architecture":   "s390x",
 			"Depends":        "libc6 (\u003e= 2.4)",
@@ -87,7 +87,7 @@ var (
 		CPEs: []string{
 			"cpe:2.3:a:e2fsprogs:e2fsprogs:1.46.2-2:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:deb/e2fsprogs@1.46.2-2arch=s390x"),
+		PURL: model.PURL("pkg:deb/e2fsprogs@1.46.2-2?arch=s390x"),
 		Metadata: DebianMetadata{
 			"Architecture":   "s390x",
 			"Depends":        "logsave",
@@ -130,7 +130,7 @@ var (
 		CPEs: []string{
 			"cpe:2.3:a:libapt-pkg6.0:libapt-pkg6.0:2.2.4:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:deb/libapt-pkg6.0@2.2.4arch=s390x"),
+		PURL: model.PURL("pkg:deb/libapt-pkg6.0@2.2.4?arch=s390x"),
 		Metadata: DebianMetadata{
 			"Architecture":   "s390x",
 			"Breaks":         "appstream (\u003c\u003c 0.9.0-3~), apt (\u003c\u003c 1.6~), aptitude (\u003c\u003c 0.8.9), libapt-inst1.5 (\u003c\u003c 0.9.9~)",
@@ -356,9 +356,9 @@ func TestParseDebianPackageUrl(t *testing.T) {
 	}
 
 	tests := []DebPurlResult{
-		{&_package1, "s390x", model.PURL("pkg:deb/libpcre2-8-0@10.36-2arch=s390x")},
-		{&_package2, "s390x", model.PURL("pkg:deb/e2fsprogs@1.46.2-2arch=s390x")},
-		{&_package3, "s390x", model.PURL("pkg:deb/libapt-pkg6.0@2.2.4arch=s390x")},
+		{&_package1, "s390x", model.PURL("pkg:deb/libpcre2-8-0@10.36-2?arch=s390x")},
+		{&_package2, "s390x", model.PURL("pkg:deb/e2fsprogs@1.46.2-2?arch=s390x")},
+		{&_package3, "s390x", model.PURL("pkg:deb/libapt-pkg6.0@2.2.4?arch=s390x")},
 	}
 
 	for _, test := range tests {
