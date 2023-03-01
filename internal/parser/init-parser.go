@@ -9,7 +9,7 @@ import (
 var (
 	// Arguments - CLI Arguments
 	Arguments *model.Arguments
-	// Packages - common ollection of packages found by parsers
+	// Packages - common collection of packages found by parsers
 	Packages []*model.Package
 	// WG - common waitgroup for all the parsers
 	WG sync.WaitGroup
