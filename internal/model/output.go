@@ -8,7 +8,7 @@ const (
 	JSON Output = "json"
 	// Table Output Type (Default)
 	Table = "table"
-	// CycloneDX Output Type
+	// CycloneDXXML Output Type
 	CycloneDXXML = "cyclonedx-xml"
 	// CycloneDXJSON Output Type
 	CycloneDXJSON = "cyclonedx-json"
