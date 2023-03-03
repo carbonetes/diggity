@@ -3,6 +3,13 @@
 <img src="material/diggity-black.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
 </p>
 
+# Diggity
+[![Github All Releases](https://img.shields.io/github/downloads/carbonetes/diggity/total.svg)]()
+[![Go Report Card](https://goreportcard.com/badge/github.com/carbonetes/diggity)](https://goreportcard.com/report/github.com/carbonetes/diggity)
+[![GitHub release](https://img.shields.io/github/release/carbonetes/diggity.svg)](https://github.com/carbonetes/diggity/releases/latest)
+[![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/carbonetes/diggity.svg)](https://github.com/carbonetes/diggity)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/carbonetes/diggity/blob/main/LICENSE)
+
 BOM Diggity’s primary purpose is to ensure the security and integrity of software programs. It incorporates secret analysis allowing the user to secure crucial information before deploying any parts of the application to the public.
 
 ## Features
@@ -123,7 +130,8 @@ Available `formats` include:
 - `cyclonedx-xml`: An XML report conforming to the [CycloneDX 1.4 specification](https://cyclonedx.org/specification/overview/).
 - `cyclonedx-json`: A JSON report conforming to the [CycloneDX 1.4 specification](https://cyclonedx.org/specification/overview/).
 - `spdx-tag-value`: A tag-value formatted report conforming to the [SPDX 2.2 specification](https://spdx.github.io/spdx-spec/).
-- `spdx-json`: A JSON report conforming to the [SPDX 2.2 JSON Schema](https://github.com/spdx/spdx-spec/blob/v2.2/schemas/spdx-schema.json).format.
+- `spdx-json`: A JSON report conforming to the [SPDX 2.2 JSON Schema](https://github.com/spdx/spdx-spec/blob/v2.2/schemas/spdx-schema.json) format.
+- `github-json`: A JSON report conforming to the [dependency snapshot](https://docs.github.com/en/rest/dependency-graph/dependency-submission?apiVersion=2022-11-28) format of Github.
 
 
 ## Configuration

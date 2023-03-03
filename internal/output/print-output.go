@@ -9,6 +9,7 @@ import (
 	log "github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/internal/model"
 	"github.com/carbonetes/diggity/internal/output/cyclonedx"
+	"github.com/carbonetes/diggity/internal/output/github"
 	"github.com/carbonetes/diggity/internal/output/save"
 	"github.com/carbonetes/diggity/internal/output/spdx"
 	"github.com/carbonetes/diggity/internal/output/tabular"
@@ -60,6 +61,8 @@ func selectOutputType(outputTypes string) {
 			spdx.PrintSpdxJSON()
 		case model.SPDXTagValue, "spdxtagvalue", "spdx", "spdxtv":
 			spdx.PrintSpdxTagValue()
+		case model.GithubJSON, "githubjson", "github":
+			github.PrintGithubJSON()
 		}
 	}
 }
