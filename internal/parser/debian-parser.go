@@ -213,5 +213,5 @@ func searchLicenseOnFileSystem(_package *model.Package, dpkgDocPath string) {
 
 // Parse PURL
 func parseDebianPackageURL(_package *model.Package, architecture string) {
-	_package.PURL = model.PURL(scheme + ":" + "deb" + "/" + _package.Name + "@" + _package.Version + "arch=" + architecture)
+	_package.PURL = model.PURL(scheme + ":" + "deb" + "/" + _package.Name + "@" + _package.Version + "?arch=" + architecture)
 }

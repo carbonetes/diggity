@@ -18,6 +18,7 @@ import (
 
 const (
 	goType   = "go"
+	golang   = "golang"
 	goModule = "go-module"
 )
 
@@ -144,7 +145,7 @@ func initGoModMetadata(_package *model.Package, modPkg interface{}) {
 
 // Parse PURL
 func parseGoPackageURL(_package *model.Package) {
-	_package.PURL = model.PURL(scheme + ":" + goType + "/" + _package.Name + "@" + _package.Version)
+	_package.PURL = model.PURL(scheme + ":" + golang + "/" + _package.Name + "@" + _package.Version)
 }
 
 // Cleanup excluded packages

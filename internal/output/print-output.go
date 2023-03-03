@@ -54,6 +54,8 @@ func selectOutputType(outputTypes string) {
 			printSpdxJSON()
 		case model.SPDXTagValue, "spdxtagvalue", "spdx", "spdxtv":
 			printSpdxTagValue()
+		case model.GithubJSON, "githubjson", "github":
+			printGithubJSON()
 		}
 	}
 }

@@ -114,7 +114,7 @@ func initRpmPackage(p *model.Package, location *model.Location, rpmPkg *rpmdb.Pa
 
 // Parse PURL
 func parseRpmPackageURL(_package *model.Package, architecture string) {
-	_package.PURL = model.PURL(scheme + ":" + rpmType + "/" + _package.Name + "@" + _package.Version + "arch=" + architecture)
+	_package.PURL = model.PURL(scheme + ":" + rpmType + "/" + _package.Name + "@" + _package.Version + "?arch=" + architecture)
 }
 
 // Initialize RPM metadata values from content

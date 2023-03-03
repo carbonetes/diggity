@@ -16,6 +16,8 @@ const (
 	SPDXJSON = "spdx-json"
 	// SPDXTagValue Output Type
 	SPDXTagValue = "spdx-tag-value"
+	// GithubJSON Output Type
+	GithubJSON = "github-json"
 )
 
 var (
@@ -27,10 +29,11 @@ var (
 		CycloneDXJSON:   CycloneDXJSON,
 		SPDXJSON:        SPDXJSON,
 		SPDXTagValue:    SPDXTagValue,
+		GithubJSON:      GithubJSON,
 	}
 
 	// OutputList - List of supported output types
-	OutputList = []string{JSON.ToOutput(), Table, CycloneDXXML, CycloneDXJSON, SPDXJSON, SPDXTagValue}
+	OutputList = []string{JSON.ToOutput(), Table, CycloneDXXML, CycloneDXJSON, SPDXJSON, SPDXTagValue, GithubJSON}
 
 	// OutputAliases - valid aliases of the output types
 	OutputAliases = map[string]string{
@@ -46,6 +49,9 @@ var (
 		"spdxtagvalue": "spdxtagvalue",
 		"spdx":         "spdx",
 		"spdxtv":       "spdxtv",
+		// Github JSON
+		"githubjson": "githubjson",
+		"github":     "github",
 	}
 )
 

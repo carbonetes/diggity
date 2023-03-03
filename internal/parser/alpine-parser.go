@@ -15,7 +15,10 @@ import (
 	"github.com/google/uuid"
 )
 
-const apkType = "apk"
+const (
+	apkType = "apk"
+	alpine  = "alpine"
+)
 
 // Used filepath for path variables
 var installedPackagesPath = filepath.Join("lib", "apk", "db", "installed")
@@ -259,7 +262,6 @@ func parseAlpineURL(_package *model.Package) {
 	if !ok {
 		origin = ""
 	}
-	// var buf bytes.Buffer
-	// encoder := json.NewEncoder()
-	_package.PURL = model.PURL(scheme + `:` + `alpine/` + _package.Name + `@` + _package.Version + `?arch=` + arch.(string) + `&` + `upstream=` + origin.(string) + `&distro=`)
+
+	_package.PURL = model.PURL(scheme + `:` + apkType + `/` + alpine + `/` + _package.Name + `@` + _package.Version + `?arch=` + arch.(string) + `&` + `upstream=` + origin.(string) + `&distro=` + alpine)
 }

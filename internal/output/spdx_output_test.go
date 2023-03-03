@@ -31,7 +31,7 @@ var (
 			"cpe:2.3:a:centos:lzo:2.08-14.el8:*:*:*:*:*:*:*",
 			"cpe:2.3:a:lzo:lzo:2.08-14.el8:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:rpm/lzo@2.08arch=x86_64"),
+		PURL: model.PURL("pkg:rpm/lzo@2.08?arch=x86_64"),
 		Metadata: metadata.RPMMetadata{
 			Release:      "14.el8",
 			Architecture: "x86_64",
@@ -97,7 +97,7 @@ var (
 		CPEs: []string{
 			"cpe:2.3:a:scanelf:scanelf:1.3.4-r0:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:alpine/scanelf@1.3.4-r0?arch=x86_64\u0026upstream=pax-utils\u0026distro="),
+		PURL: model.PURL("pkg:apk/alpine/scanelf@1.3.4-r0?arch=x86_64\u0026upstream=pax-utils\u0026distro=alpine"),
 		Metadata: parser.AlpineManifest{
 			"Architecture":         "x86_64",
 			"BuildTimestamp":       "1651005390",
@@ -221,7 +221,7 @@ func TestSpdxJSONPackages(t *testing.T) {
 				},
 				{
 					ReferenceCategory: "PACKAGE_MANAGER",
-					ReferenceLocator:  "pkg:rpm/lzo@2.08arch=x86_64",
+					ReferenceLocator:  "pkg:rpm/lzo@2.08?arch=x86_64",
 					ReferenceType:     "purl",
 				},
 			},
@@ -247,7 +247,7 @@ func TestSpdxJSONPackages(t *testing.T) {
 				},
 				{
 					ReferenceCategory: "PACKAGE_MANAGER",
-					ReferenceLocator:  "pkg:alpine/scanelf@1.3.4-r0?arch=x86_64\u0026upstream=pax-utils\u0026distro=",
+					ReferenceLocator:  "pkg:apk/alpine/scanelf@1.3.4-r0?arch=x86_64\u0026upstream=pax-utils\u0026distro=alpine",
 					ReferenceType:     "purl",
 				},
 			},

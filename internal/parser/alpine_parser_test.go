@@ -46,7 +46,7 @@ var (
 			"cpe:2.3:a:ca_certificates_bundle:ca_certificates-bundle:20220614-r0:*:*:*:*:*:*:*",
 			"cpe:2.3:a:ca_certificates_bundle:ca_certificates_bundle:20220614-r0:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:alpine/ca-certificates-bundle@20220614-r0?arch=x86_64\u0026upstream=ca-certificates\u0026distro="),
+		PURL: model.PURL("pkg:apk/alpine/ca-certificates-bundle@20220614-r0?arch=x86_64\u0026upstream=ca-certificates\u0026distro=alpine"),
 		Metadata: AlpineManifest{
 			"Architecture":         "x86_64",
 			"BuildTimestamp":       "1659254961",
@@ -83,7 +83,7 @@ var (
 		CPEs: []string{
 			"cpe:2.3:a:zlib:zlib:1.2.12-r3:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:alpine/zlib@1.2.12-r3?arch=x86_64\u0026upstream=zlib\u0026distro="),
+		PURL: model.PURL("pkg:apk/alpine/zlib@1.2.12-r3?arch=x86_64\u0026upstream=zlib\u0026distro=alpine"),
 		Metadata: AlpineManifest{
 			"Architecture":         "x86_64",
 			"BuildTimestamp":       "1660030129",
@@ -125,7 +125,7 @@ var (
 			"cpe:2.3:a:musl_utils:musl_utils:1.2.3-r0:*:*:*:*:*:*:*",
 			"cpe:2.3:a:musl_utils:musl-utils:1.2.3-r0:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:alpine/musl-utils@1.2.3-r0?arch=x86_64\u0026upstream=musl\u0026distro="),
+		PURL: model.PURL("pkg:apk/alpine/musl-utils@1.2.3-r0?arch=x86_64\u0026upstream=musl\u0026distro=alpine"),
 		Metadata: AlpineManifest{
 			"Architecture":         "x86_64",
 			"BuildTimestamp":       "1649396308",

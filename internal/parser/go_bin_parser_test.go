@@ -106,7 +106,7 @@ var (
 			"cpe:2.3:a:yawning:obfs4.git:v0.0.0-20220204003609-77af0cba934d:*:*:*:*:*:*:*",
 			"cpe:2.3:a:obfs4.git:obfs4.git:v0.0.0-20220204003609-77af0cba934d:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:go/gitlab.com/yawning/obfs4.git@v0.0.0-20220204003609-77af0cba934d"),
+		PURL: model.PURL("pkg:golang/gitlab.com/yawning/obfs4.git@v0.0.0-20220204003609-77af0cba934d"),
 		Metadata: metadata.GoBinMetadata{
 			Architecture:     "amd64",
 			Compiler:         "gc",
@@ -135,7 +135,7 @@ var (
 			"cpe:2.3:a:kr:pretty:v0.1.0:*:*:*:*:*:*:*",
 			"cpe:2.3:a:pretty:pretty:v0.1.0:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:go/github.com/kr/pretty@v0.1.0"),
+		PURL: model.PURL("pkg:golang/github.com/kr/pretty@v0.1.0"),
 		Metadata: metadata.GoBinMetadata{
 			Architecture:     "amd64",
 			Compiler:         "gc",
@@ -164,7 +164,7 @@ var (
 			"cpe:2.3:a:tomarrell:wrapcheck:v1.0.0:*:*:*:*:*:*:*",
 			"cpe:2.3:a:wrapcheck:wrapcheck:v1.0.0:*:*:*:*:*:*:*",
 		},
-		PURL: model.PURL("pkg:go/github.com/tomarrell/wrapcheck@v1.0.0"),
+		PURL: model.PURL("pkg:golang/github.com/tomarrell/wrapcheck@v1.0.0"),
 		Metadata: metadata.GoBinMetadata{
 			Architecture:     "amd64",
 			Compiler:         "gc",
