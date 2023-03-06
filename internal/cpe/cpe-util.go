@@ -21,6 +21,7 @@ const (
 
 var regExp = regexp.MustCompile(cpeRegexString)
 
+// RemoveDuplicateCPES removes duplicate CPEs
 func RemoveDuplicateCPES(cpes []string) []string {
 	processed := make(map[string]bool)
 	var list []string

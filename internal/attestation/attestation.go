@@ -19,11 +19,11 @@ var (
 	cosign     = "cosign"
 	sbomPrefix = "diggity-sbom-"
 
-	// Arguments
+	// Arguments sbom args
 	Arguments model.Arguments
 )
 
-// Run SBOM Attestation
+// Attest runs SBOM Attestation
 func Attest(image string, attestationOptions *model.AttestationOptions) {
 	var predicate string
 

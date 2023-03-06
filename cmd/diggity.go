@@ -4,6 +4,7 @@ import (
 	"os"
 )
 
+// Execute Diggity
 func Execute() {
 	err := diggity.Execute()
 	if err != nil {

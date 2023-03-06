@@ -5,7 +5,8 @@ import (
 	"testing"
 
 	"github.com/carbonetes/diggity/internal/model"
-	"github.com/carbonetes/diggity/internal/parser"
+	"github.com/carbonetes/diggity/internal/output/util"
+	"github.com/carbonetes/diggity/internal/parser/bom"
 )
 
 var (
@@ -48,22 +49,22 @@ var (
 )
 
 func TestFinalizeResults(t *testing.T) {
-	parser.Packages = []*model.Package{&printPackage1, &printPackage2, &printPackage3, &printPackage4, &printDuplicate}
+	bom.Packages = []*model.Package{&printPackage1, &printPackage2, &printPackage3, &printPackage4, &printDuplicate}
 	expected := []*model.Package{&printPackage1, &printPackage2, &printPackage3, &printPackage4}
 
 	finalizeResults()
 
-	if len(parser.Packages) != len(expected) {
-		t.Errorf("Test Failed: Expected Packages of length %+v, Received: %+v.", len(expected), len(parser.Packages))
+	if len(bom.Packages) != len(expected) {
+		t.Errorf("Test Failed: Expected Packages of length %+v, Received: %+v.", len(expected), len(bom.Packages))
 	}
 
-	sortPackages()
+	util.SortPackages()
 
 	sort.Slice(expected, func(i, j int) bool {
 		return expected[i].Name < expected[j].Name
 	})
 
-	for i, p := range parser.Packages {
+	for i, p := range bom.Packages {
 		if p.Name != expected[i].Name {
 			t.Errorf("Test Failed: Expected output of %v, received: %v", expected[i].Name, p.Name)
 		}
@@ -71,12 +72,12 @@ func TestFinalizeResults(t *testing.T) {
 }
 
 func TestSortResults(t *testing.T) {
-	parser.Packages = []*model.Package{&printPackage1, &printPackage2, &printPackage3, &printPackage4, &printNewVersion}
+	bom.Packages = []*model.Package{&printPackage1, &printPackage2, &printPackage3, &printPackage4, &printNewVersion}
 	expected := []*model.Package{&printPackage2, &printPackage1, &printPackage3, &printPackage4, &printNewVersion}
 
 	sortResults()
 
-	for i, p := range parser.Packages {
+	for i, p := range bom.Packages {
 		if p.Name != expected[i].Name {
 			t.Errorf("Test Failed: Expected output of %v, received: %v", expected[i].Name, p.Name)
 		}

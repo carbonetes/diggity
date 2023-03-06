@@ -8,7 +8,14 @@ import (
 
 	log "github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/internal/model"
-	"github.com/carbonetes/diggity/internal/parser"
+	"github.com/carbonetes/diggity/internal/output/cyclonedx"
+	"github.com/carbonetes/diggity/internal/output/github"
+	"github.com/carbonetes/diggity/internal/output/save"
+	"github.com/carbonetes/diggity/internal/output/spdx"
+	"github.com/carbonetes/diggity/internal/output/tabular"
+	"github.com/carbonetes/diggity/internal/parser/bom"
+	"github.com/carbonetes/diggity/internal/parser/distro"
+	"github.com/carbonetes/diggity/internal/parser/docker"
 	"github.com/carbonetes/diggity/internal/secret"
 
 	"golang.org/x/exp/maps"
@@ -22,13 +29,13 @@ var Result result = make(map[string]*model.Package, 0)
 // PrintResults prints the result based on the arguments
 func PrintResults() {
 	finalizeResults()
-	outputTypes := strings.ToLower(parser.Arguments.Output.ToOutput())
+	outputTypes := strings.ToLower(bom.Arguments.Output.ToOutput())
 
 	// Table Output(Default)
 	selectOutputType(outputTypes)
 
-	if len(parser.Errors) > 0 {
-		for _, err := range parser.Errors {
+	if len(bom.Errors) > 0 {
+		for _, err := range bom.Errors {
 			log.GetLogger().Printf("[warning]: %+v\n", *err)
 		}
 	}
@@ -39,30 +46,30 @@ func selectOutputType(outputTypes string) {
 	for _, output := range strings.Split(outputTypes, ",") {
 		switch output {
 		case model.Table:
-			printTable()
+			tabular.PrintTable()
 		case model.JSON.ToOutput():
-			if len(*parser.Arguments.OutputFile) > 0 {
-				saveResultToFile(GetResults())
+			if len(*bom.Arguments.OutputFile) > 0 {
+				save.ResultToFile(GetResults())
 			} else {
 				fmt.Printf("%+v\n", GetResults())
 			}
 		case model.CycloneDXXML, "cyclonedxxml", "cyclonedx", "cyclone":
-			printCycloneDXXML()
+			cyclonedx.PrintCycloneDXXML()
 		case model.CycloneDXJSON, "cyclonedxjson":
-			printCycloneDXJSON()
+			cyclonedx.PrintCycloneDXJSON()
 		case model.SPDXJSON, "spdxjson":
-			printSpdxJSON()
+			spdx.PrintSpdxJSON()
 		case model.SPDXTagValue, "spdxtagvalue", "spdx", "spdxtv":
-			printSpdxTagValue()
+			spdx.PrintSpdxTagValue()
 		case model.GithubJSON, "githubjson", "github":
-			printGithubJSON()
+			github.PrintGithubJSON()
 		}
 	}
 }
 
 // Remove Duplicates and Sort Results
 func finalizeResults() {
-	for _, _package := range parser.Packages {
+	for _, _package := range bom.Packages {
 		if _, exists := Result[_package.Name+":"+_package.Version+":"+_package.Type]; !exists {
 			Result[_package.Name+":"+_package.Version+":"+_package.Type] = _package
 		} else {
@@ -86,12 +93,12 @@ func finalizeResults() {
 
 // Sort Results
 func sortResults() {
-	parser.Packages = maps.Values(Result)
-	sort.Slice(parser.Packages, func(i, j int) bool {
-		if parser.Packages[i].Name == parser.Packages[j].Name {
-			return parser.Packages[i].Version < parser.Packages[j].Version
+	bom.Packages = maps.Values(Result)
+	sort.Slice(bom.Packages, func(i, j int) bool {
+		if bom.Packages[i].Name == bom.Packages[j].Name {
+			return bom.Packages[i].Version < bom.Packages[j].Version
 		}
-		return parser.Packages[i].Name < parser.Packages[j].Name
+		return bom.Packages[i].Name < bom.Packages[j].Name
 	})
 }
 
@@ -104,15 +111,15 @@ func GetResults() string {
 	})
 
 	output := Output{
-		Distro:   parser.Distro(),
-		Packages: parser.Packages,
+		Distro:   distro.Distro(),
+		Packages: bom.Packages,
 	}
 
-	if !*parser.Arguments.DisableSecretSearch {
+	if !*bom.Arguments.DisableSecretSearch {
 		output.Secret = secret.SecretResults
 	}
 
-	output.ImageInfo = parser.ImageInfo
+	output.ImageInfo = docker.ImageInfo
 
 	result, _ := json.MarshalIndent(output, "", " ")
 	return string(result)

@@ -10,16 +10,12 @@ import (
 	"github.com/carbonetes/diggity/internal/model"
 	"github.com/carbonetes/diggity/internal/output"
 	"github.com/carbonetes/diggity/internal/parser"
-	"github.com/carbonetes/diggity/internal/secret"
+	"github.com/carbonetes/diggity/internal/parser/bom"
 	"github.com/carbonetes/diggity/internal/ui"
 
 	"os"
 
 	"github.com/schollz/progressbar/v3"
-)
-
-type (
-	parsers []func()
 )
 
 const (
@@ -32,29 +28,6 @@ const (
 )
 
 var (
-	parserFunctions = parsers{
-		parser.FindAlpinePackagesFromContent,
-		parser.FindDebianPackagesFromContent,
-		parser.FindJavaPackagesFromContent,
-		parser.FindNpmPackagesFromContent,
-		parser.FindComposerPackagesFromContent,
-		parser.FindPythonPackagesFromContent,
-		parser.FindGemPackagesFromContent,
-		parser.FindRpmPackagesFromContent,
-		parser.FindDartPackagesFromContent,
-		parser.FindNugetPackagesFromContent,
-		parser.FindGoModPackagesFromContent,
-		parser.FindGoBinPackagesFromContent,
-		parser.FindHackagePackagesFromContent,
-		parser.FindCargoPackagesFromContent,
-		parser.FindConanPackagesFromContent,
-		parser.FindPortagePackagesFromContent,
-		parser.FindHexPackagesFromContent,
-		parser.FindSwiftPackagesFromContent,
-		parser.ParseDistro,
-		parser.ParseDockerProperties,
-		secret.Search,
-	}
 	log = logger.GetLogger()
 )
 
@@ -91,12 +64,12 @@ func Start(arguments *model.Arguments) {
 
 // Run parsers
 func startParsers(arguments *model.Arguments) {
-	parser.InitParsers(*arguments)
-	parser.WG.Add(len(parserFunctions))
-	for _, parserFunc := range parserFunctions {
-		go parserFunc()
+	bom.InitParsers(*arguments)
+	bom.WG.Add(len(parser.FindFunctions))
+	for _, parser := range parser.FindFunctions {
+		go parser()
 	}
-	parser.WG.Wait()
+	bom.WG.Wait()
 	cleanUp()
 }
 
@@ -105,7 +78,7 @@ func cleanUp() {
 	err := os.RemoveAll(docker.Dir())
 	if err != nil {
 		err = errors.New("clean-up: " + err.Error())
-		parser.Errors = append(parser.Errors, &err)
+		bom.Errors = append(bom.Errors, &err)
 	}
 }
 

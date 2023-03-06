@@ -10,7 +10,8 @@ import (
 	"github.com/carbonetes/diggity/internal/attestation"
 	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/internal/model"
-	"github.com/carbonetes/diggity/internal/parser"
+	"github.com/carbonetes/diggity/internal/parser/bom"
+	"github.com/carbonetes/diggity/internal/parser/util"
 	versionPackage "github.com/carbonetes/diggity/internal/version"
 
 	sbom "github.com/carbonetes/diggity/internal"
@@ -203,7 +204,7 @@ func init() {
 	diggity.Flags().StringVarP(Arguments.Tar, "tar", "t", "", "Read a tarball from a path on disk for archives created from docker save (e.g. 'diggity path/to/image.tar)'")
 	diggity.Flags().Int64VarP(&Arguments.SecretMaxFileSize, "secret-max-file-size", "", 10485760, "Maximum file size that the secret will search -- each file")
 	diggity.Flags().StringArrayVarP(Arguments.ExcludedFilenames, "secret-exclude-filenames", "", []string{}, "Exclude secret searching for each specified filenames")
-	diggity.Flags().StringArrayVarP(Arguments.EnabledParsers, "enabled-parsers", "", []string{}, fmt.Sprintf("Specify enabled parsers (%+v) (default all)", parser.ParserNames))
+	diggity.Flags().StringArrayVarP(Arguments.EnabledParsers, "enabled-parsers", "", []string{}, fmt.Sprintf("Specify enabled parsers (%+v) (default all)", util.ParserNames))
 	diggity.Flags().BoolVarP(&versionArg, "version", "v", false, "Display diggity version")
 	diggity.Flags().StringVarP(Arguments.RegistryURI, "registry-uri", "", "index.docker.io/", "Registry uri endpoint")
 	diggity.Flags().StringVarP(Arguments.RegistryUsername, "registry-username", "", "", "Username credential for private registry access")
@@ -247,7 +248,7 @@ func intializeConfiguration() {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		err = errors.New("init-cmd: " + err.Error())
-		parser.Errors = append(parser.Errors, &err)
+		bom.Errors = append(bom.Errors, &err)
 	}
 
 	ConfigDirectory = home + string(os.PathSeparator) + ".diggity.yaml"
@@ -304,13 +305,13 @@ func createConfiguration() {
 
 		if err != nil {
 			err = errors.New("init-cmd: " + err.Error())
-			parser.Errors = append(parser.Errors, &err)
+			bom.Errors = append(bom.Errors, &err)
 		}
 
 		err = os.WriteFile(ConfigDirectory, yamlDefaultConfig, 0644)
 		if err != nil {
 			err = errors.New("init-cmd: " + err.Error())
-			parser.Errors = append(parser.Errors, &err)
+			bom.Errors = append(bom.Errors, &err)
 		}
 	} else {
 		// Read existing configuration instead
