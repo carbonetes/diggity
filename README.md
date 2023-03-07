@@ -23,18 +23,23 @@ BOM Diggity’s primary purpose is to ensure the security and integrity of softw
 ### Supported Ecosystems
 
 - Alpine (apk)
+- Conan (conan.lock, conanfile.txt)
 - Dart (pubs)
 - Debian (dpkg)
 - Dotnet (deps.json)
 - Go (go.mod, Go binaries)
+- Hackage (cabal, stack)
+- Hex (rebar3, mix)
 - Java (jar, ear, war, par, sar)
 - JavaScript (npm, yarn)
 - Jenkins Plugins (jpi, hpi)
+- Objective-C (cocoapods)
 - PHP (composer)
 - Python (wheel, egg, poetry, requirements.txt)
 - Red Hat (rpm)
 - Ruby (gem)
 - Rust (cargo.lock)
+- Swift (cocoapods)
 
 # Installation 📥
 
