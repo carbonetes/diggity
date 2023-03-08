@@ -69,6 +69,8 @@ func TestNewCPE23(t *testing.T) {
 			"cpe:2.3:a:libc-utils:libc_utils:0.7.2-r3:*:*:*:*:*:*:*",
 			"cpe:2.3:a:libc_utils:libc_utils:0.7.2-r3:*:*:*:*:*:*:*",
 			"cpe:2.3:a:libc_utils:libc-utils:0.7.2-r3:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libc:libc-utils:0.7.2-r3:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libc:libc_utils:0.7.2-r3:*:*:*:*:*:*:*",
 		}},
 	}
 
@@ -273,6 +275,8 @@ func TestExpandCPEsBySeparators(t *testing.T) {
 		}, []string{
 			"cpe:2.3:a:libcrypto1:libcrypto1.1:1.1.1q-r0:*:*:*:*:*:*:*",
 			"cpe:2.3:a:1:libcrypto1.1:1.1.1q-r0:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libcrypto1.1:libcrypto1.1:1.1.1q-r0:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libcrypto1.1:libcrypto1.1:1.1.1q-r0:*:*:*:*:*:*:*",
 		},
 		},
 		{CPE{
@@ -294,6 +298,14 @@ func TestExpandCPEsBySeparators(t *testing.T) {
 			"cpe:2.3:a:ssl-client:ssl-client:1.35.0-r17:*:*:*:*:*:*:*",
 			"cpe:2.3:a:ssl-client:ssl-client:1.35.0-r17:*:*:*:*:*:*:*",
 			"cpe:2.3:a:ssl-client:ssl_client:1.35.0-r17:*:*:*:*:*:*:*",
+			"cpe:2.3:a:ssl_client:ssl_client:1.35.0-r17:*:*:*:*:*:*:*",
+			"cpe:2.3:a:ssl_client:ssl_client:1.35.0-r17:*:*:*:*:*:*:*",
+			"cpe:2.3:a:ssl_client:ssl-client:1.35.0-r17:*:*:*:*:*:*:*",
+			"cpe:2.3:a:ssl-client:ssl-client:1.35.0-r17:*:*:*:*:*:*:*",
+			"cpe:2.3:a:ssl-client:ssl-client:1.35.0-r17:*:*:*:*:*:*:*",
+			"cpe:2.3:a:ssl-client:ssl_client:1.35.0-r17:*:*:*:*:*:*:*",
+			"cpe:2.3:a:ssl:ssl_client:1.35.0-r17:*:*:*:*:*:*:*",
+			"cpe:2.3:a:ssl:ssl-client:1.35.0-r17:*:*:*:*:*:*:*",
 		},
 		},
 		{CPE{
@@ -308,9 +320,11 @@ func TestExpandCPEsBySeparators(t *testing.T) {
 			TargetHW:  "*",
 			Other:     "*",
 			Language:  "*",
-		}, []string{},
+		}, []string{
+			"cpe:2.3:a:zlib:zlib:1.2.12-r3:*:*:*:*:*:*:*",
+			"cpe:2.3:a:zlib:zlib:1.2.12-r3:*:*:*:*:*:*:*",
 		},
-		{CPE{}, []string{}},
+		},
 	}
 
 	for _, test := range tests {

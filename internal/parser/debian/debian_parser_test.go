@@ -53,6 +53,17 @@ var (
 		Licenses:    []string{},
 		CPEs: []string{
 			"cpe:2.3:a:libpcre2-8-0:libpcre2-8-0:10.36-2:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libpcre2-8-0:libpcre2_8-0:10.36-2:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libpcre2-8-0:libpcre2_8_0:10.36-2:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libpcre2_8-0:libpcre2_8_0:10.36-2:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libpcre2_8-0:libpcre2-8_0:10.36-2:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libpcre2_8-0:libpcre2-8-0:10.36-2:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libpcre2_8_0:libpcre2-8-0:10.36-2:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libpcre2_8_0:libpcre2_8-0:10.36-2:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libpcre2_8_0:libpcre2_8_0:10.36-2:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libpcre2:libpcre2_8_0:10.36-2:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libpcre2:libpcre2-8_0:10.36-2:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libpcre2:libpcre2-8-0:10.36-2:*:*:*:*:*:*:*",
 		},
 		PURL: model.PURL("pkg:deb/libpcre2-8-0@10.36-2?arch=s390x"),
 		Metadata: Metadata{
@@ -129,6 +140,11 @@ var (
 		},
 		CPEs: []string{
 			"cpe:2.3:a:libapt-pkg6.0:libapt-pkg6.0:2.2.4:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libapt-pkg6.0:libapt_pkg6.0:2.2.4:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libapt_pkg6.0:libapt_pkg6.0:2.2.4:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libapt_pkg6.0:libapt-pkg6.0:2.2.4:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libapt:libapt-pkg6.0:2.2.4:*:*:*:*:*:*:*",
+			"cpe:2.3:a:libapt:libapt_pkg6.0:2.2.4:*:*:*:*:*:*:*",
 		},
 		PURL: model.PURL("pkg:deb/libapt-pkg6.0@2.2.4?arch=s390x"),
 		Metadata: Metadata{
