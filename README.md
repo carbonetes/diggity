@@ -62,7 +62,7 @@ BOM Diggity’s primary purpose is to ensure the security and integrity of softw
     - linux_ppc64le.tar.gz
 - Windows
   - windows_amd64.zip
-### Recommended
+## Recommended
 ```bash
 curl -sSfL https://raw.githubusercontent.com/carbonetes/diggity/main/install.sh | sh -s -- -d /usr/local/bin
 ```
@@ -71,6 +71,12 @@ you can specify a release version and destination directory for the installation
 ```
 curl -sSfL https://raw.githubusercontent.com/carbonetes/diggity/main/install.sh | sh -s -- -d <DESTINATION_DIR> -v <RELEASE_VERSION>
 ```
+### Homebrew
+```sh
+brew tap carbonetes/diggity
+brew install diggity
+```
+
 ## Getting Started 🚀 
 
 ### SBOM
