@@ -66,7 +66,6 @@ func toCPE(vendor string, product string, version string) *CPE {
 
 // Separators = "-", "_", " ", "."
 func expandCPEsBySeparators(baseCPE CPE) []string {
-
 	cpes := make([]string, 0)
 
 	// Vendor
@@ -83,7 +82,8 @@ func expandCPEsBySeparators(baseCPE CPE) []string {
 
 		// Return to original value
 		baseCPE = tmp
-	} else if strings.Contains(baseCPE.Vendor, "_") || strings.Contains(baseCPE.Product, "_") {
+	}
+	if strings.Contains(baseCPE.Vendor, "_") || strings.Contains(baseCPE.Product, "_") {
 		tmp := baseCPE
 		for _, vendor := range expand(baseCPE, "Vendor", '_', '-') {
 			baseCPE.Vendor = vendor
@@ -96,7 +96,8 @@ func expandCPEsBySeparators(baseCPE CPE) []string {
 
 		// Return to original value
 		baseCPE = tmp
-	} else if strings.Contains(baseCPE.Vendor, ".") {
+	}
+	if strings.Contains(baseCPE.Vendor, ".") {
 		tmp := baseCPE
 		for _, vendor := range strings.Split(baseCPE.Vendor, ".") {
 			baseCPE.Vendor = vendor
@@ -106,6 +107,36 @@ func expandCPEsBySeparators(baseCPE CPE) []string {
 		// Return to original value
 		baseCPE = tmp
 	}
+
+	// Change Vendor to Product
+	tmp := baseCPE
+	baseCPE.Vendor = baseCPE.Product
+
+	for _, vendor := range expand(baseCPE, "Vendor", '_', '-') {
+		baseCPE.Vendor = vendor
+		cpes = append(cpes, cpeToString(baseCPE))
+		for _, product := range expand(baseCPE, "Product", '_', '-') {
+			baseCPE.Product = product
+			cpes = append(cpes, cpeToString(baseCPE))
+		}
+	}
+	if strings.Contains(baseCPE.Vendor, "-") {
+		baseCPE.Vendor = strings.Split(baseCPE.Vendor, "-")[0]
+		for _, product := range expand(baseCPE, "Product", '_', '-') {
+			baseCPE.Product = product
+			cpes = append(cpes, cpeToString(baseCPE))
+		}
+	}
+	if strings.Contains(baseCPE.Vendor, "_") {
+		baseCPE.Vendor = strings.Split(baseCPE.Vendor, "_")[0]
+		for _, product := range expand(baseCPE, "Product", '_', '-') {
+			baseCPE.Product = product
+			cpes = append(cpes, cpeToString(baseCPE))
+		}
+	}
+
+	// Return to original value
+	baseCPE = tmp
 
 	return cpes
 }

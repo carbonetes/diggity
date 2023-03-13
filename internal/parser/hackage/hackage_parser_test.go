@@ -74,6 +74,11 @@ var (
 		Licenses:    []string{},
 		CPEs: []string{
 			"cpe:2.3:a:rio-prettyprint:rio-prettyprint:0.1.4.0:*:*:*:*:*:*:*",
+			"cpe:2.3:a:rio-prettyprint:rio_prettyprint:0.1.4.0:*:*:*:*:*:*:*",
+			"cpe:2.3:a:rio_prettyprint:rio_prettyprint:0.1.4.0:*:*:*:*:*:*:*",
+			"cpe:2.3:a:rio_prettyprint:rio-prettyprint:0.1.4.0:*:*:*:*:*:*:*",
+			"cpe:2.3:a:rio:rio-prettyprint:0.1.4.0:*:*:*:*:*:*:*",
+			"cpe:2.3:a:rio:rio_prettyprint:0.1.4.0:*:*:*:*:*:*:*",
 		},
 		PURL: model.PURL("pkg:hackage/rio-prettyprint@0.1.4.0"),
 		Metadata: metadata.HackageMetadata{
