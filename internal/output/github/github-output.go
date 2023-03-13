@@ -36,7 +36,7 @@ func PrintGithubJSON() {
 	if len(*bom.Arguments.OutputFile) > 0 {
 		save.ResultToFile(string(githubJSON))
 	} else {
-		fmt.Printf("%+v", string(githubJSON))
+		fmt.Printf("%+v\n", string(githubJSON))
 	}
 }
 
