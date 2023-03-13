@@ -95,10 +95,10 @@ diggity <image>
 Diggity can generate an SBOM from a variety of sources:
 
 ```
-# catalog a container image archive (from the result of `docker image save ...`) using -t (or --tar) option:
+# parse a container image archive (from the result of `docker image save ...`) using -t (or --tar) option:
 diggity -t path/to/image.tar
 
-# catalog a directory using -d (or --dir) option:
+# parse a directory using -d (or --dir) option:
 diggity -d path/to/dir
 
 ```
@@ -154,7 +154,7 @@ Configuration options (example values are the default):
 
 ```yaml
 secret-config:
-  # enables/disables cataloging of secrets
+  # enables/disables parsing of secrets
   disabled: false
   #secret content regex are searched within files that match the provided regular expression
   secret-regex: API_KEY|SECRET_KEY|DOCKER_AUTH
