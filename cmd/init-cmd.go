@@ -386,21 +386,12 @@ func setAttestArgs() {
 	attestationConfig := DefaultConfig.AttestationConfig
 	if !attest.Flags().Lookup("key").Changed {
 		*attestationOptions.Key = attestationConfig.Key
-		if strings.TrimSpace(*attestationOptions.Key) == "" {
-			log.Printf("[warning]: No cosign key specified.")
-		}
 	}
 	if !attest.Flags().Lookup("pub").Changed && !*Arguments.DisableFileListing {
 		*attestationOptions.Pub = attestationConfig.Pub
-		if strings.TrimSpace(*attestationOptions.Pub) == "" {
-			log.Printf("[warning]: No cosign pub specified.")
-		}
 	}
 	if !attest.Flags().Lookup("password").Changed {
 		*attestationOptions.Password = attestationConfig.Password
-		if strings.TrimSpace(*attestationOptions.Password) == "" {
-			log.Printf("[warning]: No cosign password specified.")
-		}
 	}
 	if attest.Flags().Lookup("output").Changed {
 		ValidateOutputArg(*attestationOptions.OutputType)
