@@ -53,15 +53,15 @@ func selectOutputType(outputTypes string) {
 			} else {
 				fmt.Printf("%+v\n", GetResults())
 			}
-		case model.CycloneDXXML, "cyclonedxxml", "cyclonedx", "cyclone":
+		case model.CycloneDXXML:
 			cyclonedx.PrintCycloneDXXML()
-		case model.CycloneDXJSON, "cyclonedxjson":
+		case model.CycloneDXJSON:
 			cyclonedx.PrintCycloneDXJSON()
-		case model.SPDXJSON, "spdxjson":
+		case model.SPDXJSON:
 			spdx.PrintSpdxJSON()
-		case model.SPDXTagValue, "spdxtagvalue", "spdx", "spdxtv":
+		case model.SPDXTagValue:
 			spdx.PrintSpdxTagValue()
-		case model.GithubJSON, "githubjson", "github":
+		case model.GithubJSON:
 			github.PrintGithubJSON()
 		}
 	}

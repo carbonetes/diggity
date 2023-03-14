@@ -426,11 +426,8 @@ func ValidateOutputArg(outputType string) {
 	for _, output := range strings.Split(outputType, ",") {
 		// Validate from Default Output Types
 		if _, ok := model.OutputTypes[strings.ToLower(output)]; !ok {
-			// Validate from Output Aliases
-			if _, ok := model.OutputAliases[strings.ToLower(output)]; !ok {
-				log.Printf("[warning]: Invalid output type: %+v \nSupported output types: %+v", output, model.OutputList)
-				os.Exit(0)
-			}
+			log.Printf("[warning]: Invalid output type: %+v \nSupported output types: %+v", output, model.OutputList)
+			os.Exit(0)
 		}
 	}
 }
