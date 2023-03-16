@@ -41,7 +41,7 @@ var (
 	versionRegEx    = regexp.MustCompile(`^\W+version(?:\W+"|:\W+)([\w-_.]+)"?`)
 )
 
-// FindNpmPackagesFromContent Find DPKG packages in the file contents
+// FindNpmPackagesFromContent Find NPM packages in the file contents
 func FindNpmPackagesFromContent() {
 	if util.ParserEnabled(npm) {
 		for _, content := range file.Contents {

@@ -18,4 +18,5 @@ type Arguments struct {
 	Dir                 *string
 	Tar                 *string
 	ExcludedFilenames   *[]string
+	SecretExtensions    *[]string
 }
