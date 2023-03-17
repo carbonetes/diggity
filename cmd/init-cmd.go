@@ -46,6 +46,7 @@ var (
 		Quiet:               new(bool),
 		OutputFile:          new(string),
 		ExcludedFilenames:   &[]string{},
+		SecretExtensions:    &[]string{},
 		EnabledParsers:      &[]string{},
 		RegistryURI:         new(string),
 		RegistryUsername:    new(string),
@@ -204,6 +205,7 @@ func init() {
 	diggity.Flags().StringVarP(Arguments.Tar, "tar", "t", "", "Read a tarball from a path on disk for archives created from docker save (e.g. 'diggity path/to/image.tar)'")
 	diggity.Flags().Int64VarP(&Arguments.SecretMaxFileSize, "secret-max-file-size", "", 10485760, "Maximum file size that the secret will search -- each file")
 	diggity.Flags().StringArrayVarP(Arguments.ExcludedFilenames, "secret-exclude-filenames", "", []string{}, "Exclude secret searching for each specified filenames")
+	diggity.Flags().StringArrayVarP(Arguments.SecretExtensions, "secret-extensions", "", []string{}, "File extensions to consider for secret search (default no extension)")
 	diggity.Flags().StringArrayVarP(Arguments.EnabledParsers, "enabled-parsers", "", []string{}, fmt.Sprintf("Specify enabled parsers (%+v) (default all)", util.ParserNames))
 	diggity.Flags().BoolVarP(&versionArg, "version", "v", false, "Display diggity version")
 	diggity.Flags().StringVarP(Arguments.RegistryURI, "registry-uri", "", "index.docker.io/", "Registry uri endpoint")
@@ -280,6 +282,7 @@ func createConfiguration() {
 			SecretRegex: "API_KEY|SECRET_KEY|DOCKER_AUTH",
 			Excludes:    &[]string{},
 			MaxFileSize: 10485760,
+			Extensions:  &model.DefaultSecretExtensions,
 		}
 		attestationConfig := model.AttestationConfig{
 			Key:      "cosign.key",
@@ -367,6 +370,9 @@ func setPrioritizedArg() {
 	if !diggity.Flags().Lookup("secret-exclude-filenames").Changed {
 		Arguments.ExcludedFilenames = DefaultConfig.SecretConfig.Excludes
 	}
+	if !diggity.Flags().Lookup("secret-extensions").Changed {
+		Arguments.SecretExtensions = DefaultConfig.SecretConfig.Extensions
+	}
 	if !diggity.Flags().Lookup("registry-uri").Changed {
 		Arguments.RegistryURI = &DefaultConfig.Registry.URI
 	}
@@ -419,6 +425,10 @@ func setArrayArgs() {
 	// Set excluded filenames from flags
 	excludedFilenames := SplitArgs(*Arguments.ExcludedFilenames)
 	Arguments.ExcludedFilenames = &excludedFilenames
+
+	// Set secret extensions from flags
+	secretExtensions := SplitArgs(*Arguments.SecretExtensions)
+	Arguments.SecretExtensions = &secretExtensions
 }
 
 // ValidateOutputArg checks if output types specified are valid

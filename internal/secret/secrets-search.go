@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -25,11 +26,16 @@ var (
 
 // Search search secrets in all file contents that does not exceed the max-file-size argument
 func Search() {
-
 	if *bom.Arguments.DisableSecretSearch {
 		secrets = nil
 	} else {
+		extensions := initSecretExtensions()
 		for _, content := range file.Contents {
+
+			// validate filename if accepted for secret search
+			if !validateFilename(filepath.Base(content.Path), extensions) {
+				continue
+			}
 
 			file, _ := os.Open(content.Path)
 			if file == nil {
@@ -53,7 +59,7 @@ func Search() {
 				continue
 			}
 
-			if (stat.Size() >= bom.Arguments.SecretMaxFileSize && !util.IsText(buf)) || strings.HasSuffix(stat.Name(), ".tar") {
+			if stat.Size() >= bom.Arguments.SecretMaxFileSize && !util.IsText(buf) {
 				file.Close()
 				continue
 			}
@@ -103,7 +109,6 @@ func Search() {
 		}
 		SecretResults.Secrets = secrets
 	}
-
 	defer bom.WG.Done()
 }
 
@@ -118,4 +123,39 @@ func isExcluded(filename string) bool {
 		}
 	}
 	return false
+}
+
+// Check filename before proceeding
+func validateFilename(filename string, extensions map[string]string) bool {
+	// skip zip files
+	if strings.HasSuffix(filename, ".tar") || strings.HasSuffix(filename, ".gz") {
+		return false
+	}
+
+	// check file extension
+	ext := filepath.Ext(filename)
+	if strings.Contains(ext, ".") {
+		if _, ok := extensions[ext]; !ok {
+			return false
+		}
+	}
+
+	return true
+}
+
+// Initialize secret extensions map reference
+func initSecretExtensions() map[string]string {
+	exts := make(map[string]string)
+
+	if bom.Arguments.SecretExtensions == nil {
+		return exts
+	}
+	if len(*bom.Arguments.SecretExtensions) > 0 {
+
+		for _, ext := range *bom.Arguments.SecretExtensions {
+			exts["."+ext] = "." + ext
+		}
+	}
+
+	return exts
 }

@@ -156,11 +156,14 @@ Configuration options (example values are the default):
 secret-config:
   # enables/disables parsing of secrets
   disabled: false
-  #secret content regex are searched within files that match the provided regular expression
+  # secret content regex are searched within files that match the provided regular expression
   secret-regex: API_KEY|SECRET_KEY|DOCKER_AUTH
-  #excludes/includes secret searching for each specified filename
+  # excludes/includes secret searching for each specified filename
   excludes-filenames: []
+  # exclude files exceeding the specified size
   max-file-size: 10485760
+  # explicitly define file extensions to consider for secret search. 
+  extensions: []  # default extensions are added upon config file generation.
 # specify enabled parsers ([apk debian java npm composer python gem rpm dart nuget go]) (default all)
 enabled-parsers: []
 # disables file listing from package metadata
