@@ -130,7 +130,8 @@ func initPortageMetadata(p *model.Package, loc string) error {
 func portageNameVersion(pkg string) (name string, version string) {
 	// parse version
 	r := regexp.MustCompile(`[0-9].*`)
-	version = r.FindString(pkg)
+	pkgBase := filepath.Base(pkg)
+	version = r.FindString(pkgBase)
 
 	// parse name
 	namePath := strings.Split(pkg, portageDBPath)[1]
@@ -147,7 +148,8 @@ func getPortageLicenses(p *model.Package, loc string) error {
 	// Find and parse LICENSE file
 	file, err := os.Open(licensePath)
 	if err != nil {
-		if strings.Contains(err.Error(), "The system cannot find the file specified") {
+		if strings.Contains(err.Error(), "The system cannot find the file specified") ||
+			strings.Contains(err.Error(), "no such file or directory") {
 			p.Licenses = licenses
 			return nil
 		}
