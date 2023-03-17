@@ -34,25 +34,6 @@ var (
 
 	// OutputList - List of supported output types
 	OutputList = []string{JSON.ToOutput(), Table, CycloneDXXML, CycloneDXJSON, SPDXJSON, SPDXTagValue, GithubJSON}
-
-	// OutputAliases - valid aliases of the output types
-	OutputAliases = map[string]string{
-		// CycloneDX-XML
-		"cyclonedxxml": "cyclonedxxml",
-		"cyclonedx":    "cyclonedx",
-		"cyclone":      "cyclone",
-		// CycloneDX-JSON
-		"cyclonedxjson": "cyclonedxjson",
-		// SPDX-JSON
-		"spdxjson": "spdxjson",
-		// SPDX-Tag-Value
-		"spdxtagvalue": "spdxtagvalue",
-		"spdx":         "spdx",
-		"spdxtv":       "spdxtv",
-		// Github JSON
-		"githubjson": "githubjson",
-		"github":     "github",
-	}
 )
 
 // ToOutput - returns the output type as string

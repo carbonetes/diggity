@@ -14,10 +14,7 @@ type (
 )
 
 func TestValidateOutputArg(t *testing.T) {
-	tests := []string{"json", "table",
-		"cyclonedx-xml", "cyclonedxxml", "cyclonedx", "cyclone",
-		"cyclonedx-json", "cyclonedxjson", "spdx-json", "spdxjson",
-		"spdx-tag-value", "spdxtagvalue", "spdx", "spdxtv"}
+	tests := []string{"json", "table", "cyclonedx-xml", "cyclonedx-json", "spdx-json", "spdx-tag-value", "github-json"}
 
 	for _, test := range tests {
 		cmd.ValidateOutputArg(test)
