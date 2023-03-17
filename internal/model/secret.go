@@ -25,4 +25,4 @@ type SecretResults struct {
 
 // DefaultSecretExtensions contains a list of common file extensions containing secrets.
 // Additional Reference: https://blog.gitguardian.com/top-10-file-extensions/
-var DefaultSecretExtensions = []string{"env", "h", "so", "pem", "properties", "xml", "yml", "yaml", "json", "py", "js", "ts", "PHP"}
+var DefaultSecretExtensions = []string{"env", "h", "so", "sec", "pem", "properties", "xml", "yml", "yaml", "json", "py", "js", "ts", "PHP"}
