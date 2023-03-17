@@ -29,7 +29,7 @@ func PrintSpdxJSON() {
 	if len(*bom.Arguments.OutputFile) > 0 {
 		save.ResultToFile(string(spdxJSON))
 	} else {
-		fmt.Printf("%+v", string(spdxJSON))
+		fmt.Printf("%+v\n", string(spdxJSON))
 	}
 }
 
