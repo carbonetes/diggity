@@ -27,6 +27,8 @@ var (
 	portageObj       = "obj"
 	portageAlgorithm = "md5"
 	ebuild           = "ebuild"
+	noFileErrWin     = "The system cannot find the file specified"
+	noFileErrMac     = "no such file or directory"
 )
 
 // FindPortagePackagesFromContent find portage metadata files
@@ -99,7 +101,7 @@ func initPortageMetadata(p *model.Package, loc string) error {
 	// Find and parse SIZE file
 	file, err := os.Open(sizePath)
 	if err != nil {
-		if strings.Contains(err.Error(), "The system cannot find the file specified") {
+		if strings.Contains(err.Error(), noFileErrWin) || strings.Contains(err.Error(), noFileErrMac) {
 			return nil
 		}
 		return err
@@ -148,8 +150,7 @@ func getPortageLicenses(p *model.Package, loc string) error {
 	// Find and parse LICENSE file
 	file, err := os.Open(licensePath)
 	if err != nil {
-		if strings.Contains(err.Error(), "The system cannot find the file specified") ||
-			strings.Contains(err.Error(), "no such file or directory") {
+		if strings.Contains(err.Error(), noFileErrWin) || strings.Contains(err.Error(), noFileErrMac) {
 			p.Licenses = licenses
 			return nil
 		}
@@ -173,7 +174,7 @@ func getPortageFiles(md *metadata.PortageMetadata, loc string) error {
 	// Parse CONTENT file
 	file, err := os.Open(loc)
 	if err != nil {
-		if strings.Contains(err.Error(), "The system cannot find the file specified") {
+		if strings.Contains(err.Error(), noFileErrWin) || strings.Contains(err.Error(), noFileErrMac) {
 			return nil
 		}
 		return err

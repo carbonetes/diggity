@@ -53,11 +53,17 @@ func readGoBinContent(location *model.Location) error {
 	// Modify file permissions to allow read
 	err := os.Chmod(location.Path, 0777)
 	if err != nil {
+		if strings.Contains(err.Error(), noFileErrWin) || strings.Contains(err.Error(), noFileErrMac) {
+			return nil
+		}
 		return err
 	}
 
 	goBinFile, err := os.Open(location.Path)
 	if err != nil {
+		if strings.Contains(err.Error(), noFileErrWin) || strings.Contains(err.Error(), noFileErrMac) {
+			return nil
+		}
 		return err
 	}
 	defer goBinFile.Close()

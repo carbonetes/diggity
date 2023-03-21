@@ -19,9 +19,11 @@ import (
 )
 
 const (
-	goType   = "go"
-	golang   = "golang"
-	goModule = "go-module"
+	goType       = "go"
+	golang       = "golang"
+	goModule     = "go-module"
+	noFileErrWin = "The system cannot find the file specified"
+	noFileErrMac = "no such file or directory"
 )
 
 var (
@@ -51,6 +53,9 @@ func readGoModContent(location *model.Location) error {
 
 	reader, err := os.Open(location.Path)
 	if err != nil {
+		if strings.Contains(err.Error(), noFileErrWin) || strings.Contains(err.Error(), noFileErrMac) {
+			return nil
+		}
 		return err
 	}
 	defer reader.Close()
