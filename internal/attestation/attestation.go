@@ -108,11 +108,11 @@ func generateBom(image string, arguments *model.Arguments, outputType string) st
 	// Generate Temp Bom Filename
 	var bomFileName string
 	switch outputType {
-	case "json", "cyclonedx-json", "spdx-json", "cyclonedxjson", "spdxjson":
+	case model.JSON.ToOutput(), model.CycloneDXJSON, model.SPDXJSON:
 		bomFileName = sbomPrefix + uuid.NewString() + ".json"
-	case "cyclonedx", "cyclonedx-xml", "cyclonedxxml", "cdx":
+	case model.CycloneDXXML:
 		bomFileName = sbomPrefix + uuid.NewString() + ".cdx"
-	case "spdx-tag-value", "spdxtagvalue", "spdxtv", "spdx":
+	case model.SPDXTagValue:
 		bomFileName = sbomPrefix + uuid.NewString() + ".spdx"
 	default:
 		bomFileName = sbomPrefix + uuid.NewString() + ".json"
