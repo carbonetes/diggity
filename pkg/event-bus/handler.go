@@ -3,8 +3,8 @@ package eventbus
 import (
 	sbom "github.com/carbonetes/diggity/internal"
 	log "github.com/carbonetes/diggity/internal/logger"
-	"github.com/carbonetes/diggity/internal/model"
 	"github.com/carbonetes/diggity/internal/ui"
+	"github.com/carbonetes/diggity/pkg/model"
 
 	"github.com/vmware/transport-go/bus"
 	tm "github.com/vmware/transport-go/model"

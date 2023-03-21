@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/carbonetes/diggity/internal/model"
+	"github.com/carbonetes/diggity/pkg/model"
 )
 
 const placeholder = "not available"

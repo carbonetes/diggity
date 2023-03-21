@@ -3,7 +3,7 @@ package test
 import (
 	"testing"
 
-	"github.com/carbonetes/diggity/internal/model"
+	"github.com/carbonetes/diggity/pkg/model"
 
 	"github.com/spf13/cobra"
 )

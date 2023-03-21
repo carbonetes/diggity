@@ -13,8 +13,8 @@ import (
 
 	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/internal/logger"
-	"github.com/carbonetes/diggity/internal/model"
 	"github.com/carbonetes/diggity/internal/ui"
+	"github.com/carbonetes/diggity/pkg/model"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"

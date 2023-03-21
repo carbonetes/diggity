@@ -3,7 +3,7 @@ package cpe
 import (
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/model"
+	"github.com/carbonetes/diggity/pkg/model"
 )
 
 // NewCPE23 Generates and Validates CPE String based on CPE Version 2.3

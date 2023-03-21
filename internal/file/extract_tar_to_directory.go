@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/model"
+	"github.com/carbonetes/diggity/pkg/model"
 )
 
 const (

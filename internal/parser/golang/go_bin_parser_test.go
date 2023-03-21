@@ -5,9 +5,9 @@ import (
 	"runtime/debug"
 	"testing"
 
-	"github.com/carbonetes/diggity/internal/model"
-	"github.com/carbonetes/diggity/internal/model/metadata"
 	"github.com/carbonetes/diggity/internal/parser/bom"
+	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/carbonetes/diggity/pkg/model/metadata"
 )
 
 type (

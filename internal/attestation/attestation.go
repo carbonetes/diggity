@@ -9,8 +9,8 @@ import (
 
 	sbom "github.com/carbonetes/diggity/internal"
 	"github.com/carbonetes/diggity/internal/logger"
-	"github.com/carbonetes/diggity/internal/model"
 	"github.com/carbonetes/diggity/internal/ui"
+	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/google/uuid"
 )
 

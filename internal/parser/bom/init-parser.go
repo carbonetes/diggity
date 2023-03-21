@@ -3,7 +3,7 @@ package bom
 import (
 	"sync"
 
-	"github.com/carbonetes/diggity/internal/model"
+	"github.com/carbonetes/diggity/pkg/model"
 )
 
 var (

@@ -4,8 +4,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/model"
 	"github.com/carbonetes/diggity/internal/parser/bom"
+	"github.com/carbonetes/diggity/pkg/model"
 )
 
 // ParserNames slice of supported parser names
