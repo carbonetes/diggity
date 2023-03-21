@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/carbonetes/diggity/internal/model"
 	"github.com/carbonetes/diggity/internal/parser/bom"
+	"github.com/carbonetes/diggity/pkg/model"
 )
 
 var (

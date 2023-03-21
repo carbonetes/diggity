@@ -7,12 +7,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/carbonetes/diggity/internal/model"
-	"github.com/carbonetes/diggity/internal/model/output"
 	"github.com/carbonetes/diggity/internal/output/save"
 	"github.com/carbonetes/diggity/internal/parser/bom"
 	"github.com/carbonetes/diggity/internal/parser/distro"
 	versionPackage "github.com/carbonetes/diggity/internal/version"
+	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/carbonetes/diggity/pkg/model/output"
 )
 
 const (

@@ -9,10 +9,10 @@ import (
 
 	"github.com/carbonetes/diggity/internal/attestation"
 	"github.com/carbonetes/diggity/internal/logger"
-	"github.com/carbonetes/diggity/internal/model"
 	"github.com/carbonetes/diggity/internal/parser/bom"
 	"github.com/carbonetes/diggity/internal/parser/util"
 	versionPackage "github.com/carbonetes/diggity/internal/version"
+	"github.com/carbonetes/diggity/pkg/model"
 
 	sbom "github.com/carbonetes/diggity/internal"
 
@@ -225,13 +225,13 @@ func init() {
 	config.Flags().BoolVarP(&help, "help", "h", false, "Help for configuration")
 
 	// attest flags
-	attest.Flags().StringVarP(attestationOptions.Key, "key", "k", "", "Path to cosign.key used for the SBOM Attestation")
-	attest.Flags().StringVarP(attestationOptions.Pub, "pub", "p", "", "Path to cosign.pub used for the SBOM Attestation")
-	attest.Flags().StringVarP(attestationOptions.AttestType, "type", "t", "custom", "Type used for the Attestation ([spdx, cyclonedx, custom])")
+	attest.Flags().StringVarP(attestationOptions.Key, "key", "k", "", "Path to cosign.key used for the SBOM attestation")
+	attest.Flags().StringVarP(attestationOptions.Pub, "pub", "p", "", "Path to cosign.pub used for the SBOM attestation")
+	attest.Flags().StringVarP(attestationOptions.AttestType, "type", "t", "custom", "Type used for the attestation ([spdx, spdxjson, cyclonedx, custom])")
 	attest.Flags().StringVar(attestationOptions.Predicate, "predicate", "", "Path to the generated SBOM file to be attested")
 	attest.Flags().StringVar(attestationOptions.Password, "password", "", "Password for the generated cosign key-pair")
 	attest.Flags().StringVarP(attestationOptions.OutputFile, "output-file", "f", "", "Save the attestation result to the output file instead of writing to standard output")
-	attest.Flags().StringVarP(attestationOptions.OutputType, "output", "o", "json", "Supported output types: \n[json, cyclonedx, cyclonedx-json, spdx-json, spdx-tag-value]")
+	attest.Flags().StringVarP(attestationOptions.OutputType, "output", "o", "json", "Supported output types: \n[json, cyclonedx, cyclonedx-json, spdx-json, spdx-tag-value, github-json]")
 	attest.Flags().BoolVarP(&help, "help", "h", false, "Help for attest")
 
 	cobra.OnInitialize(setPrioritizedArg)

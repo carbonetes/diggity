@@ -4,11 +4,11 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/carbonetes/diggity/internal/model"
-	"github.com/carbonetes/diggity/internal/model/metadata"
-	"github.com/carbonetes/diggity/internal/model/output"
 	"github.com/carbonetes/diggity/internal/parser/alpine"
 	"github.com/carbonetes/diggity/internal/parser/gem"
+	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/carbonetes/diggity/pkg/model/metadata"
+	"github.com/carbonetes/diggity/pkg/model/output"
 )
 
 var (

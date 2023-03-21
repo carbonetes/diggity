@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/carbonetes/diggity/internal/model"
-	"github.com/carbonetes/diggity/internal/model/metadata"
+	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/carbonetes/diggity/pkg/model/metadata"
 
 	"golang.org/x/mod/modfile"
 	"golang.org/x/mod/module"

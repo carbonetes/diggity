@@ -3,7 +3,7 @@ package gem
 import (
 	"path/filepath"
 
-	"github.com/carbonetes/diggity/internal/model"
+	"github.com/carbonetes/diggity/pkg/model"
 
 	"testing"
 )

@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	log "github.com/carbonetes/diggity/internal/logger"
-	"github.com/carbonetes/diggity/internal/model"
 	"github.com/carbonetes/diggity/internal/output/cyclonedx"
 	"github.com/carbonetes/diggity/internal/output/github"
 	"github.com/carbonetes/diggity/internal/output/save"
@@ -17,6 +16,7 @@ import (
 	"github.com/carbonetes/diggity/internal/parser/distro"
 	"github.com/carbonetes/diggity/internal/parser/docker"
 	"github.com/carbonetes/diggity/internal/secret"
+	"github.com/carbonetes/diggity/pkg/model"
 
 	"golang.org/x/exp/maps"
 )
@@ -110,7 +110,7 @@ func GetResults() string {
 		return _packages[i].Name < _packages[j].Name
 	})
 
-	output := Output{
+	output := model.Result{
 		Distro:   distro.Distro(),
 		Packages: bom.Packages,
 	}

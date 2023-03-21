@@ -7,7 +7,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/carbonetes/diggity/internal/model"
+	"github.com/carbonetes/diggity/pkg/model"
 )
 
 type (

@@ -7,11 +7,11 @@ import (
 	"github.com/carbonetes/diggity/internal/docker"
 	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/internal/logger"
-	"github.com/carbonetes/diggity/internal/model"
 	"github.com/carbonetes/diggity/internal/output"
 	"github.com/carbonetes/diggity/internal/parser"
 	"github.com/carbonetes/diggity/internal/parser/bom"
 	"github.com/carbonetes/diggity/internal/ui"
+	"github.com/carbonetes/diggity/pkg/model"
 
 	"os"
 

@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/model"
+	"github.com/carbonetes/diggity/pkg/model"
 )
 
 // Exists checks if filename exists

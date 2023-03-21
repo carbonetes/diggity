@@ -10,8 +10,8 @@ import (
 
 	"github.com/carbonetes/diggity/internal/docker"
 	"github.com/carbonetes/diggity/internal/file"
-	"github.com/carbonetes/diggity/internal/model"
 	"github.com/carbonetes/diggity/internal/parser/bom"
+	"github.com/carbonetes/diggity/pkg/model"
 )
 
 var distro *model.Distro

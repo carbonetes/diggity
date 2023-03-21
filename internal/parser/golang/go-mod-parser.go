@@ -9,19 +9,21 @@ import (
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/file"
-	"github.com/carbonetes/diggity/internal/model"
-	"github.com/carbonetes/diggity/internal/model/metadata"
 	"github.com/carbonetes/diggity/internal/parser/bom"
 	"github.com/carbonetes/diggity/internal/parser/util"
+	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/carbonetes/diggity/pkg/model/metadata"
 
 	"github.com/google/uuid"
 	"golang.org/x/mod/modfile"
 )
 
 const (
-	goType   = "go"
-	golang   = "golang"
-	goModule = "go-module"
+	goType       = "go"
+	golang       = "golang"
+	goModule     = "go-module"
+	noFileErrWin = "The system cannot find the file specified"
+	noFileErrMac = "no such file or directory"
 )
 
 var (
@@ -51,6 +53,9 @@ func readGoModContent(location *model.Location) error {
 
 	reader, err := os.Open(location.Path)
 	if err != nil {
+		if strings.Contains(err.Error(), noFileErrWin) || strings.Contains(err.Error(), noFileErrMac) {
+			return nil
+		}
 		return err
 	}
 	defer reader.Close()

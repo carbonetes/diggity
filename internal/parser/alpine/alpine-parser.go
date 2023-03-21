@@ -5,9 +5,9 @@ import (
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/file"
-	"github.com/carbonetes/diggity/internal/model"
 	"github.com/carbonetes/diggity/internal/parser/bom"
 	"github.com/carbonetes/diggity/internal/parser/util"
+	"github.com/carbonetes/diggity/pkg/model"
 
 	"io"
 	"os"

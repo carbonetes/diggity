@@ -6,15 +6,15 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/model"
-	"github.com/carbonetes/diggity/internal/model/metadata"
-	"github.com/carbonetes/diggity/internal/model/output"
 	"github.com/carbonetes/diggity/internal/parser/alpine"
 	"github.com/carbonetes/diggity/internal/parser/bom"
 	"github.com/carbonetes/diggity/internal/parser/debian"
 	"github.com/carbonetes/diggity/internal/parser/gem"
 	"github.com/carbonetes/diggity/internal/parser/python"
 	versionPackage "github.com/carbonetes/diggity/internal/version"
+	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/carbonetes/diggity/pkg/model/metadata"
+	"github.com/carbonetes/diggity/pkg/model/output"
 
 	"github.com/google/uuid"
 )
