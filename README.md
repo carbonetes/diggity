@@ -164,7 +164,7 @@ secret-config:
   max-file-size: 10485760
   # explicitly define file extensions to consider for secret search. 
   extensions: []  # default extensions are added upon config file generation.
-# specify enabled parsers ([apk debian java npm composer python gem rpm dart nuget go]) (default all)
+# specify enabled parsers ([apk debian java npm composer python gem rpm dart nuget go rust conan hackage pod hex portage]) (default all)
 enabled-parsers: []
 # disables file listing from package metadata
 disable-file-listing: false
@@ -172,7 +172,7 @@ disable-file-listing: false
 quiet: false
 # save the sbom result to the output file instead of writing to standard output
 output-file: ""
-# supported output types: [json, table, cyclonedx, cyclonedx-json, spdx-json, spdx-tag-value] (default [table])
+# supported output types: [json table cyclonedx-xml cyclonedx-json spdx-json spdx-tag-value github-json] (default [table])
 output: []
 registry: 
   # registry uri endpoint
