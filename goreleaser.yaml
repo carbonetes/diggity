@@ -105,7 +105,7 @@ nfpms:
 
 brews:
   - 
-    skip_upload: true   # set to true to avoid uploading while under testing
+    skip_upload: false   # set to true to avoid uploading while under testing
     tap:
       owner: carbonetes
       name: homebrew-diggity
