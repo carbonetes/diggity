@@ -312,6 +312,12 @@ to build the software. To reference your provenance file, run the following comm
 diggity <image> -o json --provenance <path/to/provenance_file>
 ```
 
+You can also include your provenance metadata in SBOM attestations using the following command:
+
+```
+ diggity attest <image> --provenance <path/to/provenance_file>
+```
+
 ## License
 
 [Apache 2.0](https://choosealicense.com/licenses/mit/)

@@ -17,4 +17,5 @@ type AttestationOptions struct {
 	OutputFile *string
 	OutputType *string
 	BomArgs    *Arguments
+	Provenance *string
 }

@@ -67,6 +67,7 @@ var (
 		OutputFile: new(string),
 		OutputType: new(string),
 		BomArgs:    new(model.Arguments),
+		Provenance: new(string),
 	}
 
 	diggity = &cobra.Command{
@@ -234,6 +235,7 @@ func init() {
 	attest.Flags().StringVar(attestationOptions.Password, "password", "", "Password for the generated cosign key-pair")
 	attest.Flags().StringVarP(attestationOptions.OutputFile, "output-file", "f", "", "Save the attestation result to the output file instead of writing to standard output")
 	attest.Flags().StringVarP(attestationOptions.OutputType, "output", "o", "json", "Supported output types: \n[json, cyclonedx, cyclonedx-json, spdx-json, spdx-tag-value, github-json]")
+	attest.Flags().StringVar(attestationOptions.Provenance, "provenance", "", "Provenance file to include in the SBOM")
 	attest.Flags().BoolVarP(&help, "help", "h", false, "Help for attest")
 
 	cobra.OnInitialize(setPrioritizedArg)

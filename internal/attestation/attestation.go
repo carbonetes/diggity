@@ -32,7 +32,7 @@ func Attest(image string, attestationOptions *model.AttestationOptions) {
 
 	// Generate SBOM as needed
 	if *attestationOptions.Predicate == "" {
-		predicate = generateBom(image, attestationOptions.BomArgs, *attestationOptions.OutputType)
+		predicate = generateBom(image, attestationOptions.BomArgs, *attestationOptions.OutputType, *attestationOptions.Provenance)
 	} else {
 		predicate = *attestationOptions.Predicate
 	}
@@ -104,7 +104,7 @@ func getAttestation(image string, attestationOptions *model.AttestationOptions) 
 }
 
 // Generate SBOM
-func generateBom(image string, arguments *model.Arguments, outputType string) string {
+func generateBom(image string, arguments *model.Arguments, outputType string, provenance string) string {
 	// Generate Temp Bom Filename
 	var bomFileName string
 	switch outputType {
@@ -123,6 +123,7 @@ func generateBom(image string, arguments *model.Arguments, outputType string) st
 	Arguments = *arguments
 	Arguments.Image = &image
 	Arguments.OutputFile = &bomPath
+	Arguments.Provenance = &provenance
 	Arguments.Output = (*model.Output)(&outputType)
 
 	// Start SBOM
