@@ -124,13 +124,7 @@ func GetResults() string {
 	}
 
 	if *bom.Arguments.Provenance != "" {
-		provenance, err := slsa.GetProvenanceMetadata(*bom.Arguments.Provenance)
-		if err != nil {
-			logger.Printf("[warning]: %+v\n", err)
-		}
-		output.SLSA = &model.SLSA{
-			Provenance: provenance,
-		}
+		output.SLSA = slsa.Provenance()
 	}
 
 	output.ImageInfo = docker.ImageInfo
