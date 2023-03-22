@@ -16,6 +16,7 @@ import (
 	"github.com/carbonetes/diggity/internal/parser/distro"
 	"github.com/carbonetes/diggity/internal/parser/docker"
 	"github.com/carbonetes/diggity/internal/secret"
+	"github.com/carbonetes/diggity/internal/slsa"
 	"github.com/carbonetes/diggity/pkg/model"
 
 	"golang.org/x/exp/maps"
@@ -23,8 +24,11 @@ import (
 
 type result map[string]*model.Package
 
-// Result interface
-var Result result = make(map[string]*model.Package, 0)
+var (
+	// Result interface
+	Result result = make(map[string]*model.Package, 0)
+	logger        = log.GetLogger()
+)
 
 // PrintResults prints the result based on the arguments
 func PrintResults() {
@@ -36,7 +40,7 @@ func PrintResults() {
 
 	if len(bom.Errors) > 0 {
 		for _, err := range bom.Errors {
-			log.GetLogger().Printf("[warning]: %+v\n", *err)
+			logger.Printf("[warning]: %+v\n", *err)
 		}
 	}
 }
@@ -117,6 +121,16 @@ func GetResults() string {
 
 	if !*bom.Arguments.DisableSecretSearch {
 		output.Secret = secret.SecretResults
+	}
+
+	if *bom.Arguments.Provenance != "" {
+		provenance, err := slsa.GetProvenanceMetadata(*bom.Arguments.Provenance)
+		if err != nil {
+			logger.Printf("[warning]: %+v\n", err)
+		}
+		output.SLSA = &model.SLSA{
+			Provenance: provenance,
+		}
 	}
 
 	output.ImageInfo = docker.ImageInfo

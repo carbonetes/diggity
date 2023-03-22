@@ -52,6 +52,7 @@ var (
 		RegistryUsername:    new(string),
 		RegistryPassword:    new(string),
 		RegistryToken:       new(string),
+		Provenance:          new(string),
 	}
 
 	log = logger.GetLogger()
@@ -212,6 +213,7 @@ func init() {
 	diggity.Flags().StringVarP(Arguments.RegistryUsername, "registry-username", "", "", "Username credential for private registry access")
 	diggity.Flags().StringVarP(Arguments.RegistryPassword, "registry-password", "", "", "Password credential for private registry access")
 	diggity.Flags().StringVarP(Arguments.RegistryToken, "registry-token", "", "", "Access token for private registry access")
+	diggity.Flags().StringVarP(Arguments.Provenance, "provenance", "", "", "Provenance file to include in the SBOM")
 	diggity.Flags().BoolVarP(&help, "help", "h", false, "Help for diggity")
 
 	// version flags
