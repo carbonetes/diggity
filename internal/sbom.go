@@ -1,17 +1,15 @@
 package sbom
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/docker"
 	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/internal/output"
-	"github.com/carbonetes/diggity/internal/parser"
-	"github.com/carbonetes/diggity/internal/parser/bom"
 	"github.com/carbonetes/diggity/internal/ui"
 	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/carbonetes/diggity/pkg/parser"
 
 	"os"
 
@@ -51,40 +49,15 @@ func Start(arguments *model.Arguments) {
 		// Run Parsers
 		parseSpinner := ui.InitSpinner(spinnerMsg)
 		go ui.RunSpinner(parseSpinner)
-		startParsers(arguments)
+		parser.Start(arguments)
 		ui.DoneSpinner(parseSpinner)
 	} else {
 		extractImage(source, arguments, extractSpinner)
-		startParsers(arguments)
+		parser.Start(arguments)
 	}
 
 	//Print Results and Cleanup
 	output.PrintResults()
-}
-
-// Run parsers
-func startParsers(arguments *model.Arguments) {
-	bom.InitParsers(*arguments)
-	bom.WG.Add(len(parser.FindFunctions))
-	for _, parser := range parser.FindFunctions {
-		go parser()
-	}
-	bom.WG.Wait()
-	cleanUp()
-}
-
-// Clear temp files
-func cleanUp() {
-	err := os.RemoveAll(docker.Dir())
-	if err != nil {
-		err = errors.New("clean-up: " + err.Error())
-		bom.Errors = append(bom.Errors, &err)
-	}
-}
-
-// GetResults for event bus
-func GetResults() string {
-	return output.GetResults()
 }
 
 // Extract image

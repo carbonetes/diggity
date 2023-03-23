@@ -10,9 +10,9 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/file"
-	"github.com/carbonetes/diggity/internal/parser/bom"
-	parserUtil "github.com/carbonetes/diggity/internal/parser/util"
 	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/carbonetes/diggity/pkg/parser/bom"
+	parserUtil "github.com/carbonetes/diggity/pkg/parser/util"
 
 	"golang.org/x/tools/godoc/util"
 )

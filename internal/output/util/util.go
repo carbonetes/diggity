@@ -3,7 +3,7 @@ package util
 import (
 	"sort"
 
-	"github.com/carbonetes/diggity/internal/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 // SortPackages sort packages by name alphabetically

@@ -5,7 +5,7 @@ import (
 
 	"github.com/carbonetes/diggity/internal/output/save"
 	"github.com/carbonetes/diggity/internal/output/util"
-	"github.com/carbonetes/diggity/internal/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/bom"
 
 	"github.com/alexeyco/simpletable"
 )

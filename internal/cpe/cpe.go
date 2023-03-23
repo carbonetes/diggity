@@ -7,28 +7,28 @@ import (
 )
 
 // NewCPE23 Generates and Validates CPE String based on CPE Version 2.3
-func NewCPE23(_package *model.Package, vendor string, product string, version string) *model.Package {
+func NewCPE23(pkg *model.Package, vendor string, product string, version string) *model.Package {
 	baseCPE := toCPE(vendor, product, version)
-	if _package.Type == "java" && strings.Contains(baseCPE.Vendor, ";") {
+	if pkg.Type == "java" && strings.Contains(baseCPE.Vendor, ";") {
 		for _, _vendor := range strings.Split(baseCPE.Vendor, ";") {
 			baseCPE.Vendor = _vendor
-			_package.CPEs = append(_package.CPEs, expandCPEsBySeparators(*baseCPE)...)
+			pkg.CPEs = append(pkg.CPEs, expandCPEsBySeparators(*baseCPE)...)
 		}
 	} else {
-		_package.CPEs = append(_package.CPEs, cpeToString(*baseCPE))
-		_package.CPEs = append(_package.CPEs, expandCPEsBySeparators(*baseCPE)...)
+		pkg.CPEs = append(pkg.CPEs, cpeToString(*baseCPE))
+		pkg.CPEs = append(pkg.CPEs, expandCPEsBySeparators(*baseCPE)...)
 	}
 
 	baseCPE.Vendor = baseCPE.Product
-	_package.CPEs = append(_package.CPEs, cpeToString(*baseCPE))
-	_package.CPEs = RemoveDuplicateCPES(_package.CPEs)
+	pkg.CPEs = append(pkg.CPEs, cpeToString(*baseCPE))
+	pkg.CPEs = RemoveDuplicateCPES(pkg.CPEs)
 
 	// Retain base CPE
-	if len(_package.CPEs) == 0 {
-		_package.CPEs = append(_package.CPEs, cpeToString(*baseCPE))
+	if len(pkg.CPEs) == 0 {
+		pkg.CPEs = append(pkg.CPEs, cpeToString(*baseCPE))
 	}
 
-	return _package
+	return pkg
 }
 
 func cpeJoin(matchers ...string) string {

@@ -6,13 +6,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/carbonetes/diggity/internal/parser/alpine"
-	"github.com/carbonetes/diggity/internal/parser/debian"
-	"github.com/carbonetes/diggity/internal/parser/gem"
-	"github.com/carbonetes/diggity/internal/parser/java"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/model/output"
+	"github.com/carbonetes/diggity/pkg/parser/alpine"
+	"github.com/carbonetes/diggity/pkg/parser/debian"
+	"github.com/carbonetes/diggity/pkg/parser/gem"
+	"github.com/carbonetes/diggity/pkg/parser/java"
 )
 
 type (
@@ -21,11 +21,11 @@ type (
 		expected string
 	}
 	PackageParserResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected string
 	}
 	ExternalRefsResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected []output.ExternalRef
 	}
 )
@@ -486,9 +486,9 @@ func TestExternalRefs(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		_output := ExternalRefs(test._package)
+		_output := ExternalRefs(test.pkg)
 		if len(_output) != len(test.expected) {
-			t.Errorf("Test Failed: Input %v must have an output of %v, received: %v", test._package, test.expected, _output)
+			t.Errorf("Test Failed: Input %v must have an output of %v, received: %v", test.pkg, test.expected, _output)
 		}
 		if len(_output) <= 0 {
 			return
@@ -514,7 +514,7 @@ func TestHomepage(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := Homepage(test._package); _output != test.expected {
+		if _output := Homepage(test.pkg); _output != test.expected {
 			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, _output)
 		}
 	}
@@ -532,7 +532,7 @@ func TestLicensesDeclared(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := LicensesDeclared(test._package); _output != test.expected {
+		if _output := LicensesDeclared(test.pkg); _output != test.expected {
 			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, _output)
 		}
 	}
@@ -550,7 +550,7 @@ func TestSourceInfo(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := SourceInfo(test._package); _output != test.expected {
+		if _output := SourceInfo(test.pkg); _output != test.expected {
 			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, _output)
 		}
 	}
@@ -568,7 +568,7 @@ func TestDownloadLocation(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := DownloadLocation(test._package); _output != test.expected {
+		if _output := DownloadLocation(test.pkg); _output != test.expected {
 			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, _output)
 		}
 	}
@@ -585,7 +585,7 @@ func TestOriginator(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := Originator(test._package); _output != test.expected {
+		if _output := Originator(test.pkg); _output != test.expected {
 			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, _output)
 		}
 	}
@@ -655,7 +655,7 @@ func TestFormatTagID(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := FormatTagID(test._package); _output != test.expected {
+		if _output := FormatTagID(test.pkg); _output != test.expected {
 			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, _output)
 		}
 	}

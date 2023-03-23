@@ -9,7 +9,7 @@ import (
 
 type (
 	NewCPE23Result struct {
-		_package *model.Package
+		pkg      *model.Package
 		vendor   string
 		product  string
 		version  string
@@ -48,23 +48,23 @@ type (
 )
 
 func TestNewCPE23(t *testing.T) {
-	var _package1, _package2, _package3, _package4, _package5 model.Package
+	var pkg1, pkg2, pkg3, pkg4, pkg5 model.Package
 	tests := []NewCPE23Result{
-		{&_package1, "busybox", "busybox", "1.35.0-r17", []string{
+		{&pkg1, "busybox", "busybox", "1.35.0-r17", []string{
 			"cpe:2.3:a:busybox:busybox:1.35.0-r17:*:*:*:*:*:*:*",
 		}},
-		{&_package2, "xmlbeans", "xmlbeans", "2.6.0", []string{
+		{&pkg2, "xmlbeans", "xmlbeans", "2.6.0", []string{
 			"cpe:2.3:a:xmlbeans:xmlbeans:2.6.0:*:*:*:*:*:*:*",
 		}},
-		{&_package3, "centos", "yum", "4.4.2-11.el8", []string{
+		{&pkg3, "centos", "yum", "4.4.2-11.el8", []string{
 			"cpe:2.3:a:centos:yum:4.4.2-11.el8:*:*:*:*:*:*:*",
 			"cpe:2.3:a:yum:yum:4.4.2-11.el8:*:*:*:*:*:*:*",
 		}},
-		{&_package4, "xtaci", "smux", "v1.5.16", []string{
+		{&pkg4, "xtaci", "smux", "v1.5.16", []string{
 			"cpe:2.3:a:xtaci:smux:v1.5.16:*:*:*:*:*:*:*",
 			"cpe:2.3:a:smux:smux:v1.5.16:*:*:*:*:*:*:*",
 		}},
-		{&_package5, "libc-utils", "libc-utils", "0.7.2-r3", []string{
+		{&pkg5, "libc-utils", "libc-utils", "0.7.2-r3", []string{
 			"cpe:2.3:a:libc-utils:libc-utils:0.7.2-r3:*:*:*:*:*:*:*",
 			"cpe:2.3:a:libc-utils:libc_utils:0.7.2-r3:*:*:*:*:*:*:*",
 			"cpe:2.3:a:libc_utils:libc_utils:0.7.2-r3:*:*:*:*:*:*:*",
@@ -75,7 +75,7 @@ func TestNewCPE23(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		output := NewCPE23(test._package, test.vendor, test.product, test.version)
+		output := NewCPE23(test.pkg, test.vendor, test.product, test.version)
 
 		if len(output.CPEs) != len(test.expected) {
 			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(test.expected), len(output.CPEs))

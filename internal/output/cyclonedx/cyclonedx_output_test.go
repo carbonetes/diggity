@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/carbonetes/diggity/internal/parser/bom"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/output"
+	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 type (
@@ -19,22 +19,22 @@ type (
 	}
 
 	ConvertToComponentResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected output.Component
 	}
 
 	InitPropertiesResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected []output.Property
 	}
 
 	AddIDResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected string
 	}
 
 	ConvertLicenseResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected []output.License
 	}
 )
@@ -454,7 +454,7 @@ func TestConvertToComponent(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		_output := convertToComponent(test._package)
+		_output := convertToComponent(test.pkg)
 
 		if _output.BOMRef != test.expected.BOMRef ||
 			_output.Type != test.expected.Type ||
@@ -527,7 +527,7 @@ func TestInitProperties(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		_output := *initProperties(test._package)
+		_output := *initProperties(test.pkg)
 		for i, p := range _output {
 			if p.Name != test.expected[i].Name || p.Value != test.expected[i].Value {
 				t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", test.expected[i], p)
@@ -581,8 +581,8 @@ func TestAddID(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := addID(test._package); _output != test.expected {
-			t.Errorf("Test Failed: Input %v must have output of %v, received: %v", test._package, test.expected, _output)
+		if _output := addID(test.pkg); _output != test.expected {
+			t.Errorf("Test Failed: Input %v must have output of %v, received: %v", test.pkg, test.expected, _output)
 		}
 	}
 }
@@ -645,7 +645,7 @@ func TestConvertLicense(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		_output := convertLicense(test._package)
+		_output := convertLicense(test.pkg)
 
 		if test.expected == nil {
 			if _output != nil {
