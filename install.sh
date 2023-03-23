@@ -201,8 +201,8 @@ install_diggity() {
         echo "Run '$repo --help' to get started"
     else
         echo "Manually add the directory to your \$HOME/.bash_profile (or similar)"
-        echo "export PATH=${executable_folder}:\$PATH"
-        echo "Run '$exe --help' to get started"
+        echo "  export PATH=${executable_folder}:\$PATH"
+        echo "Run '$exe_name --help' to get started"
     fi
 }
 
