@@ -304,6 +304,20 @@ You can also pass in an already generated SBOM file using the **predicate** flag
 diggity attest <image> --predicate <path/to/bom_file>
 ```
 
+## SLSA Provenance
+Include provenance metadata to your SBOMs to provide an additional level of assurance about the secure process used
+to build the software. To reference your provenance file, run the following command: 
+
+```
+diggity <image> -o json --provenance <path/to/provenance_file>
+```
+
+You can also include your provenance metadata in SBOM attestations using the following command:
+
+```
+ diggity attest <image> --provenance <path/to/provenance_file>
+```
+
 ## License
 
 [Apache 2.0](https://choosealicense.com/licenses/mit/)
