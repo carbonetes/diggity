@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/parser/bom"
 	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 const (
