@@ -61,37 +61,37 @@ func readPortageContent(location *model.Location) error {
 
 // Init Portage Package
 func initPortagePackage(location *model.Location) (*model.Package, error) {
-	_package := new(model.Package)
-	_package.ID = uuid.NewString()
+	pkg := new(model.Package)
+	pkg.ID = uuid.NewString()
 
 	contentPath := filepath.Dir(location.Path)
 	name, version := portageNameVersion(contentPath)
-	_package.Name = name
-	_package.Version = version
-	_package.Type = portage
-	_package.Locations = append(_package.Locations, model.Location{
+	pkg.Name = name
+	pkg.Version = version
+	pkg.Type = portage
+	pkg.Locations = append(pkg.Locations, model.Location{
 		Path:      util.TrimUntilLayer(*location),
 		LayerHash: location.LayerHash,
 	})
-	_package.Path = strings.Split(contentPath, portageDBPath)[1]
+	pkg.Path = strings.Split(contentPath, portageDBPath)[1]
 
 	// get licenses
-	if err := getPortageLicenses(_package, location.Path); err != nil {
-		return _package, err
+	if err := getPortageLicenses(pkg, location.Path); err != nil {
+		return pkg, err
 	}
 
 	// get purl
-	parsePortagePURL(_package)
+	parsePortagePURL(pkg)
 
 	// get CPEs
-	cpe.NewCPE23(_package, "", _package.Name, _package.Version)
+	cpe.NewCPE23(pkg, "", pkg.Name, pkg.Version)
 
 	// fill metadata
-	if err := initPortageMetadata(_package, location.Path); err != nil {
-		return _package, err
+	if err := initPortageMetadata(pkg, location.Path); err != nil {
+		return pkg, err
 	}
 
-	return _package, nil
+	return pkg, nil
 }
 
 func initPortageMetadata(p *model.Package, loc string) error {
@@ -212,7 +212,7 @@ func parsePortageFile(content string) metadata.PortageFile {
 }
 
 // Parse PURL
-func parsePortagePURL(_package *model.Package) {
-	name := strings.Replace(_package.Name, string(os.PathSeparator), "/", -1)
-	_package.PURL = model.PURL("pkg" + ":" + ebuild + "/" + name + "@" + _package.Version)
+func parsePortagePURL(pkg *model.Package) {
+	name := strings.Replace(pkg.Name, string(os.PathSeparator), "/", -1)
+	pkg.PURL = model.PURL("pkg" + ":" + ebuild + "/" + name + "@" + pkg.Version)
 }

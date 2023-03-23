@@ -106,45 +106,45 @@ func readConanLockContent(location *model.Location) error {
 
 // Init Conan Package
 func initConanPackage(location *model.Location, conanMetadata interface{}) *model.Package {
-	_package := new(model.Package)
-	_package.ID = uuid.NewString()
+	pkg := new(model.Package)
+	pkg.ID = uuid.NewString()
 
 	// Get conan package name, version, and metadata based on parsed metadata type
 	var name, version string
 	switch md := conanMetadata.(type) {
 	case string:
 		name, version = conanNameVersion(md)
-		_package.Metadata = metadata.ConanMetadata{
+		pkg.Metadata = metadata.ConanMetadata{
 			Name:    name,
 			Version: version,
 		}
 	case metadata.ConanLockNode:
 		name, version = conanNameVersion(md.Ref)
-		_package.Metadata = md
+		pkg.Metadata = md
 	}
 
-	_package.Name = name
-	_package.Version = version
-	_package.Path = _package.Name
-	_package.Type = conan
-	_package.Locations = append(_package.Locations, model.Location{
+	pkg.Name = name
+	pkg.Version = version
+	pkg.Path = pkg.Name
+	pkg.Type = conan
+	pkg.Locations = append(pkg.Locations, model.Location{
 		Path:      util.TrimUntilLayer(*location),
 		LayerHash: location.LayerHash,
 	})
-	_package.Licenses = []string{}
+	pkg.Licenses = []string{}
 
 	// get purl
-	parseConanPackageURL(_package)
+	parseConanPackageURL(pkg)
 
 	// get CPEs
-	cpe.NewCPE23(_package, "", _package.Name, _package.Version)
+	cpe.NewCPE23(pkg, "", pkg.Name, pkg.Version)
 
-	return _package
+	return pkg
 }
 
 // Parse PURL
-func parseConanPackageURL(_package *model.Package) {
-	_package.PURL = model.PURL("pkg" + ":" + conan + "/" + _package.Name + "@" + _package.Version)
+func parseConanPackageURL(pkg *model.Package) {
+	pkg.PURL = model.PURL("pkg" + ":" + conan + "/" + pkg.Name + "@" + pkg.Version)
 }
 
 // Get Name and Version from package or node ref metadata

@@ -61,30 +61,30 @@ func parseHexRebarPacakges(location *model.Location) error {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		keyValue := scanner.Text()
-		_package := new(model.Package)
+		pkg := new(model.Package)
 		tokens := rebarLockRegex.Split(keyValue, -1)
 
 		if len(tokens) == 7 {
 			name, version := tokens[1], tokens[4]
-			_package.ID = uuid.NewString()
-			_package.Name = name
-			_package.Version = version
-			_package.Type = hex
-			_package.Path = name
-			_package.Locations = append(_package.Locations, model.Location{
+			pkg.ID = uuid.NewString()
+			pkg.Name = name
+			pkg.Version = version
+			pkg.Type = hex
+			pkg.Path = name
+			pkg.Locations = append(pkg.Locations, model.Location{
 				Path:      util.TrimUntilLayer(*location),
 				LayerHash: location.LayerHash,
 			})
-			cpe.NewCPE23(_package, _package.Name, _package.Name, _package.Version)
-			parseHexPURL(_package)
-			_package.Metadata = Metadata{
+			cpe.NewCPE23(pkg, pkg.Name, pkg.Name, pkg.Version)
+			parseHexPURL(pkg)
+			pkg.Metadata = Metadata{
 				Name:    name,
 				Version: version,
 			}
 
 		}
-		if _package.Name != "" {
-			bom.Packages = append(bom.Packages, _package)
+		if pkg.Name != "" {
+			bom.Packages = append(bom.Packages, pkg)
 		}
 
 	}
@@ -102,7 +102,7 @@ func parseHexMixPackages(location *model.Location) error {
 
 	for scanner.Scan() {
 		keyValue := scanner.Text()
-		_package := new(model.Package)
+		pkg := new(model.Package)
 		tokens := mixLockRegex.Split(keyValue, -1)
 
 		if len(tokens) < 6 {
@@ -110,31 +110,31 @@ func parseHexMixPackages(location *model.Location) error {
 		}
 		name, version, hash, hashExt := tokens[1], tokens[4], tokens[5], tokens[len(tokens)-2]
 
-		_package.ID = uuid.NewString()
-		_package.Name = name
-		_package.Version = version
-		_package.Type = hex
-		_package.Path = name
-		_package.Locations = append(_package.Locations, model.Location{
+		pkg.ID = uuid.NewString()
+		pkg.Name = name
+		pkg.Version = version
+		pkg.Type = hex
+		pkg.Path = name
+		pkg.Locations = append(pkg.Locations, model.Location{
 			Path:      util.TrimUntilLayer(*location),
 			LayerHash: location.LayerHash,
 		})
-		cpe.NewCPE23(_package, _package.Name, _package.Name, _package.Version)
-		parseHexPURL(_package)
-		_package.Metadata = Metadata{
+		cpe.NewCPE23(pkg, pkg.Name, pkg.Name, pkg.Version)
+		parseHexPURL(pkg)
+		pkg.Metadata = Metadata{
 			Name:       name,
 			Version:    version,
 			PkgHash:    hash,
 			PkgHashExt: hashExt,
 		}
-		if _package.Name != "" {
-			bom.Packages = append(bom.Packages, _package)
+		if pkg.Name != "" {
+			bom.Packages = append(bom.Packages, pkg)
 		}
 	}
 	return nil
 }
 
 // Parse PURL
-func parseHexPURL(_package *model.Package) {
-	_package.PURL = model.PURL("pkg" + ":" + "hex" + "/" + _package.Name + "@" + _package.Version)
+func parseHexPURL(pkg *model.Package) {
+	pkg.PURL = model.PURL("pkg" + ":" + "hex" + "/" + pkg.Name + "@" + pkg.Version)
 }

@@ -9,7 +9,7 @@ import (
 
 type (
 	PhpPurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected model.PURL
 	}
 )
@@ -100,9 +100,9 @@ func TestParseComposerPURL(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		parseComposerPURL(test._package)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parseComposerPURL(test.pkg)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }

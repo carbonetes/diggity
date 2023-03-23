@@ -81,11 +81,11 @@ func parseAlpineFiles(content string) []model.File {
 }
 
 // Init alpine package
-func initAlpinePackage(_package *model.Package) {
-	_package.Metadata = map[string]string{}
-	_package.ID = uuid.NewString()
-	_package.Type = apkType
-	_package.Path = installedPackagesPath
+func initAlpinePackage(pkg *model.Package) {
+	pkg.Metadata = map[string]string{}
+	pkg.ID = uuid.NewString()
+	pkg.Type = apkType
+	pkg.Path = installedPackagesPath
 }
 
 // Parse installed packages metadata
@@ -93,9 +93,9 @@ func parseInstalledPackages(filename string, layer string) error {
 
 	var value string
 	var attribute string
-	var _package *model.Package = new(model.Package)
-	initAlpinePackage(_package)
-	_package.ID = uuid.NewString()
+	var pkg *model.Package = new(model.Package)
+	initAlpinePackage(pkg)
+	pkg.ID = uuid.NewString()
 	var files []model.File
 	metadata := Manifest{}
 
@@ -142,10 +142,10 @@ func parseInstalledPackages(filename string, layer string) error {
 			case "L":
 				{
 					metadata["License"] = value
-					// _package.Licenses = strings.Split(value, " ")
+					// pkg.Licenses = strings.Split(value, " ")
 					for _, license := range strings.Split(value, " ") {
 						if !strings.Contains(strings.ToLower(license), "and") {
-							_package.Licenses = append(_package.Licenses, license)
+							pkg.Licenses = append(pkg.Licenses, license)
 						}
 					}
 				}
@@ -156,7 +156,7 @@ func parseInstalledPackages(filename string, layer string) error {
 			case "P":
 				{
 					metadata["PackageName"] = value
-					_package.Name = value
+					pkg.Name = value
 				}
 
 			case "S":
@@ -166,7 +166,7 @@ func parseInstalledPackages(filename string, layer string) error {
 			case "T":
 				{
 					metadata["PackageDescription"] = value
-					_package.Description = value
+					pkg.Description = value
 				}
 			case "U":
 				{
@@ -175,7 +175,7 @@ func parseInstalledPackages(filename string, layer string) error {
 			case "V":
 				{
 					metadata["PackageVersion"] = value
-					_package.Version = value
+					pkg.Version = value
 				}
 			case "c":
 				{
@@ -203,23 +203,23 @@ func parseInstalledPackages(filename string, layer string) error {
 				files = parseAlpineFiles(apkPackage)
 			}
 
-			_package.Metadata = metadata
+			pkg.Metadata = metadata
 		}
 
-		if len(_package.Metadata.(Manifest)) > 0 {
+		if len(pkg.Metadata.(Manifest)) > 0 {
 			if !*bom.Arguments.DisableFileListing {
-				_package.Metadata.(Manifest)["Files"] = files
+				pkg.Metadata.(Manifest)["Files"] = files
 			}
 
-			parseAlpineURL(_package)
+			parseAlpineURL(pkg)
 
-			if _package.Metadata.(Manifest)["PackageOrigin"] != nil &&
-				_package.Metadata.(Manifest)["PackageName"] != nil &&
-				_package.Metadata.(Manifest)["PackageVersion"] != nil {
-				cpe.NewCPE23(_package,
-					_package.Metadata.(Manifest)["PackageName"].(string),
-					_package.Metadata.(Manifest)["PackageName"].(string),
-					_package.Metadata.(Manifest)["PackageVersion"].(string))
+			if pkg.Metadata.(Manifest)["PackageOrigin"] != nil &&
+				pkg.Metadata.(Manifest)["PackageName"] != nil &&
+				pkg.Metadata.(Manifest)["PackageVersion"] != nil {
+				cpe.NewCPE23(pkg,
+					pkg.Metadata.(Manifest)["PackageName"].(string),
+					pkg.Metadata.(Manifest)["PackageName"].(string),
+					pkg.Metadata.(Manifest)["PackageVersion"].(string))
 
 				locations := []model.Location{
 					{
@@ -228,7 +228,7 @@ func parseInstalledPackages(filename string, layer string) error {
 					},
 				}
 				for _, content := range file.Contents {
-					if strings.Contains(content.Path, _package.Metadata.(Manifest)["PackageName"].(string)) {
+					if strings.Contains(content.Path, pkg.Metadata.(Manifest)["PackageName"].(string)) {
 						locations = append(locations, model.Location{
 							LayerHash: content.LayerHash,
 							Path:      util.TrimUntilLayer(*content),
@@ -236,18 +236,18 @@ func parseInstalledPackages(filename string, layer string) error {
 					}
 				}
 
-				_package.Locations = locations
+				pkg.Locations = locations
 			}
 
 			// Check if package is not empty before append
-			if _package.Name != "" && _package.Version != "" {
-				bom.Packages = append(bom.Packages, _package)
+			if pkg.Name != "" && pkg.Version != "" {
+				bom.Packages = append(bom.Packages, pkg)
 			}
 
 			files = []model.File{}
 			metadata = Manifest{}
-			_package = &model.Package{}
-			initAlpinePackage(_package)
+			pkg = &model.Package{}
+			initAlpinePackage(pkg)
 		}
 
 	}
@@ -255,15 +255,15 @@ func parseInstalledPackages(filename string, layer string) error {
 }
 
 // Parse PURL
-func parseAlpineURL(_package *model.Package) {
-	arch, ok := _package.Metadata.(Manifest)["Architecture"]
+func parseAlpineURL(pkg *model.Package) {
+	arch, ok := pkg.Metadata.(Manifest)["Architecture"]
 	if !ok {
 		arch = ""
 	}
-	origin, ok := _package.Metadata.(Manifest)["PackageOrigin"]
+	origin, ok := pkg.Metadata.(Manifest)["PackageOrigin"]
 	if !ok {
 		origin = ""
 	}
 
-	_package.PURL = model.PURL("pkg" + `:` + apkType + `/` + alpine + `/` + _package.Name + `@` + _package.Version + `?arch=` + arch.(string) + `&` + `upstream=` + origin.(string) + `&distro=` + alpine)
+	pkg.PURL = model.PURL("pkg" + `:` + apkType + `/` + alpine + `/` + pkg.Name + `@` + pkg.Version + `?arch=` + arch.(string) + `&` + `upstream=` + origin.(string) + `&distro=` + alpine)
 }

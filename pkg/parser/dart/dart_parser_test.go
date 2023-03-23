@@ -9,7 +9,7 @@ import (
 
 type (
 	DartPurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected model.PURL
 	}
 )
@@ -107,9 +107,9 @@ func TestParseDartPURL(t *testing.T) {
 		{&dartPackage2, model.PURL("pkg:dart/sdk_library_metadata@2.18.0")},
 	}
 	for _, test := range tests {
-		parseDartPURL(test._package)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parseDartPURL(test.pkg)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }

@@ -17,25 +17,25 @@ type (
 	}
 
 	FormatLicensesResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		licenses string
 		expected []string
 	}
 
 	RpmMetadataResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		rpmPkg   *rpmdb.PackageInfo
 		expected metadata.RPMMetadata
 	}
 
 	RpmPurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		arch     string
 		expected model.PURL
 	}
 
 	InitRpmPackageResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		location *model.Location
 		rpmdb    *rpmdb.PackageInfo
 		expected *model.Package
@@ -223,16 +223,16 @@ func TestReadRpmContent(t *testing.T) {
 }
 
 func TestInitRpmPackage(t *testing.T) {
-	var _package1, _package2, _package3 model.Package
+	var pkg1, pkg2, pkg3 model.Package
 
 	tests := []InitRpmPackageResult{
-		{&_package1, &rpmLocation1, &rpmdb1, &rpmPackage1},
-		{&_package2, &rpmLocation2, &rpmdb2, &rpmPackage2},
-		{&_package3, &rpmLocation3, &rpmdb3, &rpmPackage3},
+		{&pkg1, &rpmLocation1, &rpmdb1, &rpmPackage1},
+		{&pkg2, &rpmLocation2, &rpmdb2, &rpmPackage2},
+		{&pkg3, &rpmLocation3, &rpmdb3, &rpmPackage3},
 	}
 
 	for _, test := range tests {
-		output := initRpmPackage(test._package, test.location, test.rpmdb)
+		output := initRpmPackage(test.pkg, test.location, test.rpmdb)
 		outputMetadata := output.Metadata.(metadata.RPMMetadata)
 		expectedMetadata := test.expected.Metadata.(metadata.RPMMetadata)
 
@@ -279,38 +279,38 @@ func TestInitRpmPackage(t *testing.T) {
 }
 
 func TestParseRpmPackageURL(t *testing.T) {
-	_package1 := model.Package{
+	pkg1 := model.Package{
 		Name:    rpmPackage1.Name,
 		Version: "2.08-14.el8",
 	}
-	_package2 := model.Package{
+	pkg2 := model.Package{
 		Name:    rpmPackage2.Name,
 		Version: "0.23.15-2.fc29",
 	}
-	_package3 := model.Package{
+	pkg3 := model.Package{
 		Name:    rpmPackage3.Name,
 		Version: "1.0-19.el7",
 	}
 
 	tests := []RpmPurlResult{
-		{&_package1, rpmdb1.Arch, model.PURL("pkg:rpm/lzo@2.08-14.el8?arch=x86_64")},
-		{&_package2, rpmdb2.Arch, model.PURL("pkg:rpm/p11-kit-trust@0.23.15-2.fc29?arch=x86_64")},
-		{&_package3, rpmdb3.Arch, model.PURL("pkg:rpm/hardlink@1.0-19.el7?arch=x86_64")},
+		{&pkg1, rpmdb1.Arch, model.PURL("pkg:rpm/lzo@2.08-14.el8?arch=x86_64")},
+		{&pkg2, rpmdb2.Arch, model.PURL("pkg:rpm/p11-kit-trust@0.23.15-2.fc29?arch=x86_64")},
+		{&pkg3, rpmdb3.Arch, model.PURL("pkg:rpm/hardlink@1.0-19.el7?arch=x86_64")},
 	}
 
 	for _, test := range tests {
-		parseRpmPackageURL(test._package, test.arch)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parseRpmPackageURL(test.pkg, test.arch)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }
 
 func TestInitFinalRpmMetadata(t *testing.T) {
-	var _package1, _package2, _package3 model.Package
+	var pkg1, pkg2, pkg3 model.Package
 
 	tests := []RpmMetadataResult{
-		{&_package1, &rpmdb1, metadata.RPMMetadata{
+		{&pkg1, &rpmdb1, metadata.RPMMetadata{
 			Release:      "14.el8",
 			Architecture: "x86_64",
 			SourceRpm:    "lzo-2.08-14.el8.src.rpm",
@@ -322,7 +322,7 @@ func TestInitFinalRpmMetadata(t *testing.T) {
 			Vendor:       "CentOS",
 			Version:      "2.08",
 		}},
-		{&_package2, &rpmdb2, metadata.RPMMetadata{
+		{&pkg2, &rpmdb2, metadata.RPMMetadata{
 			Release:      "2.fc29",
 			Architecture: "x86_64",
 			SourceRpm:    "p11-kit-0.23.15-2.fc29.src.rpm",
@@ -334,7 +334,7 @@ func TestInitFinalRpmMetadata(t *testing.T) {
 			Vendor:       "Fedora Project",
 			Version:      "0.23.15",
 		}},
-		{&_package3, &rpmdb3, metadata.RPMMetadata{
+		{&pkg3, &rpmdb3, metadata.RPMMetadata{
 			Release:      "19.el7",
 			Architecture: "x86_64",
 			SourceRpm:    "hardlink-1.0-19.el7.src.rpm",
@@ -350,8 +350,8 @@ func TestInitFinalRpmMetadata(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		initFinalRpmMetadata(test._package, test.rpmPkg)
-		outputMetadata := test._package.Metadata.(metadata.RPMMetadata)
+		initFinalRpmMetadata(test.pkg, test.rpmPkg)
+		outputMetadata := test.pkg.Metadata.(metadata.RPMMetadata)
 		expectedMetadata := test.expected
 		if outputMetadata.Release != expectedMetadata.Release ||
 			outputMetadata.Architecture != expectedMetadata.Architecture ||
@@ -365,32 +365,32 @@ func TestInitFinalRpmMetadata(t *testing.T) {
 			outputMetadata.Vendor != expectedMetadata.Vendor ||
 			outputMetadata.Version != expectedMetadata.Version ||
 			outputMetadata.Epoch != expectedMetadata.Epoch {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, test._package.Metadata)
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, test.pkg.Metadata)
 		}
 	}
 }
 
 func TestFormatLicenses(t *testing.T) {
-	var _package1, _package2, _package3, _package4 model.Package
+	var pkg1, pkg2, pkg3, pkg4 model.Package
 
 	tests := []FormatLicensesResult{
-		{&_package1, "license01 and license02", []string{"license01", "license02"}},
-		{&_package2, "license01 or license02", []string{"license01", "license02"}},
-		{&_package3, " ", []string{}},
-		{&_package4, "", []string{}},
+		{&pkg1, "license01 and license02", []string{"license01", "license02"}},
+		{&pkg2, "license01 or license02", []string{"license01", "license02"}},
+		{&pkg3, " ", []string{}},
+		{&pkg4, "", []string{}},
 	}
 
 	for _, test := range tests {
-		formatLicenses(test._package, test.licenses)
-		if len(test.expected) == 0 && len(test._package.Licenses) != 0 {
-			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(test.expected), len(test._package.Licenses))
+		formatLicenses(test.pkg, test.licenses)
+		if len(test.expected) == 0 && len(test.pkg.Licenses) != 0 {
+			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(test.expected), len(test.pkg.Licenses))
 		}
-		if len(test._package.Licenses) != len(test.expected) {
-			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(test.expected), len(test._package.Licenses))
+		if len(test.pkg.Licenses) != len(test.expected) {
+			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(test.expected), len(test.pkg.Licenses))
 		}
-		for i := range test._package.Licenses {
-			if test._package.Licenses[i] != test.expected[i] {
-				t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", test.expected[i], test._package.Licenses[i])
+		for i := range test.pkg.Licenses {
+			if test.pkg.Licenses[i] != test.expected[i] {
+				t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", test.expected[i], test.pkg.Licenses[i])
 			}
 		}
 	}

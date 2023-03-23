@@ -65,21 +65,21 @@ func readGemLockContent(location *model.Location) error {
 		if isKeyValueValid(keyValue) {
 			stringArray := strings.Fields(trimedKeyValue)
 			if len(stringArray) == 2 {
-				_package := new(model.Package)
-				_package.ID = uuid.NewString()
-				_package.Name = stringArray[0]
-				_package.Type = gem
-				_package.Path = stringArray[0]
-				_package.Version = strings.Trim(stringArray[1], "()")
+				pkg := new(model.Package)
+				pkg.ID = uuid.NewString()
+				pkg.Name = stringArray[0]
+				pkg.Type = gem
+				pkg.Path = stringArray[0]
+				pkg.Version = strings.Trim(stringArray[1], "()")
 				//generate cpe
-				cpe.NewCPE23(_package, _package.Name, _package.Name, _package.Version)
+				cpe.NewCPE23(pkg, pkg.Name, pkg.Name, pkg.Version)
 				//generate and trim path
-				_package.Locations = append(_package.Locations, model.Location{
+				pkg.Locations = append(pkg.Locations, model.Location{
 					Path:      util.TrimUntilLayer(*location),
 					LayerHash: location.LayerHash,
 				})
 
-				bom.Packages = append(bom.Packages, _package)
+				bom.Packages = append(bom.Packages, pkg)
 			}
 		}
 	}
@@ -139,18 +139,18 @@ func readGemContent(location *model.Location) error {
 		previousAttribute = attribute
 	}
 	if len(metadata) > 0 {
-		_package := new(model.Package)
-		_package.ID = uuid.NewString()
-		_package.Type = gem
+		pkg := new(model.Package)
+		pkg.ID = uuid.NewString()
+		pkg.Type = gem
 
 		//generate and trim path
-		_package.Locations = append(_package.Locations, model.Location{
+		pkg.Locations = append(pkg.Locations, model.Location{
 			Path:      util.TrimUntilLayer(*location),
 			LayerHash: location.LayerHash,
 		})
 
-		initGemPackages(_package, metadata)
-		bom.Packages = append(bom.Packages, _package)
+		initGemPackages(pkg, metadata)
+		bom.Packages = append(bom.Packages, pkg)
 	}
 
 	return nil
@@ -220,6 +220,6 @@ func initGemPackages(p *model.Package, metadata Metadata) *model.Package {
 }
 
 // Parse PURL
-func parseGemPackageURL(_package *model.Package) {
-	_package.PURL = model.PURL("pkg" + ":" + gem + "/" + _package.Name + "@" + _package.Version)
+func parseGemPackageURL(pkg *model.Package) {
+	pkg.PURL = model.PURL("pkg" + ":" + gem + "/" + pkg.Name + "@" + pkg.Version)
 }

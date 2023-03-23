@@ -69,20 +69,20 @@ func selectOutputType(outputTypes string) {
 
 // Remove Duplicates and Sort Results
 func finalizeResults() {
-	for _, _package := range bom.Packages {
-		if _, exists := Result[_package.Name+":"+_package.Version+":"+_package.Type]; !exists {
-			Result[_package.Name+":"+_package.Version+":"+_package.Type] = _package
+	for _, pkg := range bom.Packages {
+		if _, exists := Result[pkg.Name+":"+pkg.Version+":"+pkg.Type]; !exists {
+			Result[pkg.Name+":"+pkg.Version+":"+pkg.Type] = pkg
 		} else {
 			idx := 0
-			if len(_package.Locations) > 0 {
-				idx = len(_package.Locations) - 1
-				for _, l := range _package.Locations {
-					if l != _package.Locations[idx] {
-						_package.Locations = append(_package.Locations, model.Location{
-							Path:      _package.Path,
-							LayerHash: "sha256:" + _package.Locations[idx].LayerHash,
+			if len(pkg.Locations) > 0 {
+				idx = len(pkg.Locations) - 1
+				for _, l := range pkg.Locations {
+					if l != pkg.Locations[idx] {
+						pkg.Locations = append(pkg.Locations, model.Location{
+							Path:      pkg.Path,
+							LayerHash: "sha256:" + pkg.Locations[idx].LayerHash,
 						})
-						Result[_package.Name+":"+_package.Version+":"+_package.Type] = _package
+						Result[pkg.Name+":"+pkg.Version+":"+pkg.Type] = pkg
 					}
 				}
 			}
@@ -104,10 +104,10 @@ func sortResults() {
 
 // GetResults - For event bus handler
 func GetResults() string {
-	_packages := maps.Values(Result)
+	pkgs := maps.Values(Result)
 
-	sort.Slice(_packages, func(i, j int) bool {
-		return _packages[i].Name < _packages[j].Name
+	sort.Slice(pkgs, func(i, j int) bool {
+		return pkgs[i].Name < pkgs[j].Name
 	})
 
 	output := model.Result{

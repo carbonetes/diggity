@@ -10,7 +10,7 @@ import (
 
 type (
 	SwiftPurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected model.PURL
 	}
 )
@@ -94,9 +94,9 @@ func TestParseSwiftPURL(t *testing.T) {
 		{&swiftPackage3, model.PURL("pkg:cocoapods/SVPullToRefresh@0.4.1")},
 	}
 	for _, test := range tests {
-		parseSwiftPURL(test._package)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parseSwiftPURL(test.pkg)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }

@@ -134,21 +134,21 @@ func extractJarFile(location *model.Location) error {
 // Init java package
 func initPackage(name string, location *model.Location, manifestFile *zip.File, pomPropertiesFile *zip.File) error {
 	endOfFile := regexp.MustCompile(jarPackagesRegex)
-	_package := new(model.Package)
-	_package.Metadata = Metadata{}
-	_package.ID = uuid.NewString()
-	_package.Path = name
-	_package.Type = java
+	pkg := new(model.Package)
+	pkg.Metadata = Metadata{}
+	pkg.ID = uuid.NewString()
+	pkg.Path = name
+	pkg.Type = java
 	paths := strings.Split(location.Path, string(os.PathSeparator))
-	_package.Locations = append(_package.Locations, model.Location{
+	pkg.Locations = append(pkg.Locations, model.Location{
 		Path:      paths[len(paths)-1],
 		LayerHash: location.LayerHash,
 	})
 	splitName := strings.Split(name, "/")
 	fileName := splitName[len(splitName)-1]
 	if manifestFile != nil {
-		_ = parseManifest(manifestFile, _package)
-		parseLicenses(_package)
+		_ = parseManifest(manifestFile, pkg)
+		parseLicenses(pkg)
 	}
 
 	vendor := ""
@@ -165,17 +165,17 @@ func initPackage(name string, location *model.Location, manifestFile *zip.File, 
 		if err != nil {
 			return err
 		}
-		parsePomProperties(string(data), _package, pomPropertiesFile.Name)
+		parsePomProperties(string(data), pkg, pomPropertiesFile.Name)
 		if err := reader.Close(); err != nil {
 			return err
 		}
 	}
 	if pomPropertiesFile != nil {
-		vendor = _package.Metadata.(Metadata)["PomProperties"]["artifactId"]
-		version = _package.Metadata.(Metadata)["PomProperties"]["version"]
+		vendor = pkg.Metadata.(Metadata)["PomProperties"]["artifactId"]
+		version = pkg.Metadata.(Metadata)["PomProperties"]["version"]
 		product = vendor
 	} else {
-		version = formatVersionMetadata(_package, _package.Metadata.(Metadata)["Manifest"]["Implementation-Version"])
+		version = formatVersionMetadata(pkg, pkg.Metadata.(Metadata)["Manifest"]["Implementation-Version"])
 		regex, err := regexp.Compile(`-\s*(\d+)`)
 		if err != nil {
 			return err
@@ -199,55 +199,55 @@ func initPackage(name string, location *model.Location, manifestFile *zip.File, 
 		product = vendor
 	}
 
-	_package.Name = vendor
-	_package.Version = version
-	_package.Description = _package.Metadata.(Metadata)["Manifest"]["Bundle-Description"]
+	pkg.Name = vendor
+	pkg.Version = version
+	pkg.Description = pkg.Metadata.(Metadata)["Manifest"]["Bundle-Description"]
 
-	parseJavaURL(_package)
+	parseJavaURL(pkg)
 
-	cpe.NewCPE23(_package, vendor, product, version)
+	cpe.NewCPE23(pkg, vendor, product, version)
 	// additional CPEs if
-	if _package.Metadata.(Metadata)["PomProperties"] != nil {
-		vendor = _package.Metadata.(Metadata)["PomProperties"]["groupId"]
+	if pkg.Metadata.(Metadata)["PomProperties"] != nil {
+		vendor = pkg.Metadata.(Metadata)["PomProperties"]["groupId"]
 		if len(vendor) > 0 {
-			generateAdditionalCPE(vendor, product, version, _package)
+			generateAdditionalCPE(vendor, product, version, pkg)
 		}
 	}
-	if _package.Metadata.(Metadata)["Manifest"] != nil {
-		vendor = _package.Metadata.(Metadata)["Manifest"]["Automatic-Module-Name"]
+	if pkg.Metadata.(Metadata)["Manifest"] != nil {
+		vendor = pkg.Metadata.(Metadata)["Manifest"]["Automatic-Module-Name"]
 		if len(vendor) > 0 {
-			cpe.NewCPE23(_package, vendor, product, version)
+			cpe.NewCPE23(pkg, vendor, product, version)
 		}
-		vendor = _package.Metadata.(Metadata)["Manifest"]["Bundle-SymbolicName"]
-		generateAdditionalCPE(vendor, product, version, _package)
+		vendor = pkg.Metadata.(Metadata)["Manifest"]["Bundle-SymbolicName"]
+		generateAdditionalCPE(vendor, product, version, pkg)
 	}
 
-	if util.SourceIsDir() || _package.Name != "" && _package.Version != "" {
-		checkPackage(_package, location.LayerHash)
+	if util.SourceIsDir() || pkg.Name != "" && pkg.Version != "" {
+		checkPackage(pkg, location.LayerHash)
 	}
 	return nil
 }
 
-func checkPackage(_package *model.Package, layerHash string) {
-	if _, exists := Result[_package.Name+":"+_package.Version+":"+layerHash]; !exists {
-		Result[_package.Name+":"+_package.Version+":"+layerHash] = _package
+func checkPackage(pkg *model.Package, layerHash string) {
+	if _, exists := Result[pkg.Name+":"+pkg.Version+":"+layerHash]; !exists {
+		Result[pkg.Name+":"+pkg.Version+":"+layerHash] = pkg
 	} else {
-		_tmpPackage := Result[_package.Name+":"+_package.Version+":"+layerHash]
-		if _package.Metadata.(Metadata)["Manifest"] != nil {
-			_tmpPackage.Metadata.(Metadata)["Manifest"] = _package.Metadata.(Metadata)["Manifest"]
-			_tmpPackage.CPEs = append(_tmpPackage.CPEs, _package.CPEs...)
+		_tmpPackage := Result[pkg.Name+":"+pkg.Version+":"+layerHash]
+		if pkg.Metadata.(Metadata)["Manifest"] != nil {
+			_tmpPackage.Metadata.(Metadata)["Manifest"] = pkg.Metadata.(Metadata)["Manifest"]
+			_tmpPackage.CPEs = append(_tmpPackage.CPEs, pkg.CPEs...)
 		}
-		if _package.Metadata.(Metadata)["PomProperties"] != nil {
-			_tmpPackage.Metadata.(Metadata)["PomProperties"] = _package.Metadata.(Metadata)["PomProperties"]
-			_tmpPackage.CPEs = append(_tmpPackage.CPEs, _package.CPEs...)
+		if pkg.Metadata.(Metadata)["PomProperties"] != nil {
+			_tmpPackage.Metadata.(Metadata)["PomProperties"] = pkg.Metadata.(Metadata)["PomProperties"]
+			_tmpPackage.CPEs = append(_tmpPackage.CPEs, pkg.CPEs...)
 		}
-		if _package.Metadata.(Metadata)["PomProject"] != nil {
-			_tmpPackage.Metadata.(Metadata)["PomProject"] = _package.Metadata.(Metadata)["PomProject"]
-			_tmpPackage.CPEs = append(_tmpPackage.CPEs, _package.CPEs...)
+		if pkg.Metadata.(Metadata)["PomProject"] != nil {
+			_tmpPackage.Metadata.(Metadata)["PomProject"] = pkg.Metadata.(Metadata)["PomProject"]
+			_tmpPackage.CPEs = append(_tmpPackage.CPEs, pkg.CPEs...)
 
 		}
 		_tmpPackage.CPEs = cpe.RemoveDuplicateCPES(_tmpPackage.CPEs)
-		Result[_package.Name+":"+_package.Version+":"+layerHash] = _tmpPackage
+		Result[pkg.Name+":"+pkg.Version+":"+layerHash] = _tmpPackage
 	}
 
 }
@@ -291,17 +291,17 @@ func parseJarFiles(dependencies []*zip.File, location *model.Location) error {
 }
 
 // Generate additional CPEs for java packages
-func generateAdditionalCPE(vendor string, product string, version string, _package *model.Package) {
+func generateAdditionalCPE(vendor string, product string, version string, pkg *model.Package) {
 	if len(vendor) > 0 {
 		if strings.Contains(vendor, ".") {
 			for _, v := range strings.Split(vendor, ".") {
 				tldsRegex := `(com|org|io|edu|net|edu|gov|mil|the\ |a\ |an\ )(?:\b|')`
 				if !regexp.MustCompile(tldsRegex).MatchString(v) {
-					cpe.NewCPE23(_package, v, product, version)
+					cpe.NewCPE23(pkg, v, product, version)
 				}
 			}
 		} else {
-			cpe.NewCPE23(_package, vendor, product, version)
+			cpe.NewCPE23(pkg, vendor, product, version)
 		}
 	}
 }
@@ -382,19 +382,19 @@ func checkZipfile(zipFile *zip.File, metadataFile *zip.File, pomPropertiesFile *
 }
 
 // Parse licenses
-func parseLicenses(_package *model.Package) {
+func parseLicenses(pkg *model.Package) {
 	var licenses = make([]string, 0)
-	for key, value := range _package.Metadata.(Metadata)["Manifest"] {
+	for key, value := range pkg.Metadata.(Metadata)["Manifest"] {
 		if strings.Contains(key, "Bundle-License") {
 			licenses = append(licenses, strings.TrimSpace(value))
 		}
 	}
 
-	_package.Licenses = licenses
+	pkg.Licenses = licenses
 }
 
 // Parse java manifest file
-func parseManifest(manifestFile *zip.File, _package *model.Package) error {
+func parseManifest(manifestFile *zip.File, pkg *model.Package) error {
 
 	createdManifest, err := os.Create(filepath.Join(docker.Dir(), strings.Replace(manifestFile.Name, "/", "_", -1)))
 	if err != nil {
@@ -437,19 +437,19 @@ func parseManifest(manifestFile *zip.File, _package *model.Package) error {
 	if err := scanner.Err(); err != nil {
 		return err
 	}
-	_package.Metadata.(Metadata)["ManifestLocation"] = Manifest{"path": filepath.Join(_package.Path, manifestFile.Name)}
-	_package.Metadata.(Metadata)["Manifest"] = manifest
+	pkg.Metadata.(Metadata)["ManifestLocation"] = Manifest{"path": filepath.Join(pkg.Path, manifestFile.Name)}
+	pkg.Metadata.(Metadata)["Manifest"] = manifest
 	return nil
 }
 
 // Parse pom properties
-func parsePomProperties(data string, _package *model.Package, path string) {
+func parsePomProperties(data string, pkg *model.Package, path string) {
 
 	var value string
 	var attribute string
 
 	pomProperties := make(Manifest)
-	pomProperties["location"] = filepath.Join(_package.Name, path)
+	pomProperties["location"] = filepath.Join(pkg.Name, path)
 	pomProperties["name"] = ""
 
 	lines := strings.Split(data, "\n")
@@ -467,15 +467,15 @@ func parsePomProperties(data string, _package *model.Package, path string) {
 		}
 	}
 
-	_package.Metadata.(Metadata)["PomProperties"] = pomProperties
+	pkg.Metadata.(Metadata)["PomProperties"] = pomProperties
 }
 
 // Parse PURL
-func parseJavaURL(_package *model.Package) {
-	if _package.Metadata.(Metadata)["PomProperties"] != nil {
-		_package.PURL = model.PURL("pkg" + ":" + "maven" + "/" + _package.Metadata.(Metadata)["PomProperties"]["groupId"] + "/" + _package.Metadata.(Metadata)["PomProperties"]["artifactId"] + "@" + _package.Version)
+func parseJavaURL(pkg *model.Package) {
+	if pkg.Metadata.(Metadata)["PomProperties"] != nil {
+		pkg.PURL = model.PURL("pkg" + ":" + "maven" + "/" + pkg.Metadata.(Metadata)["PomProperties"]["groupId"] + "/" + pkg.Metadata.(Metadata)["PomProperties"]["artifactId"] + "@" + pkg.Version)
 	} else {
-		_package.PURL = model.PURL("pkg" + ":" + "maven" + "/" + _package.Name + "/" + _package.Name + "@" + _package.Version)
+		pkg.PURL = model.PURL("pkg" + ":" + "maven" + "/" + pkg.Name + "/" + pkg.Name + "@" + pkg.Version)
 	}
 }
 
@@ -492,31 +492,31 @@ func parsePomXML(location model.Location, layerPath string) error {
 		if util.SourceIsDir() {
 			for _, dep := range JavaPomXML.Dependencies {
 				if dep.ArtifactID != "" && !strings.Contains(dep.Version, "$") {
-					_package := new(model.Package)
-					_package.Metadata = Metadata{}
-					_package.ID = uuid.NewString()
-					_package.Name = dep.ArtifactID
-					_package.Path = util.TrimUntilLayer(model.Location{
+					pkg := new(model.Package)
+					pkg.Metadata = Metadata{}
+					pkg.ID = uuid.NewString()
+					pkg.Name = dep.ArtifactID
+					pkg.Path = util.TrimUntilLayer(model.Location{
 						Path:      layerPath,
 						LayerHash: location.LayerHash,
 					})
-					_package.Version = dep.Version
-					_package.Type = java
+					pkg.Version = dep.Version
+					pkg.Type = java
 					paths := strings.Split(location.Path, string(os.PathSeparator))
-					_package.Locations = append(_package.Locations, model.Location{
+					pkg.Locations = append(pkg.Locations, model.Location{
 						Path:      paths[len(paths)-1],
 						LayerHash: location.LayerHash,
 					})
-					_package.Metadata.(Metadata)["ManifestLocation"] = Manifest{"path": _package.Path}
-					_package.Metadata.(Metadata)["PomProject"] = Manifest{
-						"name":    _package.Name,
-						"version": _package.Version,
+					pkg.Metadata.(Metadata)["ManifestLocation"] = Manifest{"path": pkg.Path}
+					pkg.Metadata.(Metadata)["PomProject"] = Manifest{
+						"name":    pkg.Name,
+						"version": pkg.Version,
 						"groupID": dep.GroupID,
 					}
-					parseJavaURL(_package)
-					cpe.NewCPE23(_package, _package.Name, _package.Name, _package.Version)
-					generateAdditionalCPE(dep.GroupID, _package.Name, _package.Version, _package)
-					checkPackage(_package, location.LayerHash)
+					parseJavaURL(pkg)
+					cpe.NewCPE23(pkg, pkg.Name, pkg.Name, pkg.Version)
+					generateAdditionalCPE(dep.GroupID, pkg.Name, pkg.Version, pkg)
+					checkPackage(pkg, location.LayerHash)
 				}
 			}
 		} else {

@@ -108,9 +108,9 @@ func readGoBinContent(location *model.Location) error {
 
 // Append Go Bin Package to Packages list
 func appendGoBinPackage(location *model.Location, buildData *debug.BuildInfo, dep *debug.Module) {
-	_package := new(model.Package)
-	initGoBinPackage(_package, location, buildData, dep)
-	bom.Packages = append(bom.Packages, _package)
+	pkg := new(model.Package)
+	initGoBinPackage(pkg, location, buildData, dep)
+	bom.Packages = append(bom.Packages, pkg)
 }
 
 // Initialize Go Bin package contents
@@ -156,7 +156,7 @@ func initGoBinPackage(p *model.Package, location *model.Location, buildData *deb
 }
 
 // Initialize Go metadata values from content
-func initGoBinMetadata(_package *model.Package, dep *debug.Module, buildData *debug.BuildInfo) {
+func initGoBinMetadata(pkg *model.Package, dep *debug.Module, buildData *debug.BuildInfo) {
 	var finalMetadata = metadata.GoBinMetadata{}
 
 	if dep != nil {
@@ -170,20 +170,20 @@ func initGoBinMetadata(_package *model.Package, dep *debug.Module, buildData *de
 		finalMetadata.Path = dep.Path
 		finalMetadata.Version = dep.Version
 
-		_package.Metadata = finalMetadata
+		pkg.Metadata = finalMetadata
 	} else {
 		finalMetadata.GoCompileRelease = buildData.GoVersion
 		finalMetadata.Path = buildData.Main.Path
 		finalMetadata.Version = buildData.Main.Version
 	}
-	_package.Metadata = finalMetadata
+	pkg.Metadata = finalMetadata
 }
 
 // Format CPEs for Devel Versions
-func formatDevelCPEs(_package *model.Package) []string {
+func formatDevelCPEs(pkg *model.Package) []string {
 	var newCPEs []string
-	if len(_package.CPEs) > 0 {
-		for _, cpe := range _package.CPEs {
+	if len(pkg.CPEs) > 0 {
+		for _, cpe := range pkg.CPEs {
 			if strings.Contains(cpe, devel) {
 				newCPEs = append(newCPEs, strings.Replace(cpe, devel, `\(devel\)`, -1))
 			} else {

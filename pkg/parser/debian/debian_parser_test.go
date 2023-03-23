@@ -12,13 +12,13 @@ import (
 
 type (
 	DebPurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		arch     string
 		expected model.PURL
 	}
 
 	DebLicenseResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		path     string
 		expected []string
 	}
@@ -30,7 +30,7 @@ type (
 	}
 
 	InitDebPackageResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		location *model.Location
 		metadata Metadata
 		expected *model.Package
@@ -228,16 +228,16 @@ var (
 )
 
 func TestInitDebianPackage(t *testing.T) {
-	var _package1, _package2, _package3 model.Package
+	var pkg1, pkg2, pkg3 model.Package
 
 	tests := []InitDebPackageResult{
-		{&_package1, &debLocation, debMetadata1, &debPackage1},
-		{&_package2, &debLocation, debMetadata2, &debPackage2},
-		{&_package3, &debLocation, debMetadata3, &debPackage3},
+		{&pkg1, &debLocation, debMetadata1, &debPackage1},
+		{&pkg2, &debLocation, debMetadata2, &debPackage2},
+		{&pkg3, &debLocation, debMetadata3, &debPackage3},
 	}
 
 	for _, test := range tests {
-		output := initDebianPackage(test._package, test.location, test.metadata)
+		output := initDebianPackage(test.pkg, test.location, test.metadata)
 		outputMetadata := output.Metadata.(Metadata)
 		expectedMetadata := test.expected.Metadata.(Metadata)
 
@@ -314,37 +314,37 @@ func TestParseDebianFiles(t *testing.T) {
 }
 
 func TestSearchOnFileSystem(t *testing.T) {
-	var _package1, _package2, _package3, _package4 model.Package
+	var pkg1, pkg2, pkg3, pkg4 model.Package
 	docPath := filepath.Join("..", "..", "..", "docs", "references", "debian", "licenses", "copyright_")
 
 	tests := []DebLicenseResult{
-		{&_package1, docPath + "zlib", []string{"Zlib"}},
-		{&_package2, docPath + "grep", []string{"GPL-3+"}},
-		{&_package3, docPath + "libp11", []string{"ISC",
+		{&pkg1, docPath + "zlib", []string{"Zlib"}},
+		{&pkg2, docPath + "grep", []string{"GPL-3+"}},
+		{&pkg3, docPath + "libp11", []string{"ISC",
 			"ISC+IBM",
 			"same-as-rest-of-p11kit",
 			"BSD-3-Clause",
 			"permissive-like-automake-output"}},
-		{&_package4, docPath + "mawk", []string{}},
+		{&pkg4, docPath + "mawk", []string{}},
 	}
 
 	for _, test := range tests {
-		searchLicenseOnFileSystem(test._package, test.path)
+		searchLicenseOnFileSystem(test.pkg, test.path)
 
-		if len(test._package.Licenses) != len(test.expected) {
-			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(test.expected), len(test._package.Licenses))
+		if len(test.pkg.Licenses) != len(test.expected) {
+			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(test.expected), len(test.pkg.Licenses))
 		}
 
-		if len(test._package.Licenses) > 0 {
-			sort.Slice(test._package.Licenses, func(i, j int) bool {
-				return test._package.Licenses[i] < test._package.Licenses[j]
+		if len(test.pkg.Licenses) > 0 {
+			sort.Slice(test.pkg.Licenses, func(i, j int) bool {
+				return test.pkg.Licenses[i] < test.pkg.Licenses[j]
 			})
 
 			sort.Slice(test.expected, func(i, j int) bool {
 				return test.expected[i] < test.expected[j]
 			})
 
-			for i, license := range test._package.Licenses {
+			for i, license := range test.pkg.Licenses {
 
 				if license != test.expected[i] {
 					t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", test.expected[i], license)
@@ -355,32 +355,32 @@ func TestSearchOnFileSystem(t *testing.T) {
 }
 
 func TestParseDebianPackageUrl(t *testing.T) {
-	_package1 := model.Package{
+	pkg1 := model.Package{
 		Name:     debPackage1.Name,
 		Version:  debPackage1.Version,
 		Metadata: debPackage1.Metadata,
 	}
-	_package2 := model.Package{
+	pkg2 := model.Package{
 		Name:     debPackage2.Name,
 		Version:  debPackage2.Version,
 		Metadata: debPackage2.Metadata,
 	}
-	_package3 := model.Package{
+	pkg3 := model.Package{
 		Name:     debPackage3.Name,
 		Version:  debPackage3.Version,
 		Metadata: debPackage3.Metadata,
 	}
 
 	tests := []DebPurlResult{
-		{&_package1, "s390x", model.PURL("pkg:deb/libpcre2-8-0@10.36-2?arch=s390x")},
-		{&_package2, "s390x", model.PURL("pkg:deb/e2fsprogs@1.46.2-2?arch=s390x")},
-		{&_package3, "s390x", model.PURL("pkg:deb/libapt-pkg6.0@2.2.4?arch=s390x")},
+		{&pkg1, "s390x", model.PURL("pkg:deb/libpcre2-8-0@10.36-2?arch=s390x")},
+		{&pkg2, "s390x", model.PURL("pkg:deb/e2fsprogs@1.46.2-2?arch=s390x")},
+		{&pkg3, "s390x", model.PURL("pkg:deb/libapt-pkg6.0@2.2.4?arch=s390x")},
 	}
 
 	for _, test := range tests {
-		parseDebianPackageURL(test._package, test.arch)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, test._package.PURL)
+		parseDebianPackageURL(test.pkg, test.arch)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }

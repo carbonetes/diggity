@@ -17,7 +17,7 @@ type (
 	}
 
 	HackagePurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected model.PURL
 	}
 
@@ -186,28 +186,28 @@ func TestInitHackagePackage(t *testing.T) {
 }
 
 func TestParseHackageURL(t *testing.T) {
-	_package1 := model.Package{
+	pkg1 := model.Package{
 		Name:    haskellPackage1.Name,
 		Version: haskellPackage1.Version,
 	}
-	_package2 := model.Package{
+	pkg2 := model.Package{
 		Name:    haskellPackage2.Name,
 		Version: haskellPackage2.Version,
 	}
-	_package3 := model.Package{
+	pkg3 := model.Package{
 		Name:    haskellPackage3.Name,
 		Version: haskellPackage3.Version,
 	}
 
 	tests := []HackagePurlResult{
-		{&_package1, model.PURL(haskellPackage1.PURL)},
-		{&_package2, model.PURL(haskellPackage2.PURL)},
-		{&_package3, model.PURL(haskellPackage3.PURL)},
+		{&pkg1, model.PURL(haskellPackage1.PURL)},
+		{&pkg2, model.PURL(haskellPackage2.PURL)},
+		{&pkg3, model.PURL(haskellPackage3.PURL)},
 	}
 	for _, test := range tests {
-		parseHackageURL(test._package)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parseHackageURL(test.pkg)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }

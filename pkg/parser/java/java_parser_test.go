@@ -13,27 +13,27 @@ type (
 		vendor   string
 		version  string
 		product  string
-		_package *model.Package
+		pkg      *model.Package
 		expected []string
 	}
 	JavaLicensesResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		licenses string
 		expected []string
 	}
 	JavaPURLResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected model.PURL
 	}
 	PomPropertiesResult struct {
 		data     string
-		_package *model.Package
+		pkg      *model.Package
 		path     string
 		expected interface{}
 	}
 
 	formatVersionMetadataResult struct {
-		_package            *model.Package
+		pkg                 *model.Package
 		version             string
 		expectedVersion     string
 		expectedMetadataKey string
@@ -208,13 +208,13 @@ func TestGenerateAdditionalCPE(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		generateAdditionalCPE(test.vendor, test.version, test.product, test._package)
-		if len(test._package.CPEs) != len(test.expected) {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", len(test.expected), len(test._package.CPEs))
+		generateAdditionalCPE(test.vendor, test.version, test.product, test.pkg)
+		if len(test.pkg.CPEs) != len(test.expected) {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", len(test.expected), len(test.pkg.CPEs))
 		}
-		for i := range test._package.CPEs {
-			if test._package.CPEs[i] != test.expected[i] {
-				t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", test.expected[i], test._package.CPEs[i])
+		for i := range test.pkg.CPEs {
+			if test.pkg.CPEs[i] != test.expected[i] {
+				t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", test.expected[i], test.pkg.CPEs[i])
 			}
 		}
 	}
@@ -225,16 +225,16 @@ func TestParseLicenses(t *testing.T) {
 		{&javaPackages2, "Indiana University Extreme! Lab Software License", []string{"Indiana University Extreme! Lab Software License"}},
 	}
 	for _, test := range tests {
-		parseLicenses(test._package)
-		if len(test.expected) == 0 && len(test._package.Licenses) != 0 {
-			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(test.expected), len(test._package.Licenses))
+		parseLicenses(test.pkg)
+		if len(test.expected) == 0 && len(test.pkg.Licenses) != 0 {
+			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(test.expected), len(test.pkg.Licenses))
 		}
-		if len(test._package.Licenses) != len(test.expected) {
-			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(test.expected), len(test._package.Licenses))
+		if len(test.pkg.Licenses) != len(test.expected) {
+			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(test.expected), len(test.pkg.Licenses))
 		}
-		for i := range test._package.Licenses {
-			if test._package.Licenses[i] != test.expected[i] {
-				t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", test.expected[i], test._package.Licenses[i])
+		for i := range test.pkg.Licenses {
+			if test.pkg.Licenses[i] != test.expected[i] {
+				t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", test.expected[i], test.pkg.Licenses[i])
 			}
 		}
 	}
@@ -246,9 +246,9 @@ func TestParseJavaURL(t *testing.T) {
 		{&javaPackages2, model.PURL("pkg:maven/io.github.x-stream/mxparser@1.2.2")},
 	}
 	for _, test := range tests {
-		parseJavaURL(test._package)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parseJavaURL(test.pkg)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }
@@ -261,34 +261,34 @@ func TestParsePomProperties(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		parsePomProperties(test.data, test._package, test.path)
-		if !reflect.DeepEqual(test.expected, test._package.Metadata) {
-			t.Errorf("Testing Failed: Expected an output of %v, received: %v", test.expected, test._package.Metadata)
+		parsePomProperties(test.data, test.pkg, test.path)
+		if !reflect.DeepEqual(test.expected, test.pkg.Metadata) {
+			t.Errorf("Testing Failed: Expected an output of %v, received: %v", test.expected, test.pkg.Metadata)
 		}
 
 	}
 }
 
 func TestFormatVersionMetadata(t *testing.T) {
-	_package1 := javaPackages1
-	_package2 := javaPackages2
+	pkg1 := javaPackages1
+	pkg2 := javaPackages2
 
 	tests := []formatVersionMetadataResult{
-		{&_package1, `1.0.0New-Metadata: metadata-content`, "1.0.0", "New-Metadata", "metadata-content"},
-		{&_package2, `9.0.70Require-Capability: osgi.ee;filter:=\"(\u0026(osgi.ee=JavaSE)(version=1.8))\`, "9.0.70", "Require-Capability", `osgi.ee;filter:=\"(\u0026(osgi.ee=JavaSE)(version=1.8))\`},
+		{&pkg1, `1.0.0New-Metadata: metadata-content`, "1.0.0", "New-Metadata", "metadata-content"},
+		{&pkg2, `9.0.70Require-Capability: osgi.ee;filter:=\"(\u0026(osgi.ee=JavaSE)(version=1.8))\`, "9.0.70", "Require-Capability", `osgi.ee;filter:=\"(\u0026(osgi.ee=JavaSE)(version=1.8))\`},
 	}
 
 	for _, test := range tests {
-		if output := formatVersionMetadata(test._package, test.version); output != test.expectedVersion {
+		if output := formatVersionMetadata(test.pkg, test.version); output != test.expectedVersion {
 			t.Errorf("Testing Failed: Expected an output of %v, received: %v", test.expectedVersion, output)
 		}
 
-		if test._package.Metadata.(Metadata)["Manifest"]["Implementation-Version"] != test.expectedVersion {
-			t.Errorf("Testing Failed: Expected an output of %v, received: %v", test.expectedVersion, test._package.Metadata.(Metadata)["Manifest"]["Implementation-Version"])
+		if test.pkg.Metadata.(Metadata)["Manifest"]["Implementation-Version"] != test.expectedVersion {
+			t.Errorf("Testing Failed: Expected an output of %v, received: %v", test.expectedVersion, test.pkg.Metadata.(Metadata)["Manifest"]["Implementation-Version"])
 		}
 
-		if test._package.Metadata.(Metadata)["Manifest"][test.expectedMetadataKey] != test.expectedMetadataVal {
-			t.Errorf("Testing Failed: Expected an output of %v, received: %v", test.expectedMetadataVal, test._package.Metadata.(Metadata)["Manifest"][test.expectedMetadataKey])
+		if test.pkg.Metadata.(Metadata)["Manifest"][test.expectedMetadataKey] != test.expectedMetadataVal {
+			t.Errorf("Testing Failed: Expected an output of %v, received: %v", test.expectedMetadataVal, test.pkg.Metadata.(Metadata)["Manifest"][test.expectedMetadataKey])
 		}
 	}
 }

@@ -66,10 +66,10 @@ func readRpmContent(location *model.Location) error {
 
 	for _, rpmPkg := range rpmPkgList {
 		// Get RPM package contents
-		_package := new(model.Package)
-		_package = initRpmPackage(_package, location, rpmPkg)
+		pkg := new(model.Package)
+		pkg = initRpmPackage(pkg, location, rpmPkg)
 
-		bom.Packages = append(bom.Packages, _package)
+		bom.Packages = append(bom.Packages, pkg)
 	}
 	return nil
 }
@@ -115,13 +115,13 @@ func initRpmPackage(p *model.Package, location *model.Location, rpmPkg *rpmdb.Pa
 }
 
 // Parse PURL
-func parseRpmPackageURL(_package *model.Package, architecture string) {
-	_package.PURL = model.PURL("pkg" + ":" + rpmType + "/" + _package.Name + "@" + _package.Version + "?arch=" + architecture)
+func parseRpmPackageURL(pkg *model.Package, architecture string) {
+	pkg.PURL = model.PURL("pkg" + ":" + rpmType + "/" + pkg.Name + "@" + pkg.Version + "?arch=" + architecture)
 }
 
 // Initialize RPM metadata values from content
-func initFinalRpmMetadata(_package *model.Package, rpmPkg *rpmdb.PackageInfo) {
-	_package.Metadata = metadata.RPMMetadata{
+func initFinalRpmMetadata(pkg *model.Package, rpmPkg *rpmdb.PackageInfo) {
+	pkg.Metadata = metadata.RPMMetadata{
 		Release:         rpmPkg.Release,
 		Architecture:    rpmPkg.Arch,
 		SourceRpm:       rpmPkg.SourceRpm,
@@ -139,17 +139,17 @@ func initFinalRpmMetadata(_package *model.Package, rpmPkg *rpmdb.PackageInfo) {
 }
 
 // Format licenses
-func formatLicenses(_package *model.Package, licenses string) {
+func formatLicenses(pkg *model.Package, licenses string) {
 	if len(licenses) > 0 && licenses != " " {
 		if strings.Contains(licenses, " and ") {
-			_package.Licenses = strings.Split(licenses, " and ")
+			pkg.Licenses = strings.Split(licenses, " and ")
 		} else if strings.Contains(licenses, " or ") {
-			_package.Licenses = strings.Split(licenses, " or ")
+			pkg.Licenses = strings.Split(licenses, " or ")
 		} else {
-			_package.Licenses = []string{licenses}
+			pkg.Licenses = []string{licenses}
 		}
 	} else {
-		_package.Licenses = []string{}
+		pkg.Licenses = []string{}
 	}
 }
 

@@ -10,11 +10,11 @@ import (
 
 type (
 	GemPurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected model.PURL
 	}
 	InitGemPackageResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		metadata Metadata
 		expected *model.Package
 	}
@@ -268,14 +268,14 @@ func TestReadGemContent(t *testing.T) {
 }
 
 func TestInitGemPackages(t *testing.T) {
-	var _package1, _package2, _package3 model.Package
+	var pkg1, pkg2, pkg3 model.Package
 	tests := []InitGemPackageResult{
-		{&_package1, gemMetadata1, &gemPackage1},
-		{&_package2, gemMetadata2, &gemPackage2},
-		{&_package3, gemMetadata3, &gemPackage3},
+		{&pkg1, gemMetadata1, &gemPackage1},
+		{&pkg2, gemMetadata2, &gemPackage2},
+		{&pkg3, gemMetadata3, &gemPackage3},
 	}
 	for _, test := range tests {
-		output := initGemPackages(test._package, test.metadata)
+		output := initGemPackages(test.pkg, test.metadata)
 		if output.Name != test.expected.Name ||
 			output.Version != test.expected.Version ||
 			output.Description != test.expected.Description ||
@@ -298,9 +298,9 @@ func TestParseGemPackageURL(t *testing.T) {
 		{&gemPackage3, model.PURL("pkg:gem/digest@3.1.0")},
 	}
 	for _, test := range tests {
-		parseGemPackageURL(test._package)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parseGemPackageURL(test.pkg)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }

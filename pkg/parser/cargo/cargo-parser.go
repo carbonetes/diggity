@@ -109,28 +109,28 @@ func readCargoContent(location *model.Location) error {
 
 // Init Cargo Package
 func initRustPackage(location *model.Location, metadata Metadata) *model.Package {
-	_package := new(model.Package)
-	_package.ID = uuid.NewString()
-	_package.Name = metadata["name"].(string)
-	_package.Version = metadata["version"].(string)
-	_package.Path = _package.Name
-	_package.Type = rustCrate
-	_package.Locations = append(_package.Locations, model.Location{
+	pkg := new(model.Package)
+	pkg.ID = uuid.NewString()
+	pkg.Name = metadata["name"].(string)
+	pkg.Version = metadata["version"].(string)
+	pkg.Path = pkg.Name
+	pkg.Type = rustCrate
+	pkg.Locations = append(pkg.Locations, model.Location{
 		Path:      util.TrimUntilLayer(*location),
 		LayerHash: location.LayerHash,
 	})
-	_package.Licenses = []string{}
+	pkg.Licenses = []string{}
 
 	// get purl
-	parseRustPackageURL(_package)
+	parseRustPackageURL(pkg)
 
 	// get CPEs
-	cpe.NewCPE23(_package, "", _package.Name, _package.Version)
+	cpe.NewCPE23(pkg, "", pkg.Name, pkg.Version)
 
 	// fill metadata
-	initCargoMetadata(_package, metadata)
+	initCargoMetadata(pkg, metadata)
 
-	return _package
+	return pkg
 }
 
 // Init Cargo Metadata
@@ -160,8 +160,8 @@ func initCargoMetadata(p *model.Package, m Metadata) {
 }
 
 // Parse PURL
-func parseRustPackageURL(_package *model.Package) {
-	_package.PURL = model.PURL("pkg" + ":" + cargo + "/" + _package.Name + "@" + _package.Version)
+func parseRustPackageURL(pkg *model.Package) {
+	pkg.PURL = model.PURL("pkg" + ":" + cargo + "/" + pkg.Name + "@" + pkg.Version)
 }
 
 // Format Dependencies Metadata

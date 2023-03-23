@@ -9,7 +9,7 @@ import (
 
 type (
 	ApkPackageResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected *model.Package
 	}
 	AlpineFilesResult struct {
@@ -232,57 +232,57 @@ func TestParseAlpineFiles(t *testing.T) {
 }
 
 func TestInitAlpinePackage(t *testing.T) {
-	var _package1, _package2, _package3 model.Package
+	var pkg1, pkg2, pkg3 model.Package
 	r := regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$")
 
 	tests := []ApkPackageResult{
-		{&_package1, &apkPackage1},
-		{&_package2, &apkPackage2},
-		{&_package3, &apkPackage3},
+		{&pkg1, &apkPackage1},
+		{&pkg2, &apkPackage2},
+		{&pkg3, &apkPackage3},
 	}
 
 	for _, test := range tests {
-		initAlpinePackage(test._package)
-		if test._package.Metadata == nil {
+		initAlpinePackage(test.pkg)
+		if test.pkg.Metadata == nil {
 			t.Error("Test Failed: Metadata must not be nil.")
 		}
-		if !r.MatchString(test._package.ID) {
-			t.Errorf("Test Failed: Output of %v must be a valid UUID, received: %v", test.expected.ID, test._package.ID)
+		if !r.MatchString(test.pkg.ID) {
+			t.Errorf("Test Failed: Output of %v must be a valid UUID, received: %v", test.expected.ID, test.pkg.ID)
 		}
-		if test._package.Type != test.expected.Type ||
-			test._package.Path != test.expected.Path {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected.Path, test._package.Path)
+		if test.pkg.Type != test.expected.Type ||
+			test.pkg.Path != test.expected.Path {
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected.Path, test.pkg.Path)
 		}
 	}
 }
 
 func TestParseAlpineURL(t *testing.T) {
-	_package1 := model.Package{
+	pkg1 := model.Package{
 		Name:     apkPackage1.Name,
 		Version:  apkPackage1.Version,
 		Metadata: apkPackage1.Metadata,
 	}
-	_package2 := model.Package{
+	pkg2 := model.Package{
 		Name:     apkPackage2.Name,
 		Version:  apkPackage2.Version,
 		Metadata: apkPackage2.Metadata,
 	}
-	_package3 := model.Package{
+	pkg3 := model.Package{
 		Name:     apkPackage3.Name,
 		Version:  apkPackage3.Version,
 		Metadata: apkPackage3.Metadata,
 	}
 
 	tests := []ApkPackageResult{
-		{&_package1, &apkPackage1},
-		{&_package2, &apkPackage2},
-		{&_package3, &apkPackage3},
+		{&pkg1, &apkPackage1},
+		{&pkg2, &apkPackage2},
+		{&pkg3, &apkPackage3},
 	}
 
 	for _, test := range tests {
-		parseAlpineURL(test._package)
-		if test._package.PURL != test.expected.PURL {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected.PURL, test._package.PURL)
+		parseAlpineURL(test.pkg)
+		if test.pkg.PURL != test.expected.PURL {
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected.PURL, test.pkg.PURL)
 		}
 	}
 }

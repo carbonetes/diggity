@@ -9,7 +9,7 @@ import (
 
 type (
 	NpmPurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected model.PURL
 	}
 )
@@ -142,9 +142,9 @@ func TestParseNpmPackageURL(t *testing.T) {
 		{&NpmPackagePURL3, model.PURL("pkg:npm/lcov-parse@1.0.0")},
 	}
 	for _, test := range tests {
-		parseNpmPackageURL(test._package)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parseNpmPackageURL(test.pkg)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }

@@ -65,45 +65,45 @@ func parseDartPackages(location *model.Location) error {
 		return err
 	}
 
-	_package := new(model.Package)
-	_package.ID = uuid.NewString()
-	_package.Name = metadata["name"].(string)
-	_package.Type = pub
-	_package.Path = metadata["name"].(string)
+	pkg := new(model.Package)
+	pkg.ID = uuid.NewString()
+	pkg.Name = metadata["name"].(string)
+	pkg.Type = pub
+	pkg.Path = metadata["name"].(string)
 
 	//check if version exist, if not set default of 0.0.0
 	if val, ok := metadata["version"].(string); ok {
-		_package.Version = val
+		pkg.Version = val
 	} else {
-		_package.Version = "0.0.0"
+		pkg.Version = "0.0.0"
 	}
 
-	_package.Locations = append(_package.Locations, model.Location{
+	pkg.Locations = append(pkg.Locations, model.Location{
 		Path:      util.TrimUntilLayer(*location),
 		LayerHash: location.LayerHash,
 	})
 
 	if val, ok := metadata["description"].(string); ok {
-		_package.Description = val
+		pkg.Description = val
 	}
 
 	if val, ok := metadata["license"].(string); ok {
 		licenses = append(licenses, val)
 	}
-	_package.Licenses = licenses
+	pkg.Licenses = licenses
 
 	//parse CPE
 	if val, ok := metadata["author"].(string); ok {
-		cpe.NewCPE23(_package, strings.TrimSpace(val), _package.Name, _package.Version)
+		cpe.NewCPE23(pkg, strings.TrimSpace(val), pkg.Name, pkg.Version)
 	} else if val, ok := metadata["authors"].(string); ok {
-		cpe.NewCPE23(_package, strings.TrimSpace(val), _package.Name, _package.Version)
+		cpe.NewCPE23(pkg, strings.TrimSpace(val), pkg.Name, pkg.Version)
 	} else {
-		cpe.NewCPE23(_package, _package.Name, _package.Name, _package.Version)
+		cpe.NewCPE23(pkg, pkg.Name, pkg.Name, pkg.Version)
 	}
 
-	parseDartPURL(_package)
-	_package.Metadata = metadata
-	bom.Packages = append(bom.Packages, _package)
+	parseDartPURL(pkg)
+	pkg.Metadata = metadata
+	bom.Packages = append(bom.Packages, pkg)
 	return nil
 }
 
@@ -118,27 +118,27 @@ func parseDartPackagesLock(location *model.Location) error {
 	}
 
 	for _, cPackage := range dartlockFileMetadata.Packages {
-		_package := new(model.Package)
-		_package.ID = uuid.NewString()
-		_package.Name = cPackage.Description.Name
-		_package.Version = cPackage.Version
-		_package.Type = pub
-		_package.Path = cPackage.Description.Name
-		_package.Locations = append(_package.Locations, model.Location{
+		pkg := new(model.Package)
+		pkg.ID = uuid.NewString()
+		pkg.Name = cPackage.Description.Name
+		pkg.Version = cPackage.Version
+		pkg.Type = pub
+		pkg.Path = cPackage.Description.Name
+		pkg.Locations = append(pkg.Locations, model.Location{
 			Path:      util.TrimUntilLayer(*location),
 			LayerHash: location.LayerHash,
 		})
-		cpe.NewCPE23(_package, _package.Name, _package.Name, _package.Version)
-		parseDartPURL(_package)
-		_package.Metadata = cPackage
-		if _package.Name != "" {
-			bom.Packages = append(bom.Packages, _package)
+		cpe.NewCPE23(pkg, pkg.Name, pkg.Name, pkg.Version)
+		parseDartPURL(pkg)
+		pkg.Metadata = cPackage
+		if pkg.Name != "" {
+			bom.Packages = append(bom.Packages, pkg)
 		}
 	}
 	return nil
 }
 
 // Parse PURL
-func parseDartPURL(_package *model.Package) {
-	_package.PURL = model.PURL("pkg" + ":" + "dart" + "/" + _package.Name + "@" + _package.Version)
+func parseDartPURL(pkg *model.Package) {
+	pkg.PURL = model.PURL("pkg" + ":" + "dart" + "/" + pkg.Name + "@" + pkg.Version)
 }

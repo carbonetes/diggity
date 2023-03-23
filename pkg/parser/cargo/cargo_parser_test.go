@@ -15,13 +15,13 @@ type (
 	}
 
 	CargoMetadataResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		metadata map[string]interface{}
 		expected metadata.CargoMetadata
 	}
 
 	RustPurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected model.PURL
 	}
 
@@ -203,10 +203,10 @@ func TestInitRustPackage(t *testing.T) {
 }
 
 func TestInitCargoMetadata(t *testing.T) {
-	var _package1, _package2, _package3 model.Package
+	var pkg1, pkg2, pkg3 model.Package
 
 	tests := []CargoMetadataResult{
-		{&_package1, rustMetadata1, metadata.CargoMetadata{
+		{&pkg1, rustMetadata1, metadata.CargoMetadata{
 			Name:     "addr2line",
 			Version:  "0.17.0",
 			Source:   "registry+https://github.com/rust-lang/crates.io-index",
@@ -218,7 +218,7 @@ func TestInitCargoMetadata(t *testing.T) {
 				"rustc-std-workspace-core",
 			},
 		}},
-		{&_package2, rustMetadata2, metadata.CargoMetadata{
+		{&pkg2, rustMetadata2, metadata.CargoMetadata{
 			Name:     "getrandom",
 			Version:  "0.2.8",
 			Source:   "registry+https://github.com/rust-lang/crates.io-index",
@@ -231,7 +231,7 @@ func TestInitCargoMetadata(t *testing.T) {
 				"wasm-bindgen",
 			},
 		}},
-		{&_package3, rustMetadata3, metadata.CargoMetadata{
+		{&pkg3, rustMetadata3, metadata.CargoMetadata{
 			Name:     "zeroize",
 			Version:  "1.5.7",
 			Source:   "registry+https://github.com/rust-lang/crates.io-index",
@@ -246,43 +246,43 @@ func TestInitCargoMetadata(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		initCargoMetadata(test._package, test.metadata)
-		outputMetadata := test._package.Metadata.(metadata.CargoMetadata)
+		initCargoMetadata(test.pkg, test.metadata)
+		outputMetadata := test.pkg.Metadata.(metadata.CargoMetadata)
 		expectedMetadata := test.expected
 		if outputMetadata.Name != expectedMetadata.Name ||
 			outputMetadata.Version != expectedMetadata.Version ||
 			outputMetadata.Source != expectedMetadata.Source ||
 			outputMetadata.Checksum != expectedMetadata.Checksum ||
 			len(outputMetadata.Dependencies) != len(expectedMetadata.Dependencies) {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, test._package.Metadata)
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, test.pkg.Metadata)
 		}
 	}
 }
 
 func TestParseRustPackageURL(t *testing.T) {
-	_package1 := model.Package{
+	pkg1 := model.Package{
 		Name:    rustPackage1.Name,
 		Version: "0.17.0",
 	}
-	_package2 := model.Package{
+	pkg2 := model.Package{
 		Name:    rustPackage2.Name,
 		Version: "0.2.8",
 	}
-	_package3 := model.Package{
+	pkg3 := model.Package{
 		Name:    rustPackage3.Name,
 		Version: "1.5.7",
 	}
 
 	tests := []RustPurlResult{
-		{&_package1, model.PURL("pkg:cargo/addr2line@0.17.0")},
-		{&_package2, model.PURL("pkg:cargo/getrandom@0.2.8")},
-		{&_package3, model.PURL("pkg:cargo/zeroize@1.5.7")},
+		{&pkg1, model.PURL("pkg:cargo/addr2line@0.17.0")},
+		{&pkg2, model.PURL("pkg:cargo/getrandom@0.2.8")},
+		{&pkg3, model.PURL("pkg:cargo/zeroize@1.5.7")},
 	}
 
 	for _, test := range tests {
-		parseRustPackageURL(test._package)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parseRustPackageURL(test.pkg)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }

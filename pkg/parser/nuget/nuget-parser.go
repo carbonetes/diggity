@@ -54,20 +54,20 @@ func parseNugetPackages(location *model.Location) error {
 
 			if cLib.Type == "package" {
 				split := strings.Split(nameAndVersion, "/")
-				_package := new(model.Package)
-				_package.ID = uuid.NewString()
-				_package.Name = split[0]
-				_package.Version = split[1]
-				_package.Type = dotnet
-				_package.Path = split[0]
-				_package.Locations = append(_package.Locations, model.Location{
+				pkg := new(model.Package)
+				pkg.ID = uuid.NewString()
+				pkg.Name = split[0]
+				pkg.Version = split[1]
+				pkg.Type = dotnet
+				pkg.Path = split[0]
+				pkg.Locations = append(pkg.Locations, model.Location{
 					Path:      util.TrimUntilLayer(*location),
 					LayerHash: location.LayerHash,
 				})
-				parseNugetPURL(_package)
-				cpe.NewCPE23(_package, _package.Name, _package.Name, _package.Version)
-				_package.Metadata = cLib
-				bom.Packages = append(bom.Packages, _package)
+				parseNugetPURL(pkg)
+				cpe.NewCPE23(pkg, pkg.Name, pkg.Name, pkg.Version)
+				pkg.Metadata = cLib
+				bom.Packages = append(bom.Packages, pkg)
 			}
 		}
 	}
@@ -75,6 +75,6 @@ func parseNugetPackages(location *model.Location) error {
 }
 
 // Parse PURL
-func parseNugetPURL(_package *model.Package) {
-	_package.PURL = model.PURL("pkg" + ":" + "dotnet" + "/" + _package.Name + "@" + _package.Version)
+func parseNugetPURL(pkg *model.Package) {
+	pkg.PURL = model.PURL("pkg" + ":" + "dotnet" + "/" + pkg.Name + "@" + pkg.Version)
 }

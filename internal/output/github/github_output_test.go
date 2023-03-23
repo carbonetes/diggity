@@ -63,7 +63,7 @@ type (
 	}
 
 	GetPackageManifestsResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		image    string
 		expected string
 	}
@@ -100,7 +100,7 @@ func TestGetPackageManifests(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		bom.Packages = []*model.Package{test._package}
+		bom.Packages = []*model.Package{test.pkg}
 		output := getPackageManifests(test.image)
 		if _, exists := output[test.expected]; !exists {
 			t.Errorf("Test Failed: Expected output of %v, received none", output)

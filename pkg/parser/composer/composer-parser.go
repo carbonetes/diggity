@@ -50,61 +50,61 @@ func parseComposerPackages(location *model.Location) error {
 	}
 
 	for _, cPackage := range lockFileMetadata.Packages {
-		_package := new(model.Package)
-		_package.ID = uuid.NewString()
-		_package.Name = cPackage.Name
-		_package.Version = cPackage.Version
-		_package.Description = cPackage.Description
-		_package.Licenses = cPackage.License
-		_package.Type = phpType
-		_package.Path = cPackage.Name
-		_package.Metadata = cPackage
-		_package.Locations = append(_package.Locations, model.Location{
+		pkg := new(model.Package)
+		pkg.ID = uuid.NewString()
+		pkg.Name = cPackage.Name
+		pkg.Version = cPackage.Version
+		pkg.Description = cPackage.Description
+		pkg.Licenses = cPackage.License
+		pkg.Type = phpType
+		pkg.Path = cPackage.Name
+		pkg.Metadata = cPackage
+		pkg.Locations = append(pkg.Locations, model.Location{
 			Path:      util.TrimUntilLayer(*location),
 			LayerHash: location.LayerHash,
 		})
-		parseComposerPURL(_package)
-		vendorProduct := strings.Split(_package.Name, "/")
+		parseComposerPURL(pkg)
+		vendorProduct := strings.Split(pkg.Name, "/")
 		if len(vendorProduct) == 0 {
 			vendorProduct = []string{
-				_package.Name,
-				_package.Name,
+				pkg.Name,
+				pkg.Name,
 			}
 		}
-		cpe.NewCPE23(_package, vendorProduct[0], vendorProduct[1], _package.Version)
-		bom.Packages = append(bom.Packages, _package)
+		cpe.NewCPE23(pkg, vendorProduct[0], vendorProduct[1], pkg.Version)
+		bom.Packages = append(bom.Packages, pkg)
 	}
 
 	for _, cPackage := range lockFileMetadata.PackagesDev {
-		_package := new(model.Package)
-		_package.ID = uuid.NewString()
-		_package.Name = cPackage.Name
-		_package.Version = cPackage.Version
-		_package.Description = cPackage.Description
-		_package.Licenses = cPackage.License
-		_package.Type = phpType
-		_package.Path = cPackage.Name
-		_package.Metadata = cPackage
-		_package.Locations = append(_package.Locations, model.Location{
+		pkg := new(model.Package)
+		pkg.ID = uuid.NewString()
+		pkg.Name = cPackage.Name
+		pkg.Version = cPackage.Version
+		pkg.Description = cPackage.Description
+		pkg.Licenses = cPackage.License
+		pkg.Type = phpType
+		pkg.Path = cPackage.Name
+		pkg.Metadata = cPackage
+		pkg.Locations = append(pkg.Locations, model.Location{
 			Path:      util.TrimUntilLayer(*location),
 			LayerHash: location.LayerHash,
 		})
-		parseComposerPURL(_package)
-		vendorProduct := strings.Split(_package.Name, "/")
+		parseComposerPURL(pkg)
+		vendorProduct := strings.Split(pkg.Name, "/")
 		if len(vendorProduct) == 0 {
 			vendorProduct = []string{
-				_package.Name,
-				_package.Name,
+				pkg.Name,
+				pkg.Name,
 			}
 		}
-		cpe.NewCPE23(_package, vendorProduct[0], vendorProduct[1], _package.Version)
-		bom.Packages = append(bom.Packages, _package)
+		cpe.NewCPE23(pkg, vendorProduct[0], vendorProduct[1], pkg.Version)
+		bom.Packages = append(bom.Packages, pkg)
 	}
 
 	return nil
 }
 
 // Parse PURL
-func parseComposerPURL(_package *model.Package) {
-	_package.PURL = model.PURL("pkg" + ":" + "composer" + "/" + _package.Name + "@" + _package.Version)
+func parseComposerPURL(pkg *model.Package) {
+	pkg.PURL = model.PURL("pkg" + ":" + "composer" + "/" + pkg.Name + "@" + pkg.Version)
 }

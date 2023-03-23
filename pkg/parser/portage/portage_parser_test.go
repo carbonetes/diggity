@@ -22,7 +22,7 @@ type (
 	}
 
 	PortagePurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected model.PURL
 	}
 )
@@ -96,18 +96,18 @@ func TestPortageNameVersion(t *testing.T) {
 
 func TestGetPortageLicenses(t *testing.T) {
 	path := filepath.Join("..", "..", "..", "docs", "references", "portage", "var", "db", "pkg", "dev-util", "gperf-3.1-r1", portageContent)
-	var _package model.Package
+	var pkg model.Package
 	expected := []string{"GPL-2"}
 
-	if err := getPortageLicenses(&_package, path); err != nil {
+	if err := getPortageLicenses(&pkg, path); err != nil {
 		t.Error("Test Failed: Error occurred while reading portage LICENSE file.")
 	}
 
-	if len(_package.Licenses) != len(expected) {
-		t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", expected, _package.Licenses)
+	if len(pkg.Licenses) != len(expected) {
+		t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", expected, pkg.Licenses)
 	}
 
-	for i, license := range _package.Licenses {
+	for i, license := range pkg.Licenses {
 		if license != expected[i] {
 			t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", expected[i], license)
 		}
@@ -156,23 +156,23 @@ func TestParsePortageFile(t *testing.T) {
 }
 
 func TestParsePortagePackageURL(t *testing.T) {
-	_package1 := model.Package{
+	pkg1 := model.Package{
 		Name:    portagePackage1.Name,
 		Version: portagePackage1.Version,
 	}
-	_package2 := model.Package{
+	pkg2 := model.Package{
 		Name:    portagePackage2.Name,
 		Version: portagePackage2.Version,
 	}
 
 	tests := []PortagePurlResult{
-		{&_package1, model.PURL(portagePackage1.PURL)},
-		{&_package2, model.PURL(portagePackage2.PURL)},
+		{&pkg1, model.PURL(portagePackage1.PURL)},
+		{&pkg2, model.PURL(portagePackage2.PURL)},
 	}
 	for _, test := range tests {
-		parsePortagePURL(test._package)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parsePortagePURL(test.pkg)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }

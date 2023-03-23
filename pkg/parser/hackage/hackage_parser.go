@@ -144,26 +144,26 @@ func readCabalFreezeContent(location *model.Location) error {
 func initHackagePackage(location *model.Location, dep string, url string) *model.Package {
 	name, version, pkgHash, size, rev := parseExtraDep(dep)
 
-	_package := new(model.Package)
-	_package.ID = uuid.NewString()
-	_package.Name = name
-	_package.Version = version
-	_package.Path = _package.Name
-	_package.Type = hackage
-	_package.Locations = append(_package.Locations, model.Location{
+	pkg := new(model.Package)
+	pkg.ID = uuid.NewString()
+	pkg.Name = name
+	pkg.Version = version
+	pkg.Path = pkg.Name
+	pkg.Type = hackage
+	pkg.Locations = append(pkg.Locations, model.Location{
 		Path:      util.TrimUntilLayer(*location),
 		LayerHash: location.LayerHash,
 	})
-	_package.Licenses = []string{}
+	pkg.Licenses = []string{}
 
 	// get purl
-	parseHackageURL(_package)
+	parseHackageURL(pkg)
 
 	// get CPEs
-	cpe.NewCPE23(_package, "", _package.Name, _package.Version)
+	cpe.NewCPE23(pkg, "", pkg.Name, pkg.Version)
 
 	// fill metadata
-	_package.Metadata = metadata.HackageMetadata{
+	pkg.Metadata = metadata.HackageMetadata{
 		Name:        name,
 		Version:     version,
 		PkgHash:     pkgHash,
@@ -172,12 +172,12 @@ func initHackagePackage(location *model.Location, dep string, url string) *model
 		SnapshotURL: url,
 	}
 
-	return _package
+	return pkg
 }
 
 // Parse PURL
-func parseHackageURL(_package *model.Package) {
-	_package.PURL = model.PURL("pkg" + ":" + hackage + "/" + _package.Name + "@" + _package.Version)
+func parseHackageURL(pkg *model.Package) {
+	pkg.PURL = model.PURL("pkg" + ":" + hackage + "/" + pkg.Name + "@" + pkg.Version)
 }
 
 // Parse Name, Version, PkgHash, Size, and Revision from extra-deps

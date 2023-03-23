@@ -362,8 +362,8 @@ func parseMetadataFiles(m Metadata, path string) error {
 }
 
 // Parse PURL
-func parsePythonPackageURL(_package *model.Package) {
-	_package.PURL = model.PURL("pkg" + ":" + pypi + "/" + _package.Name + "@" + _package.Version)
+func parsePythonPackageURL(pkg *model.Package) {
+	pkg.PURL = model.PURL("pkg" + ":" + pypi + "/" + pkg.Name + "@" + pkg.Version)
 }
 
 // Parse requirements metadata

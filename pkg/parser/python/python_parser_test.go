@@ -9,13 +9,13 @@ import (
 
 type (
 	InitPythonPackages struct {
-		_package *model.Package
+		pkg      *model.Package
 		metadata Metadata
 		location model.Location
 		expected *model.Package
 	}
 	PythonPurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected model.PURL
 	}
 
@@ -154,10 +154,10 @@ func TestReadRequirementsContent(t *testing.T) {
 }
 
 func TestInitPythonPackages(t *testing.T) {
-	var _package1, _package2 model.Package
+	var pkg1, pkg2 model.Package
 	tests := []InitPythonPackages{
-		{&_package1, Metadata1, pythonLocation1, &pythonPackage1},
-		{&_package2, Metadata2, pythonLocation2, &pythonPackage2},
+		{&pkg1, Metadata1, pythonLocation1, &pythonPackage1},
+		{&pkg2, Metadata2, pythonLocation2, &pythonPackage2},
 	}
 	for _, test := range tests {
 		output := initPythonPackages(test.metadata, &test.location)
@@ -182,9 +182,9 @@ func TestParsePythonPackageURL(t *testing.T) {
 		{&pythonPackage2, model.PURL("pkg:pypi/Python@2.7.16")},
 	}
 	for _, test := range tests {
-		parsePythonPackageURL(test._package)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parsePythonPackageURL(test.pkg)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }

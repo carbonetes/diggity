@@ -9,7 +9,7 @@ import (
 
 type (
 	DotnetPurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected model.PURL
 	}
 )
@@ -95,9 +95,9 @@ func TestParseNugetPURL(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		parseNugetPURL(test._package)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parseNugetPURL(test.pkg)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }

@@ -83,37 +83,37 @@ func readNpmContent(location *model.Location) error {
 	}
 
 	if NpmMetadata.Name != "" {
-		_package := new(model.Package)
-		_package.ID = uuid.NewString()
-		_package.Locations = append(_package.Locations, model.Location{
+		pkg := new(model.Package)
+		pkg.ID = uuid.NewString()
+		pkg.Locations = append(pkg.Locations, model.Location{
 			Path:      util.TrimUntilLayer(*location),
 			LayerHash: location.LayerHash,
 		})
 
 		// // init npm data
-		_package.Name = NpmMetadata.Name
-		_package.Version = NpmMetadata.Version
-		_package.Description = NpmMetadata.Description
-		_package.Type = npm
-		_package.Path = NpmMetadata.Name
+		pkg.Name = NpmMetadata.Name
+		pkg.Version = NpmMetadata.Version
+		pkg.Description = NpmMetadata.Description
+		pkg.Type = npm
+		pkg.Path = NpmMetadata.Name
 
 		// // check type of license then parse
 		switch NpmMetadata.License.(type) {
 		case string:
-			_package.Licenses = append(_package.Licenses, NpmMetadata.License.(string))
+			pkg.Licenses = append(pkg.Licenses, NpmMetadata.License.(string))
 		case map[string]interface{}:
 			license := NpmMetadata.License.(map[string]interface{})
 			if _, ok := license["type"]; ok {
-				_package.Licenses = append(_package.Licenses, license["type"].(string))
+				pkg.Licenses = append(pkg.Licenses, license["type"].(string))
 			}
 		}
 
 		// //parseURL
-		parseNpmPackageURL(_package)
-		cpe.NewCPE23(_package, _package.Name, _package.Name, _package.Version)
-		_package.Metadata = NpmMetadata
+		parseNpmPackageURL(pkg)
+		cpe.NewCPE23(pkg, pkg.Name, pkg.Name, pkg.Version)
+		pkg.Metadata = NpmMetadata
 
-		bom.Packages = append(bom.Packages, _package)
+		bom.Packages = append(bom.Packages, pkg)
 
 	}
 	return nil
@@ -138,25 +138,25 @@ func readNpmLockContent(location *model.Location) error {
 
 	if len(NpmLockMetadata.Dependencies) > 0 {
 		for name, cPackage := range NpmLockMetadata.Dependencies {
-			_package := new(model.Package)
-			_package.ID = uuid.NewString()
-			_package.Locations = append(_package.Locations, model.Location{
+			pkg := new(model.Package)
+			pkg.ID = uuid.NewString()
+			pkg.Locations = append(pkg.Locations, model.Location{
 				Path:      util.TrimUntilLayer(*location),
 				LayerHash: location.LayerHash,
 			})
 
 			// // init npm data
-			_package.Name = name
-			_package.Version = cPackage.Version
-			_package.Type = npm
-			_package.Path = name
+			pkg.Name = name
+			pkg.Version = cPackage.Version
+			pkg.Type = npm
+			pkg.Path = name
 
 			// //parseURL
-			parseNpmPackageURL(_package)
-			cpe.NewCPE23(_package, _package.Name, _package.Name, _package.Version)
-			_package.Metadata = cPackage
+			parseNpmPackageURL(pkg)
+			cpe.NewCPE23(pkg, pkg.Name, pkg.Name, pkg.Version)
+			pkg.Metadata = cPackage
 
-			bom.Packages = append(bom.Packages, _package)
+			bom.Packages = append(bom.Packages, pkg)
 
 		}
 	}
@@ -199,24 +199,24 @@ func readYarnLockContent(location *model.Location) error {
 		}
 
 		if _, ok := metadata["Name"].(string); ok && len(keyValue) == 0 && len(metadata) >= 2 {
-			_package := new(model.Package)
-			_package.ID = uuid.NewString()
-			_package.Type = npm
-			_package.Name = metadata["Name"].(string)
-			_package.Path = metadata["Name"].(string)
+			pkg := new(model.Package)
+			pkg.ID = uuid.NewString()
+			pkg.Type = npm
+			pkg.Name = metadata["Name"].(string)
+			pkg.Path = metadata["Name"].(string)
 
 			if metadata["Version"] != nil {
-				_package.Version = metadata["Version"].(string)
+				pkg.Version = metadata["Version"].(string)
 			}
 
-			_package.Locations = append(_package.Locations, model.Location{
+			pkg.Locations = append(pkg.Locations, model.Location{
 				Path:      util.TrimUntilLayer(*location),
 				LayerHash: location.LayerHash,
 			})
-			parseNpmPackageURL(_package)
-			cpe.NewCPE23(_package, _package.Name, _package.Name, _package.Version)
-			_package.Metadata = metadata
-			bom.Packages = append(bom.Packages, _package)
+			parseNpmPackageURL(pkg)
+			cpe.NewCPE23(pkg, pkg.Name, pkg.Name, pkg.Version)
+			pkg.Metadata = metadata
+			bom.Packages = append(bom.Packages, pkg)
 			metadata = LockMetadata{}
 		}
 	}
@@ -225,6 +225,6 @@ func readYarnLockContent(location *model.Location) error {
 }
 
 // Parse PURL
-func parseNpmPackageURL(_package *model.Package) {
-	_package.PURL = model.PURL("pkg" + ":" + npm + "/" + _package.Name + "@" + _package.Version)
+func parseNpmPackageURL(pkg *model.Package) {
+	pkg.PURL = model.PURL("pkg" + ":" + npm + "/" + pkg.Name + "@" + pkg.Version)
 }

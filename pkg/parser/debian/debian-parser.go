@@ -87,17 +87,17 @@ func readContent(location *model.Location) error {
 		previousAttribute = attribute
 
 		if len(keyValue) == 0 {
-			_package := new(model.Package)
-			_package.ID = uuid.NewString()
-			_package.Type = debType
-			_package.Path = dpkgStatusPath
-			_package.Locations = append(_package.Locations, model.Location{
+			pkg := new(model.Package)
+			pkg.ID = uuid.NewString()
+			pkg.Type = debType
+			pkg.Path = dpkgStatusPath
+			pkg.Locations = append(pkg.Locations, model.Location{
 				Path:      util.TrimUntilLayer(*location),
 				LayerHash: location.LayerHash,
 			})
 			// init debian data
-			initDebianPackage(_package, location, metadata)
-			bom.Packages = append(bom.Packages, _package)
+			initDebianPackage(pkg, location, metadata)
+			bom.Packages = append(bom.Packages, pkg)
 
 			// Reset metadata
 			metadata = make(Metadata)
@@ -180,7 +180,7 @@ func parseDebianFiles(m Metadata, filesContent string) {
 }
 
 // Search licenses in existing directory
-func searchLicenseOnFileSystem(_package *model.Package, dpkgDocPath string) {
+func searchLicenseOnFileSystem(pkg *model.Package, dpkgDocPath string) {
 	// use map license to avoid duplicate entry of license
 	var mapLicense = make(map[string]string)
 	var value string
@@ -210,10 +210,10 @@ func searchLicenseOnFileSystem(_package *model.Package, dpkgDocPath string) {
 		}
 	}
 
-	_package.Licenses = licenses
+	pkg.Licenses = licenses
 }
 
 // Parse PURL
-func parseDebianPackageURL(_package *model.Package, architecture string) {
-	_package.PURL = model.PURL("pkg" + ":" + "deb" + "/" + _package.Name + "@" + _package.Version + "?arch=" + architecture)
+func parseDebianPackageURL(pkg *model.Package, architecture string) {
+	pkg.PURL = model.PURL("pkg" + ":" + "deb" + "/" + pkg.Name + "@" + pkg.Version + "?arch=" + architecture)
 }

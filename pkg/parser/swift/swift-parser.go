@@ -50,8 +50,8 @@ func parseSwiftPackages(location *model.Location) error {
 	}
 
 	for _, cPackage := range podFileLockFileMetadata.Pods {
-		_package := new(model.Package)
-		_package.ID = uuid.NewString()
+		pkg := new(model.Package)
+		pkg.ID = uuid.NewString()
 
 		//check metadata in podfile lock file
 		var pods string
@@ -69,32 +69,32 @@ func parseSwiftPackages(location *model.Location) error {
 		name := splits[0]
 		version := strings.TrimSuffix(strings.TrimPrefix(splits[1], "("), ")")
 
-		_package.Name = name
-		_package.Version = version
-		_package.Type = pod
-		_package.Path = name
-		_package.Locations = append(_package.Locations, model.Location{
+		pkg.Name = name
+		pkg.Version = version
+		pkg.Type = pod
+		pkg.Path = name
+		pkg.Locations = append(pkg.Locations, model.Location{
 			Path:      util.TrimUntilLayer(*location),
 			LayerHash: location.LayerHash,
 		})
 		basepodname := strings.Split(name, "/")[0]
-		cpe.NewCPE23(_package, name, name, version)
-		parseSwiftPURL(_package)
+		cpe.NewCPE23(pkg, name, name, version)
+		parseSwiftPURL(pkg)
 		if val, ok := podFileLockFileMetadata.SpecChecksums[basepodname]; ok {
-			_package.Metadata = metadata.PodFileLockMetadataCheckSums{
+			pkg.Metadata = metadata.PodFileLockMetadataCheckSums{
 				Checksums: val,
 			}
 		} else {
 			return nil
 		}
 
-		bom.Packages = append(bom.Packages, _package)
+		bom.Packages = append(bom.Packages, pkg)
 	}
 
 	return nil
 }
 
 // Parse PURL
-func parseSwiftPURL(_package *model.Package) {
-	_package.PURL = model.PURL("pkg" + ":" + "cocoapods" + "/" + _package.Name + "@" + _package.Version)
+func parseSwiftPURL(pkg *model.Package) {
+	pkg.PURL = model.PURL("pkg" + ":" + "cocoapods" + "/" + pkg.Name + "@" + pkg.Version)
 }

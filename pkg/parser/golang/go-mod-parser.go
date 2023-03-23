@@ -72,16 +72,16 @@ func readGoModContent(location *model.Location) error {
 
 	// Initial Package List
 	for _, modPkg := range goModFile.Require {
-		_package := new(model.Package)
-		_package = initGoModPackage(_package, location, modPkg)
-		bom.Packages = append(bom.Packages, _package)
+		pkg := new(model.Package)
+		pkg = initGoModPackage(pkg, location, modPkg)
+		bom.Packages = append(bom.Packages, pkg)
 	}
 
 	// Add New to Package List
 	for _, modPkg := range goModFile.Replace {
-		_package := new(model.Package)
-		_package = initGoModPackage(_package, location, modPkg)
-		bom.Packages = append(bom.Packages, _package)
+		pkg := new(model.Package)
+		pkg = initGoModPackage(pkg, location, modPkg)
+		bom.Packages = append(bom.Packages, pkg)
 	}
 
 	// Cleanup Excluded Packages
@@ -135,7 +135,7 @@ func initGoModPackage(p *model.Package, location *model.Location, modPkg interfa
 }
 
 // Initialize go metadata values from content
-func initGoModMetadata(_package *model.Package, modPkg interface{}) {
+func initGoModMetadata(pkg *model.Package, modPkg interface{}) {
 	var finalMetadata = metadata.GoModMetadata{}
 
 	switch goPkg := modPkg.(type) {
@@ -147,12 +147,12 @@ func initGoModMetadata(_package *model.Package, modPkg interface{}) {
 		finalMetadata.Version = goPkg.New.Version
 	}
 
-	_package.Metadata = finalMetadata
+	pkg.Metadata = finalMetadata
 }
 
 // Parse PURL
-func parseGoPackageURL(_package *model.Package) {
-	_package.PURL = model.PURL("pkg" + ":" + golang + "/" + _package.Name + "@" + _package.Version)
+func parseGoPackageURL(pkg *model.Package) {
+	pkg.PURL = model.PURL("pkg" + ":" + golang + "/" + pkg.Name + "@" + pkg.Version)
 }
 
 // Cleanup excluded packages

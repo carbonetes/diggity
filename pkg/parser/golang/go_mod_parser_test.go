@@ -18,18 +18,18 @@ type (
 		expected []string
 	}
 	GoModPurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected model.PURL
 	}
 
 	GoModMetadataResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		modPkg   interface{}
 		expected metadata.GoModMetadata
 	}
 
 	InitGoModPackageResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		location *model.Location
 		modPkg   interface{}
 		expected *model.Package
@@ -168,16 +168,16 @@ func TestReadGoModContent(t *testing.T) {
 }
 
 func TestInitGoModPackage(t *testing.T) {
-	var _package1, _package2, _package3 model.Package
+	var pkg1, pkg2, pkg3 model.Package
 
 	tests := []InitGoModPackageResult{
-		{&_package1, &goModLocation1, &modPkg1, &goModPackage1},
-		{&_package2, &goModLocation2, &modPkg2, &goModPackage2},
-		{&_package3, &goModLocation3, &modPkg3, &goModPackage3},
+		{&pkg1, &goModLocation1, &modPkg1, &goModPackage1},
+		{&pkg2, &goModLocation2, &modPkg2, &goModPackage2},
+		{&pkg3, &goModLocation3, &modPkg3, &goModPackage3},
 	}
 
 	for _, test := range tests {
-		output := initGoModPackage(test._package, test.location, test.modPkg)
+		output := initGoModPackage(test.pkg, test.location, test.modPkg)
 		outputMetadata := output.Metadata.(metadata.GoModMetadata)
 		expectedMetadata := test.expected.Metadata.(metadata.GoModMetadata)
 
@@ -214,59 +214,59 @@ func TestInitGoModPackage(t *testing.T) {
 }
 
 func TestInitGoModMetadata(t *testing.T) {
-	var _package1, _package2, _package3 model.Package
+	var pkg1, pkg2, pkg3 model.Package
 
 	tests := []GoModMetadataResult{
-		{&_package1, &modPkg1, metadata.GoModMetadata{
+		{&pkg1, &modPkg1, metadata.GoModMetadata{
 			Path:    "gitlab.com/yawning/obfs4.git",
 			Version: "v0.0.0-20220204003609-77af0cba934d",
 		}},
-		{&_package2, &modPkg2, metadata.GoModMetadata{
+		{&pkg2, &modPkg2, metadata.GoModMetadata{
 			Path:    "github.com/kr/pretty",
 			Version: "v0.1.0",
 		}},
-		{&_package3, &modPkg3, metadata.GoModMetadata{
+		{&pkg3, &modPkg3, metadata.GoModMetadata{
 			Path:    "github.com/tomarrell/wrapcheck",
 			Version: "v1.0.0",
 		}},
 	}
 
 	for _, test := range tests {
-		initGoModMetadata(test._package, test.modPkg)
+		initGoModMetadata(test.pkg, test.modPkg)
 
-		outputMetadata := test._package.Metadata.(metadata.GoModMetadata)
+		outputMetadata := test.pkg.Metadata.(metadata.GoModMetadata)
 		expectedMetadata := test.expected
 
 		if outputMetadata.Path != expectedMetadata.Path ||
 			outputMetadata.Version != expectedMetadata.Version {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, test._package.Metadata)
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, test.pkg.Metadata)
 		}
 	}
 }
 func TestGoModPackageURL(t *testing.T) {
-	_package1 := model.Package{
+	pkg1 := model.Package{
 		Name:    goModPackage1.Name,
 		Version: goModPackage1.Version,
 	}
-	_package2 := model.Package{
+	pkg2 := model.Package{
 		Name:    goModPackage2.Name,
 		Version: goModPackage2.Version,
 	}
-	_package3 := model.Package{
+	pkg3 := model.Package{
 		Name:    goModPackage3.Name,
 		Version: goModPackage3.Version,
 	}
 
 	tests := []GoModPurlResult{
-		{&_package1, model.PURL("pkg:golang/gitlab.com/yawning/obfs4.git@v0.0.0-20220204003609-77af0cba934d")},
-		{&_package2, model.PURL("pkg:golang/github.com/kr/pretty@v0.1.0")},
-		{&_package3, model.PURL("pkg:golang/github.com/tomarrell/wrapcheck@v1.0.0")},
+		{&pkg1, model.PURL("pkg:golang/gitlab.com/yawning/obfs4.git@v0.0.0-20220204003609-77af0cba934d")},
+		{&pkg2, model.PURL("pkg:golang/github.com/kr/pretty@v0.1.0")},
+		{&pkg3, model.PURL("pkg:golang/github.com/tomarrell/wrapcheck@v1.0.0")},
 	}
 
 	for _, test := range tests {
-		parseGoPackageURL(test._package)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parseGoPackageURL(test.pkg)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }

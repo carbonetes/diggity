@@ -34,11 +34,11 @@ type (
 	}
 
 	FormatDevelCPEsResult struct {
-		_package model.Package
+		pkg      model.Package
 		expected []string
 	}
 	GoBinMetadataResult struct {
-		_package  *model.Package
+		pkg       *model.Package
 		dep       *debug.Module
 		buildData *debug.BuildInfo
 		expected  metadata.GoBinMetadata
@@ -50,7 +50,7 @@ type (
 		expected  *model.Package
 	}
 	InitGoBinPackageResult struct {
-		_package  *model.Package
+		pkg       *model.Package
 		location  *model.Location
 		buildData *debug.BuildInfo
 		dep       *debug.Module
@@ -265,16 +265,16 @@ func TestAppendGoBinPackage(t *testing.T) {
 }
 
 func TestInitGoBinPackage(t *testing.T) {
-	var _package1, _package2, _package3 model.Package
+	var pkg1, pkg2, pkg3 model.Package
 
 	tests := []InitGoBinPackageResult{
-		{&_package1, &goBinLocation1, &testBuildData1, &goBinDep1, &goBinPackage1},
-		{&_package2, &goBinLocation2, &testBuildData1, &goBinDep2, &goBinPackage2},
-		{&_package3, &goBinLocation3, &testBuildData2, &goBinDep3, &goBinPackage3},
+		{&pkg1, &goBinLocation1, &testBuildData1, &goBinDep1, &goBinPackage1},
+		{&pkg2, &goBinLocation2, &testBuildData1, &goBinDep2, &goBinPackage2},
+		{&pkg3, &goBinLocation3, &testBuildData2, &goBinDep3, &goBinPackage3},
 	}
 
 	for _, test := range tests {
-		output := initGoBinPackage(test._package, test.location, test.buildData, test.dep)
+		output := initGoBinPackage(test.pkg, test.location, test.buildData, test.dep)
 		outputMetadata := output.Metadata.(metadata.GoBinMetadata)
 		expectedMetadata := test.expected.Metadata.(metadata.GoBinMetadata)
 
@@ -316,10 +316,10 @@ func TestInitGoBinPackage(t *testing.T) {
 }
 
 func TestInitGoBinMetadata(t *testing.T) {
-	var _package1, _package2, _package3 model.Package
+	var pkg1, pkg2, pkg3 model.Package
 
 	tests := []GoBinMetadataResult{
-		{&_package1, &goBinDep1, &testBuildData1, metadata.GoBinMetadata{
+		{&pkg1, &goBinDep1, &testBuildData1, metadata.GoBinMetadata{
 			Architecture:     "amd64",
 			Compiler:         "gc",
 			OS:               "linux",
@@ -328,7 +328,7 @@ func TestInitGoBinMetadata(t *testing.T) {
 			Path:             "gitlab.com/yawning/obfs4.git",
 			Version:          "v0.0.0-20220204003609-77af0cba934d",
 		}},
-		{&_package2, &goBinDep2, &testBuildData1, metadata.GoBinMetadata{
+		{&pkg2, &goBinDep2, &testBuildData1, metadata.GoBinMetadata{
 			Architecture:     "amd64",
 			Compiler:         "gc",
 			OS:               "linux",
@@ -337,7 +337,7 @@ func TestInitGoBinMetadata(t *testing.T) {
 			Path:             "github.com/kr/pretty",
 			Version:          "v0.1.0",
 		}},
-		{&_package3, &goBinDep3, &testBuildData2, metadata.GoBinMetadata{
+		{&pkg3, &goBinDep3, &testBuildData2, metadata.GoBinMetadata{
 			Architecture:     "amd64",
 			Compiler:         "gc",
 			OS:               "linux",
@@ -349,13 +349,13 @@ func TestInitGoBinMetadata(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		initGoBinMetadata(test._package, test.dep, test.buildData)
+		initGoBinMetadata(test.pkg, test.dep, test.buildData)
 
-		outputMetadata := test._package.Metadata.(metadata.GoBinMetadata)
+		outputMetadata := test.pkg.Metadata.(metadata.GoBinMetadata)
 		expectedMetadata := test.expected
 
 		if outputMetadata != expectedMetadata {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, test._package.Metadata)
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, test.pkg.Metadata)
 		}
 	}
 }
@@ -366,11 +366,11 @@ func TestFormatDevelCPEs(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		output := formatDevelCPEs(&test._package)
+		output := formatDevelCPEs(&test.pkg)
 		if len(output) > 0 {
 			for i := range output {
 				if string(output[i]) != test.expected[i] {
-					t.Errorf("Test Failed: \nIndex: %v of input %v must be equal to %v, received: %v", i, test._package.CPEs[i], test.expected[i], output[i])
+					t.Errorf("Test Failed: \nIndex: %v of input %v must be equal to %v, received: %v", i, test.pkg.CPEs[i], test.expected[i], output[i])
 				}
 			}
 		}

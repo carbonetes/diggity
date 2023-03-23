@@ -16,7 +16,7 @@ type (
 	}
 
 	ConanPurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected model.PURL
 	}
 
@@ -164,23 +164,23 @@ func TestInitConanPackage(t *testing.T) {
 }
 
 func TestParseConanPackageURL(t *testing.T) {
-	_package1 := model.Package{
+	pkg1 := model.Package{
 		Name:    conanPackage1.Name,
 		Version: conanPackage1.Version,
 	}
-	_package2 := model.Package{
+	pkg2 := model.Package{
 		Name:    conanPackage2.Name,
 		Version: conanPackage2.Version,
 	}
 
 	tests := []ConanPurlResult{
-		{&_package1, model.PURL(conanPackage1.PURL)},
-		{&_package2, model.PURL(conanPackage2.PURL)},
+		{&pkg1, model.PURL(conanPackage1.PURL)},
+		{&pkg2, model.PURL(conanPackage2.PURL)},
 	}
 	for _, test := range tests {
-		parseConanPackageURL(test._package)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parseConanPackageURL(test.pkg)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }

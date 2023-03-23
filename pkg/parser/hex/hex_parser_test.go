@@ -9,7 +9,7 @@ import (
 
 type (
 	HexPurlResult struct {
-		_package *model.Package
+		pkg      *model.Package
 		expected model.PURL
 	}
 )
@@ -112,9 +112,9 @@ func TestParseHexPURL(t *testing.T) {
 		{&hexPackage3, model.PURL(hexPackage3.PURL)},
 	}
 	for _, test := range tests {
-		parseHexPURL(test._package)
-		if test._package.PURL != test.expected {
-			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test._package.PURL)
+		parseHexPURL(test.pkg)
+		if test.pkg.PURL != test.expected {
+			t.Errorf("Test Failed: Expected an output of %v, received: %v", test.expected, test.pkg.PURL)
 		}
 	}
 }
