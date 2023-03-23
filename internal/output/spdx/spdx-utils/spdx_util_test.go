@@ -6,13 +6,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/carbonetes/diggity/internal/parser/alpine"
-	"github.com/carbonetes/diggity/internal/parser/debian"
-	"github.com/carbonetes/diggity/internal/parser/gem"
-	"github.com/carbonetes/diggity/internal/parser/java"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/model/output"
+	"github.com/carbonetes/diggity/pkg/parser/alpine"
+	"github.com/carbonetes/diggity/pkg/parser/debian"
+	"github.com/carbonetes/diggity/pkg/parser/gem"
+	"github.com/carbonetes/diggity/pkg/parser/java"
 )
 
 type (

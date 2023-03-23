@@ -4,8 +4,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/carbonetes/diggity/internal/parser/bom"
 	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 var (

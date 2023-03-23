@@ -12,11 +12,11 @@ import (
 	"github.com/carbonetes/diggity/internal/output/save"
 	"github.com/carbonetes/diggity/internal/output/spdx"
 	"github.com/carbonetes/diggity/internal/output/tabular"
-	"github.com/carbonetes/diggity/internal/parser/bom"
-	"github.com/carbonetes/diggity/internal/parser/distro"
-	"github.com/carbonetes/diggity/internal/parser/docker"
 	"github.com/carbonetes/diggity/internal/secret"
 	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/distro"
+	"github.com/carbonetes/diggity/pkg/parser/docker"
 
 	"golang.org/x/exp/maps"
 )

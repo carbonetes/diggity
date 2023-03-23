@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/carbonetes/diggity/internal/parser/bom"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/output"
+	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 type (

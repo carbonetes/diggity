@@ -9,10 +9,10 @@ import (
 
 	"github.com/carbonetes/diggity/internal/attestation"
 	"github.com/carbonetes/diggity/internal/logger"
-	"github.com/carbonetes/diggity/internal/parser/bom"
-	"github.com/carbonetes/diggity/internal/parser/util"
 	versionPackage "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/util"
 
 	sbom "github.com/carbonetes/diggity/internal"
 

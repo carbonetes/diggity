@@ -13,9 +13,9 @@ import (
 	"github.com/carbonetes/diggity/internal/output/save"
 	spdxutils "github.com/carbonetes/diggity/internal/output/spdx/spdx-utils"
 	"github.com/carbonetes/diggity/internal/output/util"
-	"github.com/carbonetes/diggity/internal/parser/bom"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/output"
+	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 // PrintSpdxJSON Print Packages in SPDX-JSON format

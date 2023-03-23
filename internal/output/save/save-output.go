@@ -3,7 +3,7 @@ package save
 import (
 	"os"
 
-	"github.com/carbonetes/diggity/internal/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 // ResultToFile saves output to a file
