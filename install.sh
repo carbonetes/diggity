@@ -200,7 +200,8 @@ install_diggity() {
     if command -v $repo --version >/dev/null; then
         echo "Run '$repo --help' to get started"
     else
-        export PATH=${executable_folder}:\$PATH
+        echo "Manually add the directory to your \$HOME/.bash_profile (or similar)"
+        echo "  export PATH=${executable_folder}:\$PATH"
         echo "Run '$exe_name --help' to get started"
     fi
 }
