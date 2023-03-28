@@ -486,18 +486,18 @@ func TestExternalRefs(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		_output := ExternalRefs(test.pkg)
-		if len(_output) != len(test.expected) {
-			t.Errorf("Test Failed: Input %v must have an output of %v, received: %v", test.pkg, test.expected, _output)
+		output := ExternalRefs(test.pkg)
+		if len(output) != len(test.expected) {
+			t.Errorf("Test Failed: Input %v must have an output of %v, received: %v", test.pkg, test.expected, output)
 		}
-		if len(_output) <= 0 {
+		if len(output) <= 0 {
 			return
 		}
-		for i := range _output {
-			if _output[i].ReferenceCategory != test.expected[i].ReferenceCategory ||
-				_output[i].ReferenceLocator != test.expected[i].ReferenceLocator ||
-				_output[i].ReferenceType != test.expected[i].ReferenceType {
-				t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected[i], _output[i])
+		for i := range output {
+			if output[i].ReferenceCategory != test.expected[i].ReferenceCategory ||
+				output[i].ReferenceLocator != test.expected[i].ReferenceLocator ||
+				output[i].ReferenceType != test.expected[i].ReferenceType {
+				t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected[i], output[i])
 			}
 		}
 	}
@@ -514,8 +514,8 @@ func TestHomepage(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := Homepage(test.pkg); _output != test.expected {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, _output)
+		if output := Homepage(test.pkg); output != test.expected {
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, output)
 		}
 	}
 }
@@ -532,8 +532,8 @@ func TestLicensesDeclared(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := LicensesDeclared(test.pkg); _output != test.expected {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, _output)
+		if output := LicensesDeclared(test.pkg); output != test.expected {
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, output)
 		}
 	}
 }
@@ -550,8 +550,8 @@ func TestSourceInfo(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := SourceInfo(test.pkg); _output != test.expected {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, _output)
+		if output := SourceInfo(test.pkg); output != test.expected {
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, output)
 		}
 	}
 }
@@ -568,8 +568,8 @@ func TestDownloadLocation(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := DownloadLocation(test.pkg); _output != test.expected {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, _output)
+		if output := DownloadLocation(test.pkg); output != test.expected {
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, output)
 		}
 	}
 }
@@ -585,8 +585,8 @@ func TestOriginator(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := Originator(test.pkg); _output != test.expected {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, _output)
+		if output := Originator(test.pkg); output != test.expected {
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, output)
 		}
 	}
 }
@@ -605,8 +605,8 @@ func TestFormatName(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := FormatName(&test.input); _output != test.expected {
-			t.Errorf("Test Failed: Input %v must have an output of %v, received: %v", test.input, test.expected, _output)
+		if output := FormatName(&test.input); output != test.expected {
+			t.Errorf("Test Failed: Input %v must have an output of %v, received: %v", test.input, test.expected, output)
 		}
 	}
 }
@@ -616,14 +616,14 @@ func TestFormatNamespace(t *testing.T) {
 	images := []string{"bom", "smartentry/centos", "s390x/debian", "furynix/fedora", "gost/go", "test", "app"}
 
 	for _, image := range images {
-		_output := FormatNamespace(image)
-		uuid := strings.Split(_output, image+"-")[1]
+		output := FormatNamespace(image)
+		uuid := strings.Split(output, image+"-")[1]
 
 		if !r.MatchString(uuid) {
-			t.Errorf("Test Failed: Output of %v must contain a valid UUID, received: %v", image, _output)
+			t.Errorf("Test Failed: Output of %v must contain a valid UUID, received: %v", image, output)
 		}
-		if !strings.Contains(_output, namespace+image) {
-			t.Errorf("Test Failed: Output of %v must contain %v, received: %v", image, namespace+image, _output)
+		if !strings.Contains(output, namespace+image) {
+			t.Errorf("Test Failed: Output of %v must contain %v, received: %v", image, namespace+image, output)
 		}
 	}
 }
@@ -637,8 +637,8 @@ func TestFormatPath(t *testing.T) {
 		{filepath.Join("app"), "app"},
 	}
 	for _, test := range tests {
-		if _output := FormatPath(test.input); _output != test.expected {
-			t.Errorf("Test Failed: Input %v must have an output of %v, received: %v", test.input, test.expected, _output)
+		if output := FormatPath(test.input); output != test.expected {
+			t.Errorf("Test Failed: Input %v must have an output of %v, received: %v", test.input, test.expected, output)
 		}
 	}
 }
@@ -655,8 +655,8 @@ func TestFormatTagID(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := FormatTagID(test.pkg); _output != test.expected {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, _output)
+		if output := FormatTagID(test.pkg); output != test.expected {
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, output)
 		}
 	}
 }
@@ -674,8 +674,8 @@ func TestCheckLicense(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := CheckLicense(test.input); _output != test.expected {
-			t.Errorf("Test Failed: Input %v must have an output of %v, received: %v", test.input, test.expected, _output)
+		if output := CheckLicense(test.input); output != test.expected {
+			t.Errorf("Test Failed: Input %v must have an output of %v, received: %v", test.input, test.expected, output)
 		}
 	}
 }
@@ -694,8 +694,8 @@ func TestFormatAuthor(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := FormatAuthor(test.input); _output != test.expected {
-			t.Errorf("Test Failed: Input %v must have an output of %v, received: %v", test.input, test.expected, _output)
+		if output := FormatAuthor(test.input); output != test.expected {
+			t.Errorf("Test Failed: Input %v must have an output of %v, received: %v", test.input, test.expected, output)
 		}
 	}
 }

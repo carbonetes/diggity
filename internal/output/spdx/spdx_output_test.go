@@ -288,10 +288,10 @@ func TestSpdxJSONPackages(t *testing.T) {
 		},
 	}
 
-	_output := spdxJSONPackages(packages)
+	output := spdxJSONPackages(packages)
 
-	for i, spdxPkg := range _output {
-		for j, exRef := range _output[i].ExternalRefs {
+	for i, spdxPkg := range output {
+		for j, exRef := range output[i].ExternalRefs {
 			if exRef != expected[i].ExternalRefs[j] {
 				t.Errorf("Test Failed: Expected output of %v, received: %v", expected[i].ExternalRefs[j], exRef)
 			}
@@ -309,7 +309,7 @@ func TestSpdxJSONPackages(t *testing.T) {
 			spdxPkg.SourceInfo != expected[i].SourceInfo ||
 			spdxPkg.VersionInfo != expected[i].VersionInfo ||
 			spdxPkg.Copyright != expected[i].Copyright {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", expected[i], _output[i])
+			t.Errorf("Test Failed: Expected output of %v, received: %v", expected[i], output[i])
 		}
 
 	}
