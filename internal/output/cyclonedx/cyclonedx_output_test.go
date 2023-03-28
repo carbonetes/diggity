@@ -7,25 +7,25 @@ import (
 	"testing"
 	"time"
 
+	cyclonedx "github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/model/output"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 type (
 	AddDistroComponenetResult struct {
 		_distro  *model.Distro
-		expected output.Component
+		expected cyclonedx.Component
 	}
 
 	ConvertToComponentResult struct {
 		pkg      *model.Package
-		expected output.Component
+		expected cyclonedx.Component
 	}
 
 	InitPropertiesResult struct {
 		pkg      *model.Package
-		expected []output.Property
+		expected []cyclonedx.Property
 	}
 
 	AddIDResult struct {
@@ -35,7 +35,7 @@ type (
 
 	ConvertLicenseResult struct {
 		pkg      *model.Package
-		expected []output.License
+		expected []cyclonedx.LicenseChoice
 	}
 )
 
@@ -165,27 +165,29 @@ var (
 
 func TestConvertPackage(t *testing.T) {
 	bom.Packages = []*model.Package{&cdxPackage1, &cdxPackage2, &cdxPackage3, &cdxPackage4}
-	expected := output.CycloneFormat{
+	expected := cyclonedx.BOM{
 		XMLNS: XMLN,
-		Metadata: &output.Metadata{
-			Tools: &[]output.Tool{
+		Metadata: &cyclonedx.Metadata{
+			Tools: &[]cyclonedx.Tool{
 				{
 					Vendor: vendor,
 					Name:   name,
 				},
 			},
 		},
-		Components: &[]output.Component{
+		Components: &[]cyclonedx.Component{
 			{
 				BOMRef:     "pkg:rpm/hardlink@1.0arch=x86_64?package-id=",
 				Type:       library,
 				Name:       "hardlink",
 				Version:    "1.0",
 				PackageURL: string(model.PURL("pkg:rpm/hardlink@1.0arch=x86_64")),
-				Licenses: &[]output.License{
-					{ID: "GPL+"},
+				Licenses: &cyclonedx.Licenses{
+					cyclonedx.LicenseChoice{
+						License: &cyclonedx.License{ID: "GPL+"},
+					},
 				},
-				Properties: &[]output.Property{
+				Properties: &[]cyclonedx.Property{
 					{Name: "diggity:package:type", Value: "rpm"},
 					{Name: "diggity:cpe23", Value: "cpe:2.3:a:redhat:hardlink:1.0-19.el7:*:*:*:*:*:*:*"},
 					{Name: "diggity:cpe23", Value: "cpe:2.3:a:hardlink:hardlink:1.0-19.el7:*:*:*:*:*:*:*"},
@@ -199,10 +201,12 @@ func TestConvertPackage(t *testing.T) {
 				Name:       "libapt-pkg6.0",
 				Version:    "2.2.4",
 				PackageURL: string(model.PURL("pkg:deb/libapt-pkg6.0@2.2.4arch=s390x")),
-				Licenses: &[]output.License{
-					{ID: "GPLv2+"},
+				Licenses: &cyclonedx.Licenses{
+					cyclonedx.LicenseChoice{
+						License: &cyclonedx.License{ID: "GPLv2+"},
+					},
 				},
-				Properties: &[]output.Property{
+				Properties: &[]cyclonedx.Property{
 					{Name: "diggity:package:type", Value: "deb"},
 					{Name: "diggity:cpe23", Value: "cpe:2.3:a:libapt-pkg6.0:libapt-pkg6.0:2.2.4:*:*:*:*:*:*:*"},
 					{Name: "diggity:location:0:layerHash", Value: "f1a5f5ce6b163fac7f09b47645c56d2ab676bdcdb268eef06a4d9b782a75bfd0"},
@@ -217,10 +221,12 @@ func TestConvertPackage(t *testing.T) {
 				Name:       "phpdocumentor/reflection",
 				Version:    "5.2.0",
 				PackageURL: string(model.PURL("pkg:composer/phpdocumentor/reflection@5.2.0")),
-				Licenses: &[]output.License{
-					{ID: "MIT"},
+				Licenses: &cyclonedx.Licenses{
+					cyclonedx.LicenseChoice{
+						License: &cyclonedx.License{ID: "MIT"},
+					},
 				},
-				Properties: &[]output.Property{
+				Properties: &[]cyclonedx.Property{
 					{Name: "diggity:package:type", Value: "php"},
 					{Name: "diggity:cpe23", Value: "cpe:2.3:a:phpdocumentor:reflection:5.2.0:*:*:*:*:*:*:*"},
 					{Name: "diggity:cpe23", Value: "cpe:2.3:a:reflection:reflection:5.2.0:*:*:*:*:*:*:*"},
@@ -234,10 +240,12 @@ func TestConvertPackage(t *testing.T) {
 				Name:       "zlib",
 				Version:    "1.2.12-r3",
 				PackageURL: string(model.PURL("pkg:alpine/zlib@1.2.12-r3?arch=x86_64\u0026upstream=zlib\u0026distro=")),
-				Licenses: &[]output.License{
-					{ID: "Zlib"},
+				Licenses: &cyclonedx.Licenses{
+					cyclonedx.LicenseChoice{
+						License: &cyclonedx.License{ID: "Zlib"},
+					},
 				},
-				Properties: &[]output.Property{
+				Properties: &[]cyclonedx.Property{
 					{Name: "diggity:package:type", Value: "apk"},
 					{Name: "diggity:cpe23", Value: "cpe:2.3:a:zlib:zlib:1.2.12-r3:*:*:*:*:*:*:*"},
 					{Name: "diggity:location:0:layerHash", Value: "9b7240956cfbfefddcd91a2195bfb2ed2cd17bdff81f21111849d643dfaf8131"},
@@ -247,78 +255,78 @@ func TestConvertPackage(t *testing.T) {
 		},
 	}
 
-	_output := convertPackage()
+	cdxOutput := convertPackage()
 
-	if _output.XMLNS != expected.XMLNS {
-		t.Errorf("Test Failed: Expected output of %v, received: %v ", expected.XMLNS, _output.XMLNS)
+	if cdxOutput.XMLNS != expected.XMLNS {
+		t.Errorf("Test Failed: Expected output of %v, received: %v ", expected.XMLNS, cdxOutput.XMLNS)
 	}
 
 	r := regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$")
-	if !r.MatchString(_output.SerialNumber) {
-		t.Errorf("Test Failed: Output %v must be a valid UUID.", _output.SerialNumber)
+	if !r.MatchString(cdxOutput.SerialNumber) {
+		t.Errorf("Test Failed: Output %v must be a valid UUID.", cdxOutput.SerialNumber)
 	}
 
-	if _output := convertPackage(); _output.Metadata.Timestamp != time.Now().Format(time.RFC3339) {
+	if cdxOutput := convertPackage(); cdxOutput.Metadata.Timestamp != time.Now().Format(time.RFC3339) {
 		t.Errorf("Test Failed: Must produce current timestamp of %v, received: %v.",
 			time.Now().Format(time.RFC3339), getFromSource().Timestamp)
 	}
 
-	outputTools := *_output.Metadata.Tools
+	outputTools := *cdxOutput.Metadata.Tools
 	if outputTools[0].Vendor != vendor ||
 		outputTools[0].Name != name {
-		t.Errorf("Test Failed: Expected output of %v, received: %v ", output.Tool{
+		t.Errorf("Test Failed: Expected output of %v, received: %v ", cyclonedx.Tool{
 			Vendor: vendor,
 			Name:   name,
 		}, outputTools)
 	}
 
-	if (len(*_output.Components) - 1) != len(*expected.Components) { // No distro parsed for unit test
-		t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(*expected.Components), len(*_output.Components)-1)
+	if (len(*cdxOutput.Components) - 1) != len(*expected.Components) { // No distro parsed for unit test
+		t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(*expected.Components), len(*cdxOutput.Components)-1)
 	}
 }
 
 func TestAddDistroComponent(t *testing.T) {
 	tests := []AddDistroComponenetResult{
-		{&cdxDistro1, output.Component{
+		{&cdxDistro1, cyclonedx.Component{
 			Type:        operatingSystem,
 			Name:        "alpine",
 			Description: "Alpine Linux v3.16",
-			ExternalReferences: &[]output.ExternalReference{
+			ExternalReferences: &[]cyclonedx.ExternalReference{
 				{URL: "https://gitlab.alpinelinux.org/alpine/aports/-/issues", Type: "issue-tracker"},
 				{URL: "https://alpinelinux.org/", Type: "website"},
 			},
-			Properties: &[]output.Property{
+			Properties: &[]cyclonedx.Property{
 				{Name: "diggity:distro:id", Value: "alpine"},
 				{Name: "diggity:distro:prettyName", Value: "Alpine Linux v3.16"},
 				{Name: "diggity:distro:distributionCodename", Value: ""},
 				{Name: "diggity:distro:versionID", Value: "3.16.2"},
 			},
 		}},
-		{&cdxDistro2, output.Component{
+		{&cdxDistro2, cyclonedx.Component{
 			Type:        operatingSystem,
 			Name:        "debian",
 			Description: "Debian GNU/Linux 11 (bullseye)",
-			ExternalReferences: &[]output.ExternalReference{
+			ExternalReferences: &[]cyclonedx.ExternalReference{
 				{URL: "https://bugs.debian.org/", Type: "issue-tracker"},
 				{URL: "https://www.debian.org/", Type: "website"},
 				{URL: "https://www.debian.org/support", Type: "other", Comment: "support"},
 			},
-			Properties: &[]output.Property{
+			Properties: &[]cyclonedx.Property{
 				{Name: "diggity:distro:id", Value: "debian"},
 				{Name: "diggity:distro:prettyName", Value: "Debian GNU/Linux 11 (bullseye)"},
 				{Name: "diggity:distro:distributionCodename", Value: ""},
 				{Name: "diggity:distro:versionID", Value: "11"},
 			},
 		}},
-		{&cdxDistro3, output.Component{
+		{&cdxDistro3, cyclonedx.Component{
 			Type:        operatingSystem,
 			Name:        "centos",
 			Description: "CentOS Linux 8",
-			ExternalReferences: &[]output.ExternalReference{
+			ExternalReferences: &[]cyclonedx.ExternalReference{
 				{URL: "https://bugs.centos.org/", Type: "issue-tracker"},
 				{URL: "https://centos.org/", Type: "website"},
 			},
-			Properties: &[]output.Property{
+			Properties: &[]cyclonedx.Property{
 				{Name: "diggity:distro:id", Value: "centos"},
 				{Name: "diggity:distro:prettyName", Value: "CentOS Linux 8"},
 				{Name: "diggity:distro:distributionCodename", Value: ""},
@@ -328,36 +336,36 @@ func TestAddDistroComponent(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		_output := addDistroComponent(test._distro)
+		cdxOutput := addDistroComponent(test._distro)
 
-		if _output.Type != test.expected.Type ||
-			_output.Name != test.expected.Name ||
-			_output.Description != test.expected.Description {
-			t.Errorf("Test Failed: Expected output of %v, received: %v ", test.expected, _output)
+		if cdxOutput.Type != test.expected.Type ||
+			cdxOutput.Name != test.expected.Name ||
+			cdxOutput.Description != test.expected.Description {
+			t.Errorf("Test Failed: Expected output of %v, received: %v ", test.expected, cdxOutput)
 		}
 
-		if (len(*_output.ExternalReferences) == 0 && len(*test.expected.ExternalReferences) != 0) ||
-			(len(*_output.Properties) == 0 && len(*test.expected.Properties) != 0) {
+		if (len(*cdxOutput.ExternalReferences) == 0 && len(*test.expected.ExternalReferences) != 0) ||
+			(len(*cdxOutput.Properties) == 0 && len(*test.expected.Properties) != 0) {
 			t.Error("Test Failed: Slice must not be empty.")
 		}
 
-		if len(*_output.ExternalReferences) != len(*test.expected.ExternalReferences) {
-			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(*test.expected.ExternalReferences), len(*_output.ExternalReferences))
+		if len(*cdxOutput.ExternalReferences) != len(*test.expected.ExternalReferences) {
+			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(*test.expected.ExternalReferences), len(*cdxOutput.ExternalReferences))
 		}
 
-		if len(*_output.Properties) != len(*test.expected.Properties) {
-			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(*test.expected.Properties), len(*_output.Properties))
+		if len(*cdxOutput.Properties) != len(*test.expected.Properties) {
+			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(*test.expected.Properties), len(*cdxOutput.Properties))
 		}
 
 		expectedExRefs := *test.expected.ExternalReferences
-		for i, exRef := range *_output.ExternalReferences {
+		for i, exRef := range *cdxOutput.ExternalReferences {
 			if exRef != expectedExRefs[i] {
 				t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", expectedExRefs[i], exRef)
 			}
 		}
 
 		expectedProperties := *test.expected.Properties
-		for i, p := range *_output.Properties {
+		for i, p := range *cdxOutput.Properties {
 			if p != expectedProperties[i] {
 				t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", expectedProperties[i], p)
 			}
@@ -374,7 +382,7 @@ func TestGetFromSource(t *testing.T) {
 	outputTools := *getFromSource().Tools
 	if outputTools[0].Vendor != vendor ||
 		outputTools[0].Name != name {
-		t.Errorf("Test Failed: Expected output of %v, received: %v ", output.Tool{
+		t.Errorf("Test Failed: Expected output of %v, received: %v ", cyclonedx.Tool{
 			Vendor: vendor,
 			Name:   name,
 		}, outputTools)
@@ -383,32 +391,36 @@ func TestGetFromSource(t *testing.T) {
 
 func TestConvertToComponent(t *testing.T) {
 	tests := []ConvertToComponentResult{
-		{&cdxPackage1, output.Component{
+		{&cdxPackage1, cyclonedx.Component{
 			BOMRef:     "pkg:alpine/zlib@1.2.12-r3?arch=x86_64&upstream=zlib&distro=?package-id=",
 			Type:       library,
 			Name:       "zlib",
 			Version:    "1.2.12-r3",
 			PackageURL: string(model.PURL("pkg:alpine/zlib@1.2.12-r3?arch=x86_64\u0026upstream=zlib\u0026distro=")),
-			Licenses: &[]output.License{
-				{ID: "Zlib"},
+			Licenses: &cyclonedx.Licenses{
+				cyclonedx.LicenseChoice{
+					License: &cyclonedx.License{ID: "Zlib"},
+				},
 			},
-			Properties: &[]output.Property{
+			Properties: &[]cyclonedx.Property{
 				{Name: "diggity:package:type", Value: "apk"},
 				{Name: "diggity:cpe23", Value: "cpe:2.3:a:zlib:zlib:1.2.12-r3:*:*:*:*:*:*:*"},
 				{Name: "diggity:location:0:layerHash", Value: "9b7240956cfbfefddcd91a2195bfb2ed2cd17bdff81f21111849d643dfaf8131"},
 				{Name: "diggity:location:0:path", Value: filepath.Join("lib", "apk", "db", "installed")},
 			},
 		}},
-		{&cdxPackage2, output.Component{
+		{&cdxPackage2, cyclonedx.Component{
 			BOMRef:     "pkg:deb/libapt-pkg6.0@2.2.4arch=s390x?package-id=",
 			Type:       library,
 			Name:       "libapt-pkg6.0",
 			Version:    "2.2.4",
 			PackageURL: string(model.PURL("pkg:deb/libapt-pkg6.0@2.2.4arch=s390x")),
-			Licenses: &[]output.License{
-				{ID: "GPLv2+"},
+			Licenses: &cyclonedx.Licenses{
+				cyclonedx.LicenseChoice{
+					License: &cyclonedx.License{ID: "GPLv2+"},
+				},
 			},
-			Properties: &[]output.Property{
+			Properties: &[]cyclonedx.Property{
 				{Name: "diggity:package:type", Value: "deb"},
 				{Name: "diggity:cpe23", Value: "cpe:2.3:a:libapt-pkg6.0:libapt-pkg6.0:2.2.4:*:*:*:*:*:*:*"},
 				{Name: "diggity:location:0:layerHash", Value: "f1a5f5ce6b163fac7f09b47645c56d2ab676bdcdb268eef06a4d9b782a75bfd0"},
@@ -417,16 +429,18 @@ func TestConvertToComponent(t *testing.T) {
 				{Name: "diggity:location:1:path", Value: filepath.Join("var", "lib", "dpkg", "status")},
 			},
 		}},
-		{&cdxPackage3, output.Component{
+		{&cdxPackage3, cyclonedx.Component{
 			BOMRef:     "pkg:rpm/hardlink@1.0arch=x86_64?package-id=",
 			Type:       library,
 			Name:       "hardlink",
 			Version:    "1.0",
 			PackageURL: string(model.PURL("pkg:rpm/hardlink@1.0arch=x86_64")),
-			Licenses: &[]output.License{
-				{ID: "GPL+"},
+			Licenses: &cyclonedx.Licenses{
+				cyclonedx.LicenseChoice{
+					License: &cyclonedx.License{ID: "GPL+"},
+				},
 			},
-			Properties: &[]output.Property{
+			Properties: &[]cyclonedx.Property{
 				{Name: "diggity:package:type", Value: "rpm"},
 				{Name: "diggity:cpe23", Value: "cpe:2.3:a:redhat:hardlink:1.0-19.el7:*:*:*:*:*:*:*"},
 				{Name: "diggity:cpe23", Value: "cpe:2.3:a:hardlink:hardlink:1.0-19.el7:*:*:*:*:*:*:*"},
@@ -434,16 +448,19 @@ func TestConvertToComponent(t *testing.T) {
 				{Name: "diggity:location:0:path", Value: filepath.Join("var", "lib", "rpm", "Packages")},
 			},
 		}},
-		{&cdxPackage4, output.Component{
+		{&cdxPackage4, cyclonedx.Component{
 			BOMRef:     "pkg:composer/phpdocumentor/reflection@5.2.0?package-id=",
 			Type:       library,
 			Name:       "phpdocumentor/reflection",
 			Version:    "5.2.0",
 			PackageURL: string(model.PURL("pkg:composer/phpdocumentor/reflection@5.2.0")),
-			Licenses: &[]output.License{
-				{ID: "MIT"},
+			Licenses: &cyclonedx.Licenses{
+				cyclonedx.LicenseChoice{
+					License: &cyclonedx.License{ID: "MIT"},
+				},
 			},
-			Properties: &[]output.Property{
+
+			Properties: &[]cyclonedx.Property{
 				{Name: "diggity:package:type", Value: "php"},
 				{Name: "diggity:cpe23", Value: "cpe:2.3:a:phpdocumentor:reflection:5.2.0:*:*:*:*:*:*:*"},
 				{Name: "diggity:cpe23", Value: "cpe:2.3:a:reflection:reflection:5.2.0:*:*:*:*:*:*:*"},
@@ -454,39 +471,39 @@ func TestConvertToComponent(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		_output := convertToComponent(test.pkg)
+		cdxOutput := convertToComponent(test.pkg)
 
-		if _output.BOMRef != test.expected.BOMRef ||
-			_output.Type != test.expected.Type ||
-			_output.Name != test.expected.Name ||
-			_output.Version != test.expected.Version ||
-			_output.PackageURL != test.expected.PackageURL {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, _output)
+		if cdxOutput.BOMRef != test.expected.BOMRef ||
+			cdxOutput.Type != test.expected.Type ||
+			cdxOutput.Name != test.expected.Name ||
+			cdxOutput.Version != test.expected.Version ||
+			cdxOutput.PackageURL != test.expected.PackageURL {
+			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, cdxOutput)
 		}
 
 		expectedProperties := *test.expected.Properties
 		expectedLicenses := *test.expected.Licenses
 
-		if (len(*test.expected.Licenses) == 0 && len(*_output.Licenses) != 0) ||
-			(len(*test.expected.Properties) == 0 && len(*_output.Properties) != 0) {
+		if (len(*test.expected.Licenses) == 0 && len(*cdxOutput.Licenses) != 0) ||
+			(len(*test.expected.Properties) == 0 && len(*cdxOutput.Properties) != 0) {
 			t.Error("Test Failed: Slice must not be empty.")
 		}
 
-		if len(*_output.Licenses) != len(*test.expected.Licenses) {
-			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(*test.expected.Licenses), len(*_output.Licenses))
+		if len(*cdxOutput.Licenses) != len(*test.expected.Licenses) {
+			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(*test.expected.Licenses), len(*cdxOutput.Licenses))
 		}
 
-		for i, l := range *_output.Licenses {
-			if l != expectedLicenses[i] {
-				t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", expectedLicenses[i], l)
+		for i, l := range *cdxOutput.Licenses {
+			if l.License.ID != expectedLicenses[i].License.ID {
+				t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", expectedLicenses[i], l.License)
 			}
 		}
 
-		if len(*_output.Properties) != len(*test.expected.Properties) {
-			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(*test.expected.Properties), len(*_output.Properties))
+		if len(*cdxOutput.Properties) != len(*test.expected.Properties) {
+			t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(*test.expected.Properties), len(*cdxOutput.Properties))
 		}
 
-		for i, p := range *_output.Properties {
+		for i, p := range *cdxOutput.Properties {
 			if p != expectedProperties[i] {
 				t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", expectedProperties[i], p)
 			}
@@ -496,13 +513,13 @@ func TestConvertToComponent(t *testing.T) {
 
 func TestInitProperties(t *testing.T) {
 	tests := []InitPropertiesResult{
-		{&cdxPackage1, []output.Property{
+		{&cdxPackage1, []cyclonedx.Property{
 			{Name: "diggity:package:type", Value: "apk"},
 			{Name: "diggity:cpe23", Value: "cpe:2.3:a:zlib:zlib:1.2.12-r3:*:*:*:*:*:*:*"},
 			{Name: "diggity:location:0:layerHash", Value: "9b7240956cfbfefddcd91a2195bfb2ed2cd17bdff81f21111849d643dfaf8131"},
 			{Name: "diggity:location:0:path", Value: filepath.Join("lib", "apk", "db", "installed")},
 		}},
-		{&cdxPackage2, []output.Property{
+		{&cdxPackage2, []cyclonedx.Property{
 			{Name: "diggity:package:type", Value: "deb"},
 			{Name: "diggity:cpe23", Value: "cpe:2.3:a:libapt-pkg6.0:libapt-pkg6.0:2.2.4:*:*:*:*:*:*:*"},
 			{Name: "diggity:location:0:layerHash", Value: "f1a5f5ce6b163fac7f09b47645c56d2ab676bdcdb268eef06a4d9b782a75bfd0"},
@@ -510,14 +527,14 @@ func TestInitProperties(t *testing.T) {
 			{Name: "diggity:location:1:layerHash", Value: "f1a5f5ce6b163fac7f09b47645c56d2ab676bdcdb268eef06a4d9b782a75bfd0"},
 			{Name: "diggity:location:1:path", Value: filepath.Join("var", "lib", "dpkg", "status")},
 		}},
-		{&cdxPackage3, []output.Property{
+		{&cdxPackage3, []cyclonedx.Property{
 			{Name: "diggity:package:type", Value: "rpm"},
 			{Name: "diggity:cpe23", Value: "cpe:2.3:a:redhat:hardlink:1.0-19.el7:*:*:*:*:*:*:*"},
 			{Name: "diggity:cpe23", Value: "cpe:2.3:a:hardlink:hardlink:1.0-19.el7:*:*:*:*:*:*:*"},
 			{Name: "diggity:location:0:layerHash", Value: "d1fd2cca7a7751ca9786b088cf639e65088fa0bda34492bb5ba292c32195461a"},
 			{Name: "diggity:location:0:path", Value: filepath.Join("var", "lib", "rpm", "Packages")},
 		}},
-		{&cdxPackage4, []output.Property{
+		{&cdxPackage4, []cyclonedx.Property{
 			{Name: "diggity:package:type", Value: "php"},
 			{Name: "diggity:cpe23", Value: "cpe:2.3:a:phpdocumentor:reflection:5.2.0:*:*:*:*:*:*:*"},
 			{Name: "diggity:cpe23", Value: "cpe:2.3:a:reflection:reflection:5.2.0:*:*:*:*:*:*:*"},
@@ -527,8 +544,8 @@ func TestInitProperties(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		_output := *initProperties(test.pkg)
-		for i, p := range _output {
+		cdxOutput := *initProperties(test.pkg)
+		for i, p := range cdxOutput {
 			if p.Name != test.expected[i].Name || p.Value != test.expected[i].Value {
 				t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", test.expected[i], p)
 			}
@@ -581,8 +598,8 @@ func TestAddID(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		if _output := addID(test.pkg); _output != test.expected {
-			t.Errorf("Test Failed: Input %v must have output of %v, received: %v", test.pkg, test.expected, _output)
+		if cdxOutput := addID(test.pkg); cdxOutput != test.expected {
+			t.Errorf("Test Failed: Input %v must have output of %v, received: %v", test.pkg, test.expected, cdxOutput)
 		}
 	}
 }
@@ -594,8 +611,10 @@ func TestConvertLicense(t *testing.T) {
 				"MIT",
 			},
 		},
-			[]output.License{
-				{ID: "MIT"},
+			[]cyclonedx.LicenseChoice{
+				{
+					License: &cyclonedx.License{ID: "MIT"},
+				},
 			},
 		},
 		{&model.Package{
@@ -603,8 +622,10 @@ func TestConvertLicense(t *testing.T) {
 				"GPL-2.0-only",
 			},
 		},
-			[]output.License{
-				{ID: "GPL-2.0-only"},
+			[]cyclonedx.LicenseChoice{
+				{
+					License: &cyclonedx.License{ID: "GPL-2.0-only"},
+				},
 			},
 		},
 		{&model.Package{
@@ -614,10 +635,16 @@ func TestConvertLicense(t *testing.T) {
 				"GPL2+",
 			},
 		},
-			[]output.License{
-				{ID: "MIT"},
-				{ID: "BSD"},
-				{ID: "GPL2+"},
+			[]cyclonedx.LicenseChoice{
+				{
+					License: &cyclonedx.License{ID: "MIT"},
+				},
+				{
+					License: &cyclonedx.License{ID: "BSD"},
+				},
+				{
+					License: &cyclonedx.License{ID: "GPL2+"},
+				},
 			},
 		},
 		{&model.Package{
@@ -629,12 +656,22 @@ func TestConvertLicense(t *testing.T) {
 				"test-5",
 			},
 		},
-			[]output.License{
-				{ID: "test-1"},
-				{ID: "test-2"},
-				{ID: "test-3"},
-				{ID: "test-4"},
-				{ID: "test-5"},
+			[]cyclonedx.LicenseChoice{
+				{
+					License: &cyclonedx.License{ID: "test-1"},
+				},
+				{
+					License: &cyclonedx.License{ID: "test-2"},
+				},
+				{
+					License: &cyclonedx.License{ID: "test-3"},
+				},
+				{
+					License: &cyclonedx.License{ID: "test-4"},
+				},
+				{
+					License: &cyclonedx.License{ID: "test-5"},
+				},
 			},
 		},
 		{&model.Package{
@@ -645,22 +682,11 @@ func TestConvertLicense(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		_output := convertLicense(test.pkg)
+		cdxOutput := convertLicense(test.pkg)
 
-		if test.expected == nil {
-			if _output != nil {
-				t.Error("Test Failed: Expected output of nil.")
-			}
-			continue
-		}
-
-		if len(*_output) != len(test.expected) {
-			t.Errorf("Test Failed: Expected length of %+v, Received: %+v.", len(test.expected), len(*_output))
-		}
-
-		for i, license := range *_output {
-			if license.ID != test.expected[i].ID {
-				t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected[i], license.ID)
+		for i, l := range *cdxOutput {
+			if l.License.ID != test.expected[i].License.ID {
+				t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected[i].License, l.License)
 			}
 		}
 	}
