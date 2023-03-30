@@ -65,6 +65,8 @@ func selectOutputType(outputTypes string) {
 			spdx.PrintSpdxJSON()
 		case model.SPDXTagValue:
 			spdx.PrintSpdxTagValue()
+		case model.SPDXYML:
+			spdx.PrintSpdxYaml()
 		case model.GithubJSON:
 			github.PrintGithubJSON()
 		}

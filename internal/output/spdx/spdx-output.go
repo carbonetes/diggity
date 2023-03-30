@@ -17,6 +17,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	spdxcommon "github.com/spdx/tools-golang/spdx/common"
 	spdx22 "github.com/spdx/tools-golang/spdx/v2_2"
+	"gopkg.in/yaml.v3"
 )
 
 // PrintSpdxJSON Print Packages in SPDX-JSON format
@@ -162,6 +163,39 @@ func GetSpdxTagValues() (spdxTagValues []string) {
 	}
 
 	return spdxTagValues
+}
+
+// PrintSpdxYaml Print Packages in SPDX Yaml format
+func PrintSpdxYaml() {
+	spdxYML, err := GetSpdxYaml(bom.Arguments.Image)
+
+	if err != nil {
+		panic(err)
+	}
+
+	if len(*bom.Arguments.OutputFile) > 0 {
+		save.ResultToFile(string(spdxYML))
+	} else {
+		fmt.Printf("%+v\n", string(spdxYML))
+	}
+}
+
+// GetSpdxYaml Init SPDX-YML Output
+func GetSpdxYaml(image *string) ([]byte, error) {
+	result := spdx22.Document{
+		SPDXIdentifier: spdxutils.Ref + spdxutils.Doc,
+		DocumentName:   spdxutils.FormatName(image),
+		SPDXVersion:    spdxutils.Version,
+		CreationInfo: &spdx22.CreationInfo{
+			Created:            time.Now().UTC().String(),
+			Creators:           spdxutils.CreateInfo,
+			LicenseListVersion: spdxutils.LicenseListVersion,
+		},
+		DataLicense:       spdxutils.DataLicense,
+		DocumentNamespace: spdxutils.FormatNamespace(spdxutils.FormatName(image)),
+		Packages:          spdxJSONPackages(bom.Packages),
+	}
+	return yaml.Marshal(result)
 }
 
 // convert spdx-tag-values to single string
