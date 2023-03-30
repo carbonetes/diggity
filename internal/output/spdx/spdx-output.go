@@ -14,8 +14,9 @@ import (
 	spdxutils "github.com/carbonetes/diggity/internal/output/spdx/spdx-utils"
 	"github.com/carbonetes/diggity/internal/output/util"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/model/output"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
+	spdxcommon "github.com/spdx/tools-golang/spdx/common"
+	spdx22 "github.com/spdx/tools-golang/spdx/v2_2"
 )
 
 // PrintSpdxJSON Print Packages in SPDX-JSON format
@@ -35,45 +36,54 @@ func PrintSpdxJSON() {
 
 // GetSpdxJSON Init SPDX-JSON Output
 func GetSpdxJSON(image *string) ([]byte, error) {
-	result := output.SpdxJSONDocument{
-		SPDXID:      spdxutils.Ref + spdxutils.Doc,
-		Name:        spdxutils.FormatName(image),
-		SpdxVersion: spdxutils.Version,
-		CreationInfo: output.CreationInfo{
-			Created:            time.Now().UTC(),
+	result := spdx22.Document{
+		SPDXIdentifier: spdxutils.Ref + spdxutils.Doc,
+		DocumentName:   spdxutils.FormatName(image),
+		SPDXVersion:    spdxutils.Version,
+		CreationInfo: &spdx22.CreationInfo{
+			Created:            time.Now().UTC().String(),
 			Creators:           spdxutils.CreateInfo,
 			LicenseListVersion: spdxutils.LicenseListVersion,
 		},
 		DataLicense:       spdxutils.DataLicense,
 		DocumentNamespace: spdxutils.FormatNamespace(spdxutils.FormatName(image)),
-		SpdxJSONPackages:  spdxJSONPackages(bom.Packages),
+		Packages:          spdxJSONPackages(bom.Packages),
 	}
 	return json.MarshalIndent(result, "", " ")
 }
 
 // spdxJSONPackages Get Packages in SPDX-JSON format
-func spdxJSONPackages(packages []*model.Package) (spdxJSONPkgs []output.SpdxJSONPackage) {
+func spdxJSONPackages(packages []*model.Package) (spdxJSONPkgs []*spdx22.Package) {
 	// Sort packages alphabetically
 	sort.Slice(packages, func(i, j int) bool {
 		return packages[i].Name < packages[j].Name
 	})
 
 	for _, p := range packages {
-		spdxJSONPkgs = append(spdxJSONPkgs, output.SpdxJSONPackage{
-			SpdxID:           spdxutils.Ref + p.ID,
-			Name:             p.Name,
-			Description:      p.Description,
-			DownloadLocation: spdxutils.DownloadLocation(p),
-			LicenseConcluded: spdxutils.LicensesDeclared(p),
-			ExternalRefs:     spdxutils.ExternalRefs(p),
-			FilesAnalyzed:    false, // If false, indicates packages that represent metadata or URI references to a project, product, artifact, distribution or a component.
-			Homepage:         spdxutils.Homepage(p),
-			LicenseDeclared:  spdxutils.LicensesDeclared(p),
-			Originator:       spdxutils.Originator(p),
-			SourceInfo:       spdxutils.SourceInfo(p),
-			VersionInfo:      p.Version,
-			Copyright:        spdxutils.NoAssertion,
-		})
+		spdxPkg := &spdx22.Package{
+			PackageSPDXIdentifier:     spdxcommon.ElementID(spdxutils.Ref + p.ID),
+			PackageName:               p.Name,
+			PackageDescription:        p.Description,
+			PackageDownloadLocation:   spdxutils.DownloadLocation(p),
+			PackageLicenseConcluded:   spdxutils.LicensesDeclared(p),
+			PackageExternalReferences: spdxutils.ExternalRefs(p),
+			FilesAnalyzed:             false, // If false, indicates packages that represent metadata or URI references to a project, product, artifact, distribution or a component.
+			PackageHomePage:           spdxutils.Homepage(p),
+			PackageLicenseDeclared:    spdxutils.LicensesDeclared(p),
+			PackageSourceInfo:         spdxutils.SourceInfo(p),
+			PackageVersion:            p.Version,
+			PackageCopyrightText:      spdxutils.NoAssertion,
+		}
+
+		originatorType, originator := spdxutils.Originator(p)
+		if originatorType != "" && originator != "" {
+			spdxPkg.PackageOriginator = &spdxcommon.Originator{
+				Originator:     originator,
+				OriginatorType: originatorType,
+			}
+		}
+
+		spdxJSONPkgs = append(spdxJSONPkgs, spdxPkg)
 	}
 	return spdxJSONPkgs
 }
@@ -144,9 +154,9 @@ func GetSpdxTagValues() (spdxTagValues []string) {
 		for _, ref := range spdxutils.ExternalRefs(p) {
 			spdxTagValues = append(spdxTagValues, fmt.Sprintf(
 				"ExternalRef: %s %s %s",
-				ref.ReferenceCategory,
-				ref.ReferenceType,
-				ref.ReferenceLocator,
+				ref.Category,
+				ref.RefType,
+				ref.Locator,
 			))
 		}
 	}

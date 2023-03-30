@@ -8,11 +8,11 @@ import (
 
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
-	"github.com/carbonetes/diggity/pkg/model/output"
 	"github.com/carbonetes/diggity/pkg/parser/alpine"
 	"github.com/carbonetes/diggity/pkg/parser/debian"
 	"github.com/carbonetes/diggity/pkg/parser/gem"
 	"github.com/carbonetes/diggity/pkg/parser/java"
+	spdx22 "github.com/spdx/tools-golang/spdx/v2_2"
 )
 
 type (
@@ -26,7 +26,7 @@ type (
 	}
 	ExternalRefsResult struct {
 		pkg      *model.Package
-		expected []output.ExternalRef
+		expected []spdx22.PackageExternalReference
 	}
 )
 
@@ -334,153 +334,153 @@ var (
 
 func TestExternalRefs(t *testing.T) {
 	tests := []ExternalRefsResult{
-		{&package1, []output.ExternalRef{
+		{&package1, []spdx22.PackageExternalReference{
 			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:centos:lzo:2.08-14.el8:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
+				Category: security,
+				Locator:  "cpe:2.3:a:centos:lzo:2.08-14.el8:*:*:*:*:*:*:*",
+				RefType:  cpeType,
 			},
 			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:lzo:lzo:2.08-14.el8:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
+				Category: security,
+				Locator:  "cpe:2.3:a:lzo:lzo:2.08-14.el8:*:*:*:*:*:*:*",
+				RefType:  cpeType,
 			},
 			{
-				ReferenceCategory: packageManager,
-				ReferenceLocator:  "pkg:rpm/lzo@2.08arch=x86_64",
-				ReferenceType:     purlType,
-			},
-		}},
-		{&package2, []output.ExternalRef{
-			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:yawning:obfs4.git:v0.0.0-20220204003609-77af0cba934d:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
-			},
-			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:obfs4.git:obfs4.git:v0.0.0-20220204003609-77af0cba934d:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
-			},
-			{
-				ReferenceCategory: packageManager,
-				ReferenceLocator:  "pkg:go/gitlab.com/yawning/obfs4.git@v0.0.0-20220204003609-77af0cba934d",
-				ReferenceType:     purlType,
+				Category: packageManager,
+				Locator:  "pkg:rpm/lzo@2.08arch=x86_64",
+				RefType:  purlType,
 			},
 		}},
-		{&package3, []output.ExternalRef{
+		{&package2, []spdx22.PackageExternalReference{
 			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:scanelf:scanelf:1.3.4-r0:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
+				Category: security,
+				Locator:  "cpe:2.3:a:yawning:obfs4.git:v0.0.0-20220204003609-77af0cba934d:*:*:*:*:*:*:*",
+				RefType:  cpeType,
 			},
 			{
-				ReferenceCategory: packageManager,
-				ReferenceLocator:  "pkg:alpine/scanelf@1.3.4-r0?arch=x86_64\u0026upstream=pax-utils\u0026distro=",
-				ReferenceType:     purlType,
+				Category: security,
+				Locator:  "cpe:2.3:a:obfs4.git:obfs4.git:v0.0.0-20220204003609-77af0cba934d:*:*:*:*:*:*:*",
+				RefType:  cpeType,
 			},
-		}},
-		{&package4, []output.ExternalRef{
 			{
-				ReferenceCategory: packageManager,
-				ReferenceLocator:  "pkg:deb/libgpg-error0@1.38-2arch=s390x",
-				ReferenceType:     purlType,
+				Category: packageManager,
+				Locator:  "pkg:go/gitlab.com/yawning/obfs4.git@v0.0.0-20220204003609-77af0cba934d",
+				RefType:  purlType,
 			},
 		}},
-		{&package5, []output.ExternalRef{
+		{&package3, []spdx22.PackageExternalReference{
 			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:jnr-unixsocket:jnr-unixsocket:0.18:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
+				Category: security,
+				Locator:  "cpe:2.3:a:scanelf:scanelf:1.3.4-r0:*:*:*:*:*:*:*",
+				RefType:  cpeType,
 			},
 			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:jnr-unixsocket:jnr_unixsocket:0.18:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
-			},
-			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:jnr_unixsocket:jnr_unixsocket:0.18:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
-			},
-			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:jnr_unixsocket:jnr-unixsocket:0.18:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
-			},
-			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:github:jnr-unixsocket:0.18:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
-			},
-			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:github:jnr_unixsocket:0.18:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
-			},
-			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:jnr:jnr-unixsocket:0.18:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
-			},
-			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:jnr:jnr_unixsocket:0.18:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
-			},
-			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:unixsocket:jnr-unixsocket:0.18:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
-			},
-			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:unixsocket:jnr_unixsocket:0.18:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
-			},
-			{
-				ReferenceCategory: packageManager,
-				ReferenceLocator:  "pkg:maven/com.github.jnr/jnr-unixsocket@0.18",
-				ReferenceType:     purlType,
+				Category: packageManager,
+				Locator:  "pkg:alpine/scanelf@1.3.4-r0?arch=x86_64\u0026upstream=pax-utils\u0026distro=",
+				RefType:  purlType,
 			},
 		}},
-		{&package6, []output.ExternalRef{
+		{&package4, []spdx22.PackageExternalReference{
 			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:scanf:scanf:1.0.0:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
-			},
-			{
-				ReferenceCategory: packageManager,
-				ReferenceLocator:  "pkg:gem/scanf@1.0.0",
-				ReferenceType:     purlType,
+				Category: packageManager,
+				Locator:  "pkg:deb/libgpg-error0@1.38-2arch=s390x",
+				RefType:  purlType,
 			},
 		}},
-		{&package7, []output.ExternalRef{
+		{&package5, []spdx22.PackageExternalReference{
 			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:buffer-shims:buffer-shims:1.0.0:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
+				Category: security,
+				Locator:  "cpe:2.3:a:jnr-unixsocket:jnr-unixsocket:0.18:*:*:*:*:*:*:*",
+				RefType:  cpeType,
 			},
 			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:buffer-shims:buffer_shims:1.0.0:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
+				Category: security,
+				Locator:  "cpe:2.3:a:jnr-unixsocket:jnr_unixsocket:0.18:*:*:*:*:*:*:*",
+				RefType:  cpeType,
 			},
 			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:buffer_shims:buffer_shims:1.0.0:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
+				Category: security,
+				Locator:  "cpe:2.3:a:jnr_unixsocket:jnr_unixsocket:0.18:*:*:*:*:*:*:*",
+				RefType:  cpeType,
 			},
 			{
-				ReferenceCategory: security,
-				ReferenceLocator:  "cpe:2.3:a:buffer_shims:buffer-shims:1.0.0:*:*:*:*:*:*:*",
-				ReferenceType:     cpeType,
+				Category: security,
+				Locator:  "cpe:2.3:a:jnr_unixsocket:jnr-unixsocket:0.18:*:*:*:*:*:*:*",
+				RefType:  cpeType,
 			},
 			{
-				ReferenceCategory: packageManager,
-				ReferenceLocator:  "pkg:npm/buffer-shims@1.0.0",
-				ReferenceType:     purlType,
+				Category: security,
+				Locator:  "cpe:2.3:a:github:jnr-unixsocket:0.18:*:*:*:*:*:*:*",
+				RefType:  cpeType,
+			},
+			{
+				Category: security,
+				Locator:  "cpe:2.3:a:github:jnr_unixsocket:0.18:*:*:*:*:*:*:*",
+				RefType:  cpeType,
+			},
+			{
+				Category: security,
+				Locator:  "cpe:2.3:a:jnr:jnr-unixsocket:0.18:*:*:*:*:*:*:*",
+				RefType:  cpeType,
+			},
+			{
+				Category: security,
+				Locator:  "cpe:2.3:a:jnr:jnr_unixsocket:0.18:*:*:*:*:*:*:*",
+				RefType:  cpeType,
+			},
+			{
+				Category: security,
+				Locator:  "cpe:2.3:a:unixsocket:jnr-unixsocket:0.18:*:*:*:*:*:*:*",
+				RefType:  cpeType,
+			},
+			{
+				Category: security,
+				Locator:  "cpe:2.3:a:unixsocket:jnr_unixsocket:0.18:*:*:*:*:*:*:*",
+				RefType:  cpeType,
+			},
+			{
+				Category: packageManager,
+				Locator:  "pkg:maven/com.github.jnr/jnr-unixsocket@0.18",
+				RefType:  purlType,
+			},
+		}},
+		{&package6, []spdx22.PackageExternalReference{
+			{
+				Category: security,
+				Locator:  "cpe:2.3:a:scanf:scanf:1.0.0:*:*:*:*:*:*:*",
+				RefType:  cpeType,
+			},
+			{
+				Category: packageManager,
+				Locator:  "pkg:gem/scanf@1.0.0",
+				RefType:  purlType,
+			},
+		}},
+		{&package7, []spdx22.PackageExternalReference{
+			{
+				Category: security,
+				Locator:  "cpe:2.3:a:buffer-shims:buffer-shims:1.0.0:*:*:*:*:*:*:*",
+				RefType:  cpeType,
+			},
+			{
+				Category: security,
+				Locator:  "cpe:2.3:a:buffer-shims:buffer_shims:1.0.0:*:*:*:*:*:*:*",
+				RefType:  cpeType,
+			},
+			{
+				Category: security,
+				Locator:  "cpe:2.3:a:buffer_shims:buffer_shims:1.0.0:*:*:*:*:*:*:*",
+				RefType:  cpeType,
+			},
+			{
+				Category: security,
+				Locator:  "cpe:2.3:a:buffer_shims:buffer-shims:1.0.0:*:*:*:*:*:*:*",
+				RefType:  cpeType,
+			},
+			{
+				Category: packageManager,
+				Locator:  "pkg:npm/buffer-shims@1.0.0",
+				RefType:  purlType,
 			},
 		}},
 	}
@@ -494,9 +494,9 @@ func TestExternalRefs(t *testing.T) {
 			return
 		}
 		for i := range output {
-			if output[i].ReferenceCategory != test.expected[i].ReferenceCategory ||
-				output[i].ReferenceLocator != test.expected[i].ReferenceLocator ||
-				output[i].ReferenceType != test.expected[i].ReferenceType {
+			if output[i].Category != test.expected[i].Category ||
+				output[i].Locator != test.expected[i].Locator ||
+				output[i].RefType != test.expected[i].RefType {
 				t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected[i], output[i])
 			}
 		}
@@ -575,18 +575,20 @@ func TestDownloadLocation(t *testing.T) {
 }
 func TestOriginator(t *testing.T) {
 	tests := []PackageParserResult{
-		{&package1, "Organization: CentOS"},
-		{&package2, ""},
-		{&package3, "Person: Natanael Copa \u003cncopa@alpinelinux.org\u003e"},
-		{&package4, "Person: Mark Brown \u003cbroonie@debian.org\u003e"},
-		{&package5, ""},
-		{&package6, "Person: David Alan Black"},
-		{&package7, "Person: Woong Jun <woong.jun@gmail.com>"},
+		{&package1, "Organization:CentOS"},
+		{&package2, ":"},
+		{&package3, "Person:Natanael Copa \u003cncopa@alpinelinux.org\u003e"},
+		{&package4, "Person:Mark Brown \u003cbroonie@debian.org\u003e"},
+		{&package5, ":"},
+		{&package6, "Person:David Alan Black"},
+		{&package7, "Person:Woong Jun <woong.jun@gmail.com>"},
 	}
 
 	for _, test := range tests {
-		if output := Originator(test.pkg); output != test.expected {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", test.expected, output)
+		outputType, outputName := Originator(test.pkg)
+		expected := strings.Split(test.expected, ":")
+		if outputType != expected[0] || outputName != expected[1] {
+			t.Errorf("Test Failed: Expected output of %v, received: %v:%v", test.expected, outputType, outputName)
 		}
 	}
 }

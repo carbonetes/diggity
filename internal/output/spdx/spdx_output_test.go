@@ -2,13 +2,15 @@ package spdx
 
 import (
 	"path/filepath"
+	"reflect"
 	"testing"
 
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
-	"github.com/carbonetes/diggity/pkg/model/output"
 	"github.com/carbonetes/diggity/pkg/parser/alpine"
 	"github.com/carbonetes/diggity/pkg/parser/gem"
+	spdxcommon "github.com/spdx/tools-golang/spdx/common"
+	spdx22 "github.com/spdx/tools-golang/spdx/v2_2"
 )
 
 var (
@@ -169,146 +171,158 @@ func TestGetSPDXJSON(t *testing.T) {
 		}
 	}
 }
+
 func TestSpdxJSONPackages(t *testing.T) {
 	packages := []*model.Package{&spdxPackage1, &spdxPackage2, &spdxPackage3, &spdxPackage4}
-	expected := []output.SpdxJSONPackage{
+	expected := []spdx22.Package{
 		{
-			SpdxID:           "SPDXRef-9583e9ec-df1d-484a-b560-8e1415ea92c2",
-			Name:             "gitlab.com/yawning/obfs4.git",
-			Description:      "",
-			DownloadLocation: "NOASSERTION",
-			LicenseConcluded: "NONE",
-			ExternalRefs: []output.ExternalRef{
+			PackageSPDXIdentifier:   "SPDXRef-9583e9ec-df1d-484a-b560-8e1415ea92c2",
+			PackageName:             "gitlab.com/yawning/obfs4.git",
+			PackageDescription:      "",
+			PackageDownloadLocation: "NOASSERTION",
+			PackageLicenseConcluded: "NONE",
+			PackageExternalReferences: []*spdx22.PackageExternalReference{
 				{
-					ReferenceCategory: "SECURITY",
-					ReferenceLocator:  "cpe:2.3:a:yawning:obfs4.git:v0.0.0-20220204003609-77af0cba934d:*:*:*:*:*:*:*",
-					ReferenceType:     "cpe23Type",
+					Category: "SECURITY",
+					Locator:  "cpe:2.3:a:yawning:obfs4.git:v0.0.0-20220204003609-77af0cba934d:*:*:*:*:*:*:*",
+					RefType:  "cpe23Type",
 				},
 				{
-					ReferenceCategory: "SECURITY",
-					ReferenceLocator:  "cpe:2.3:a:obfs4.git:obfs4.git:v0.0.0-20220204003609-77af0cba934d:*:*:*:*:*:*:*",
-					ReferenceType:     "cpe23Type",
+					Category: "SECURITY",
+					Locator:  "cpe:2.3:a:obfs4.git:obfs4.git:v0.0.0-20220204003609-77af0cba934d:*:*:*:*:*:*:*",
+					RefType:  "cpe23Type",
 				},
 				{
-					ReferenceCategory: "PACKAGE_MANAGER",
-					ReferenceLocator:  "pkg:go/gitlab.com/yawning/obfs4.git@v0.0.0-20220204003609-77af0cba934d",
-					ReferenceType:     "purl",
+					Category: "PACKAGE_MANAGER",
+					Locator:  "pkg:go/gitlab.com/yawning/obfs4.git@v0.0.0-20220204003609-77af0cba934d",
+					RefType:  "purl",
 				},
 			},
-			FilesAnalyzed:   false,
-			Homepage:        "",
-			LicenseDeclared: "NONE",
-			Originator:      "",
-			SourceInfo:      "Information parsed from go-module information: bin/gost",
-			VersionInfo:     "v0.0.0-20220204003609-77af0cba934d",
-			Copyright:       "NOASSERTION",
+			FilesAnalyzed:          false,
+			PackageHomePage:        "",
+			PackageLicenseDeclared: "NONE",
+			PackageOriginator:      nil,
+			PackageSourceInfo:      "Information parsed from go-module information: bin/gost",
+			PackageVersion:         "v0.0.0-20220204003609-77af0cba934d",
+			PackageCopyrightText:   "NOASSERTION",
 		},
 		{
-			SpdxID:           "SPDXRef-8fe93afb-86f2-4639-a3eb-6c4e787f210b",
-			Name:             "lzo",
-			Description:      "Data compression library with very fast (de)compression",
-			DownloadLocation: "NOASSERTION",
-			LicenseConcluded: "NOASSERTION",
-			ExternalRefs: []output.ExternalRef{
+			PackageSPDXIdentifier:   "SPDXRef-8fe93afb-86f2-4639-a3eb-6c4e787f210b",
+			PackageName:             "lzo",
+			PackageDescription:      "Data compression library with very fast (de)compression",
+			PackageDownloadLocation: "NOASSERTION",
+			PackageLicenseConcluded: "NOASSERTION",
+			PackageExternalReferences: []*spdx22.PackageExternalReference{
 				{
-					ReferenceCategory: "SECURITY",
-					ReferenceLocator:  "cpe:2.3:a:centos:lzo:2.08-14.el8:*:*:*:*:*:*:*",
-					ReferenceType:     "cpe23Type",
+					Category: "SECURITY",
+					Locator:  "cpe:2.3:a:centos:lzo:2.08-14.el8:*:*:*:*:*:*:*",
+					RefType:  "cpe23Type",
 				},
 				{
-					ReferenceCategory: "SECURITY",
-					ReferenceLocator:  "cpe:2.3:a:lzo:lzo:2.08-14.el8:*:*:*:*:*:*:*",
-					ReferenceType:     "cpe23Type",
+					Category: "SECURITY",
+					Locator:  "cpe:2.3:a:lzo:lzo:2.08-14.el8:*:*:*:*:*:*:*",
+					RefType:  "cpe23Type",
 				},
 				{
-					ReferenceCategory: "PACKAGE_MANAGER",
-					ReferenceLocator:  "pkg:rpm/lzo@2.08?arch=x86_64",
-					ReferenceType:     "purl",
+					Category: "PACKAGE_MANAGER",
+					Locator:  "pkg:rpm/lzo@2.08?arch=x86_64",
+					RefType:  "purl",
 				},
 			},
-			FilesAnalyzed:   false,
-			Homepage:        "",
-			LicenseDeclared: "NOASSERTION",
-			Originator:      "Organization: CentOS",
-			SourceInfo:      "Information parsed from RPM DB: var/lib/rpm/Packages",
-			VersionInfo:     "2.08",
-			Copyright:       "NOASSERTION",
+			FilesAnalyzed:          false,
+			PackageHomePage:        "",
+			PackageLicenseDeclared: "NOASSERTION",
+			PackageOriginator: &spdxcommon.Originator{
+				Originator:     "CentOS",
+				OriginatorType: "Organization",
+			},
+			PackageSourceInfo:    "Information parsed from RPM DB: var/lib/rpm/Packages",
+			PackageVersion:       "2.08",
+			PackageCopyrightText: "NOASSERTION",
 		},
 		{
-			SpdxID:           "SPDXRef-bdbd600f-dbdf-49a1-a329-a339f1123ffd",
-			Name:             "scanelf",
-			Description:      "Scan ELF binaries for stuff",
-			DownloadLocation: "https://wiki.gentoo.org/wiki/Hardened/PaX_Utilities",
-			LicenseConcluded: "GPL-2.0-only",
-			ExternalRefs: []output.ExternalRef{
+			PackageSPDXIdentifier:   "SPDXRef-bdbd600f-dbdf-49a1-a329-a339f1123ffd",
+			PackageName:             "scanelf",
+			PackageDescription:      "Scan ELF binaries for stuff",
+			PackageDownloadLocation: "https://wiki.gentoo.org/wiki/Hardened/PaX_Utilities",
+			PackageLicenseConcluded: "GPL-2.0-only",
+			PackageExternalReferences: []*spdx22.PackageExternalReference{
 				{
-					ReferenceCategory: "SECURITY",
-					ReferenceLocator:  "cpe:2.3:a:scanelf:scanelf:1.3.4-r0:*:*:*:*:*:*:*",
-					ReferenceType:     "cpe23Type",
+					Category: "SECURITY",
+					Locator:  "cpe:2.3:a:scanelf:scanelf:1.3.4-r0:*:*:*:*:*:*:*",
+					RefType:  "cpe23Type",
 				},
 				{
-					ReferenceCategory: "PACKAGE_MANAGER",
-					ReferenceLocator:  "pkg:apk/alpine/scanelf@1.3.4-r0?arch=x86_64\u0026upstream=pax-utils\u0026distro=alpine",
-					ReferenceType:     "purl",
+					Category: "PACKAGE_MANAGER",
+					Locator:  "pkg:apk/alpine/scanelf@1.3.4-r0?arch=x86_64\u0026upstream=pax-utils\u0026distro=alpine",
+					RefType:  "purl",
 				},
 			},
-			FilesAnalyzed:   false,
-			Homepage:        "",
-			LicenseDeclared: "GPL-2.0-only",
-			Originator:      "Person: Natanael Copa \u003cncopa@alpinelinux.org\u003e",
-			SourceInfo:      "Information parsed from APK DB: lib/apk/db/installed, lib/apk/db/installed",
-			VersionInfo:     "1.3.4-r0",
-			Copyright:       "NOASSERTION",
+			FilesAnalyzed:          false,
+			PackageHomePage:        "",
+			PackageLicenseDeclared: "GPL-2.0-only",
+			PackageOriginator: &spdxcommon.Originator{
+				Originator:     "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+				OriginatorType: "Person",
+			},
+			PackageSourceInfo:    "Information parsed from APK DB: lib/apk/db/installed, lib/apk/db/installed",
+			PackageVersion:       "1.3.4-r0",
+			PackageCopyrightText: "NOASSERTION",
 		},
 		{
-			SpdxID:           "SPDXRef-418ee75b-cb1a-4abe-aad6-d757c7a91610",
-			Name:             "scanf",
-			Description:      "scanf is an implementation of the C function scanf(3).",
-			DownloadLocation: "NOASSERTION",
-			LicenseConcluded: "NOASSERTION",
-			ExternalRefs: []output.ExternalRef{
+			PackageSPDXIdentifier:   "SPDXRef-418ee75b-cb1a-4abe-aad6-d757c7a91610",
+			PackageName:             "scanf",
+			PackageDescription:      "scanf is an implementation of the C function scanf(3).",
+			PackageDownloadLocation: "NOASSERTION",
+			PackageLicenseConcluded: "NOASSERTION",
+			PackageExternalReferences: []*spdx22.PackageExternalReference{
 				{
-					ReferenceCategory: "SECURITY",
-					ReferenceLocator:  "cpe:2.3:a:scanf:scanf:1.0.0:*:*:*:*:*:*:*",
-					ReferenceType:     "cpe23Type",
+					Category: "SECURITY",
+					Locator:  "cpe:2.3:a:scanf:scanf:1.0.0:*:*:*:*:*:*:*",
+					RefType:  "cpe23Type",
 				},
 				{
-					ReferenceCategory: "PACKAGE_MANAGER",
-					ReferenceLocator:  "pkg:gem/scanf@1.0.0",
-					ReferenceType:     "purl",
+					Category: "PACKAGE_MANAGER",
+					Locator:  "pkg:gem/scanf@1.0.0",
+					RefType:  "purl",
 				},
 			},
-			FilesAnalyzed:   false,
-			Homepage:        "https://github.com/ruby/scanf",
-			LicenseDeclared: "NOASSERTION",
-			Originator:      "Person: David Alan Black",
-			SourceInfo:      "Information parsed from gem metadata: usr/share/gems/specifications/default/scanf-1.0.0.gemspec",
-			VersionInfo:     "1.0.0",
-			Copyright:       "NOASSERTION",
+			FilesAnalyzed:          false,
+			PackageHomePage:        "https://github.com/ruby/scanf",
+			PackageLicenseDeclared: "NOASSERTION",
+			PackageOriginator: &spdxcommon.Originator{
+				Originator:     "David Alan Black",
+				OriginatorType: "Person",
+			},
+			PackageSourceInfo:    "Information parsed from gem metadata: usr/share/gems/specifications/default/scanf-1.0.0.gemspec",
+			PackageVersion:       "1.0.0",
+			PackageCopyrightText: "NOASSERTION",
 		},
 	}
 
 	output := spdxJSONPackages(packages)
 
 	for i, spdxPkg := range output {
-		for j, exRef := range output[i].ExternalRefs {
-			if exRef != expected[i].ExternalRefs[j] {
-				t.Errorf("Test Failed: Expected output of %v, received: %v", expected[i].ExternalRefs[j], exRef)
+		for j, exRef := range output[i].PackageExternalReferences {
+			if exRef.Category != expected[i].PackageExternalReferences[j].Category ||
+				exRef.Locator != expected[i].PackageExternalReferences[j].Locator ||
+				exRef.RefType != expected[i].PackageExternalReferences[j].RefType {
+				t.Errorf("Test Failed: Expected output of %v, received: %v", expected[i].PackageExternalReferences[j], exRef)
 			}
 		}
 
-		if spdxPkg.SpdxID != expected[i].SpdxID ||
-			spdxPkg.Name != expected[i].Name ||
-			spdxPkg.Description != expected[i].Description ||
-			spdxPkg.DownloadLocation != expected[i].DownloadLocation ||
-			spdxPkg.LicenseConcluded != expected[i].LicenseConcluded ||
+		if spdxPkg.PackageSPDXIdentifier != expected[i].PackageSPDXIdentifier ||
+			spdxPkg.PackageName != expected[i].PackageName ||
+			spdxPkg.PackageDescription != expected[i].PackageDescription ||
+			spdxPkg.PackageDownloadLocation != expected[i].PackageDownloadLocation ||
+			spdxPkg.PackageLicenseConcluded != expected[i].PackageLicenseConcluded ||
 			spdxPkg.FilesAnalyzed != expected[i].FilesAnalyzed ||
-			spdxPkg.Homepage != expected[i].Homepage ||
-			spdxPkg.LicenseDeclared != expected[i].LicenseDeclared ||
-			spdxPkg.Originator != expected[i].Originator ||
-			spdxPkg.SourceInfo != expected[i].SourceInfo ||
-			spdxPkg.VersionInfo != expected[i].VersionInfo ||
-			spdxPkg.Copyright != expected[i].Copyright {
+			spdxPkg.PackageHomePage != expected[i].PackageHomePage ||
+			spdxPkg.PackageLicenseDeclared != expected[i].PackageLicenseDeclared ||
+			spdxPkg.PackageSourceInfo != expected[i].PackageSourceInfo ||
+			spdxPkg.PackageVersion != expected[i].PackageVersion ||
+			spdxPkg.PackageCopyrightText != expected[i].PackageCopyrightText ||
+			!reflect.DeepEqual(spdxPkg.PackageOriginator, expected[i].PackageOriginator) {
 			t.Errorf("Test Failed: Expected output of %v, received: %v", expected[i], output[i])
 		}
 
