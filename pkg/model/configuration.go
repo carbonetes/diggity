@@ -5,6 +5,7 @@ type Configuration struct {
 	SecretConfig       SecretConfig      `yaml:"secret-config"`
 	EnabledParsers     []string          `yaml:"enabled-parsers"`
 	DisableFileListing bool              `yaml:"disable-file-listing"`
+	DisablePullTimeout bool              `yaml:"disable-pull-timeout"`
 	Quiet              bool              `yaml:"quiet"`
 	OutputFile         string            `yaml:"output-file"`
 	Output             *[]string         `yaml:"output"`

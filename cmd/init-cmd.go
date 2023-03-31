@@ -41,6 +41,7 @@ var (
 		DisableFileListing:  new(bool),
 		SecretContentRegex:  new(string),
 		DisableSecretSearch: new(bool),
+		DisablePullTimeout:  new(bool),
 		Dir:                 new(string),
 		Tar:                 new(string),
 		Quiet:               new(bool),
@@ -199,6 +200,7 @@ func init() {
 	// diggity flags
 	diggity.Flags().StringArrayVarP(outputArray, "output", "o", tableOutput, fmt.Sprintf("Supported output types: \n%+v", model.OutputList))
 	diggity.Flags().BoolVar(Arguments.DisableFileListing, "disable-file-listing", false, "Disables file listing from package metadata (default false)")
+	diggity.Flags().BoolVar(Arguments.DisablePullTimeout, "disable-pull-timeout", false, "Disables the timeout when pulling an image from server (default false)")
 	diggity.Flags().StringVar(Arguments.SecretContentRegex, "secrets-content-regex", "", "Secret content regex are searched within files that matches the provided regular expression")
 	diggity.Flags().BoolVar(Arguments.DisableSecretSearch, "disable-secret-search", false, "Disables secret search when set to true (default false)")
 	diggity.Flags().BoolVarP(Arguments.Quiet, "quiet", "q", false, "Disable all output except SBOM result")
@@ -355,6 +357,9 @@ func setPrioritizedArg() {
 	}
 	if !diggity.Flags().Lookup("disable-file-listing").Changed && !*Arguments.DisableFileListing {
 		Arguments.DisableFileListing = &DefaultConfig.DisableFileListing
+	}
+	if !diggity.Flags().Lookup("disable-pull-timeout").Changed && !*Arguments.DisablePullTimeout {
+		Arguments.DisablePullTimeout = &DefaultConfig.DisablePullTimeout
 	}
 	if !diggity.Flags().Lookup("secrets-content-regex").Changed {
 		Arguments.SecretContentRegex = &DefaultConfig.SecretConfig.SecretRegex
