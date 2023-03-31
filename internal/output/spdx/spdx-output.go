@@ -37,20 +37,7 @@ func PrintSpdxJSON() {
 
 // GetSpdxJSON Init SPDX-JSON Output
 func GetSpdxJSON(image *string) ([]byte, error) {
-	result := spdx22.Document{
-		SPDXIdentifier: spdxutils.Ref + spdxutils.Doc,
-		DocumentName:   spdxutils.FormatName(image),
-		SPDXVersion:    spdxutils.Version,
-		CreationInfo: &spdx22.CreationInfo{
-			Created:            time.Now().UTC().String(),
-			Creators:           spdxutils.CreateInfo,
-			LicenseListVersion: spdxutils.LicenseListVersion,
-		},
-		DataLicense:       spdxutils.DataLicense,
-		DocumentNamespace: spdxutils.FormatNamespace(spdxutils.FormatName(image)),
-		Packages:          spdxJSONPackages(bom.Packages),
-	}
-	return json.MarshalIndent(result, "", " ")
+	return json.MarshalIndent(spdxDocument(image), "", " ")
 }
 
 // spdxJSONPackages Get Packages in SPDX-JSON format
@@ -182,7 +169,12 @@ func PrintSpdxYaml() {
 
 // GetSpdxYaml Init SPDX-YML Output
 func GetSpdxYaml(image *string) ([]byte, error) {
-	result := spdx22.Document{
+	return yaml.Marshal(spdxDocument(image))
+}
+
+// spdxDocument returns SPDX Document of the SBOM
+func spdxDocument(image *string) spdx22.Document {
+	return spdx22.Document{
 		SPDXIdentifier: spdxutils.Ref + spdxutils.Doc,
 		DocumentName:   spdxutils.FormatName(image),
 		SPDXVersion:    spdxutils.Version,
@@ -195,7 +187,6 @@ func GetSpdxYaml(image *string) ([]byte, error) {
 		DocumentNamespace: spdxutils.FormatNamespace(spdxutils.FormatName(image)),
 		Packages:          spdxJSONPackages(bom.Packages),
 	}
-	return yaml.Marshal(result)
 }
 
 // convert spdx-tag-values to single string
