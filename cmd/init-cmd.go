@@ -38,21 +38,22 @@ var (
 	versionOutputFormat string
 	// Arguments is an instance of the actual arguments passed
 	Arguments model.Arguments = model.Arguments{
-		DisableFileListing:  new(bool),
-		SecretContentRegex:  new(string),
-		DisableSecretSearch: new(bool),
-		Dir:                 new(string),
-		Tar:                 new(string),
-		Quiet:               new(bool),
-		OutputFile:          new(string),
-		ExcludedFilenames:   &[]string{},
-		SecretExtensions:    &[]string{},
-		EnabledParsers:      &[]string{},
-		RegistryURI:         new(string),
-		RegistryUsername:    new(string),
-		RegistryPassword:    new(string),
-		RegistryToken:       new(string),
-		Provenance:          new(string),
+		DisableFileListing:   new(bool),
+		SecretContentRegex:   new(string),
+		DisableSecretSearch:  new(bool),
+		DisableRelationships: new(bool),
+		Dir:                  new(string),
+		Tar:                  new(string),
+		Quiet:                new(bool),
+		OutputFile:           new(string),
+		ExcludedFilenames:    &[]string{},
+		SecretExtensions:     &[]string{},
+		EnabledParsers:       &[]string{},
+		RegistryURI:          new(string),
+		RegistryUsername:     new(string),
+		RegistryPassword:     new(string),
+		RegistryToken:        new(string),
+		Provenance:           new(string),
 	}
 
 	log = logger.GetLogger()
@@ -199,6 +200,7 @@ func init() {
 	// diggity flags
 	diggity.Flags().StringArrayVarP(outputArray, "output", "o", tableOutput, fmt.Sprintf("Supported output types: \n%+v", model.OutputList))
 	diggity.Flags().BoolVar(Arguments.DisableFileListing, "disable-file-listing", false, "Disables file listing from package metadata (default false)")
+	diggity.Flags().BoolVar(Arguments.DisableRelationships, "disable-relationships", false, "Disables relationship listing from package metadata (default false)")
 	diggity.Flags().StringVar(Arguments.SecretContentRegex, "secrets-content-regex", "", "Secret content regex are searched within files that matches the provided regular expression")
 	diggity.Flags().BoolVar(Arguments.DisableSecretSearch, "disable-secret-search", false, "Disables secret search when set to true (default false)")
 	diggity.Flags().BoolVarP(Arguments.Quiet, "quiet", "q", false, "Disable all output except SBOM result")
@@ -355,6 +357,9 @@ func setPrioritizedArg() {
 	}
 	if !diggity.Flags().Lookup("disable-file-listing").Changed && !*Arguments.DisableFileListing {
 		Arguments.DisableFileListing = &DefaultConfig.DisableFileListing
+	}
+	if !diggity.Flags().Lookup("disable-relationships").Changed && !*Arguments.DisableRelationships {
+		Arguments.DisableRelationships = &DefaultConfig.DisableRelationships
 	}
 	if !diggity.Flags().Lookup("secrets-content-regex").Changed {
 		Arguments.SecretContentRegex = &DefaultConfig.SecretConfig.SecretRegex

@@ -12,6 +12,7 @@ import (
 	"github.com/carbonetes/diggity/internal/output/save"
 	"github.com/carbonetes/diggity/internal/output/spdx"
 	"github.com/carbonetes/diggity/internal/output/tabular"
+	"github.com/carbonetes/diggity/internal/relationship"
 	"github.com/carbonetes/diggity/internal/secret"
 	"github.com/carbonetes/diggity/internal/slsa"
 	"github.com/carbonetes/diggity/pkg/model"
@@ -117,6 +118,10 @@ func GetResults() string {
 	output := model.Result{
 		Distro:   distro.Distro(),
 		Packages: bom.Packages,
+	}
+
+	if !*bom.Arguments.DisableRelationships {
+		output.Relationships = relationship.GetOwnerships()
 	}
 
 	if !*bom.Arguments.DisableSecretSearch {
