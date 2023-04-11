@@ -9,7 +9,6 @@ import (
 	versionPackage "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
-	"github.com/carbonetes/diggity/pkg/model/output"
 	"github.com/carbonetes/diggity/pkg/parser/alpine"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/debian"
@@ -17,6 +16,8 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/python"
 
 	"github.com/google/uuid"
+	spdxcommon "github.com/spdx/tools-golang/spdx/common"
+	spdx22 "github.com/spdx/tools-golang/spdx/v2_2"
 )
 
 const (
@@ -24,8 +25,8 @@ const (
 	Version = "SPDX-2.2"
 	// DataLicense : 6.2 Data license field Table 3 https://spdx.github.io/spdx-spec/v2.2.2/document-creation-information/
 	DataLicense = "CC0-1.0"
-	// Creator : Organization: Carbonetes
-	Creator = "Organization: Carbonetes"
+	// Creator : Carbonetes
+	Creator = "Carbonetes"
 	// Ref : SPDX Ref Prefix
 	Ref = "SPDXRef-"
 	// Doc : Document Prefix
@@ -35,9 +36,14 @@ const (
 	// None : NONE
 	None = "NONE"
 
+	// Extrnal Ref Types
+	cpeType  = spdxcommon.TypeSecurityCPE23Type
+	purlType = spdxcommon.TypePackageManagerPURL
+
+	organization     = "Organization"
+	tool             = "Tool"
+	person           = "Person"
 	security         = "SECURITY"
-	cpeType          = "cpe23Type"
-	purlType         = "purl"
 	packageManager   = "PACKAGE_MANAGER"
 	licenseSeparator = " AND "
 	parsedFrom       = "Information parsed from"
@@ -48,26 +54,35 @@ const (
 // CreateInfo : Contains creator and tool information.
 var (
 	Tool       = "Tool: " + versionPackage.FromBuild().Version
-	CreateInfo = []string{Creator, Tool}
+	CreateInfo = []spdxcommon.Creator{
+		{
+			Creator:     Creator,
+			CreatorType: organization,
+		},
+		{
+			Creator:     versionPackage.FromBuild().Version,
+			CreatorType: tool,
+		},
+	}
 )
 
 // ExternalRefs helper
-func ExternalRefs(p *model.Package) (refs []output.ExternalRef) {
+func ExternalRefs(p *model.Package) (refs []*spdx22.PackageExternalReference) {
 	// Init CPEs
 	for _, cpe := range p.CPEs {
-		var cpeRef output.ExternalRef
-		cpeRef.ReferenceCategory = security
-		cpeRef.ReferenceLocator = cpe
-		cpeRef.ReferenceType = cpeType
-		refs = append(refs, cpeRef)
+		var cpeRef spdx22.PackageExternalReference
+		cpeRef.Category = security
+		cpeRef.Locator = cpe
+		cpeRef.RefType = cpeType
+		refs = append(refs, &cpeRef)
 	}
 
 	// Init PURL
-	var purlRef output.ExternalRef
-	purlRef.ReferenceCategory = packageManager
-	purlRef.ReferenceLocator = string(p.PURL)
-	purlRef.ReferenceType = purlType
-	refs = append(refs, purlRef)
+	var purlRef spdx22.PackageExternalReference
+	purlRef.Category = packageManager
+	purlRef.Locator = string(p.PURL)
+	purlRef.RefType = purlType
+	refs = append(refs, &purlRef)
 
 	return refs
 }
@@ -193,14 +208,13 @@ func DownloadLocation(p *model.Package) string {
 }
 
 // Originator helper
-func Originator(p *model.Package) string {
+func Originator(p *model.Package) (string, string) {
 	var originator string
 
 	switch m := p.Metadata.(type) {
 	// Cases with existing metadata models
 	case metadata.RPMMetadata:
-		originator = fmt.Sprintf("Organization: %s", m.Vendor)
-		return originator
+		return organization, m.Vendor
 	case metadata.PackageJSON:
 		switch m.Author.(type) {
 		case map[string]interface{}:
@@ -239,10 +253,10 @@ func Originator(p *model.Package) string {
 	}
 
 	if originator != "" {
-		return fmt.Sprintf("Person: %s", originator)
+		return person, originator
 	}
 
-	return ""
+	return "", ""
 }
 
 // FormatName helper

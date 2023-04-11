@@ -28,6 +28,8 @@ const (
 	SPDXJSON = "spdx-json"
 	// SPDXTagValue Output Type
 	SPDXTagValue = "spdx-tag-value"
+	// SPDXYML Output Type
+	SPDXYML = "spdx-yml"
 	// GithubJSON Output Type
 	GithubJSON = "github-json"
 )
@@ -41,11 +43,20 @@ var (
 		CycloneDXJSON:   CycloneDXJSON,
 		SPDXJSON:        SPDXJSON,
 		SPDXTagValue:    SPDXTagValue,
+		SPDXYML:         SPDXYML,
 		GithubJSON:      GithubJSON,
 	}
 
 	// OutputList - List of supported output types
-	OutputList = []string{JSON.ToOutput(), Table, CycloneDXXML, CycloneDXJSON, SPDXJSON, SPDXTagValue, GithubJSON}
+	OutputList = []string{
+		JSON.ToOutput(),
+		Table,
+		CycloneDXXML,
+		CycloneDXJSON,
+		SPDXJSON,
+		SPDXTagValue,
+		SPDXYML,
+		GithubJSON}
 )
 
 // ToOutput - returns the output type as string

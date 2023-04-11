@@ -142,6 +142,7 @@ Available `formats` include:
 - `cyclonedx-json`: A JSON report conforming to the [CycloneDX 1.4 specification](https://cyclonedx.org/specification/overview/).
 - `spdx-tag-value`: A tag-value formatted report conforming to the [SPDX 2.2 specification](https://spdx.github.io/spdx-spec/).
 - `spdx-json`: A JSON report conforming to the [SPDX 2.2 JSON Schema](https://github.com/spdx/spdx-spec/blob/v2.2/schemas/spdx-schema.json) format.
+- `spdx-yml`: A YAML report conforming to the [SPDX 2.2 YAML Schema](https://github.com/spdx/spdx-spec/blob/development/v2.2.2/examples/SPDXYAMLExample-2.2.spdx.yaml) format.
 - `github-json`: A JSON report conforming to the [dependency snapshot](https://docs.github.com/en/rest/dependency-graph/dependency-submission?apiVersion=2022-11-28) format of Github.
 
 
@@ -168,11 +169,13 @@ secret-config:
 enabled-parsers: []
 # disables file listing from package metadata
 disable-file-listing: false
+# disables the timeout when pulling an image from server
+disable-pull-timeout: false
 # disable all output except SBOM result
 quiet: false
 # save the sbom result to the output file instead of writing to standard output
 output-file: ""
-# supported output types: [json table cyclonedx-xml cyclonedx-json spdx-json spdx-tag-value github-json] (default [table])
+# supported output types: [json table cyclonedx-xml cyclonedx-json spdx-json spdx-tag-value spdx-yml github-json] (default [table])
 output: []
 registry: 
   # registry uri endpoint

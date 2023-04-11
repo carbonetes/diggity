@@ -11,7 +11,8 @@ import (
 	"github.com/carbonetes/diggity/internal/output/util"
 	versionPackage "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/model/output"
+
+	cyclonedx "github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/distro"
 
@@ -19,21 +20,26 @@ import (
 )
 
 const (
-	vendor                                   = "carbonetes"
-	name                                     = "diggity"
-	diggityPrefix                            = "diggity"
-	packagePrefix                            = "package"
-	distroPrefix                             = "distro"
-	colonPrefix                              = ":"
-	cpePrefix                                = "cpe23"
-	locationPrefix                           = "location"
-	library          output.ComponentLibrary = "library"
-	operatingSystem                          = "operating-system"
-	issueTracker                             = "issue-tracker"
-	referenceWebsite                         = "website"
-	referenceOther                           = "other"
+	cycloneDX        = "CycloneDX"
+	vendor           = "carbonetes"
+	name             = "diggity"
+	diggityPrefix    = "diggity"
+	packagePrefix    = "package"
+	distroPrefix     = "distro"
+	colonPrefix      = ":"
+	cpePrefix        = "cpe23"
+	locationPrefix   = "location"
+	library          = "library"
+	operatingSystem  = "operating-system"
+	issueTracker     = "issue-tracker"
+	referenceWebsite = "website"
+	referenceOther   = "other"
+	version          = 1
+)
+
+var (
 	// XMLN cyclonedx
-	XMLN = "http://cyclonedx.org/schema/bom/1.4"
+	XMLN = fmt.Sprintf("http://cyclonedx.org/schema/bom/%+v", cyclonedx.SpecVersion1_4)
 )
 
 // PrintCycloneDXXML Print Packages in XML format
@@ -63,53 +69,56 @@ func PrintCycloneDXJSON() {
 	}
 }
 
-func convertPackage() *output.CycloneFormat {
+func convertPackage() *cyclonedx.BOM {
 	// Sort packages alphabetically
 	util.SortPackages()
 
 	//initialize component
-	components := make([]output.Component, len(bom.Packages))
+	components := make([]cyclonedx.Component, len(bom.Packages))
 	for i, p := range bom.Packages {
 		components[i] = convertToComponent(p)
 	}
 
 	components = append(components, addDistroComponent(distro.Distro()))
 
-	return &output.CycloneFormat{
+	return &cyclonedx.BOM{
+		BOMFormat:    cycloneDX,
+		SpecVersion:  cyclonedx.SpecVersion1_4,
 		XMLNS:        XMLN,
 		SerialNumber: uuid.NewString(),
+		Version:      version,
 		Metadata:     getFromSource(),
 		Components:   &components,
 	}
 }
 
-func addDistroComponent(distro *model.Distro) output.Component {
+func addDistroComponent(distro *model.Distro) cyclonedx.Component {
 
 	if distro == nil {
-		return output.Component{}
+		return cyclonedx.Component{}
 	}
-	externalReferences := &[]output.ExternalReference{}
+	externalReferences := &[]cyclonedx.ExternalReference{}
 	if distro.BugReportURL != "" {
-		*externalReferences = append(*externalReferences, output.ExternalReference{
+		*externalReferences = append(*externalReferences, cyclonedx.ExternalReference{
 			URL:  distro.BugReportURL,
 			Type: issueTracker,
 		})
 	}
 	if distro.HomeURL != "" {
-		*externalReferences = append(*externalReferences, output.ExternalReference{
+		*externalReferences = append(*externalReferences, cyclonedx.ExternalReference{
 			URL:  distro.HomeURL,
 			Type: referenceWebsite,
 		})
 	}
 	if distro.SupportURL != "" {
-		*externalReferences = append(*externalReferences, output.ExternalReference{
+		*externalReferences = append(*externalReferences, cyclonedx.ExternalReference{
 			URL:     distro.SupportURL,
 			Type:    referenceOther,
 			Comment: "support",
 		})
 	}
 	if distro.PrivacyPolicyURL != "" {
-		*externalReferences = append(*externalReferences, output.ExternalReference{
+		*externalReferences = append(*externalReferences, cyclonedx.ExternalReference{
 			URL:     distro.PrivacyPolicyURL,
 			Type:    referenceOther,
 			Comment: "privacyPolicy",
@@ -118,30 +127,30 @@ func addDistroComponent(distro *model.Distro) output.Component {
 	if len(*externalReferences) == 0 {
 		externalReferences = nil
 	}
-	properties := make([]output.Property, 0)
+	properties := make([]cyclonedx.Property, 0)
 
 	//assign id
-	properties = append(properties, output.Property{
+	properties = append(properties, cyclonedx.Property{
 		Name:  diggityPrefix + colonPrefix + distroPrefix + ":id",
 		Value: distro.ID,
 	})
 
-	properties = append(properties, output.Property{
+	properties = append(properties, cyclonedx.Property{
 		Name:  diggityPrefix + colonPrefix + distroPrefix + ":prettyName",
 		Value: distro.PrettyName,
 	})
 
-	properties = append(properties, output.Property{
+	properties = append(properties, cyclonedx.Property{
 		Name:  diggityPrefix + colonPrefix + distroPrefix + ":distributionCodename",
 		Value: distro.DistribCodename,
 	})
 
-	properties = append(properties, output.Property{
+	properties = append(properties, cyclonedx.Property{
 		Name:  diggityPrefix + colonPrefix + distroPrefix + ":versionID",
 		Value: distro.VersionID,
 	})
 
-	return output.Component{
+	return cyclonedx.Component{
 		Type:               operatingSystem,
 		Name:               distro.ID,
 		Description:        distro.PrettyName,
@@ -150,12 +159,12 @@ func addDistroComponent(distro *model.Distro) output.Component {
 	}
 }
 
-func getFromSource() *output.Metadata {
+func getFromSource() *cyclonedx.Metadata {
 	//temp data-- data should come from final bom model
 	versionInfo := versionPackage.FromBuild()
-	return &output.Metadata{
+	return &cyclonedx.Metadata{
 		Timestamp: time.Now().Format(time.RFC3339),
-		Tools: &[]output.Tool{
+		Tools: &[]cyclonedx.Tool{
 			{
 				Vendor:  vendor,
 				Name:    name,
@@ -165,9 +174,9 @@ func getFromSource() *output.Metadata {
 	}
 }
 
-func convertToComponent(p *model.Package) output.Component {
+func convertToComponent(p *model.Package) cyclonedx.Component {
 
-	return output.Component{
+	return cyclonedx.Component{
 		BOMRef:     addID(p),
 		Type:       library,
 		Name:       p.Name,
@@ -178,18 +187,18 @@ func convertToComponent(p *model.Package) output.Component {
 	}
 }
 
-func initProperties(p *model.Package) *[]output.Property {
-	properties := make([]output.Property, 0)
+func initProperties(p *model.Package) *[]cyclonedx.Property {
+	properties := make([]cyclonedx.Property, 0)
 
 	//assign type
-	properties = append(properties, output.Property{
+	properties = append(properties, cyclonedx.Property{
 		Name:  diggityPrefix + colonPrefix + packagePrefix + ":type",
 		Value: p.Type,
 	})
 
 	//assign cpes
 	for _, cpe := range p.CPEs {
-		properties = append(properties, output.Property{
+		properties = append(properties, cyclonedx.Property{
 			Name:  diggityPrefix + colonPrefix + cpePrefix,
 			Value: cpe,
 		})
@@ -200,12 +209,12 @@ func initProperties(p *model.Package) *[]output.Property {
 		index := strconv.Itoa(i)
 
 		//add hash
-		properties = append(properties, output.Property{
+		properties = append(properties, cyclonedx.Property{
 			Name:  diggityPrefix + colonPrefix + locationPrefix + colonPrefix + index + colonPrefix + "layerHash",
 			Value: location.LayerHash,
 		})
 		//add path
-		properties = append(properties, output.Property{
+		properties = append(properties, cyclonedx.Property{
 			Name:  diggityPrefix + colonPrefix + locationPrefix + colonPrefix + index + colonPrefix + "path",
 			Value: location.Path,
 		})
@@ -219,17 +228,22 @@ func addID(p *model.Package) string {
 	return string(p.PURL) + "?package-id=" + p.ID
 }
 
-func convertLicense(p *model.Package) *[]output.License {
-	// lm := output.LicenseModel{}
-	licenses := make([]output.License, 0)
+func convertLicense(p *model.Package) *cyclonedx.Licenses {
+	licenses := make(cyclonedx.Licenses, 0)
+
+	// Get Licenses for CycloneDX model
 	for _, licenseName := range p.Licenses {
-		licenses = append(licenses, output.License{
+		license := cyclonedx.License{
 			ID: licenseName,
+		}
+		licenses = append(licenses, cyclonedx.LicenseChoice{
+			License: &license,
 		})
 	}
+
 	if len(licenses) > 0 {
 		return &licenses
 	}
-	return nil
 
+	return &licenses
 }

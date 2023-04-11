@@ -33,8 +33,11 @@ var (
 )
 
 const (
-	timeout       int = 60 //timeout in seconds
 	imageIDLength int = 12 //short 12-digit hex string of the Image ID
+)
+
+var (
+	timeout int = 60 //timeout in seconds
 )
 
 // Dir returns generated temporary directory string
@@ -48,8 +51,8 @@ func ExtractedDir() string {
 }
 
 // ExtractImage extracts docker image contents
-func ExtractImage(_arguments *model.Arguments, spinner *progressbar.ProgressBar) {
-	arguments = _arguments
+func ExtractImage(args *model.Arguments, spinner *progressbar.ProgressBar) {
+	arguments = args
 
 	if err := testConnection(); err != nil {
 		log.Fatal("\nCannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?\n")
@@ -57,7 +60,7 @@ func ExtractImage(_arguments *model.Arguments, spinner *progressbar.ProgressBar)
 	}
 
 	// Get Image ID; Pull from server if needed
-	imageIDS = append(imageIDS, getImageID(_arguments))
+	imageIDS = append(imageIDS, getImageID(args))
 
 	// Run Spinner
 	if !*arguments.Quiet {
@@ -113,13 +116,13 @@ func testConnection() error {
 }
 
 // Get image ID
-func getImageID(_arguments *model.Arguments) string {
+func getImageID(args *model.Arguments) string {
 	// Check Image From Local
 	imageID := findImageID()
 
 	// If image not in local, pull from server
 	if len(imageID) == 0 {
-		imageID = pullImageFromServer(_arguments)
+		imageID = pullImageFromServer(args)
 	}
 
 	return imageID
@@ -157,7 +160,7 @@ func findImageID() (imageID string) {
 }
 
 // Pull docker image from server
-func pullImageFromServer(_arguments *model.Arguments) string {
+func pullImageFromServer(args *model.Arguments) string {
 
 	pullingSpinner := ui.InitSpinner("Pulling image from server")
 
@@ -168,7 +171,7 @@ func pullImageFromServer(_arguments *model.Arguments) string {
 	}
 
 	// Verify if image is found on server
-	reader, err := pullImage(_arguments)
+	reader, err := pullImage(args)
 	if err != nil {
 		log.Fatalf("\nImage %s not found\n", *arguments.Image)
 	}
@@ -184,6 +187,11 @@ func pullImageFromServer(_arguments *model.Arguments) string {
 		}
 		time.Sleep(1 * time.Second)
 		timer++
+
+		// Infinite timeout
+		if *arguments.DisablePullTimeout {
+			timeout++
+		}
 	}
 	// Timeout Error
 	if timer >= timeout {
@@ -194,12 +202,12 @@ func pullImageFromServer(_arguments *model.Arguments) string {
 }
 
 // Pull image from registry
-func pullImage(_arguments *model.Arguments) (io.ReadCloser, error) {
-	if hasUserNameAndPassword(_arguments) {
-		loginRegistry(_arguments)
+func pullImage(args *model.Arguments) (io.ReadCloser, error) {
+	if hasUserNameAndPassword(args) {
+		loginRegistry(args)
 		c := &credentials{
-			Username: *_arguments.RegistryUsername,
-			Password: *_arguments.RegistryPassword,
+			Username: *args.RegistryUsername,
+			Password: *args.RegistryPassword,
 		}
 		encodedJSON, _ := json.Marshal(c)
 		authStr := base64.URLEncoding.EncodeToString(encodedJSON)
@@ -212,8 +220,8 @@ func pullImage(_arguments *model.Arguments) (io.ReadCloser, error) {
 }
 
 // Validate username and password
-func hasUserNameAndPassword(_arguments *model.Arguments) bool {
-	return (*_arguments.RegistryUsername != "" && *_arguments.RegistryPassword != "") || (*_arguments.RegistryUsername != "" && *_arguments.RegistryToken != "")
+func hasUserNameAndPassword(args *model.Arguments) bool {
+	return (*args.RegistryUsername != "" && *args.RegistryPassword != "") || (*args.RegistryUsername != "" && *args.RegistryToken != "")
 }
 
 // NewDockerClient (unimplemented)
