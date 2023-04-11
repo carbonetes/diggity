@@ -8,6 +8,7 @@ type Arguments struct {
 	OutputFile          *string
 	EnabledParsers      *[]string
 	DisableFileListing  *bool
+	DisablePullTimeout  *bool
 	SecretContentRegex  *string
 	DisableSecretSearch *bool
 	SecretMaxFileSize   int64

@@ -168,6 +168,8 @@ secret-config:
 enabled-parsers: []
 # disables file listing from package metadata
 disable-file-listing: false
+# disables the timeout when pulling an image from server
+disable-pull-timeout: false
 # disable all output except SBOM result
 quiet: false
 # save the sbom result to the output file instead of writing to standard output
