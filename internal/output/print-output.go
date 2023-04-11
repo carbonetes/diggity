@@ -19,6 +19,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/distro"
 	"github.com/carbonetes/diggity/pkg/parser/docker"
+	"github.com/carbonetes/diggity/pkg/parser/source"
 
 	"golang.org/x/exp/maps"
 )
@@ -134,6 +135,7 @@ func GetResults() string {
 		output.SLSA = slsa.Provenance()
 	}
 
+	output.SourceInfo = source.SourceInfo
 	output.ImageInfo = docker.ImageInfo
 
 	result, _ := json.MarshalIndent(output, "", " ")

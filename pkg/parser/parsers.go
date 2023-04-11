@@ -23,6 +23,7 @@ import (
 	portage "github.com/carbonetes/diggity/pkg/parser/portage"
 	python "github.com/carbonetes/diggity/pkg/parser/python"
 	rpm "github.com/carbonetes/diggity/pkg/parser/rpm"
+	source "github.com/carbonetes/diggity/pkg/parser/source"
 	swift "github.com/carbonetes/diggity/pkg/parser/swift"
 	"github.com/carbonetes/diggity/pkg/parser/util"
 )
@@ -53,6 +54,7 @@ var (
 		hex.FindHexPackagesFromContent,
 		swift.FindSwiftPackagesFromContent,
 		distro.ParseDistro,
+		source.ParseSourceProperties,
 		docker.ParseDockerProperties,
 		secret.Search,
 	}

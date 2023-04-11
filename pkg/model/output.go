@@ -9,7 +9,8 @@ type (
 		Packages      []*Package     `json:"packages"`
 		Relationships []Relationship `json:"relationships,omitempty"`
 		Secret        *SecretResults `json:"secrets,omitempty"`
-		ImageInfo     ImageInfo      `json:"imageInfo"`
+		SourceInfo    *SourceInfo    `json:"sourceInfo,omitempty"`
+		ImageInfo     *ImageInfo     `json:"imageInfo,omitempty"`
 		Distro        *Distro        `json:"distro"`
 		SLSA          *SLSA          `json:"slsa,omitempty"`
 	}

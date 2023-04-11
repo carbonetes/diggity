@@ -13,7 +13,7 @@ import (
 
 var (
 	// ImageInfo docker image information
-	ImageInfo model.ImageInfo
+	ImageInfo *model.ImageInfo
 	// DockerManifest docker manifest json file
 	dockerManifest []model.DockerManifest = make([]model.DockerManifest, 0)
 	// DockerConfig docker config json file
@@ -22,6 +22,12 @@ var (
 
 // ParseDockerProperties appends docker json files to parser.Result
 func ParseDockerProperties() {
+	// Omit ImageInfo for dir
+	if *bom.Arguments.Dir != "" {
+		ImageInfo = nil
+		bom.WG.Done()
+		return
+	}
 
 	tarDirectory, err := os.Open(docker.ExtractedDir())
 	if err != nil {
@@ -32,7 +38,6 @@ func ParseDockerProperties() {
 				bom.Errors = append(bom.Errors, &err)
 			}
 		}
-
 	}
 	files, err := getJSONFilesFromDir(tarDirectory.Name())
 	if err != nil {
@@ -40,6 +45,18 @@ func ParseDockerProperties() {
 		bom.Errors = append(bom.Errors, &err)
 	}
 
+	parseDockerManifest(files)
+
+	ImageInfo = &model.ImageInfo{
+		DockerConfig:   dockerConfig,
+		DockerManifest: dockerManifest,
+	}
+
+	defer bom.WG.Done()
+}
+
+// Parse Docker Manifest JSON Metadata
+func parseDockerManifest(files []string) {
 	for _, jsonFile := range files {
 		jsonFile, err := os.Open(jsonFile)
 		if err != nil {
@@ -60,13 +77,6 @@ func ParseDockerProperties() {
 		}
 
 	}
-
-	ImageInfo = model.ImageInfo{
-		DockerConfig:   dockerConfig,
-		DockerManifest: dockerManifest,
-	}
-
-	defer bom.WG.Done()
 }
 
 // Get JSON files from extracted image
