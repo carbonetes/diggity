@@ -121,7 +121,7 @@ func GetResults() string {
 	}
 
 	if !*bom.Arguments.DisableRelationships {
-		output.Relationships = relationship.GetOwnerships()
+		output.Relationships = relationship.GetRelationships(Result)
 	}
 
 	if !*bom.Arguments.DisableSecretSearch {
