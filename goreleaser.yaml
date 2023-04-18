@@ -24,10 +24,10 @@ builds:
     mod_timestamp: '{{ .CommitTimestamp }}'
     ldflags:
       - |
-        -X github.com/carbonetes/diggity/pkg/version.version={{.Version}}
-        -X github.com/carbonetes/diggity/pkg/version.buildDate={{.Date}}
-        -X github.com/carbonetes/diggity/pkg/version.gitCommit={{.Commit}}
-        -X github.com/carbonetes/diggity/pkg/version.gitDesc={{.Summary}}
+        -X github.com/carbonetes/diggity/internal/version.version={{.Version}}
+        -X github.com/carbonetes/diggity/internal/version.buildDate={{.Date}}
+        -X github.com/carbonetes/diggity/internal/version.gitCommit={{.Commit}}
+        -X github.com/carbonetes/diggity/internal/version.gitDesc={{.Summary}}
 
   - id: darwin-builds
     binary: diggity
@@ -41,10 +41,10 @@ builds:
       - CGO_ENABLED=0
     ldflags:
       - |
-        -X github.com/carbonetes/diggity/pkg/version.version={{.Version}}
-        -X github.com/carbonetes/diggity/pkg/version.buildDate={{.Date}}
-        -X github.com/carbonetes/diggity/pkg/version.gitCommit={{.Commit}}
-        -X github.com/carbonetes/diggity/pkg/version.gitDesc={{.Summary}}
+        -X github.com/carbonetes/diggity/internal/version.version={{.Version}}
+        -X github.com/carbonetes/diggity/internal/version.buildDate={{.Date}}
+        -X github.com/carbonetes/diggity/internal/version.gitCommit={{.Commit}}
+        -X github.com/carbonetes/diggity/internal/version.gitDesc={{.Summary}}
 
   - id: windows-build
     binary: diggity
@@ -57,10 +57,10 @@ builds:
       - CGO_ENABLED=0
     ldflags:
       - |
-        -X github.com/carbonetes/diggity/pkg/version.version={{.Version}}
-        -X github.com/carbonetes/diggity/pkg/version.buildDate={{.Date}}
-        -X github.com/carbonetes/diggity/pkg/version.gitCommit={{.Commit}}
-        -X github.com/carbonetes/diggity/pkg/version.gitDesc={{.Summary}}
+        -X github.com/carbonetes/diggity/internal/version.version={{.Version}}
+        -X github.com/carbonetes/diggity/internal/version.buildDate={{.Date}}
+        -X github.com/carbonetes/diggity/internal/version.gitCommit={{.Commit}}
+        -X github.com/carbonetes/diggity/internal/version.gitDesc={{.Summary}}
 
 archives:
   - id: tar-archives
