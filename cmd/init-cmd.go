@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/attestation"
+	"github.com/carbonetes/diggity/pkg/attestation"
 	"github.com/carbonetes/diggity/internal/logger"
 	versionPackage "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/model"
