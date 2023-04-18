@@ -77,6 +77,12 @@ brew tap carbonetes/diggity
 brew install diggity
 ```
 
+### Scoop
+```sh
+scoop bucket add diggity https://github.com/carbonetes/diggity-bucket
+scoop install diggity
+```
+
 ## Getting Started 🚀 
 
 ### SBOM
