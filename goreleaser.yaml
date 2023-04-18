@@ -118,22 +118,20 @@ brews:
     description: "BOM Diggity’s primary purpose is to ensure the security and integrity of software programs. It incorporates secret analysis allowing the user to secure crucial information before deploying any parts of the application to the public."
     license: "Apache License 2.0"
 
-chocolateys:
-  -
-    skip_publish: true   # set to true to avoid uploading while under testing
-    authors: carbonetes
-    description: "BOM Diggity’s primary purpose is to ensure the security and integrity of software programs. It incorporates secret analysis allowing the user to secure crucial information before deploying any parts of the application to the public."
-    name: diggity
-    ids:
-      - zip-archives
-    project_url: https://www.carbonetes.com/
-    copyright: 2023 Carbonetes
-    license_url: https://github.com/carbonetes/diggity/blob/main/LICENSE
-    require_license_acceptance: false
-    project_source_url: https://github.com/carbonetes/diggity
-    docs_url: https://github.com/carbonetes/diggity/blob/main/README.md
-    release_notes: "https://github.com/carbonetes/diggity/releases/tag/v{{ .Version }}"
-    source_repo: "https://push.chocolatey.org/"
+scoop:
+  skip_upload: false
+  bucket:
+    owner: carbonetes
+    name: diggity-bucket
+    branch: main
+    token: "{{ .Env.GITHUB_TOKEN }}"
+  commit_author:
+    name: carbonetes
+    email: eng@carbonetes.com
+  commit_msg_template: "Update for {{ .ProjectName }} version {{ .Tag }}"
+  homepage: https://www.carbonetes.com/
+  description: "BOM Diggity’s primary purpose is to ensure the security and integrity of software programs. It incorporates secret analysis allowing the user to secure crucial information before deploying any parts of the application to the public."
+  license: "Apache License 2.0"
 
 checksum:
   name_template: '{{.ProjectName}}_{{.Version}}_checksums.txt'
