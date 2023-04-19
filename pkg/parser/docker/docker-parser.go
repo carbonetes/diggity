@@ -22,8 +22,14 @@ var (
 
 // ParseDockerProperties appends docker json files to parser.Result
 func ParseDockerProperties() {
+	var tarDir string
+	if bom.Target != nil {
+		tarDir = *bom.Target
+	} else {
+		tarDir = docker.ExtractedDir()
+	}
 
-	tarDirectory, err := os.Open(docker.ExtractedDir())
+	tarDirectory, err := os.Open(tarDir)
 	if err != nil {
 		if len(*bom.Arguments.Dir) > 0 {
 			tarDirectory, err = os.Open(*bom.Arguments.Dir)

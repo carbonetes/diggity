@@ -7,12 +7,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/carbonetes/diggity/pkg/attestation"
 	"github.com/carbonetes/diggity/internal/logger"
 	versionPackage "github.com/carbonetes/diggity/internal/version"
+	"github.com/carbonetes/diggity/pkg/attestation"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/util"
+	"github.com/carbonetes/diggity/pkg/provider"
 
 	sbom "github.com/carbonetes/diggity/internal"
 
@@ -37,24 +38,7 @@ var (
 	versionArg          bool
 	versionOutputFormat string
 	// Arguments is an instance of the actual arguments passed
-	Arguments model.Arguments = model.Arguments{
-		DisableFileListing:  new(bool),
-		SecretContentRegex:  new(string),
-		DisableSecretSearch: new(bool),
-		DisablePullTimeout:  new(bool),
-		Dir:                 new(string),
-		Tar:                 new(string),
-		Quiet:               new(bool),
-		OutputFile:          new(string),
-		ExcludedFilenames:   &[]string{},
-		SecretExtensions:    &[]string{},
-		EnabledParsers:      &[]string{},
-		RegistryURI:         new(string),
-		RegistryUsername:    new(string),
-		RegistryPassword:    new(string),
-		RegistryToken:       new(string),
-		Provenance:          new(string),
-	}
+	Arguments = provider.NewArguments()
 
 	log = logger.GetLogger()
 
@@ -101,7 +85,7 @@ var (
 				}
 				os.Exit(127)
 			}
-			sbom.Start(&Arguments)
+			sbom.Start(Arguments)
 		},
 	}
 
@@ -242,7 +226,7 @@ func init() {
 
 	cobra.OnInitialize(setPrioritizedArg)
 	cobra.OnInitialize(setAttestArgs)
-	attestationOptions.BomArgs = &Arguments
+	attestationOptions.BomArgs = Arguments
 
 	diggity.AddCommand(version)
 	diggity.AddCommand(config)

@@ -7,6 +7,7 @@ import (
 )
 
 var (
+	Target *string
 	// Arguments - CLI Arguments
 	Arguments *model.Arguments
 	// Packages - common collection of packages found by parsers
