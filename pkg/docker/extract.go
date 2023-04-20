@@ -57,3 +57,22 @@ func ExtractImage(target *string) *string {
 
 	return &extractDir
 }
+
+func ExtractTarFile(tar *string) *string {
+	dir, err := ioutils.TempDir("", "")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	folder := "diggity-tmp-dir" + uuid.NewString()
+	target := filepath.Join(dir, folder)
+	err = os.Mkdir(target, fs.ModePerm)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := file.UnTar(target, *tar, true); err != nil {
+		log.Fatal(err)
+	}
+	return &target
+}
