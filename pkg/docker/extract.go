@@ -15,8 +15,27 @@ import (
 
 // ExtractImage extracts a Docker image to a temporary directory and returns the path to the directory.
 func ExtractImage(target *string) *string {
+
+	tarFile := SaveImageToTar(target)
+
+	// Create a directory to extract the Docker image to.
+	extractDir := strings.Replace(tarFile.Name(), ".tar", "", -1)
+	err := os.Mkdir(extractDir, fs.ModePerm)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Extract the Docker image to the temporary directory.
+	if err = file.UnTar(extractDir, tarFile.Name(), true); err != nil {
+		log.Fatal(err)
+	}
+
+	return &extractDir
+}
+
+func SaveImageToTar(image *string) *os.File {
 	ids := new([]string)
-	*ids = append(*ids, *target)
+	*ids = append(*ids, *image)
 
 	// Get a reader for the saved Docker image.
 	reader, err := docker.ImageSave(context.Background(), *ids)
@@ -37,25 +56,13 @@ func ExtractImage(target *string) *string {
 		log.Fatal(err)
 	}
 
-	// Create a directory to extract the Docker image to.
-	extractDir := strings.Replace(tarFile.Name(), ".tar", "", -1)
-	err = os.Mkdir(extractDir, fs.ModePerm)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// Copy the Docker image to the temporary file.
 	_, err = io.Copy(tarFile, reader)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Extract the Docker image to the temporary directory.
-	if err = file.UnTar(extractDir, tarFile.Name(), true); err != nil {
-		log.Fatal(err)
-	}
-
-	return &extractDir
+	return tarFile
 }
 
 func ExtractTarFile(tar *string) *string {
