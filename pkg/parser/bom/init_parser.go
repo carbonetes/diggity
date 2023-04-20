@@ -16,7 +16,7 @@ import (
 var (
 	Target = new(string)
 	// Arguments - CLI Arguments
-	Arguments *model.Arguments
+	Arguments = provider.NewArguments()
 	// Packages - common collection of packages found by parsers
 	Packages []*model.Package
 	// WG - common waitgroup for all the parsers
