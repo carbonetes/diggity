@@ -16,7 +16,7 @@ func TestInitParsers(t *testing.T) {
 
 	InitParsers(*arg1)
 	if !assert.DirExists(t, *Target) {
-		t.Errorf("Target was not set correctly '%s'", *Target)
+		t.Errorf("Target Directory for image %s was not set correctly '%s'", *arg1.Image, *Target)
 	}
 
 	// Test case 2: Dir argument provided
@@ -25,7 +25,7 @@ func TestInitParsers(t *testing.T) {
 
 	InitParsers(*arg2)
 	if !assert.DirExists(t, *Target) {
-		t.Errorf("Target was not set correctly '%s'", *Target)
+		t.Errorf("Target Directory for %s was not set correctly '%s'", *arg2.Dir, *Target)
 	}
 
 	// Test case 3: Tar argument provided
@@ -35,7 +35,7 @@ func TestInitParsers(t *testing.T) {
 
 	InitParsers(*arg3)
 	if !assert.DirExists(t, *Target) {
-		t.Errorf("Target was not set correctly '%s'", *Target)
+		t.Errorf("Target Directory for tar file %s was not set correctly '%s'", *arg3.Tar, *Target)
 	}
 }
 
