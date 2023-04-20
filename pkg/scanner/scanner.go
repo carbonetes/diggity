@@ -1,5 +1,5 @@
 // Package scan provides functionality for scanning Docker images.
-package scan
+package scanner
 
 import (
 	secret "github.com/carbonetes/diggity/internal/secret"
