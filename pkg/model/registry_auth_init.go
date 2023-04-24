@@ -1,12 +1,9 @@
-package provider
+package model
 
-import (
-	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/docker/docker/api/types"
-)
+import "github.com/docker/docker/api/types"
 
 // NewRegistryAuth returns a new types.AuthConfig struct with the values set from the given model.Arguments struct.
-func NewRegistryAuth(arguments *model.Arguments) *types.AuthConfig {
+func NewRegistryAuth(arguments *Arguments) *types.AuthConfig {
 	return &types.AuthConfig{
 		Username:      *setValue(arguments.RegistryUsername),
 		Password:      *setValue(arguments.RegistryPassword),

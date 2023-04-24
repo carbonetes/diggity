@@ -1,14 +1,9 @@
-package provider
+package model
 
-import (
-	"github.com/carbonetes/diggity/pkg/model"
-)
-
-// NewArguments returns a new model.Arguments struct with all fields initialized to their zero values.
-func NewArguments() *model.Arguments {
-	return &model.Arguments{
+func NewArguments() *Arguments {
+	return &Arguments{
 		Image:               new(string),
-		Output:              new(model.Output),
+		Output:              new(Output),
 		DisableFileListing:  new(bool),
 		SecretContentRegex:  new(string),
 		DisableSecretSearch: new(bool),

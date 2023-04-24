@@ -13,7 +13,6 @@ import (
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/util"
-	"github.com/carbonetes/diggity/pkg/provider"
 
 	sbom "github.com/carbonetes/diggity/internal"
 
@@ -38,7 +37,7 @@ var (
 	versionArg          bool
 	versionOutputFormat string
 	// Arguments is an instance of the actual arguments passed
-	Arguments = provider.NewArguments()
+	Arguments = model.NewArguments()
 
 	log = logger.GetLogger()
 

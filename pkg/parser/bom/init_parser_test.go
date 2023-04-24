@@ -4,14 +4,14 @@ import (
 	"testing"
 
 	"github.com/carbonetes/diggity/pkg/docker"
-	"github.com/carbonetes/diggity/pkg/provider"
+	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestInitParsers(t *testing.T) {
 
 	// Test case 1: Image argument provided
-	arg1 := provider.NewArguments()
+	arg1 := model.NewArguments()
 	arg1.Image = stringPtr("alpine")
 
 	InitParsers(*arg1)
@@ -20,7 +20,7 @@ func TestInitParsers(t *testing.T) {
 	}
 
 	// Test case 2: Dir argument provided
-	arg2 := provider.NewArguments()
+	arg2 := model.NewArguments()
 	arg2.Dir = stringPtr(".")
 
 	InitParsers(*arg2)
@@ -30,7 +30,7 @@ func TestInitParsers(t *testing.T) {
 
 	// Test case 3: Tar argument provided
 	tarFile := docker.SaveImageToTar(stringPtr("alpine"))
-	arg3 := provider.NewArguments()
+	arg3 := model.NewArguments()
 	arg3.Tar = stringPtr(tarFile.Name())
 
 	InitParsers(*arg3)

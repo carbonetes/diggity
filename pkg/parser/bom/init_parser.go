@@ -10,13 +10,12 @@ import (
 	"github.com/carbonetes/diggity/internal/logger"
 	client "github.com/carbonetes/diggity/pkg/docker"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/provider"
 )
 
 var (
 	Target = new(string)
 	// Arguments - CLI Arguments
-	Arguments = provider.NewArguments()
+	Arguments = model.NewArguments()
 	// Packages - common collection of packages found by parsers
 	Packages []*model.Package
 	// WG - common waitgroup for all the parsers
@@ -34,7 +33,7 @@ func InitParsers(argument model.Arguments) {
 			modifiedTag := *Arguments.Image + ":latest"
 			Arguments.Image = &modifiedTag
 		}
-		credential := provider.NewRegistryAuth(Arguments)
+		credential := model.NewRegistryAuth(Arguments)
 		imageId := client.GetImageID(Arguments.Image, credential)
 		Target = client.ExtractImage(imageId)
 	} else if len(*Arguments.Dir) > 0 {
