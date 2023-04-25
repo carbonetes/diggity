@@ -23,8 +23,26 @@ const (
 // ExtractImage extracts a Docker image to a temporary directory and returns the path to the directory.
 func ExtractImage(target *string) (*[]model.Location, *string) {
 	contents := new([]model.Location)
+	tarFile := SaveImageToTar(target)
+
+	// Create a directory to extract the Docker image to.
+	extractDir := strings.Replace(tarFile.Name(), ".tar", "", -1)
+	err := os.Mkdir(extractDir, fs.ModePerm)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Extract the Docker image to the temporary directory.
+	if err = UnTar(extractDir, tarFile.Name(), true, contents); err != nil {
+		log.Fatal(err)
+	}
+
+	return contents, &extractDir
+}
+
+func SaveImageToTar(image *string) *os.File {
 	ids := new([]string)
-	*ids = append(*ids, *target)
+	*ids = append(*ids, *image)
 
 	// Get a reader for the saved Docker image.
 	reader, err := docker.ImageSave(context.Background(), *ids)
@@ -45,25 +63,13 @@ func ExtractImage(target *string) (*[]model.Location, *string) {
 		log.Fatal(err)
 	}
 
-	// Create a directory to extract the Docker image to.
-	extractDir := strings.Replace(tarFile.Name(), ".tar", "", -1)
-	err = os.Mkdir(extractDir, fs.ModePerm)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// Copy the Docker image to the temporary file.
 	_, err = io.Copy(tarFile, reader)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Extract the Docker image to the temporary directory.
-	if err = UnTar(extractDir, tarFile.Name(), true, contents); err != nil {
-		log.Fatal(err)
-	}
-
-	return contents, &extractDir
+	return tarFile
 }
 
 func UnTar(dst string, source string, recursive bool, contents *[]model.Location) error {
@@ -150,11 +156,30 @@ func processFile(tarReader *tar.Reader, target string, fileMode fs.FileMode, rec
 		}
 	}
 
-	// Contents = append(Contents, &model.Location{Path: f.Name(), LayerHash: path})
 	*contents = append(*contents, model.Location{Path: f.Name(), LayerHash: path})
 	if err := f.Close(); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func ExtractTarFile(tar *string) (*[]model.Location, *string) {
+	contents := new([]model.Location)
+	dir, err := ioutils.TempDir("", "")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	folder := "diggity-tmp-dir" + uuid.NewString()
+	target := filepath.Join(dir, folder)
+	err = os.Mkdir(target, fs.ModePerm)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := UnTar(target, *tar, true, contents); err != nil {
+		log.Fatal(err)
+	}
+	return contents, &target
 }

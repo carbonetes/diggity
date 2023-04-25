@@ -29,8 +29,10 @@ func ParseDockerProperties(req *bom.ParserRequirements) {
 				err = errors.New("docker-parser: " + err.Error())
 				*req.Errors = append(*req.Errors, err)
 			}
+		} else {
+			err = errors.New("docker-parser: " + err.Error())
+			*req.Errors = append(*req.Errors, err)
 		}
-
 	}
 	files, err := getJSONFilesFromDir(tarDirectory.Name())
 	if err != nil {
@@ -56,7 +58,6 @@ func ParseDockerProperties(req *bom.ParserRequirements) {
 				*req.Errors = append(*req.Errors, err)
 			}
 		}
-
 	}
 
 	ImageInfo = model.ImageInfo{

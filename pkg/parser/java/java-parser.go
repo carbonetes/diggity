@@ -52,12 +52,12 @@ func FindJavaPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(java, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if match := regexp.MustCompile(jarPackagesRegex).FindString(content.Path); len(match) > 0 {
-				if err := extractJarFile(&content); err != nil {
+				if err := extractJarFile(&content, req.Arguments.Dir); err != nil {
 					err = errors.New("java-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
 			} else if strings.Contains(content.Path, pomFileName) {
-				if err := parsePomXML(content, content.Path); err != nil {
+				if err := parsePomXML(content, content.Path, req.Arguments.Dir); err != nil {
 					err = errors.New("java-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
@@ -69,7 +69,7 @@ func FindJavaPackagesFromContent(req *bom.ParserRequirements) {
 }
 
 // Extract jar files
-func extractJarFile(location *model.Location) error {
+func extractJarFile(location *model.Location, dir *string) error {
 
 	buff, err := os.ReadFile(location.Path)
 	if err != nil {
@@ -108,7 +108,7 @@ func extractJarFile(location *model.Location) error {
 			_ = parsePomXML(model.Location{
 				Path:      file.Name(),
 				LayerHash: location.LayerHash,
-			}, location.Path)
+			}, location.Path, dir)
 
 			if err := file.Close(); err != nil {
 				return err
@@ -122,16 +122,16 @@ func extractJarFile(location *model.Location) error {
 
 		if metadataFile != nil || pomPropertiesFile != nil {
 			paths := strings.Split(util.TrimUntilLayer(*location), string(os.PathSeparator))
-			_ = initPackage(paths[len(paths)-1], location, metadataFile, pomPropertiesFile)
+			_ = initPackage(paths[len(paths)-1], location, metadataFile, pomPropertiesFile, dir)
 		}
 	}
 
-	err = parseJarFiles(dependencies, location)
+	err = parseJarFiles(dependencies, location, dir)
 	return err
 }
 
 // Init java package
-func initPackage(name string, location *model.Location, manifestFile *zip.File, pomPropertiesFile *zip.File) error {
+func initPackage(name string, location *model.Location, manifestFile *zip.File, pomPropertiesFile *zip.File, dir *string) error {
 	endOfFile := regexp.MustCompile(jarPackagesRegex)
 	pkg := new(model.Package)
 	pkg.Metadata = Metadata{}
@@ -221,7 +221,7 @@ func initPackage(name string, location *model.Location, manifestFile *zip.File, 
 		generateAdditionalCPE(vendor, product, version, pkg)
 	}
 
-	if util.SourceIsDir() || pkg.Name != "" && pkg.Version != "" {
+	if len(*dir) > 0 || pkg.Name != "" && pkg.Version != "" {
 		checkPackage(pkg, location.LayerHash)
 	}
 	return nil
@@ -252,7 +252,7 @@ func checkPackage(pkg *model.Package, layerHash string) {
 }
 
 // Parse jar files
-func parseJarFiles(dependencies []*zip.File, location *model.Location) error {
+func parseJarFiles(dependencies []*zip.File, location *model.Location, dir *string) error {
 
 	if err := os.Mkdir(docker.Dir(), fs.ModePerm); err != nil && !os.IsExist(err) {
 		return err
@@ -277,7 +277,7 @@ func parseJarFiles(dependencies []*zip.File, location *model.Location) error {
 			return err
 		}
 
-		err = findManifestAndPomPropertiesFromDependencyJarFile(jarFile, location, dependency.Name)
+		err = findManifestAndPomPropertiesFromDependencyJarFile(jarFile, location, dependency.Name, dir)
 		if err != nil {
 			return err
 		}
@@ -306,7 +306,7 @@ func generateAdditionalCPE(vendor string, product string, version string, pkg *m
 }
 
 // Find the manifest and pom properties files from the dependency jar file
-func findManifestAndPomPropertiesFromDependencyJarFile(jarFile *os.File, location *model.Location, name string) error {
+func findManifestAndPomPropertiesFromDependencyJarFile(jarFile *os.File, location *model.Location, name string, dir *string) error {
 
 	buff, err := os.ReadFile(jarFile.Name())
 	if err != nil {
@@ -347,7 +347,7 @@ func findManifestAndPomPropertiesFromDependencyJarFile(jarFile *os.File, locatio
 			_ = parsePomXML(model.Location{
 				Path:      file.Name(),
 				LayerHash: location.LayerHash,
-			}, paths[len(paths)-1])
+			}, paths[len(paths)-1], dir)
 
 			if err := file.Close(); err != nil {
 				return err
@@ -358,12 +358,12 @@ func findManifestAndPomPropertiesFromDependencyJarFile(jarFile *os.File, locatio
 		metadataFile, pomPropertiesFile = checkZipfile(zipFile, metadataFile, pomPropertiesFile)
 
 		if metadataFile != nil || pomPropertiesFile != nil {
-			_ = initPackage(name, location, metadataFile, pomPropertiesFile)
+			_ = initPackage(name, location, metadataFile, pomPropertiesFile, dir)
 			pomPropertiesFile = nil
 			metadataFile = nil
 		}
 	}
-	_ = parseJarFiles(dependencies, location)
+	_ = parseJarFiles(dependencies, location, dir)
 	return nil
 }
 
@@ -478,7 +478,7 @@ func parseJavaURL(pkg *model.Package) {
 	}
 }
 
-func parsePomXML(location model.Location, layerPath string) error {
+func parsePomXML(location model.Location, layerPath string, dir *string) error {
 	file, err := os.ReadFile(location.Path)
 	if err != nil {
 		return err
@@ -488,7 +488,7 @@ func parsePomXML(location model.Location, layerPath string) error {
 	}
 
 	if len(JavaPomXML.Dependencies) > 0 {
-		if util.SourceIsDir() {
+		if len(*dir) > 0 {
 			for _, dep := range JavaPomXML.Dependencies {
 				if dep.ArtifactID != "" && !strings.Contains(dep.Version, "$") {
 					pkg := new(model.Package)

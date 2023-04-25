@@ -7,7 +7,6 @@ import (
 
 	"github.com/carbonetes/diggity/internal/docker"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 // ParserNames slice of supported parser names
@@ -79,11 +78,6 @@ func StringSliceContains(s []string, e string) bool {
 	return false
 }
 
-// SourceIsDir returns if source is dir
-func SourceIsDir() bool {
-	return len(*bom.Arguments.Dir) > 0
-}
-
 // FormatLockKeyVal formats .lock Key Value Data String
 func FormatLockKeyVal(kv string) string {
 	trimmed := strings.TrimSpace(kv)
@@ -91,10 +85,10 @@ func FormatLockKeyVal(kv string) string {
 }
 
 // CleanUp clears temp files
-func CleanUp() {
+func CleanUp(errGroup *[]error) {
 	err := os.RemoveAll(docker.Dir())
 	if err != nil {
 		err = errors.New("clean-up: " + err.Error())
-		bom.Errors = append(bom.Errors, &err)
+		*errGroup = append(*errGroup, err)
 	}
 }
