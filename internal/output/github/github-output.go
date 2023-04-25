@@ -11,8 +11,6 @@ import (
 	versionPackage "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/output"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
-	"github.com/carbonetes/diggity/pkg/parser/distro"
 )
 
 const (
@@ -26,32 +24,32 @@ const (
 type DependencyMetadata map[string]interface{}
 
 // PrintGithubJSON Print Packages in Github JSON format
-func PrintGithubJSON() {
-	githubJSON, err := getGithubJSON()
+func PrintGithubJSON(args *model.Arguments, results *model.Result) {
+	githubJSON, err := getGithubJSON(args, results)
 
 	if err != nil {
 		panic(err)
 	}
 
-	if len(*bom.Arguments.OutputFile) > 0 {
-		save.ResultToFile(string(githubJSON))
+	if len(*args.OutputFile) > 0 {
+		save.ResultToFile(string(githubJSON), args.OutputFile)
 	} else {
 		fmt.Printf("%+v\n", string(githubJSON))
 	}
 }
 
 // getGithubJSON Init Github JSON Output
-func getGithubJSON() ([]byte, error) {
+func getGithubJSON(args *model.Arguments, results *model.Result) ([]byte, error) {
 	var image string
-	if bom.Arguments.Image == nil {
-		if *bom.Arguments.Tar != "" {
-			image = *bom.Arguments.Tar
+	if args.Image == nil {
+		if *args.Tar != "" {
+			image = *args.Tar
 		}
-		if *bom.Arguments.Dir != "" {
-			image = *bom.Arguments.Tar
+		if *args.Dir != "" {
+			image = *args.Tar
 		}
 	} else {
-		image = strings.Split(*bom.Arguments.Image, ":")[0]
+		image = strings.Split(*args.Image, ":")[0]
 	}
 
 	result := output.DependencySnapshot{
@@ -61,8 +59,8 @@ func getGithubJSON() ([]byte, error) {
 			URL:     githubUrl,
 			Version: versionPackage.FromBuild().Version,
 		},
-		Metadata:  getSnapshotMetadata(distro.Distro()),
-		Manifests: getPackageManifests(image),
+		Metadata:  getSnapshotMetadata(results.Distro),
+		Manifests: getPackageManifests(image, results.Packages),
 		Scanned:   time.Now().Format(time.RFC3339),
 	}
 	return json.MarshalIndent(result, "", " ")
@@ -79,11 +77,11 @@ func getSnapshotMetadata(distro *model.Distro) DependencyMetadata {
 }
 
 // getPackageManifests returns the manifests metadata from the sbom packages discovered
-func getPackageManifests(image string) output.PackageManifests {
+func getPackageManifests(image string, pkgs *[]model.Package) output.PackageManifests {
 	manifests := make(output.PackageManifests)
 
 	// Iterate through SBOM Packages
-	for _, pkg := range bom.Packages {
+	for _, pkg := range *pkgs {
 		paths := pkg.Locations
 		for _, p := range paths {
 			locPath := strings.Replace(p.Path, string(os.PathSeparator), "/", -1)

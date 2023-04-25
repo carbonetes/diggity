@@ -6,6 +6,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/carbonetes/diggity/internal/docker"
 	client "github.com/carbonetes/diggity/pkg/docker"
 	"github.com/carbonetes/diggity/pkg/files"
 	"github.com/carbonetes/diggity/pkg/model"
@@ -30,6 +31,7 @@ func InitParsers(args *model.Arguments) (*ParserRequirements, error) {
 		credential := model.NewRegistryAuth(args)
 		imageId := client.GetImageID(args.Image, credential)
 		contents, dir := client.ExtractImage(imageId)
+		docker.CreateTempDir()
 		return &ParserRequirements{
 			Arguments: args,
 			Dir:       dir,
@@ -48,10 +50,10 @@ func InitParsers(args *model.Arguments) (*ParserRequirements, error) {
 			if err != nil {
 				log.Fatal(err)
 			}
-			dir := client.CreateTempDir()
+			docker.CreateTempDir()
 			return &ParserRequirements{
 				Arguments: args,
-				Dir:       dir,
+				Dir:       args.Dir,
 				Contents:  contents,
 				Errors:    new([]error),
 				Result: &model.Result{
@@ -67,6 +69,7 @@ func InitParsers(args *model.Arguments) (*ParserRequirements, error) {
 	} else if len(*args.Tar) > 0 {
 		if files.Exists(*args.Tar) {
 			contents, dir := client.ExtractTarFile(args.Tar)
+			docker.CreateTempDir()
 			return &ParserRequirements{
 				Arguments: args,
 				Dir:       dir,
@@ -77,7 +80,7 @@ func InitParsers(args *model.Arguments) (*ParserRequirements, error) {
 					Secret:   new(model.SecretResults),
 					Distro:   new(model.Distro),
 					SLSA:     new(model.SLSA),
-				}, 
+				},
 			}, nil
 		} else {
 			return nil, errors.New("Tar file not found!")

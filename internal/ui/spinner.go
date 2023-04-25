@@ -1,24 +1,26 @@
 package ui
 
 import (
-	"time"
-
+	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/schollz/progressbar/v3"
 )
 
-var disabled bool
+var (
+	disabled bool
+	log      = logger.GetLogger()
+)
 
 // InitSpinner generates simple spinner
 func InitSpinner(text string) *progressbar.ProgressBar {
 	if disabled {
 		return nil
 	}
-	spinner := progressbar.NewOptions(-1,
+	pb := progressbar.NewOptions(-1,
 		progressbar.OptionSpinnerType(14),
 		progressbar.OptionSetDescription(text),
 		progressbar.OptionClearOnFinish(),
 	)
-	return spinner
+	return pb
 }
 
 // RunSpinner starts a spinner
@@ -29,23 +31,22 @@ func RunSpinner(spinner *progressbar.ProgressBar) {
 	for {
 		err := spinner.Add(1)
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
-		time.Sleep(5 * time.Millisecond)
 	}
 }
 
 // DoneSpinner stops and closes a spiner
-func DoneSpinner(spinner *progressbar.ProgressBar) {
+func DoneSpinner(pb *progressbar.ProgressBar) {
 	if disabled {
 		return
 	}
-	err := spinner.Finish()
+	err := pb.Finish()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	spinner.Close()
+	pb.Close()
 }
 
 // Disable spinner

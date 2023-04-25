@@ -78,7 +78,7 @@ func Scan(arguments *model.Arguments) *model.Result {
 	result := requirements.Result
 
 	if *arguments.Provenance != "" {
-		result.SLSA = slsa.Provenance()
+		result.SLSA = slsa.Provenance(requirements)
 	}
 
 	return result

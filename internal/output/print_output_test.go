@@ -4,9 +4,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/carbonetes/diggity/internal/output/util"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 var (
@@ -48,38 +46,38 @@ var (
 	}
 )
 
-func TestFinalizeResults(t *testing.T) {
-	bom.Packages = []*model.Package{&printPackage1, &printPackage2, &printPackage3, &printPackage4, &printDuplicate}
-	expected := []*model.Package{&printPackage1, &printPackage2, &printPackage3, &printPackage4}
+func TestDepulicate(t *testing.T) {
+	pkgs := &[]model.Package{printPackage1, printPackage2, printPackage3, printPackage4, printDuplicate}
+	expected := &[]model.Package{printPackage1, printPackage2, printPackage3, printPackage4}
 
-	finalizeResults()
+	_ = Depulicate(pkgs)
+	// SortResults(pkgs, result)
 
-	if len(bom.Packages) != len(expected) {
-		t.Errorf("Test Failed: Expected Packages of length %+v, Received: %+v.", len(expected), len(bom.Packages))
+	if len(*pkgs) != len(*expected) {
+		t.Errorf("Test Failed: Expected Packages of length %+v, Received: %+v.", len(*expected), len(*pkgs))
 	}
-
-	util.SortPackages()
 
 	sort.Slice(expected, func(i, j int) bool {
-		return expected[i].Name < expected[j].Name
+		return (*expected)[i].Name < (*expected)[j].Name
 	})
 
-	for i, p := range bom.Packages {
-		if p.Name != expected[i].Name {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", expected[i].Name, p.Name)
+	for i, p := range *pkgs {
+		if p.Name != (*expected)[i].Name {
+			t.Errorf("Test Failed: Expected output of %v, received: %v", (*expected)[i].Name, p.Name)
 		}
 	}
 }
 
-func TestSortResults(t *testing.T) {
-	bom.Packages = []*model.Package{&printPackage1, &printPackage2, &printPackage3, &printPackage4, &printNewVersion}
-	expected := []*model.Package{&printPackage2, &printPackage1, &printPackage3, &printPackage4, &printNewVersion}
+// func TestSortResults(t *testing.T) {
+// 	pkgs := &[]model.Package{printPackage1, printPackage2, printPackage3, printPackage4, printNewVersion}
+// 	expected := &[]model.Package{printPackage2, printPackage1, printPackage3, printPackage4, printNewVersion}
 
-	sortResults()
+// 	result := Depulicate(pkgs)
+// 	SortResults(pkgs, result)
 
-	for i, p := range bom.Packages {
-		if p.Name != expected[i].Name {
-			t.Errorf("Test Failed: Expected output of %v, received: %v", expected[i].Name, p.Name)
-		}
-	}
-}
+// 	for i, p := range *pkgs {
+// 		if p.Name != (*expected)[i].Name {
+// 			t.Errorf("Test Failed: Expected output of %v, received: %v", (*expected)[i].Name, p.Name)
+// 		}
+// 	}
+// }

@@ -17,11 +17,11 @@ const (
 var ProvenanceMetadata map[string]interface{}
 
 // Provenance adds provenance metadata to SBOM result
-func Provenance() *model.SLSA {
-	provenance, err := parseProvenanceMetadata(*bom.Arguments.Provenance)
+func Provenance(req *bom.ParserRequirements) *model.SLSA {
+	provenance, err := parseProvenanceMetadata(*req.Arguments.Provenance)
 	if err != nil {
 		err = errors.New("provenance: " + err.Error())
-		bom.Errors = append(bom.Errors, &err)
+		*req.Errors = append(*req.Errors, err)
 		return nil
 	}
 	return &model.SLSA{
