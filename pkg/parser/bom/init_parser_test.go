@@ -1,63 +1,45 @@
 package bom
 
 import (
-	"reflect"
 	"testing"
 
+	"github.com/carbonetes/diggity/pkg/docker"
 	"github.com/carbonetes/diggity/pkg/model"
-)
-
-type (
-	InitParsersResult struct {
-		_argument *model.Arguments
-		expected  *model.Arguments
-	}
+	"github.com/stretchr/testify/assert"
 )
 
 func TestInitParsers(t *testing.T) {
-	argImage1 := "test-image"
-	argImage2 := "test-image/test"
-	argImage3 := "test-image/test:latest"
-	argImage4 := "test-image/testt:xyz"
-	argImage5 := "alpine"
 
-	boolTrue := true
-	boolFalse := false
+	// Test case 1: Image argument provided
+	arg1 := model.NewArguments()
+	arg1.Image = stringPtr("alpine")
 
-	arguments1 := model.Arguments{
-		Image:              &argImage1,
-		DisableFileListing: &boolTrue,
-	}
-	arguments2 := model.Arguments{
-		Image:              &argImage2,
-		DisableFileListing: &boolTrue,
-	}
-	arguments3 := model.Arguments{
-		Image:              &argImage3,
-		DisableFileListing: &boolFalse,
-	}
-	arguments4 := model.Arguments{
-		Image:              &argImage4,
-		DisableFileListing: &boolTrue,
-	}
-	arguments5 := model.Arguments{
-		Image:              &argImage5,
-		DisableFileListing: &boolFalse,
+	InitParsers(*arg1)
+	if !assert.DirExists(t, *Target) {
+		t.Errorf("Target Directory for image %s was not set correctly '%s'", *arg1.Image, *Target)
 	}
 
-	tests := []InitParsersResult{
-		{&arguments1, &arguments1},
-		{&arguments2, &arguments2},
-		{&arguments3, &arguments3},
-		{&arguments4, &arguments4},
-		{&arguments5, &arguments5},
+	// Test case 2: Dir argument provided
+	arg2 := model.NewArguments()
+	arg2.Dir = stringPtr(".")
+
+	InitParsers(*arg2)
+	if !assert.DirExists(t, *Target) {
+		t.Errorf("Target Directory for %s was not set correctly '%s'", *arg2.Dir, *Target)
 	}
 
-	for _, test := range tests {
-		InitParsers(*test._argument)
+	// Test case 3: Tar argument provided
+	tarFile := docker.SaveImageToTar(stringPtr("alpine"))
+	arg3 := model.NewArguments()
+	arg3.Tar = stringPtr(tarFile.Name())
 
-		if !reflect.DeepEqual(Arguments, test.expected) {
-			t.Errorf("Test Failed: Arguments must be instantiated from &arguments.")
-		}
+	InitParsers(*arg3)
+	if !assert.DirExists(t, *Target) {
+		t.Errorf("Target Directory for tar file %s was not set correctly '%s'", *arg3.Tar, *Target)
 	}
+}
+
+// Helper function to create a string pointer
+func stringPtr(s string) *string {
+	return &s
 }

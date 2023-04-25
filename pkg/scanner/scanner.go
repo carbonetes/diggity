@@ -1,10 +1,9 @@
 // Package scan provides functionality for scanning Docker images.
-package scan
+package scanner
 
 import (
 	secret "github.com/carbonetes/diggity/internal/secret"
 	"github.com/carbonetes/diggity/internal/slsa"
-	client "github.com/carbonetes/diggity/pkg/docker"
 	"github.com/carbonetes/diggity/pkg/model"
 	alpine "github.com/carbonetes/diggity/pkg/parser/alpine"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -27,7 +26,6 @@ import (
 	rpm "github.com/carbonetes/diggity/pkg/parser/rpm"
 	swift "github.com/carbonetes/diggity/pkg/parser/swift"
 	"github.com/carbonetes/diggity/pkg/parser/util"
-	"github.com/carbonetes/diggity/pkg/provider"
 )
 
 // parsers is a slice of functions that find content from the image.
@@ -62,31 +60,41 @@ var (
 	}
 )
 
-// ScanImage scans the Docker image specified in the given model.Arguments struct and returns a model.Result struct.
-func ScanImage(arguments *model.Arguments) *model.Result {
-	credential := provider.NewRegistryAuth(arguments)
-	imageId := client.GetImageID(arguments.Image, credential)
-	target := client.ExtractImage(imageId)
-	bom.Target = target
-	bom.InitParsers(*arguments)
-	bom.WG.Add(len(FindFunctions))
-	for _, parser := range FindFunctions {
-		go parser()
-	}
-	bom.WG.Wait()
-	util.CleanUp()
-	output := model.Result{
-		Distro:   distro.Distro(),
-		Packages: bom.Packages,
-	}
+// Diggity scans the Docker images, Tar Files, and Codebases(directories) specified in the given model.Arguments struct and returns a sbom(model.Result) struct.
+func Scan(arguments *model.Arguments) *model.Result {
+    // Initialize parsers with the given arguments.
+    bom.InitParsers(*arguments)
+    
+    // Add the number of FindFunctions to the WaitGroup.
+    bom.WG.Add(len(FindFunctions))
+    
+    // For each parser in FindFunctions, run it concurrently.
+    for _, parser := range FindFunctions {
+        go parser()
+    }
+    
+    // Wait for all parsers to finish.
+    bom.WG.Wait()
+    
+    // Clean up any temporary files created during parsing.
+    util.CleanUp()
+    
+    // Create a new Result struct with the Distro and Packages fields set.
+    output := model.Result{
+        Distro:   distro.Distro(),
+        Packages: bom.Packages,
+    }
 
-	if !*bom.Arguments.DisableSecretSearch {
-		output.Secret = secret.SecretResults
-	}
+    // If secret search is not disabled, add the SecretResults field to the output.
+    if !*bom.Arguments.DisableSecretSearch {
+        output.Secret = secret.SecretResults
+    }
 
-	if *bom.Arguments.Provenance != "" {
-		output.SLSA = slsa.Provenance()
-	}
+    // If provenance is specified, add the SLSA field to the output.
+    if *bom.Arguments.Provenance != "" {
+        output.SLSA = slsa.Provenance()
+    }
 
-	return &output
+    // Return a pointer to the output struct.
+    return &output
 }

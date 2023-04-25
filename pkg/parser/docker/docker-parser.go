@@ -6,7 +6,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/docker"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
@@ -22,14 +21,7 @@ var (
 
 // ParseDockerProperties appends docker json files to parser.Result
 func ParseDockerProperties() {
-	var tarDir string
-	if bom.Target != nil {
-		tarDir = *bom.Target
-	} else {
-		tarDir = docker.ExtractedDir()
-	}
-
-	tarDirectory, err := os.Open(tarDir)
+	tarDirectory, err := os.Open(*bom.Target)
 	if err != nil {
 		if len(*bom.Arguments.Dir) > 0 {
 			tarDirectory, err = os.Open(*bom.Arguments.Dir)
@@ -37,8 +29,10 @@ func ParseDockerProperties() {
 				err = errors.New("docker-parser: " + err.Error())
 				bom.Errors = append(bom.Errors, &err)
 			}
+		} else {
+			err = errors.New("docker-parser: " + err.Error())
+			bom.Errors = append(bom.Errors, &err)
 		}
-
 	}
 	files, err := getJSONFilesFromDir(tarDirectory.Name())
 	if err != nil {
@@ -64,7 +58,6 @@ func ParseDockerProperties() {
 				bom.Errors = append(bom.Errors, &err)
 			}
 		}
-
 	}
 
 	ImageInfo = model.ImageInfo{
