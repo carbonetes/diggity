@@ -13,6 +13,7 @@ import (
 	"github.com/carbonetes/diggity/internal/output/tabular"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"golang.org/x/exp/maps"
 )
 
 type result map[string]*model.Package
@@ -25,7 +26,7 @@ var (
 
 // PrintResults prints the result based on the arguments
 func PrintResults(req *bom.ParserRequirements) {
-	_ = Depulicate(req.Result.Packages)
+	Depulicate(req.Result.Packages)
 	// SortResults(req.Result.Packages, result)
 	// Table Output(Default)
 	selectOutputType(req.Arguments, req.Result)
@@ -70,7 +71,7 @@ func selectOutputType(args *model.Arguments, results *model.Result) {
 }
 
 // Remove Duplicates
-func Depulicate(pkgs *[]model.Package) map[string]model.Package {
+func Depulicate(pkgs *[]model.Package) {
 	result := make(map[string]model.Package, 0)
 	for _, pkg := range *pkgs {
 		if _, exists := result[pkg.Name+":"+pkg.Version+":"+pkg.Type]; !exists {
@@ -91,7 +92,7 @@ func Depulicate(pkgs *[]model.Package) map[string]model.Package {
 			}
 		}
 	}
-	return result
+	*pkgs = maps.Values(result)
 }
 
 // Sort Results

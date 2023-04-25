@@ -42,12 +42,6 @@ type (
 		buildData *debug.BuildInfo
 		expected  metadata.GoBinMetadata
 	}
-	AppendGoBinPackageResult struct {
-		location  *model.Location
-		buildData *debug.BuildInfo
-		dep       *debug.Module
-		expected  *model.Package
-	}
 	InitGoBinPackageResult struct {
 		pkg       *model.Package
 		location  *model.Location
