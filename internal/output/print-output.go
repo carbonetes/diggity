@@ -3,6 +3,7 @@ package output
 import (
 	"encoding/json"
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/logger"
@@ -25,6 +26,7 @@ var (
 // PrintResults prints the result based on the arguments
 func PrintResults(req *bom.ParserRequirements) {
 	Depulicate(req.Result.Packages)
+	SortResults(req.Result.Packages)
 	// SortResults(req.Result.Packages, result)
 	// Table Output(Default)
 	selectOutputType(req.Arguments, req.Result)
@@ -93,13 +95,11 @@ func Depulicate(pkgs *[]model.Package) {
 	*pkgs = maps.Values(result)
 }
 
-// Sort Results
-// func SortResults(pkgs *[]model.Package, result map[string]model.Package) {
-// 	*pkgs = maps.Values(result)
-// 	sort.Slice(pkgs, func(i, j int) bool {
-// 		if (*pkgs)[i].Name == (*pkgs)[j].Name {
-// 			return (*pkgs)[i].Version < (*pkgs)[j].Version
-// 		}
-// 		return (*pkgs)[i].Name < (*pkgs)[j].Name
-// 	})
-// }
+func SortResults(pkgs *[]model.Package) {
+	sort.SliceStable(*pkgs, func(i, j int) bool {
+		if strings.EqualFold((*pkgs)[i].Name, (*pkgs)[j].Name) {
+			return strings.ToLower((*pkgs)[i].Version) < strings.ToLower((*pkgs)[j].Version)
+		}
+		return strings.ToLower((*pkgs)[i].Name) < strings.ToLower((*pkgs)[j].Name)
+	})
+}

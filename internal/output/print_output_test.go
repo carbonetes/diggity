@@ -37,6 +37,12 @@ var (
 		Type:    "gem",
 		Version: "1.0.0",
 	}
+	printNewVersion = model.Package{
+		ID:      "519ee75c-cb1d-4abe-bad7-d758c7a91611",
+		Name:    "scanf",
+		Type:    "gem",
+		Version: "2.0.0",
+	}
 )
 
 func TestDepulicate(t *testing.T) {
@@ -47,5 +53,18 @@ func TestDepulicate(t *testing.T) {
 
 	if len(*pkgs) != len(*expected) {
 		t.Errorf("Test Failed: Expected Packages of length %+v, Received: %+v.", len(*expected), len(*pkgs))
+	}
+}
+
+func TestSortResults(t *testing.T) {
+	pkgs := &[]model.Package{printPackage1, printPackage2, printPackage3, printPackage4, printNewVersion}
+	expected := &[]model.Package{printPackage2, printPackage1, printPackage3, printPackage4, printNewVersion}
+
+	SortResults(pkgs)
+
+	for i, p := range *pkgs {
+		if p.Name != (*expected)[i].Name {
+			t.Errorf("Test Failed: Expected output of %v, received: %v", (*expected)[i].Name, p.Name)
+		}
 	}
 }
