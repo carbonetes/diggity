@@ -1,4 +1,4 @@
-package cyclonedx
+package convert
 
 import (
 	"os"
@@ -9,7 +9,6 @@ import (
 
 	cyclonedx "github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 type (
@@ -164,7 +163,7 @@ var (
 )
 
 func TestConvertPackage(t *testing.T) {
-	bom.Packages = []*model.Package{&cdxPackage1, &cdxPackage2, &cdxPackage3, &cdxPackage4}
+	pkgs := &[]model.Package{cdxPackage1, cdxPackage2, cdxPackage3, cdxPackage4}
 	expected := cyclonedx.BOM{
 		XMLNS: XMLN,
 		Metadata: &cyclonedx.Metadata{
@@ -255,7 +254,7 @@ func TestConvertPackage(t *testing.T) {
 		},
 	}
 
-	cdxOutput := convertPackage()
+	cdxOutput := ToCDX(pkgs)
 
 	if cdxOutput.XMLNS != expected.XMLNS {
 		t.Errorf("Test Failed: Expected output of %v, received: %v ", expected.XMLNS, cdxOutput.XMLNS)
@@ -266,7 +265,7 @@ func TestConvertPackage(t *testing.T) {
 		t.Errorf("Test Failed: Output %v must be a valid UUID.", cdxOutput.SerialNumber)
 	}
 
-	if cdxOutput := convertPackage(); cdxOutput.Metadata.Timestamp != time.Now().Format(time.RFC3339) {
+	if cdxOutput := ToCDX(pkgs); cdxOutput.Metadata.Timestamp != time.Now().Format(time.RFC3339) {
 		t.Errorf("Test Failed: Must produce current timestamp of %v, received: %v.",
 			time.Now().Format(time.RFC3339), getFromSource().Timestamp)
 	}

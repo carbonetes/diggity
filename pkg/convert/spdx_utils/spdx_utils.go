@@ -10,7 +10,6 @@ import (
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/alpine"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/debian"
 	"github.com/carbonetes/diggity/pkg/parser/gem"
 	"github.com/carbonetes/diggity/pkg/parser/python"
@@ -260,21 +259,21 @@ func Originator(p *model.Package) (string, string) {
 }
 
 // FormatName helper
-func FormatName(image *string) string {
+func FormatName(args *model.Arguments) string {
 	// Check if tar or dir was scanned
-	if image == nil {
-		if *bom.Arguments.Tar != "" {
-			tarFile := filepath.Base(*bom.Arguments.Tar)
+	if args.Image == nil {
+		if *args.Tar != "" {
+			tarFile := filepath.Base(*args.Tar)
 			return strings.Split(tarFile, ".")[0]
 		}
-		if *bom.Arguments.Dir != "" {
-			return filepath.Base(*bom.Arguments.Dir)
+		if *args.Dir != "" {
+			return filepath.Base(*args.Dir)
 		}
 	}
-	if strings.Contains(*image, ":") {
-		return strings.Split(*image, ":")[0]
+	if strings.Contains(*args.Image, ":") {
+		return strings.Split(*args.Image, ":")[0]
 	}
-	return *image
+	return *args.Image
 }
 
 // FormatNamespace helper
