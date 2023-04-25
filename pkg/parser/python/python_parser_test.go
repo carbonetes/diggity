@@ -134,8 +134,9 @@ func TestReadPythonContent(t *testing.T) {
 	pythonPackagepath := filepath.Join("..", "..", "..", "docs", "references", "python", "METADATA")
 	pythonEggLocation := model.Location{Path: pythonEggPath}
 	pythonPackagelocation := model.Location{Path: pythonPackagepath}
-	errPythonEgg := readPythonContent(&pythonEggLocation)
-	errPythonPackage := readPythonContent(&pythonPackagelocation)
+	pkgs := new([]model.Package)
+	errPythonEgg := readPythonContent(&pythonEggLocation, pkgs)
+	errPythonPackage := readPythonContent(&pythonPackagelocation, pkgs)
 	if errPythonEgg != nil {
 		t.Errorf("Test Failed: Error occurred while reading Python egg-info content. %v", errPythonEgg)
 	}
@@ -147,7 +148,8 @@ func TestReadPythonContent(t *testing.T) {
 func TestReadRequirementsContent(t *testing.T) {
 	requirementsPath := filepath.Join("..", "..", "..", "docs", "references", "python", "requirements.txt")
 	requirementsLocation := model.Location{Path: requirementsPath}
-	err := readRequirementsContent(&requirementsLocation)
+	pkgs := new([]model.Package)
+	err := readRequirementsContent(&requirementsLocation, pkgs)
 	if err != nil {
 		t.Errorf("Test Failed: Error occurred while reading requirements.txt content. %v", err)
 	}

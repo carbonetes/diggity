@@ -233,15 +233,15 @@ var (
 func TestReadGoBinContent(t *testing.T) {
 	goBinPath := filepath.Join("..", "..", "..", "docs", "references", "go", "gobin")
 	testLocation := model.Location{Path: goBinPath}
-	err := readGoBinContent(&testLocation)
+	pkgs := new([]model.Package)
+	err := readGoBinContent(&testLocation, pkgs)
 	if err != nil {
 		t.Error("Test Failed: Error occurred while reading go bin content.")
 	}
 }
 
 func TestAppendGoBinPackage(t *testing.T) {
-	bom.Packages = []*model.Package{}
-
+	pkgs := new([]model.Package)
 	tests := []AppendGoBinPackageResult{
 		{&goBinLocation1, &testBuildData1, &goBinDep1, &goBinPackage1},
 		{&goBinLocation2, &testBuildData1, &goBinDep2, &goBinPackage2},
@@ -249,7 +249,7 @@ func TestAppendGoBinPackage(t *testing.T) {
 	}
 
 	for i, test := range tests {
-		appendGoBinPackage(test.location, test.buildData, test.dep)
+		appendGoBinPackage(test.location, test.buildData, test.dep, pkgs)
 		if bom.Packages[i].Name != test.expected.Name ||
 			bom.Packages[i].Type != test.expected.Type ||
 			bom.Packages[i].Path != test.expected.Path ||

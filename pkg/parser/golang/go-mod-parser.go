@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -34,22 +33,22 @@ var (
 type GoModMetadata map[string]interface{}
 
 // FindGoModPackagesFromContent Find go.mod in the file contents
-func FindGoModPackagesFromContent() {
-	if util.ParserEnabled(goType) {
-		for _, content := range file.Contents {
+func FindGoModPackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(goType, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if filepath.Base(content.Path) == goModPath {
-				if err := readGoModContent(content); err != nil {
+				if err := readGoModContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("go-mod-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Read go.mod content
-func readGoModContent(location *model.Location) error {
+func readGoModContent(location *model.Location, pkgs *[]model.Package) error {
 
 	reader, err := os.Open(location.Path)
 	if err != nil {
@@ -74,19 +73,19 @@ func readGoModContent(location *model.Location) error {
 	for _, modPkg := range goModFile.Require {
 		pkg := new(model.Package)
 		pkg = initGoModPackage(pkg, location, modPkg)
-		bom.Packages = append(bom.Packages, pkg)
+		*pkgs = append(*pkgs, *pkg)
 	}
 
 	// Add New to Package List
 	for _, modPkg := range goModFile.Replace {
 		pkg := new(model.Package)
 		pkg = initGoModPackage(pkg, location, modPkg)
-		bom.Packages = append(bom.Packages, pkg)
+		*pkgs = append(*pkgs, *pkg)
 	}
 
 	// Cleanup Excluded Packages
 	if len(goModFile.Exclude) > 0 {
-		bom.Packages = cleanExcluded(bom.Packages, goModFile)
+		cleanExcluded(pkgs, goModFile)
 	}
 
 	return nil
@@ -156,15 +155,14 @@ func parseGoPackageURL(pkg *model.Package) {
 }
 
 // Cleanup excluded packages
-func cleanExcluded(packages []*model.Package, f *modfile.File) []*model.Package {
+func cleanExcluded(packages *[]model.Package, f *modfile.File) {
 	for _, exPkg := range f.Exclude {
-		for i, pkg := range packages {
+		for i, pkg := range *packages {
 			if pkg.Name == exPkg.Mod.Path {
-				packages = append(packages[:i], packages[i+1:]...)
+				*packages = append((*packages)[:i], (*packages)[i+1:]...)
 			}
 		}
 	}
-	return packages
 }
 
 // Split go package path

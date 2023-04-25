@@ -86,7 +86,8 @@ var (
 func TestParseComposerPackages(t *testing.T) {
 	composerPath := filepath.Join("..", "..", "..", "docs", "references", "composer", "composer.lock")
 	testLocation := model.Location{Path: composerPath}
-	err := parseComposerPackages(&testLocation)
+	pkgs := new([]model.Package)
+	err := parseComposerPackages(&testLocation, pkgs)
 	if err != nil {
 		t.Error("Test Failed: Error occurred while reading Composer content.")
 	}

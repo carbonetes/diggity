@@ -161,7 +161,8 @@ var (
 func TestReadGoModContent(t *testing.T) {
 	goModPath := filepath.Join("..", "..", "..", "docs", "references", "go", "go.mod")
 	testLocation := model.Location{Path: goModPath}
-	err := readGoModContent(&testLocation)
+	pkgs := new([]model.Package)
+	err := readGoModContent(&testLocation, pkgs)
 	if err != nil {
 		t.Error("Test Failed: Error occurred while reading go mod content.")
 	}
@@ -276,15 +277,15 @@ func TestCleanExcluded(t *testing.T) {
 	p2 := new(model.Package)
 	p1.Name = "github.com/test/to-exclude01"
 	p2.Name = "github.com/test/to-exclude02"
-	packages := []*model.Package{&goModPackage1, &goModPackage2, &goModPackage3, p1, p2}
-	expected := []*model.Package{&goModPackage1, &goModPackage2, &goModPackage3}
+	packages := &[]model.Package{goModPackage1, goModPackage2, goModPackage3, *p1, *p2}
+	expected := &[]model.Package{goModPackage1, goModPackage2, goModPackage3}
 
-	packages = cleanExcluded(packages, &modFile)
-	if len(packages) != len(expected) {
-		t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(expected), len(packages))
+	cleanExcluded(packages, &modFile)
+	if len(*packages) != len(*expected) {
+		t.Errorf("Test Failed: Slice length must be equal with the expected result. Expected: %v, Received: %v", len(*expected), len(*packages))
 	}
 
-	for _, pkg := range packages {
+	for _, pkg := range *packages {
 		if strings.Contains(pkg.Name, "github.com/test/to-exclude") {
 			t.Errorf("Test Failed: Excluded Package must be removed.")
 		}

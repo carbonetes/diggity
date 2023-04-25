@@ -18,6 +18,30 @@ var (
 	Errors []*error
 )
 
+type ParserRequirements struct {
+	Arguments *model.Arguments
+	Dir       *string
+	Contents  *[]model.Location
+	Result    *model.Result
+	WG        sync.WaitGroup
+	Errors    *[]error
+}
+
+func NewParserRequirements(args *model.Arguments, dir *string, contents *[]model.Location) *ParserRequirements {
+	return &ParserRequirements{
+		Arguments: args,
+		Dir:       dir,
+		Contents:  contents,
+		Errors:    new([]error),
+		Result: &model.Result{
+			Packages: new([]model.Package),
+			Secret:   new(model.SecretResults),
+			Distro:   new(model.Distro),
+			SLSA:     new(model.SLSA),
+		},
+	}
+}
+
 // InitParsers initialize arguments
 func InitParsers(argument model.Arguments) {
 	Arguments = &argument

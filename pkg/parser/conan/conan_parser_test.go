@@ -85,7 +85,8 @@ var (
 func TestReadConanFileContent(t *testing.T) {
 	conanPath := filepath.Join("..", "..", "..", "docs", "references", "conan", conanFile)
 	testLocation := model.Location{Path: conanPath}
-	err := readConanFileContent(&testLocation)
+	pkgs := new([]model.Package)
+	err := readConanFileContent(&testLocation, pkgs)
 	if err != nil {
 		t.Error("Test Failed: Error occurred while reading conanfile.txt content.")
 	}
@@ -94,7 +95,8 @@ func TestReadConanFileContent(t *testing.T) {
 func TestReadConanLockContent(t *testing.T) {
 	conanLockPath := filepath.Join("..", "..", "..", "docs", "references", "conan", conanLock)
 	testLocation := model.Location{Path: conanLockPath}
-	err := readConanFileContent(&testLocation)
+	pkgs := new([]model.Package)
+	err := readConanFileContent(&testLocation, pkgs)
 	if err != nil {
 		t.Error("Test Failed: Error occurred while reading conan.lock content.")
 	}

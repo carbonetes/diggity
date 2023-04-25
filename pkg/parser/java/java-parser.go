@@ -15,7 +15,6 @@ import (
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/docker"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -44,29 +43,29 @@ var (
 	// JavaPomXML pom metadata
 	JavaPomXML metadata.Project
 	// Result java metadata
-	Result              = make(map[string]*model.Package, 0)
+	Result              = make(map[string]model.Package, 0)
 	nameAndVersionRegex = regexp.MustCompile(`(?Ui)^(?P<name>(?:[[:alpha:]][[:word:].]*(?:\.[[:alpha:]][[:word:].]*)*-?)+)(?:-(?P<version>(?:\d.*|(?:build\d*.*)|(?:rc?\d+(?:^[[:alpha:]].*)?))))?$`)
 )
 
 // FindJavaPackagesFromContent checks for jar files in the file contents
-func FindJavaPackagesFromContent() {
-	if util.ParserEnabled(java) {
-		for _, content := range file.Contents {
+func FindJavaPackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(java, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if match := regexp.MustCompile(jarPackagesRegex).FindString(content.Path); len(match) > 0 {
-				if err := extractJarFile(content); err != nil {
+				if err := extractJarFile(&content); err != nil {
 					err = errors.New("java-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			} else if strings.Contains(content.Path, pomFileName) {
-				if err := parsePomXML(*content, content.Path); err != nil {
+				if err := parsePomXML(content, content.Path); err != nil {
 					err = errors.New("java-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
-		bom.Packages = append(bom.Packages, maps.Values(Result)...)
+		*req.Result.Packages = append(*req.Result.Packages, maps.Values(Result)...)
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Extract jar files
@@ -230,7 +229,7 @@ func initPackage(name string, location *model.Location, manifestFile *zip.File, 
 
 func checkPackage(pkg *model.Package, layerHash string) {
 	if _, exists := Result[pkg.Name+":"+pkg.Version+":"+layerHash]; !exists {
-		Result[pkg.Name+":"+pkg.Version+":"+layerHash] = pkg
+		Result[pkg.Name+":"+pkg.Version+":"+layerHash] = *pkg
 	} else {
 		_tmpPackage := Result[pkg.Name+":"+pkg.Version+":"+layerHash]
 		if pkg.Metadata.(Metadata)["Manifest"] != nil {
@@ -527,8 +526,8 @@ func parsePomXML(location model.Location, layerPath string) error {
 					"version": JavaPomXML.Version,
 					"groupID": JavaPomXML.GroupID,
 				}
-				cpe.NewCPE23(_tmpPackage, JavaPomXML.ArtifactID, JavaPomXML.ArtifactID, JavaPomXML.Version)
-				generateAdditionalCPE(JavaPomXML.GroupID, JavaPomXML.ArtifactID, JavaPomXML.Version, _tmpPackage)
+				cpe.NewCPE23(&_tmpPackage, JavaPomXML.ArtifactID, JavaPomXML.ArtifactID, JavaPomXML.Version)
+				generateAdditionalCPE(JavaPomXML.GroupID, JavaPomXML.ArtifactID, JavaPomXML.Version, &_tmpPackage)
 				Result[JavaPomXML.ArtifactID+":"+JavaPomXML.Version+":"+location.LayerHash] = _tmpPackage
 			}
 		}

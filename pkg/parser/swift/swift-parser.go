@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -26,21 +25,21 @@ const (
 var podFileLockFileMetadata metadata.PodFileLockMetadata
 
 // FindSwiftPackagesFromContent - find swift and objective-c packages from content
-func FindSwiftPackagesFromContent() {
-	if util.ParserEnabled(pod) {
-		for _, content := range file.Contents {
+func FindSwiftPackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(pod, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if filepath.Base(content.Path) == podfilelock {
-				if err := parseSwiftPackages(content); err != nil {
+				if err := parseSwiftPackages(&content, req.Result.Packages); err != nil {
 					err = errors.New("swift-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
-func parseSwiftPackages(location *model.Location) error {
+func parseSwiftPackages(location *model.Location, pkgs *[]model.Package) error {
 	byteValue, err := os.ReadFile(location.Path)
 	if err != nil {
 		return err
@@ -88,7 +87,7 @@ func parseSwiftPackages(location *model.Location) error {
 			return nil
 		}
 
-		bom.Packages = append(bom.Packages, pkg)
+		*pkgs = append(*pkgs, *pkg)
 	}
 
 	return nil

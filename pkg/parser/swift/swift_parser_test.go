@@ -81,7 +81,8 @@ var (
 func TestParseSwiftPackages(t *testing.T) {
 	podfilePath := filepath.Join("..", "..", "..", "docs", "references", "swift", "Podfile.lock")
 	testLocation := model.Location{Path: podfilePath}
-	err := parseSwiftPackages(&testLocation)
+	pkgs := new([]model.Package)
+	err := parseSwiftPackages(&testLocation, pkgs)
 	if err != nil {
 		t.Errorf("Test Failed: Error occurred while reading Swift content.")
 	}

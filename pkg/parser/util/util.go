@@ -49,11 +49,11 @@ func TrimUntilLayer(location model.Location) string {
 }
 
 // ParserEnabled checks if all or a specific parser is enabled
-func ParserEnabled(parser string) bool {
-	if len(*bom.Arguments.EnabledParsers) == 0 {
+func ParserEnabled(parser string, enabledParsers *[]string) bool {
+	if len(*enabledParsers) == 0 {
 		return true
 	}
-	if StringSliceContains(*bom.Arguments.EnabledParsers, parser) {
+	if StringSliceContains(*enabledParsers, parser) {
 		return true
 	}
 	return false

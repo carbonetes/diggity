@@ -6,7 +6,7 @@ type (
 
 	// Result - Final SBOM output content
 	Result struct {
-		Packages  []*Package     `json:"packages"`
+		Packages  *[]Package     `json:"packages"`
 		Secret    *SecretResults `json:"secrets,omitempty"`
 		ImageInfo ImageInfo      `json:"imageInfo"`
 		Distro    *Distro        `json:"distro"`

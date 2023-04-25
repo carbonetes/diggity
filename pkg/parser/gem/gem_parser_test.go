@@ -261,7 +261,8 @@ var (
 func TestReadGemContent(t *testing.T) {
 	gemspecPath := filepath.Join("..", "..", "..", "docs", "references", "ruby", "bigdecimal-1.4.1.gemspec")
 	testLocation := model.Location{Path: gemspecPath}
-	err := readGemContent(&testLocation)
+	pkgs := new([]model.Package)
+	err := readGemContent(&testLocation, pkgs)
 	if err != nil {
 		t.Error("Test Failed: Error occurred while reading Gem content.")
 	}

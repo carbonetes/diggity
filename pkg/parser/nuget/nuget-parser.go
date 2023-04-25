@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -25,22 +24,22 @@ const (
 var dotnetMetadata metadata.DotnetDeps
 
 // FindNugetPackagesFromContent - find nuget packages
-func FindNugetPackagesFromContent() {
-	if util.ParserEnabled(nuget) {
-		for _, content := range file.Contents {
+func FindNugetPackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(nuget, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, dotnetPackage) {
-				if err := parseNugetPackages(content); err != nil {
+				if err := parseNugetPackages(&content, req.Result.Packages); err != nil {
 					err = errors.New("nuget-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Parse nuget package metadata
-func parseNugetPackages(location *model.Location) error {
+func parseNugetPackages(location *model.Location, pkgs *[]model.Package) error {
 	byteValue, err := os.ReadFile(location.Path)
 	if err != nil {
 		return err
@@ -67,7 +66,7 @@ func parseNugetPackages(location *model.Location) error {
 				parseNugetPURL(pkg)
 				cpe.NewCPE23(pkg, pkg.Name, pkg.Name, pkg.Version)
 				pkg.Metadata = cLib
-				bom.Packages = append(bom.Packages, pkg)
+				*pkgs = append(*pkgs, *pkg)
 			}
 		}
 	}

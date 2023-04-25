@@ -1,4 +1,4 @@
-package parser
+package hackage
 
 import (
 	"path/filepath"
@@ -115,7 +115,8 @@ var (
 func TestReadStackContent(t *testing.T) {
 	stackPath := filepath.Join("..", "..", "..", "docs", "references", "hackage", stackYaml)
 	testLocation := model.Location{Path: stackPath}
-	err := readStackContent(&testLocation)
+	pkgs := new([]model.Package)
+	err := readStackContent(&testLocation, pkgs)
 	if err != nil {
 		t.Error("Test Failed: Error occurred while reading stack.yaml content.")
 	}
@@ -124,7 +125,8 @@ func TestReadStackContent(t *testing.T) {
 func TestReadStackLockContent(t *testing.T) {
 	stackLockPath := filepath.Join("..", "..", "..", "docs", "references", "hackage", stackYamlLock)
 	testLocation := model.Location{Path: stackLockPath}
-	err := readStackLockContent(&testLocation)
+	pkgs := new([]model.Package)
+	err := readStackLockContent(&testLocation, pkgs)
 	if err != nil {
 		t.Error("Test Failed: Error occurred while reading stack.yaml.lock content.")
 	}
@@ -133,7 +135,8 @@ func TestReadStackLockContent(t *testing.T) {
 func TestReadCabalFreezeContent(t *testing.T) {
 	cabalFreezePath := filepath.Join("..", "..", "..", "docs", "references", "hackage", cabalFreeze)
 	testLocation := model.Location{Path: cabalFreezePath}
-	err := readCabalFreezeContent(&testLocation)
+	pkgs := new([]model.Package)
+	err := readCabalFreezeContent(&testLocation, pkgs)
 	if err != nil {
 		t.Error("Test Failed: Error occurred while reading cabal.project.freeze content.")
 	}

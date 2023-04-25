@@ -216,7 +216,8 @@ var (
 func TestReadRpmContent(t *testing.T) {
 	rpmPath := filepath.Join("..", "..", "..", "docs", "references", "rpm", "Packages")
 	testLocation := model.Location{Path: rpmPath}
-	err := readRpmContent(&testLocation)
+	pkgs := new([]model.Package)
+	err := readRpmContent(&testLocation, pkgs)
 	if err != nil {
 		t.Error("Test Failed: Error occurred while reading RPM content.")
 	}

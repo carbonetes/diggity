@@ -81,7 +81,8 @@ var (
 func TestParseNugetPackages(t *testing.T) {
 	dotnetPath := filepath.Join("..", "..", "..", "docs", "references", "nuget", "dotnetTest.deps.json")
 	testLocation := model.Location{Path: dotnetPath}
-	err := parseNugetPackages(&testLocation)
+	pkgs := new([]model.Package)
+	err := parseNugetPackages(&testLocation, pkgs)
 	if err != nil {
 		t.Error("Test Failed: Error occurred while reading Dotnet content.")
 	}

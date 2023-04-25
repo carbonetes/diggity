@@ -85,7 +85,8 @@ var (
 func TestParseDartPackages(t *testing.T) {
 	pubspecPath := filepath.Join("..", "..", "..", "docs", "references", "dart", "pubspec.yaml")
 	testLocation := model.Location{Path: pubspecPath}
-	err := parseDartPackages(&testLocation)
+	pkgs := new([]model.Package)
+	err := parseDartPackages(&testLocation, pkgs)
 	if err != nil {
 		t.Errorf("Test Failed: Error occurred while reading Dart content.")
 	}
@@ -95,7 +96,8 @@ func TestParseDartPackages(t *testing.T) {
 func TestParseDartPackagesLock(t *testing.T) {
 	pubspecLockPath := filepath.Join("..", "..", "..", "docs", "references", "dart", "pubspec.lock")
 	testLocation := model.Location{Path: pubspecLockPath}
-	err := parseDartPackagesLock(&testLocation)
+	pkgs := new([]model.Package)
+	err := parseDartPackagesLock(&testLocation, pkgs)
 	if err != nil {
 		t.Errorf("Test Failed: Error occurred while reading Dart content.")
 	}

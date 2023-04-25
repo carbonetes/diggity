@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -32,35 +31,35 @@ var (
 )
 
 // FindPortagePackagesFromContent find portage metadata files
-func FindPortagePackagesFromContent() {
-	if util.ParserEnabled(portage) {
-		for _, content := range file.Contents {
+func FindPortagePackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(portage, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, portageDBPath) && strings.Contains(content.Path, portageContent) {
-				if err := readPortageContent(content); err != nil {
+				if err := readPortageContent(&content, req.Arguments.DisableFileListing, req.Result.Packages); err != nil {
 					err = errors.New("portage-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Read Portage Contents
-func readPortageContent(location *model.Location) error {
+func readPortageContent(location *model.Location, noFileListing *bool, pkgs *[]model.Package) error {
 	// Parse package metadata from path
-	pkg, err := initPortagePackage(location)
+	pkg, err := initPortagePackage(location, noFileListing)
 	if err != nil {
 		return err
 	}
 
-	bom.Packages = append(bom.Packages, pkg)
+	*pkgs = append(*pkgs, *pkg)
 
 	return nil
 }
 
 // Init Portage Package
-func initPortagePackage(location *model.Location) (*model.Package, error) {
+func initPortagePackage(location *model.Location, noFileListing *bool) (*model.Package, error) {
 	pkg := new(model.Package)
 	pkg.ID = uuid.NewString()
 
@@ -87,14 +86,14 @@ func initPortagePackage(location *model.Location) (*model.Package, error) {
 	cpe.NewCPE23(pkg, "", pkg.Name, pkg.Version)
 
 	// fill metadata
-	if err := initPortageMetadata(pkg, location.Path); err != nil {
+	if err := initPortageMetadata(pkg, location.Path, noFileListing); err != nil {
 		return pkg, err
 	}
 
 	return pkg, nil
 }
 
-func initPortageMetadata(p *model.Package, loc string) error {
+func initPortageMetadata(p *model.Package, loc string, noFileListing *bool) error {
 	var metadata metadata.PortageMetadata
 	sizePath := strings.Replace(loc, portageContent, portageSize, -1)
 
@@ -118,7 +117,7 @@ func initPortageMetadata(p *model.Package, loc string) error {
 	}
 
 	// Get files metadata
-	if !*bom.Arguments.DisableFileListing {
+	if !*noFileListing {
 		if err := getPortageFiles(&metadata, loc); err != nil {
 			return nil
 		}

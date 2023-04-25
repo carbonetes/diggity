@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/util"
@@ -38,35 +37,35 @@ const (
 type Metadata map[string]interface{}
 
 // FindPythonPackagesFromContent - Find python packages in the file contents
-func FindPythonPackagesFromContent() {
-	if util.ParserEnabled(pip) {
-		for _, content := range file.Contents {
+func FindPythonPackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(pip, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, pythonPackage) || strings.Contains(content.Path, pythonEgg) {
-				if err := readPythonContent(content); err != nil {
+				if err := readPythonContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("python-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 			if filepath.Base(content.Path) == poetry {
-				if err := readPoetryContent(content); err != nil {
+				if err := readPoetryContent(&content, req.Arguments.DisableFileListing, req.Result.Packages); err != nil {
 					err = errors.New("python-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 			if strings.Contains(filepath.Base(content.Path), requirements) &&
 				strings.Contains(filepath.Base(content.Path), txt) {
-				if err := readRequirementsContent(content); err != nil {
+				if err := readRequirementsContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("python-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Read file contents
-func readPythonContent(location *model.Location) error {
+func readPythonContent(location *model.Location, pkgs *[]model.Package) error {
 	file, err := os.Open(location.Path)
 	if err != nil {
 		return err
@@ -104,14 +103,14 @@ func readPythonContent(location *model.Location) error {
 		previousAttribute = attribute
 	}
 	if len(metadata) > 0 && metadata["Name"] != nil {
-		bom.Packages = append(bom.Packages, initPythonPackages(metadata, location))
+		*pkgs = append(*pkgs, *initPythonPackages(metadata, location))
 	}
 
 	return nil
 }
 
 // Read poetry.lock contents
-func readPoetryContent(location *model.Location) error {
+func readPoetryContent(location *model.Location, noFileListing *bool, pkgs *[]model.Package) error {
 	// Read poetry.lock file
 	file, err := os.Open(location.Path)
 	if err != nil {
@@ -134,7 +133,7 @@ func readPoetryContent(location *model.Location) error {
 		keyValue := scanner.Text()
 
 		// Parse files metadata, if any
-		if !*bom.Arguments.DisableFileListing {
+		if !*noFileListing {
 			if strings.Contains(keyValue, poetryFiles) {
 				isFile = true
 				continue
@@ -190,7 +189,7 @@ func readPoetryContent(location *model.Location) error {
 			}
 			// init poetry data
 			if metadata["name"] != nil {
-				bom.Packages = append(bom.Packages, initPythonPackages(metadata, location))
+				*pkgs = append(*pkgs, *initPythonPackages(metadata, location))
 			}
 
 			// Reset metadata
@@ -200,14 +199,14 @@ func readPoetryContent(location *model.Location) error {
 
 	// Parse packages before EOF
 	if metadata["name"] != nil {
-		bom.Packages = append(bom.Packages, initPythonPackages(metadata, location))
+		*pkgs = append(*pkgs, *initPythonPackages(metadata, location))
 	}
 
 	return nil
 }
 
 // Read requirements.txt contents
-func readRequirementsContent(location *model.Location) error {
+func readRequirementsContent(location *model.Location, pkgs *[]model.Package) error {
 	// Read requirements.txt file
 	file, err := os.Open(location.Path)
 	if err != nil {
@@ -233,7 +232,7 @@ func readRequirementsContent(location *model.Location) error {
 				metadata := make(Metadata)
 				metadata["name"] = name
 				metadata["version"] = version
-				bom.Packages = append(bom.Packages, initPythonPackages(metadata, location))
+				*pkgs = append(*pkgs, *initPythonPackages(metadata, location))
 			}
 		}
 

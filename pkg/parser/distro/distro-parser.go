@@ -22,7 +22,7 @@ func Distro() *model.Distro {
 }
 
 // ParseDistro parses os release
-func ParseDistro() {
+func ParseDistro(req *bom.ParserRequirements) {
 
 	var relatedOsFiles []string
 	var err error
@@ -40,10 +40,11 @@ func ParseDistro() {
 
 	if err != nil {
 		err = errors.New("distro-parser: " + err.Error())
-		bom.Errors = append(bom.Errors, &err)
+		*req.Errors = append(*req.Errors, err)
 	}
+	req.Result.Distro = distro
 
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Parse Linux distro

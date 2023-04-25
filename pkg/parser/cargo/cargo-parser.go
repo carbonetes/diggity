@@ -8,7 +8,6 @@ import (
 	"regexp"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -31,22 +30,22 @@ const (
 type Metadata map[string]interface{}
 
 // FindCargoPackagesFromContent checks for cargo.lock files in the file contents
-func FindCargoPackagesFromContent() {
-	if util.ParserEnabled(rust) {
-		for _, content := range file.Contents {
+func FindCargoPackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(rust, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if filepath.Base(content.Path) == cargoLock {
-				if err := readCargoContent(content); err != nil {
+				if err := readCargoContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("cargo-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Read Cargo.lock package information
-func readCargoContent(location *model.Location) error {
+func readCargoContent(location *model.Location, pkgs *[]model.Package) error {
 	// Read Cargo.lock file
 	file, err := os.Open(location.Path)
 	if err != nil {
@@ -91,7 +90,7 @@ func readCargoContent(location *model.Location) error {
 		if len(keyValue) <= 1 || keyValue == packageTag {
 			// init cargo data
 			if metadata["name"] != nil {
-				bom.Packages = append(bom.Packages, initRustPackage(location, metadata))
+				*pkgs = append(*pkgs, *initRustPackage(location, metadata))
 			}
 
 			// Reset metadata
@@ -101,7 +100,7 @@ func readCargoContent(location *model.Location) error {
 
 	// Parse packages before EOF
 	if metadata["name"] != nil {
-		bom.Packages = append(bom.Packages, initRustPackage(location, metadata))
+		*pkgs = append(*pkgs, *initRustPackage(location, metadata))
 	}
 
 	return nil

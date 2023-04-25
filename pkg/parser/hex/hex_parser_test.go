@@ -1,4 +1,4 @@
-package parser
+package hex
 
 import (
 	"path/filepath"
@@ -90,7 +90,8 @@ var (
 func TestParseHexRebarPackages(t *testing.T) {
 	rebarLockPath := filepath.Join("..", "..", "..", "docs", "references", "hex", "rebar.lock")
 	testLocation := model.Location{Path: rebarLockPath}
-	err := parseHexRebarPacakges(&testLocation)
+	pkgs := new([]model.Package)
+	err := parseHexRebarPacakges(&testLocation, pkgs)
 	if err != nil {
 		t.Errorf("Test Failed: Error occurred while reading Hex - rebar content.")
 	}
@@ -99,7 +100,8 @@ func TestParseHexRebarPackages(t *testing.T) {
 func TestParseHexMixPackages(t *testing.T) {
 	mixLockPath := filepath.Join("..", "..", "..", "docs", "references", "hex", "mix.lock")
 	testLocation := model.Location{Path: mixLockPath}
-	err := parseHexMixPackages(&testLocation)
+	pkgs := new([]model.Package)
+	err := parseHexMixPackages(&testLocation, pkgs)
 	if err != nil {
 		t.Errorf("Test Failed: Error occurred while reading Hex - mix content.")
 	}

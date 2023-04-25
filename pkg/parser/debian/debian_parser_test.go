@@ -229,6 +229,7 @@ var (
 
 func TestInitDebianPackage(t *testing.T) {
 	var pkg1, pkg2, pkg3 model.Package
+	boolFalse := new(bool)
 
 	tests := []InitDebPackageResult{
 		{&pkg1, &debLocation, debMetadata1, &debPackage1},
@@ -237,7 +238,7 @@ func TestInitDebianPackage(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		output := initDebianPackage(test.pkg, test.location, test.metadata)
+		output := initDebianPackage(test.pkg, test.location, test.metadata, boolFalse)
 		outputMetadata := output.Metadata.(Metadata)
 		expectedMetadata := test.expected.Metadata.(Metadata)
 
