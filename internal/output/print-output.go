@@ -16,8 +16,6 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-type result map[string]*model.Package
-
 var (
 	// Result interface
 
