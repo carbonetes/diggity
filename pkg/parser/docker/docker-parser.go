@@ -20,42 +20,42 @@ var (
 )
 
 // ParseDockerProperties appends docker json files to parser.Result
-func ParseDockerProperties() {
-	tarDirectory, err := os.Open(*bom.Target)
+func ParseDockerProperties(req *bom.ParserRequirements) {
+	tarDirectory, err := os.Open(*req.Dir)
 	if err != nil {
-		if len(*bom.Arguments.Dir) > 0 {
-			tarDirectory, err = os.Open(*bom.Arguments.Dir)
+		if len(*req.Arguments.Dir) > 0 {
+			tarDirectory, err = os.Open(*req.Arguments.Dir)
 			if err != nil {
 				err = errors.New("docker-parser: " + err.Error())
-				bom.Errors = append(bom.Errors, &err)
+				*req.Errors = append(*req.Errors, err)
 			}
 		} else {
 			err = errors.New("docker-parser: " + err.Error())
-			bom.Errors = append(bom.Errors, &err)
+			*req.Errors = append(*req.Errors, err)
 		}
 	}
 	files, err := getJSONFilesFromDir(tarDirectory.Name())
 	if err != nil {
 		err = errors.New("docker-parser: " + err.Error())
-		bom.Errors = append(bom.Errors, &err)
+		*req.Errors = append(*req.Errors, err)
 	}
 
 	for _, jsonFile := range files {
 		jsonFile, err := os.Open(jsonFile)
 		if err != nil {
 			err = errors.New("docker-parser: " + err.Error())
-			bom.Errors = append(bom.Errors, &err)
+			*req.Errors = append(*req.Errors, err)
 		}
 		jsonparser := json.NewDecoder(jsonFile)
 		if strings.Contains(jsonFile.Name(), "manifest") {
 			if err := jsonparser.Decode(&dockerManifest); err != nil {
 				err = errors.New("docker-parser: " + err.Error())
-				bom.Errors = append(bom.Errors, &err)
+				*req.Errors = append(*req.Errors, err)
 			}
 		} else {
 			if err := jsonparser.Decode(&dockerConfig); err != nil {
 				err = errors.New("docker-parser: " + err.Error())
-				bom.Errors = append(bom.Errors, &err)
+				*req.Errors = append(*req.Errors, err)
 			}
 		}
 	}
@@ -65,7 +65,9 @@ func ParseDockerProperties() {
 		DockerManifest: dockerManifest,
 	}
 
-	defer bom.WG.Done()
+	req.Result.ImageInfo = ImageInfo
+
+	defer req.WG.Done()
 }
 
 // Get JSON files from extracted image

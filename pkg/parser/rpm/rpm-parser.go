@@ -15,7 +15,6 @@ import (
 	"path/filepath"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -36,23 +35,23 @@ var (
 )
 
 // FindRpmPackagesFromContent Find rpm/Packages in the file content.
-func FindRpmPackagesFromContent() {
+func FindRpmPackagesFromContent(req *bom.ParserRequirements) {
 	// Get RPM Information if rpm/Packages is found
-	if util.ParserEnabled(rpmType) {
-		for _, content := range file.Contents {
+	if util.ParserEnabled(rpmType, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, rpmPackagesPath) {
-				if err := readRpmContent(content); err != nil {
+				if err := readRpmContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("rpm-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Read RPM package information from rpm/Packages
-func readRpmContent(location *model.Location) error {
+func readRpmContent(location *model.Location, pkgs *[]model.Package) error {
 
 	// Open and Get rpm/Packages data
 	db, err := rpmdb.Open(location.Path)
@@ -69,7 +68,7 @@ func readRpmContent(location *model.Location) error {
 		pkg := new(model.Package)
 		pkg = initRpmPackage(pkg, location, rpmPkg)
 
-		bom.Packages = append(bom.Packages, pkg)
+		*pkgs = append(*pkgs, *pkg)
 	}
 	return nil
 }

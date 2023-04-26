@@ -1,11 +1,10 @@
 package eventbus
 
 import (
-	sbom "github.com/carbonetes/diggity/internal"
 	log "github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/internal/ui"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser"
+	"github.com/carbonetes/diggity/pkg/scanner"
 
 	"github.com/vmware/transport-go/bus"
 	tm "github.com/vmware/transport-go/model"
@@ -22,8 +21,7 @@ func SetAnalysisRequestHandler(channelName string) {
 		func(msg *tm.Message) {
 			arguments := msg.Payload.(model.Arguments)
 			arguments.Output = (*model.Output)(&event)
-			sbom.Start(&arguments)
-			result := parser.GetResults()
+			result := scanner.Scan(&arguments)
 			if err := tr.SendResponseMessage(channelName, result, msg.DestinationId); err != nil {
 				log.Fatalf("Error sending response message: %v", err)
 			}

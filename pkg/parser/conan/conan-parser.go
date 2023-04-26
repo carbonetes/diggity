@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -28,28 +27,28 @@ const (
 var conanLockMetadata metadata.ConanLockMetadata
 
 // FindConanPackagesFromContent Find Conan packages in the file content
-func FindConanPackagesFromContent() {
-	if util.ParserEnabled(conan) {
-		for _, content := range file.Contents {
+func FindConanPackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(conan, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, conanFile) {
-				if err := readConanFileContent(content); err != nil {
+				if err := readConanFileContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("conan-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 			if strings.Contains(content.Path, conanLock) {
-				if err := readConanLockContent(content); err != nil {
+				if err := readConanLockContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("conan-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Read conanfile.txt contents
-func readConanFileContent(location *model.Location) error {
+func readConanFileContent(location *model.Location, pkgs *[]model.Package) error {
 	file, err := os.Open(location.Path)
 	if err != nil {
 		return err
@@ -70,7 +69,7 @@ func readConanFileContent(location *model.Location) error {
 
 		// Parse conan package metadata
 		if requires && strings.Contains(values, "/") {
-			bom.Packages = append(bom.Packages, initConanPackage(location, values))
+			*pkgs = append(*pkgs, *initConanPackage(location, values))
 		}
 
 		// End of requires section
@@ -83,7 +82,7 @@ func readConanFileContent(location *model.Location) error {
 }
 
 // Parse conan.lock contents
-func readConanLockContent(location *model.Location) error {
+func readConanLockContent(location *model.Location, pkgs *[]model.Package) error {
 	file, err := os.ReadFile(location.Path)
 	if err != nil {
 		return err
@@ -96,7 +95,7 @@ func readConanLockContent(location *model.Location) error {
 	if len(conanLockMetadata.GraphLock.Nodes) > 0 {
 		for _, conanPkg := range conanLockMetadata.GraphLock.Nodes {
 			if conanPkg.Ref != "" {
-				bom.Packages = append(bom.Packages, initConanPackage(location, conanPkg))
+				*pkgs = append(*pkgs, *initConanPackage(location, conanPkg))
 			}
 		}
 	}

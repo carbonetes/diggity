@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -32,28 +31,28 @@ type Metadata map[string]interface{}
 var dartlockFileMetadata metadata.PubspecLockPackage
 
 // FindDartPackagesFromContent - find dart packages from content
-func FindDartPackagesFromContent() {
-	if util.ParserEnabled(dart) {
-		for _, content := range file.Contents {
+func FindDartPackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(dart, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if filepath.Base(content.Path) == pubspecYaml {
-				if err := parseDartPackages(content); err != nil {
+				if err := parseDartPackages(&content, req.Result.Packages); err != nil {
 					err = errors.New("dart-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 			if filepath.Base(content.Path) == pubspecLock {
-				if err := parseDartPackagesLock(content); err != nil {
+				if err := parseDartPackagesLock(&content, req.Result.Packages); err != nil {
 					err = errors.New("dart-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Parse dart package metadata
-func parseDartPackages(location *model.Location) error {
+func parseDartPackages(location *model.Location, pkgs *[]model.Package) error {
 	var licenses []string = make([]string, 0)
 	byteValue, err := os.ReadFile(location.Path)
 	if err != nil {
@@ -103,12 +102,12 @@ func parseDartPackages(location *model.Location) error {
 
 	parseDartPURL(pkg)
 	pkg.Metadata = metadata
-	bom.Packages = append(bom.Packages, pkg)
+	*pkgs = append(*pkgs, *pkg)
 	return nil
 }
 
 // Parse dart packages metadata - lock file
-func parseDartPackagesLock(location *model.Location) error {
+func parseDartPackagesLock(location *model.Location, pkgs *[]model.Package) error {
 	byteValue, err := os.ReadFile(location.Path)
 	if err != nil {
 		return err
@@ -132,7 +131,7 @@ func parseDartPackagesLock(location *model.Location) error {
 		parseDartPURL(pkg)
 		pkg.Metadata = cPackage
 		if pkg.Name != "" {
-			bom.Packages = append(bom.Packages, pkg)
+			*pkgs = append(*pkgs, *pkg)
 		}
 	}
 	return nil

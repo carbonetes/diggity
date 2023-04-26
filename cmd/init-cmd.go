@@ -11,7 +11,6 @@ import (
 	versionPackage "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/attestation"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/util"
 
 	sbom "github.com/carbonetes/diggity/internal"
@@ -239,7 +238,7 @@ func intializeConfiguration() {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		err = errors.New("init-cmd: " + err.Error())
-		bom.Errors = append(bom.Errors, &err)
+		log.Fatal(err)
 	}
 
 	ConfigDirectory = home + string(os.PathSeparator) + ".diggity.yaml"
@@ -297,13 +296,13 @@ func createConfiguration() {
 
 		if err != nil {
 			err = errors.New("init-cmd: " + err.Error())
-			bom.Errors = append(bom.Errors, &err)
+			log.Fatal(err)
 		}
 
 		err = os.WriteFile(ConfigDirectory, yamlDefaultConfig, 0644)
 		if err != nil {
 			err = errors.New("init-cmd: " + err.Error())
-			bom.Errors = append(bom.Errors, &err)
+			log.Fatal(err)
 		}
 	} else {
 		// Read existing configuration instead

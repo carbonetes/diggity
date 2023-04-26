@@ -29,18 +29,19 @@ var installedPackagesPath = filepath.Join("lib", "apk", "db", "installed")
 type Manifest map[string]interface{}
 
 // FindAlpinePackagesFromContent check for alpine-os files in the file contents
-func FindAlpinePackagesFromContent() {
-	if util.ParserEnabled(apkType) {
-		for _, content := range file.Contents {
+func FindAlpinePackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(apkType, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, installedPackagesPath) {
-				if err := parseInstalledPackages(content.Path, content.LayerHash); err != nil {
+
+				if err := parseInstalledPackages(content.Path, content.LayerHash, req.Arguments.DisableFileListing, req.Result.Packages); err != nil {
 					err = errors.New("apk-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Parse alpine files
@@ -89,7 +90,7 @@ func initAlpinePackage(pkg *model.Package) {
 }
 
 // Parse installed packages metadata
-func parseInstalledPackages(filename string, layer string) error {
+func parseInstalledPackages(filename string, layer string, noFileListing *bool, pkgs *[]model.Package) error {
 
 	var value string
 	var attribute string
@@ -199,7 +200,7 @@ func parseInstalledPackages(filename string, layer string) error {
 				}
 			}
 
-			if !*bom.Arguments.DisableFileListing {
+			if !*noFileListing {
 				files = parseAlpineFiles(apkPackage)
 			}
 
@@ -207,7 +208,7 @@ func parseInstalledPackages(filename string, layer string) error {
 		}
 
 		if len(pkg.Metadata.(Manifest)) > 0 {
-			if !*bom.Arguments.DisableFileListing {
+			if !*noFileListing {
 				pkg.Metadata.(Manifest)["Files"] = files
 			}
 
@@ -241,7 +242,7 @@ func parseInstalledPackages(filename string, layer string) error {
 
 			// Check if package is not empty before append
 			if pkg.Name != "" && pkg.Version != "" {
-				bom.Packages = append(bom.Packages, pkg)
+				*pkgs = append(*pkgs, *pkg)
 			}
 
 			files = []model.File{}

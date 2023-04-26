@@ -1,4 +1,4 @@
-package parser
+package hex
 
 import (
 	"bufio"
@@ -6,7 +6,6 @@ import (
 	"regexp"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -31,28 +30,28 @@ var rebarLockRegex = regexp.MustCompile(`[\[{<">},: \]\n]+`)
 var mixLockRegex = regexp.MustCompile(`[%{}\n" ,:]+`)
 
 // FindHexPackagesFromContent - find hex packages from content
-func FindHexPackagesFromContent() {
-	if util.ParserEnabled(hex) {
-		for _, content := range file.Contents {
+func FindHexPackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(hex, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if filepath.Base(content.Path) == rebarLock {
-				if err := parseHexRebarPacakges(content); err != nil {
+				if err := parseHexRebarPacakges(&content, req.Result.Packages); err != nil {
 					err = errors.New("hex-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 			if filepath.Base(content.Path) == mixLock {
-				if err := parseHexMixPackages(content); err != nil {
+				if err := parseHexMixPackages(&content, req.Result.Packages); err != nil {
 					err = errors.New("hex-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Parse hex package metadata - rebar
-func parseHexRebarPacakges(location *model.Location) error {
+func parseHexRebarPacakges(location *model.Location, pkgs *[]model.Package) error {
 	file, err := os.Open(location.Path)
 	if err != nil {
 		return err
@@ -84,7 +83,7 @@ func parseHexRebarPacakges(location *model.Location) error {
 
 		}
 		if pkg.Name != "" {
-			bom.Packages = append(bom.Packages, pkg)
+			*pkgs = append(*pkgs, *pkg)
 		}
 
 	}
@@ -92,7 +91,7 @@ func parseHexRebarPacakges(location *model.Location) error {
 }
 
 // Parse hex package metadata - mix
-func parseHexMixPackages(location *model.Location) error {
+func parseHexMixPackages(location *model.Location, pkgs *[]model.Package) error {
 	file, err := os.Open(location.Path)
 	if err != nil {
 		return err
@@ -128,7 +127,7 @@ func parseHexMixPackages(location *model.Location) error {
 			PkgHashExt: hashExt,
 		}
 		if pkg.Name != "" {
-			bom.Packages = append(bom.Packages, pkg)
+			*pkgs = append(*pkgs, *pkg)
 		}
 	}
 	return nil

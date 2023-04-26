@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -25,22 +24,22 @@ const (
 var lockFileMetadata metadata.ComposerMetadata
 
 // FindComposerPackagesFromContent - find composers packages from content
-func FindComposerPackagesFromContent() {
-	if util.ParserEnabled(composer) {
-		for _, content := range file.Contents {
+func FindComposerPackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(composer, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, composerLock) {
-				if err := parseComposerPackages(content); err != nil {
+				if err := parseComposerPackages(&content, req.Result.Packages); err != nil {
 					err = errors.New("composer-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Parse composer package metadata
-func parseComposerPackages(location *model.Location) error {
+func parseComposerPackages(location *model.Location, pkgs *[]model.Package) error {
 	byteValue, err := os.ReadFile(location.Path)
 	if err != nil {
 		return err
@@ -72,7 +71,7 @@ func parseComposerPackages(location *model.Location) error {
 			}
 		}
 		cpe.NewCPE23(pkg, vendorProduct[0], vendorProduct[1], pkg.Version)
-		bom.Packages = append(bom.Packages, pkg)
+		*pkgs = append(*pkgs, *pkg)
 	}
 
 	for _, cPackage := range lockFileMetadata.PackagesDev {
@@ -98,7 +97,7 @@ func parseComposerPackages(location *model.Location) error {
 			}
 		}
 		cpe.NewCPE23(pkg, vendorProduct[0], vendorProduct[1], pkg.Version)
-		bom.Packages = append(bom.Packages, pkg)
+		*pkgs = append(*pkgs, *pkg)
 	}
 
 	return nil

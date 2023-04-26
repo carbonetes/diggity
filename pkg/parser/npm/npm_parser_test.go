@@ -110,7 +110,8 @@ var (
 func TestReadNpmContent(t *testing.T) {
 	packageLockPath := filepath.Join("..", "..", "..", "docs", "references", "npm", "package.json")
 	testLocation := model.Location{Path: packageLockPath}
-	err := readNpmContent(&testLocation)
+	pkgs := new([]model.Package)
+	err := readNpmContent(&testLocation, pkgs)
 	if err != nil {
 		t.Errorf("Test Failed: Error occurred while reading Npm content. %v", err)
 	}
@@ -120,7 +121,8 @@ func TestReadNpmContent(t *testing.T) {
 func TestReadNpmLockContent(t *testing.T) {
 	packagePath := filepath.Join("..", "..", "..", "docs", "references", "npm", "package-lock.json")
 	testLocation := model.Location{Path: packagePath}
-	err := readNpmLockContent(&testLocation)
+	pkgs := new([]model.Package)
+	err := readNpmLockContent(&testLocation, pkgs)
 	if err != nil {
 		t.Errorf("Test Failed: Error occurred while reading Npm Lock content. %v", err)
 	}
@@ -129,7 +131,8 @@ func TestReadNpmLockContent(t *testing.T) {
 func TestReadYarnLockContent(t *testing.T) {
 	yarnPath := filepath.Join("..", "..", "..", "docs", "references", "npm", "yarn.lock")
 	testLocation := model.Location{Path: yarnPath}
-	err := readYarnLockContent(&testLocation)
+	pkgs := new([]model.Package)
+	err := readYarnLockContent(&testLocation, pkgs)
 	if err != nil {
 		t.Errorf("Test Failed: Error occurred while reading Yarn Lock content. %v", err)
 	}

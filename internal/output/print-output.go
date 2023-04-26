@@ -6,78 +6,76 @@ import (
 	"sort"
 	"strings"
 
-	log "github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/internal/output/cyclonedx"
 	"github.com/carbonetes/diggity/internal/output/github"
 	"github.com/carbonetes/diggity/internal/output/save"
 	"github.com/carbonetes/diggity/internal/output/spdx"
 	"github.com/carbonetes/diggity/internal/output/tabular"
-	"github.com/carbonetes/diggity/internal/secret"
-	"github.com/carbonetes/diggity/internal/slsa"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
-	"github.com/carbonetes/diggity/pkg/parser/distro"
-	"github.com/carbonetes/diggity/pkg/parser/docker"
-
 	"golang.org/x/exp/maps"
 )
 
-type result map[string]*model.Package
-
 var (
 	// Result interface
-	Result result = make(map[string]*model.Package, 0)
-	logger        = log.GetLogger()
+
+	log = logger.GetLogger()
 )
 
 // PrintResults prints the result based on the arguments
-func PrintResults() {
-	finalizeResults()
-	outputTypes := strings.ToLower(bom.Arguments.Output.ToOutput())
-
+func PrintResults(req *bom.ParserRequirements) {
+	Depulicate(req.Result.Packages)
+	SortResults(req.Result.Packages)
+	// SortResults(req.Result.Packages, result)
 	// Table Output(Default)
-	selectOutputType(outputTypes)
+	selectOutputType(req.Arguments, req.Result)
 
-	if len(bom.Errors) > 0 {
-		for _, err := range bom.Errors {
-			logger.Printf("[warning]: %+v\n", *err)
+	if len(*req.Errors) > 0 {
+		for _, err := range *req.Errors {
+			log.Errorf("[warning]: %+v\n", err)
 		}
 	}
 }
 
 // Select Output Type based on the User Input with aliases considered
-func selectOutputType(outputTypes string) {
-	for _, output := range strings.Split(outputTypes, ",") {
+func selectOutputType(args *model.Arguments, results *model.Result) {
+	for _, output := range strings.Split(strings.ToLower(args.Output.ToOutput()), ",") {
 		switch output {
 		case model.Table:
-			tabular.PrintTable()
+			tabular.PrintTable(args, results.Packages)
 		case model.JSON.ToOutput():
-			if len(*bom.Arguments.OutputFile) > 0 {
-				save.ResultToFile(GetResults())
+			result, err := json.MarshalIndent(results, "", " ")
+			if err != nil {
+				log.Fatal(err)
+			}
+			if len(*args.OutputFile) > 0 {
+				save.ResultToFile(string(result), args.OutputFile)
 			} else {
-				fmt.Printf("%+v\n", GetResults())
+				fmt.Printf("%+v\n", string(result))
 			}
 		case model.CycloneDXXML:
-			cyclonedx.PrintCycloneDXXML()
+			cyclonedx.PrintCycloneDXXML(results.Packages, args.OutputFile)
 		case model.CycloneDXJSON:
-			cyclonedx.PrintCycloneDXJSON()
+			cyclonedx.PrintCycloneDXJSON(results.Packages, args.OutputFile)
 		case model.SPDXJSON:
-			spdx.PrintSpdxJSON()
+			spdx.PrintSpdxJSON(args, results.Packages)
 		case model.SPDXTagValue:
-			spdx.PrintSpdxTagValue()
+			spdx.PrintSpdxTagValue(args, results.Packages)
 		case model.SPDXYML:
-			spdx.PrintSpdxYaml()
+			spdx.PrintSpdxYaml(args, results.Packages)
 		case model.GithubJSON:
-			github.PrintGithubJSON()
+			github.PrintGithubJSON(args, results)
 		}
 	}
 }
 
-// Remove Duplicates and Sort Results
-func finalizeResults() {
-	for _, pkg := range bom.Packages {
-		if _, exists := Result[pkg.Name+":"+pkg.Version+":"+pkg.Type]; !exists {
-			Result[pkg.Name+":"+pkg.Version+":"+pkg.Type] = pkg
+// Remove Duplicates
+func Depulicate(pkgs *[]model.Package) {
+	result := make(map[string]model.Package, 0)
+	for _, pkg := range *pkgs {
+		if _, exists := result[pkg.Name+":"+pkg.Version+":"+pkg.Type]; !exists {
+			result[pkg.Name+":"+pkg.Version+":"+pkg.Type] = pkg
 		} else {
 			idx := 0
 			if len(pkg.Locations) > 0 {
@@ -88,49 +86,20 @@ func finalizeResults() {
 							Path:      pkg.Path,
 							LayerHash: "sha256:" + pkg.Locations[idx].LayerHash,
 						})
-						Result[pkg.Name+":"+pkg.Version+":"+pkg.Type] = pkg
+						result[pkg.Name+":"+pkg.Version+":"+pkg.Type] = pkg
 					}
 				}
 			}
 		}
 	}
-	sortResults()
+	*pkgs = maps.Values(result)
 }
 
-// Sort Results
-func sortResults() {
-	bom.Packages = maps.Values(Result)
-	sort.Slice(bom.Packages, func(i, j int) bool {
-		if bom.Packages[i].Name == bom.Packages[j].Name {
-			return bom.Packages[i].Version < bom.Packages[j].Version
+func SortResults(pkgs *[]model.Package) {
+	sort.SliceStable(*pkgs, func(i, j int) bool {
+		if strings.EqualFold((*pkgs)[i].Name, (*pkgs)[j].Name) {
+			return strings.ToLower((*pkgs)[i].Version) < strings.ToLower((*pkgs)[j].Version)
 		}
-		return bom.Packages[i].Name < bom.Packages[j].Name
+		return strings.ToLower((*pkgs)[i].Name) < strings.ToLower((*pkgs)[j].Name)
 	})
-}
-
-// GetResults - For event bus handler
-func GetResults() string {
-	pkgs := maps.Values(Result)
-
-	sort.Slice(pkgs, func(i, j int) bool {
-		return pkgs[i].Name < pkgs[j].Name
-	})
-
-	output := model.Result{
-		Distro:   distro.Distro(),
-		Packages: bom.Packages,
-	}
-
-	if !*bom.Arguments.DisableSecretSearch {
-		output.Secret = secret.SecretResults
-	}
-
-	if *bom.Arguments.Provenance != "" {
-		output.SLSA = slsa.Provenance()
-	}
-
-	output.ImageInfo = docker.ImageInfo
-
-	result, _ := json.MarshalIndent(output, "", " ")
-	return string(result)
 }

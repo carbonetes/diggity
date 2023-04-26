@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/util"
@@ -27,27 +26,27 @@ const (
 type Metadata map[string]interface{}
 
 // FindGemPackagesFromContent Find gem packages in the file contents
-func FindGemPackagesFromContent() {
-	if util.ParserEnabled(gem) {
-		for _, content := range file.Contents {
+func FindGemPackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(gem, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, gemPackage) && strings.Contains(content.Path, spec) {
-				if err := readGemContent(content); err != nil {
+				if err := readGemContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("gem-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			} else if strings.Contains(content.Path, lockFile) {
-				if err := readGemLockContent(content); err != nil {
+				if err := readGemLockContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("gem-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Parse gem lock content
-func readGemLockContent(location *model.Location) error {
+func readGemLockContent(location *model.Location, pkgs *[]model.Package) error {
 	gemFile, err := os.Open(location.Path)
 	if err != nil {
 		return err
@@ -79,7 +78,7 @@ func readGemLockContent(location *model.Location) error {
 					LayerHash: location.LayerHash,
 				})
 
-				bom.Packages = append(bom.Packages, pkg)
+				*pkgs = append(*pkgs, *pkg)
 			}
 		}
 	}
@@ -95,7 +94,7 @@ func isKeyValueValid(keyValue string) bool {
 }
 
 // Read file contents
-func readGemContent(location *model.Location) error {
+func readGemContent(location *model.Location, pkgs *[]model.Package) error {
 	gemFile, err := os.Open(location.Path)
 	if err != nil {
 		return err
@@ -150,7 +149,7 @@ func readGemContent(location *model.Location) error {
 		})
 
 		initGemPackages(pkg, metadata)
-		bom.Packages = append(bom.Packages, pkg)
+		*pkgs = append(*pkgs, *pkg)
 	}
 
 	return nil

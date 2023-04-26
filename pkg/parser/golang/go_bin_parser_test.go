@@ -7,7 +7,6 @@ import (
 
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 type (
@@ -42,12 +41,6 @@ type (
 		dep       *debug.Module
 		buildData *debug.BuildInfo
 		expected  metadata.GoBinMetadata
-	}
-	AppendGoBinPackageResult struct {
-		location  *model.Location
-		buildData *debug.BuildInfo
-		dep       *debug.Module
-		expected  *model.Package
 	}
 	InitGoBinPackageResult struct {
 		pkg       *model.Package
@@ -233,34 +226,10 @@ var (
 func TestReadGoBinContent(t *testing.T) {
 	goBinPath := filepath.Join("..", "..", "..", "docs", "references", "go", "gobin")
 	testLocation := model.Location{Path: goBinPath}
-	err := readGoBinContent(&testLocation)
+	pkgs := new([]model.Package)
+	err := readGoBinContent(&testLocation, pkgs)
 	if err != nil {
 		t.Error("Test Failed: Error occurred while reading go bin content.")
-	}
-}
-
-func TestAppendGoBinPackage(t *testing.T) {
-	bom.Packages = []*model.Package{}
-
-	tests := []AppendGoBinPackageResult{
-		{&goBinLocation1, &testBuildData1, &goBinDep1, &goBinPackage1},
-		{&goBinLocation2, &testBuildData1, &goBinDep2, &goBinPackage2},
-		{&goBinLocation3, &testBuildData2, &goBinDep3, &goBinPackage3},
-	}
-
-	for i, test := range tests {
-		appendGoBinPackage(test.location, test.buildData, test.dep)
-		if bom.Packages[i].Name != test.expected.Name ||
-			bom.Packages[i].Type != test.expected.Type ||
-			bom.Packages[i].Path != test.expected.Path ||
-			bom.Packages[i].Version != test.expected.Version ||
-			bom.Packages[i].Description != test.expected.Description ||
-			len(bom.Packages[i].Licenses) != len(test.expected.Licenses) ||
-			len(bom.Packages[i].Locations) != len(test.expected.Locations) ||
-			len(bom.Packages[i].CPEs) != len(test.expected.CPEs) ||
-			string(bom.Packages[i].PURL) != string(test.expected.PURL) {
-			t.Errorf("Test Failed:\n Expected output of %v \n, Received: %v \n", test.expected, bom.Packages[i])
-		}
 	}
 }
 

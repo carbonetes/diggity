@@ -593,26 +593,6 @@ func TestOriginator(t *testing.T) {
 	}
 }
 
-func TestFormatName(t *testing.T) {
-	tests := []StringParserResult{
-		{"bom:latest", "bom"},
-		{"smartentry/centos:latest", "smartentry/centos"},
-		{"buluma/centos:6", "buluma/centos"},
-		{"furynix/fedora:29", "furynix/fedora"},
-		{"test/image:test-tag", "test/image"},
-		{"test-image/image:test-tag", "test-image/image"},
-		{"test_image/image:test_tag", "test_image/image"},
-		{"image", "image"},
-		{"", ""},
-	}
-
-	for _, test := range tests {
-		if output := FormatName(&test.input); output != test.expected {
-			t.Errorf("Test Failed: Input %v must have an output of %v, received: %v", test.input, test.expected, output)
-		}
-	}
-}
-
 func TestFormatNamespace(t *testing.T) {
 	r := regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$")
 	images := []string{"bom", "smartentry/centos", "s390x/debian", "furynix/fedora", "gost/go", "test", "app"}

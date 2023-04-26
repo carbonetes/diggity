@@ -4,14 +4,13 @@ import (
 	"strconv"
 
 	"github.com/carbonetes/diggity/internal/output/save"
-	"github.com/carbonetes/diggity/internal/output/util"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"github.com/carbonetes/diggity/pkg/model"
 
 	"github.com/alexeyco/simpletable"
 )
 
 // PrintTable Packages in Table format
-func PrintTable() {
+func PrintTable(args *model.Arguments, pkgs *[]model.Package) {
 	table := simpletable.New()
 
 	table.Header = &simpletable.Header{
@@ -25,10 +24,7 @@ func PrintTable() {
 
 	var cells [][]*simpletable.Cell
 
-	// Sort packages alphabetically
-	util.SortPackages()
-
-	for i, p := range bom.Packages {
+	for i, p := range *pkgs {
 		i++
 		cells = append(cells, []*simpletable.Cell{
 			{Text: strconv.Itoa(i)},
@@ -38,7 +34,7 @@ func PrintTable() {
 		})
 	}
 
-	totalPackages := strconv.Itoa(len(bom.Packages))
+	totalPackages := strconv.Itoa(len(*pkgs))
 
 	table.Body = &simpletable.Body{Cells: cells}
 
@@ -50,8 +46,8 @@ func PrintTable() {
 
 	table.SetStyle(simpletable.StyleDefault)
 
-	if len(*bom.Arguments.OutputFile) > 0 {
-		save.ResultToFile(table.String())
+	if len(*args.OutputFile) > 0 {
+		save.ResultToFile(table.String(), args.OutputFile)
 	} else {
 		table.Println()
 	}

@@ -1,28 +1,64 @@
 package sbom
 
 import (
-	"strings"
-
-	"github.com/carbonetes/diggity/internal/docker"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/internal/output"
+	"github.com/carbonetes/diggity/internal/secret"
+	"github.com/carbonetes/diggity/internal/slsa"
 	"github.com/carbonetes/diggity/internal/ui"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser"
-
-	"os"
-
-	"github.com/schollz/progressbar/v3"
+	"github.com/carbonetes/diggity/pkg/parser/alpine"
+	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/cargo"
+	"github.com/carbonetes/diggity/pkg/parser/composer"
+	"github.com/carbonetes/diggity/pkg/parser/conan"
+	"github.com/carbonetes/diggity/pkg/parser/dart"
+	"github.com/carbonetes/diggity/pkg/parser/debian"
+	"github.com/carbonetes/diggity/pkg/parser/distro"
+	"github.com/carbonetes/diggity/pkg/parser/docker"
+	"github.com/carbonetes/diggity/pkg/parser/gem"
+	"github.com/carbonetes/diggity/pkg/parser/golang"
+	"github.com/carbonetes/diggity/pkg/parser/hackage"
+	"github.com/carbonetes/diggity/pkg/parser/hex"
+	"github.com/carbonetes/diggity/pkg/parser/java"
+	"github.com/carbonetes/diggity/pkg/parser/npm"
+	"github.com/carbonetes/diggity/pkg/parser/nuget"
+	"github.com/carbonetes/diggity/pkg/parser/portage"
+	"github.com/carbonetes/diggity/pkg/parser/python"
+	"github.com/carbonetes/diggity/pkg/parser/rpm"
+	"github.com/carbonetes/diggity/pkg/parser/swift"
+	"github.com/carbonetes/diggity/pkg/parser/util"
 )
 
-const (
-	tarFile      string = "tar"
-	image        string = "image"
-	dir          string = "dir"
-	unknown      string = "Unknown"
-	defaultTag   string = "latest"
-	tagSeparator string = ":"
+type (
+	parsers []func(*bom.ParserRequirements)
+)
+
+var (
+	// FindFunctions is a collection of the find content functions of all parsers.
+	FindFunctions = parsers{
+		alpine.FindAlpinePackagesFromContent,
+		debian.FindDebianPackagesFromContent,
+		java.FindJavaPackagesFromContent,
+		npm.FindNpmPackagesFromContent,
+		composer.FindComposerPackagesFromContent,
+		python.FindPythonPackagesFromContent,
+		gem.FindGemPackagesFromContent,
+		rpm.FindRpmPackagesFromContent,
+		dart.FindDartPackagesFromContent,
+		nuget.FindNugetPackagesFromContent,
+		golang.FindGoModPackagesFromContent,
+		golang.FindGoBinPackagesFromContent,
+		hackage.FindHackagePackagesFromContent,
+		cargo.FindCargoPackagesFromContent,
+		conan.FindConanPackagesFromContent,
+		portage.FindPortagePackagesFromContent,
+		hex.FindHexPackagesFromContent,
+		swift.FindSwiftPackagesFromContent,
+		distro.ParseDistro,
+		docker.ParseDockerProperties,
+		secret.Search,
+	}
 )
 
 var (
@@ -32,65 +68,30 @@ var (
 // Start SBOM extraction
 func Start(arguments *model.Arguments) {
 	if *arguments.Quiet {
-		log = logger.SetQuietMode(log)
+		ui.Disable()
 	}
-	//check image if DIR
-	source, spinnerMsg := file.CheckUserInput(arguments)
-	if source == image && !strings.Contains(*arguments.Image, tagSeparator) {
-		log.Printf("Using default tag:" + defaultTag)
+	pb := ui.InitSpinner("Scanning for packages...")
+	go ui.RunSpinner(pb)
+
+	requirements, err := bom.InitParsers(arguments)
+	if err != nil {
+		log.Fatal(err)
+	}
+	requirements.WG.Add(len(FindFunctions))
+	for _, parser := range FindFunctions {
+		go parser(requirements)
+	}
+	requirements.WG.Wait()
+	util.CleanUp(requirements.Errors)
+
+	result := requirements.Result
+
+	if *arguments.Provenance != "" {
+		result.SLSA = slsa.Provenance(requirements)
 	}
 
-	extractSpinner := ui.InitSpinner(spinnerMsg)
-	//Extract Image
-	if !*arguments.Quiet {
-		// Pull (if needed) and Extract Image
-		spinnerMsg = extractImage(source, arguments, extractSpinner)
-
-		// Run Parsers
-		parseSpinner := ui.InitSpinner(spinnerMsg)
-		go ui.RunSpinner(parseSpinner)
-		parser.Start(arguments)
-		ui.DoneSpinner(parseSpinner)
-	} else {
-		extractImage(source, arguments, extractSpinner)
-		parser.Start(arguments)
-	}
+	ui.DoneSpinner(pb)
 
 	//Print Results and Cleanup
-	output.PrintResults()
-}
-
-// Extract image
-func extractImage(source string, arguments *model.Arguments, spinner *progressbar.ProgressBar) string {
-	switch source {
-	case tarFile:
-		dir := *arguments.Tar
-		if file.Exists(dir) {
-			docker.ExtractFromDir(arguments.Tar)
-			return "Parsing Tar file..."
-		}
-		log.Printf("%s not found\n", *arguments.Tar)
-		os.Exit(0)
-	case image:
-		if !strings.Contains(*arguments.Image, tagSeparator) {
-			modifiedTag := *arguments.Image + tagSeparator + defaultTag
-			arguments.Image = &modifiedTag
-		}
-		docker.ExtractImage(arguments, spinner)
-		return "Parsing Image..."
-	case dir:
-		dir := *arguments.Dir
-		if file.Exists(dir) {
-			err := file.GetFilesFromDir(dir)
-			if err != nil {
-				panic(err)
-			}
-
-			docker.CreateTempDir()
-			return "Parsing Directory..."
-		}
-		log.Printf("%s not found\n", *arguments.Dir)
-		os.Exit(0)
-	}
-	return ""
+	output.PrintResults(requirements)
 }

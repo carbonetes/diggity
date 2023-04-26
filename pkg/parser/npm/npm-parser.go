@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -42,32 +41,32 @@ var (
 )
 
 // FindNpmPackagesFromContent Find NPM packages in the file contents
-func FindNpmPackagesFromContent() {
-	if util.ParserEnabled(npm) {
-		for _, content := range file.Contents {
+func FindNpmPackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(npm, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if filepath.Base(content.Path) == npmPackage {
-				if err := readNpmContent(content); err != nil {
+				if err := readNpmContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("npm-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			} else if filepath.Base(content.Path) == npmLock {
-				if err := readNpmLockContent(content); err != nil {
+				if err := readNpmLockContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("npm-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			} else if filepath.Base(content.Path) == yarnLock {
-				if err := readYarnLockContent(content); err != nil {
+				if err := readYarnLockContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("npm-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Read file contents
-func readNpmContent(location *model.Location) error {
+func readNpmContent(location *model.Location, pkgs *[]model.Package) error {
 	file, err := os.ReadFile(location.Path)
 	if err != nil {
 		return err
@@ -113,14 +112,14 @@ func readNpmContent(location *model.Location) error {
 		cpe.NewCPE23(pkg, pkg.Name, pkg.Name, pkg.Version)
 		pkg.Metadata = NpmMetadata
 
-		bom.Packages = append(bom.Packages, pkg)
+		*pkgs = append(*pkgs, *pkg)
 
 	}
 	return nil
 }
 
 // Parse lock content
-func readNpmLockContent(location *model.Location) error {
+func readNpmLockContent(location *model.Location, pkgs *[]model.Package) error {
 
 	file, err := os.ReadFile(location.Path)
 	if err != nil {
@@ -156,7 +155,7 @@ func readNpmLockContent(location *model.Location) error {
 			cpe.NewCPE23(pkg, pkg.Name, pkg.Name, pkg.Version)
 			pkg.Metadata = cPackage
 
-			bom.Packages = append(bom.Packages, pkg)
+			*pkgs = append(*pkgs, *pkg)
 
 		}
 	}
@@ -165,7 +164,7 @@ func readNpmLockContent(location *model.Location) error {
 }
 
 // Parse yarn lock content
-func readYarnLockContent(location *model.Location) error {
+func readYarnLockContent(location *model.Location, pkgs *[]model.Package) error {
 
 	file, err := os.Open(location.Path)
 	if err != nil {
@@ -216,7 +215,7 @@ func readYarnLockContent(location *model.Location) error {
 			parseNpmPackageURL(pkg)
 			cpe.NewCPE23(pkg, pkg.Name, pkg.Name, pkg.Version)
 			pkg.Metadata = metadata
-			bom.Packages = append(bom.Packages, pkg)
+			*pkgs = append(*pkgs, *pkg)
 			metadata = LockMetadata{}
 		}
 	}

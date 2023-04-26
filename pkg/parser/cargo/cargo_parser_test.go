@@ -149,7 +149,8 @@ var (
 func TestReadCargoContent(t *testing.T) {
 	cargoPath := filepath.Join("..", "..", "..", "docs", "references", "rust", cargoLock)
 	testLocation := model.Location{Path: cargoPath}
-	err := readCargoContent(&testLocation)
+	pkgs := new([]model.Package)
+	err := readCargoContent(&testLocation, pkgs)
 	if err != nil {
 		t.Error("Test Failed: Error occurred while reading Cargo.lock content.")
 	}

@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/util"
@@ -32,22 +31,22 @@ var (
 type Metadata map[string]interface{}
 
 // FindDebianPackagesFromContent Find DPKG packages in the file content
-func FindDebianPackagesFromContent() {
-	if util.ParserEnabled(debian) {
-		for _, content := range file.Contents {
+func FindDebianPackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(debian, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, dpkgStatusPath) && !strings.Contains(content.Path, dpkgOldStatusPath) {
-				if err := readContent(content); err != nil {
+				if err := readContent(&content, req.Arguments.DisableFileListing, req.Result.Packages); err != nil {
 					err = errors.New("debian-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Read File Contents
-func readContent(location *model.Location) error {
+func readContent(location *model.Location, noFileListing *bool, pkgs *[]model.Package) error {
 	file, err := os.Open(location.Path)
 	if err != nil {
 		return err
@@ -96,8 +95,8 @@ func readContent(location *model.Location) error {
 				LayerHash: location.LayerHash,
 			})
 			// init debian data
-			initDebianPackage(pkg, location, metadata)
-			bom.Packages = append(bom.Packages, pkg)
+			initDebianPackage(pkg, location, metadata, noFileListing)
+			*pkgs = append(*pkgs, *pkg)
 
 			// Reset metadata
 			metadata = make(Metadata)
@@ -109,7 +108,7 @@ func readContent(location *model.Location) error {
 }
 
 // Initialize Debian package contents
-func initDebianPackage(p *model.Package, location *model.Location, metadata Metadata) *model.Package {
+func initDebianPackage(p *model.Package, location *model.Location, metadata Metadata, noFileListing *bool) *model.Package {
 
 	p.Name = metadata["Package"].(string)
 	p.Version = metadata["Version"].(string)
@@ -131,7 +130,7 @@ func initDebianPackage(p *model.Package, location *model.Location, metadata Meta
 		})
 	}
 	//check files
-	if val, ok := metadata["Conffiles"].(string); ok && !*bom.Arguments.DisableFileListing {
+	if val, ok := metadata["Conffiles"].(string); ok && !*noFileListing {
 		parseDebianFiles(metadata, val)
 	}
 

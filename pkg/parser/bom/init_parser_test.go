@@ -1,45 +1,37 @@
 package bom
 
-import (
-	"testing"
+// func TestInitParsers(t *testing.T) {
 
-	"github.com/carbonetes/diggity/pkg/docker"
-	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/stretchr/testify/assert"
-)
+// 	// Test case 1: Image argument provided
+// 	arg1 := model.NewArguments()
+// 	arg1.Image = stringPtr("alpine")
 
-func TestInitParsers(t *testing.T) {
+// 	InitParsers(*arg1)
+// 	if !assert.DirExists(t, *Target) {
+// 		t.Errorf("Target Directory for image %s was not set correctly '%s'", *arg1.Image, *Target)
+// 	}
 
-	// Test case 1: Image argument provided
-	arg1 := model.NewArguments()
-	arg1.Image = stringPtr("alpine")
+// 	// Test case 2: Dir argument provided
+// 	arg2 := model.NewArguments()
+// 	arg2.Dir = stringPtr(".")
 
-	InitParsers(*arg1)
-	if !assert.DirExists(t, *Target) {
-		t.Errorf("Target Directory for image %s was not set correctly '%s'", *arg1.Image, *Target)
-	}
+// 	InitParsers(*arg2)
+// 	if !assert.DirExists(t, *Target) {
+// 		t.Errorf("Target Directory for %s was not set correctly '%s'", *arg2.Dir, *Target)
+// 	}
 
-	// Test case 2: Dir argument provided
-	arg2 := model.NewArguments()
-	arg2.Dir = stringPtr(".")
+// 	// Test case 3: Tar argument provided
+// 	tarFile := docker.SaveImageToTar(stringPtr("alpine"))
+// 	arg3 := model.NewArguments()
+// 	arg3.Tar = stringPtr(tarFile.Name())
 
-	InitParsers(*arg2)
-	if !assert.DirExists(t, *Target) {
-		t.Errorf("Target Directory for %s was not set correctly '%s'", *arg2.Dir, *Target)
-	}
+// 	InitParsers(*arg3)
+// 	if !assert.DirExists(t, *Target) {
+// 		t.Errorf("Target Directory for tar file %s was not set correctly '%s'", *arg3.Tar, *Target)
+// 	}
+// }
 
-	// Test case 3: Tar argument provided
-	tarFile := docker.SaveImageToTar(stringPtr("alpine"))
-	arg3 := model.NewArguments()
-	arg3.Tar = stringPtr(tarFile.Name())
-
-	InitParsers(*arg3)
-	if !assert.DirExists(t, *Target) {
-		t.Errorf("Target Directory for tar file %s was not set correctly '%s'", *arg3.Tar, *Target)
-	}
-}
-
-// Helper function to create a string pointer
-func stringPtr(s string) *string {
-	return &s
-}
+// // Helper function to create a string pointer
+// func stringPtr(s string) *string {
+// 	return &s
+// }

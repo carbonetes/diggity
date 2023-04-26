@@ -1,4 +1,4 @@
-package parser
+package hackage
 
 import (
 	"bufio"
@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -35,34 +34,34 @@ var (
 )
 
 // FindHackagePackagesFromContent checks for stack.yaml, stack.yaml.lock, and cabal.project.freeze files in the file contents
-func FindHackagePackagesFromContent() {
-	if util.ParserEnabled(hackage) {
-		for _, content := range file.Contents {
+func FindHackagePackagesFromContent(req *bom.ParserRequirements) {
+	if util.ParserEnabled(hackage, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if filepath.Base(content.Path) == stackYaml {
-				if err := readStackContent(content); err != nil {
+				if err := readStackContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("hackage-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 			if filepath.Base(content.Path) == stackYamlLock {
-				if err := readStackLockContent(content); err != nil {
+				if err := readStackLockContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("hackage-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 			if filepath.Base(content.Path) == cabalFreeze {
-				if err := readCabalFreezeContent(content); err != nil {
+				if err := readCabalFreezeContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("hackage-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Read stack.yaml contents
-func readStackContent(location *model.Location) error {
+func readStackContent(location *model.Location, pkgs *[]model.Package) error {
 	stackBytes, _ := os.ReadFile(location.Path)
 	err := yaml.Unmarshal(stackBytes, &stackConfig)
 
@@ -76,7 +75,7 @@ func readStackContent(location *model.Location) error {
 
 	for _, dep := range stackConfig.ExtraDeps {
 		if name, _, _, _, _ := parseExtraDep(dep); name != "" {
-			bom.Packages = append(bom.Packages, initHackagePackage(location, dep, ""))
+			*pkgs = append(*pkgs, *initHackagePackage(location, dep, ""))
 		}
 	}
 
@@ -84,7 +83,7 @@ func readStackContent(location *model.Location) error {
 }
 
 // Read stack.yaml.lock contents
-func readStackLockContent(location *model.Location) error {
+func readStackLockContent(location *model.Location, pkgs *[]model.Package) error {
 	stackBytes, _ := os.ReadFile(location.Path)
 	err := yaml.Unmarshal(stackBytes, &stackLockConfig)
 
@@ -102,7 +101,7 @@ func readStackLockContent(location *model.Location) error {
 
 	for _, dep := range stackLockConfig.Packages {
 		if name, _, _, _, _ := parseExtraDep(dep.Original.Hackage); name != "" {
-			bom.Packages = append(bom.Packages, initHackagePackage(location, dep.Original.Hackage, url))
+			*pkgs = append(*pkgs, *initHackagePackage(location, dep.Original.Hackage, url))
 		}
 	}
 
@@ -110,7 +109,7 @@ func readStackLockContent(location *model.Location) error {
 }
 
 // Read cabal.project.freeze contents
-func readCabalFreezeContent(location *model.Location) error {
+func readCabalFreezeContent(location *model.Location, pkgs *[]model.Package) error {
 	file, err := os.Open(location.Path)
 	if err != nil {
 		return err
@@ -132,7 +131,7 @@ func readCabalFreezeContent(location *model.Location) error {
 				pkg = line
 			}
 			if nv := formatCabalPackage(pkg); nv != "" {
-				bom.Packages = append(bom.Packages, initHackagePackage(location, nv, ""))
+				*pkgs = append(*pkgs, *initHackagePackage(location, nv, ""))
 			}
 		}
 	}

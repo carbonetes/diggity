@@ -11,7 +11,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -33,23 +32,23 @@ const (
 type GoBinMetadata map[string]interface{}
 
 // FindGoBinPackagesFromContent Find go binaries in the file contents
-func FindGoBinPackagesFromContent() {
+func FindGoBinPackagesFromContent(req *bom.ParserRequirements) {
 	// Look for go bin file
-	if util.ParserEnabled(goType) {
-		for _, content := range file.Contents {
+	if util.ParserEnabled(goType, req.Arguments.EnabledParsers) {
+		for _, content := range *req.Contents {
 			if !strings.Contains(filepath.Base(content.Path), ".") {
-				if err := readGoBinContent(content); err != nil {
+				if err := readGoBinContent(&content, req.Result.Packages); err != nil {
 					err = errors.New("go-bin-parser: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 			}
 		}
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Read go binaries content
-func readGoBinContent(location *model.Location) error {
+func readGoBinContent(location *model.Location, pkgs *[]model.Package) error {
 	// Modify file permissions to allow read
 	err := os.Chmod(location.Path, 0777)
 	if err != nil {
@@ -87,30 +86,30 @@ func readGoBinContent(location *model.Location) error {
 
 	// Parse mod metadata from bin
 	if buildData.Main.Path != "" {
-		appendGoBinPackage(location, buildData, &buildData.Main)
+		appendGoBinPackage(location, buildData, &buildData.Main, pkgs)
 	}
 
 	// Parse dependencies
 	if len(buildData.Deps) > 0 {
 		for _, dep := range buildData.Deps {
 			if dep.Replace != nil {
-				appendGoBinPackage(location, buildData, dep.Replace)
+				appendGoBinPackage(location, buildData, dep.Replace, pkgs)
 			}
-			appendGoBinPackage(location, buildData, dep)
+			appendGoBinPackage(location, buildData, dep, pkgs)
 		}
 	} else {
 		if buildData.Main.Path != "" {
-			appendGoBinPackage(location, buildData, nil)
+			appendGoBinPackage(location, buildData, nil, pkgs)
 		}
 	}
 	return nil
 }
 
 // Append Go Bin Package to Packages list
-func appendGoBinPackage(location *model.Location, buildData *debug.BuildInfo, dep *debug.Module) {
+func appendGoBinPackage(location *model.Location, buildData *debug.BuildInfo, dep *debug.Module, pkgs *[]model.Package) {
 	pkg := new(model.Package)
 	initGoBinPackage(pkg, location, buildData, dep)
-	bom.Packages = append(bom.Packages, pkg)
+	*pkgs = append(*pkgs, *pkg)
 }
 
 // Initialize Go Bin package contents

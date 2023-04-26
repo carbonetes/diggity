@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 var (
@@ -100,8 +99,8 @@ func TestGetPackageManifests(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		bom.Packages = []*model.Package{test.pkg}
-		output := getPackageManifests(test.image)
+		pkgs := &[]model.Package{*test.pkg}
+		output := getPackageManifests(test.image, pkgs)
 		if _, exists := output[test.expected]; !exists {
 			t.Errorf("Test Failed: Expected output of %v, received none", output)
 		}

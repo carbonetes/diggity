@@ -25,11 +25,11 @@ var (
 )
 
 // Search search secrets in all file contents that does not exceed the max-file-size argument
-func Search() {
-	if *bom.Arguments.DisableSecretSearch {
+func Search(req *bom.ParserRequirements) {
+	if *req.Arguments.DisableSecretSearch {
 		secrets = nil
 	} else {
-		extensions := initSecretExtensions()
+		extensions := initSecretExtensions(req.Arguments.SecretExtensions)
 		for _, content := range file.Contents {
 
 			// validate filename if accepted for secret search
@@ -51,15 +51,19 @@ func Search() {
 			buf, err := os.ReadFile(content.Path)
 			if err != nil {
 				err = errors.New("secrets: " + err.Error())
-				bom.Errors = append(bom.Errors, &err)
+				*req.Errors = append(*req.Errors, err)
 			}
 			stat, err := file.Stat()
+			if err != nil {
+				err = errors.New("secrets: " + err.Error())
+				*req.Errors = append(*req.Errors, err)
+			}
 
-			if isExcluded(file.Name()) {
+			if isExcluded(file.Name(), req.Arguments.ExcludedFilenames) {
 				continue
 			}
 
-			if stat.Size() >= bom.Arguments.SecretMaxFileSize && !util.IsText(buf) {
+			if stat.Size() >= req.Arguments.SecretMaxFileSize && !util.IsText(buf) {
 				file.Close()
 				continue
 			}
@@ -68,7 +72,7 @@ func Search() {
 
 				if err != nil {
 					err = errors.New("secrets: " + err.Error())
-					bom.Errors = append(bom.Errors, &err)
+					*req.Errors = append(*req.Errors, err)
 				}
 
 				scanner := bufio.NewScanner(file)
@@ -76,7 +80,7 @@ func Search() {
 				lineNumber := 1
 				for scanner.Scan() {
 					scannerText := scanner.Text()
-					if match := regexp.MustCompile(*bom.Arguments.SecretContentRegex).FindString(scannerText); len(match) > 0 {
+					if match := regexp.MustCompile(*req.Arguments.SecretContentRegex).FindString(scannerText); len(match) > 0 {
 						secrets = append(secrets, model.Secret{
 							ContentRegexName: match,
 							FilePath:         parserUtil.TrimUntilLayer(model.Location{Path: content.Path, LayerHash: content.LayerHash}),
@@ -91,7 +95,7 @@ func Search() {
 							continue
 						}
 						err = errors.New("secrets: " + err.Error())
-						bom.Errors = append(bom.Errors, &err)
+						*req.Errors = append(*req.Errors, err)
 					}
 				}
 
@@ -102,22 +106,23 @@ func Search() {
 		}
 
 		SecretResults.Configuration = model.SecretConfig{
-			Disabled:    *bom.Arguments.DisableSecretSearch,
-			SecretRegex: *bom.Arguments.SecretContentRegex,
-			Excludes:    bom.Arguments.ExcludedFilenames,
-			MaxFileSize: bom.Arguments.SecretMaxFileSize,
+			Disabled:    *req.Arguments.DisableSecretSearch,
+			SecretRegex: *req.Arguments.SecretContentRegex,
+			Excludes:    req.Arguments.ExcludedFilenames,
+			MaxFileSize: req.Arguments.SecretMaxFileSize,
 		}
 		SecretResults.Secrets = secrets
+		req.Result.Secret = SecretResults
 	}
-	defer bom.WG.Done()
+	defer req.WG.Done()
 }
 
 // Check if filename is excluded from search
-func isExcluded(filename string) bool {
-	if bom.Arguments.ExcludedFilenames == nil {
+func isExcluded(filename string, excluded *[]string) bool {
+	if excluded == nil {
 		return false
 	}
-	for _, exclude := range *bom.Arguments.ExcludedFilenames {
+	for _, exclude := range *excluded {
 		if strings.Contains(filename, exclude) {
 			return true
 		}
@@ -144,15 +149,15 @@ func validateFilename(filename string, extensions map[string]string) bool {
 }
 
 // Initialize secret extensions map reference
-func initSecretExtensions() map[string]string {
+func initSecretExtensions(extensions *[]string) map[string]string {
 	exts := make(map[string]string)
 
-	if bom.Arguments.SecretExtensions == nil {
+	if extensions == nil {
 		return exts
 	}
-	if len(*bom.Arguments.SecretExtensions) > 0 {
+	if len(*extensions) > 0 {
 
-		for _, ext := range *bom.Arguments.SecretExtensions {
+		for _, ext := range *extensions {
 			exts["."+ext] = "." + ext
 		}
 	}
