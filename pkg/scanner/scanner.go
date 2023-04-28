@@ -73,7 +73,7 @@ func Scan(arguments *model.Arguments) (*model.SBOM, *[]error) {
 		go parser(requirements)
 	}
 	requirements.WG.Wait()
-	util.CleanUp(requirements.Errors)
+	defer util.CleanUp(requirements)
 
 	if *arguments.Provenance != "" {
 		requirements.SBOM.SLSA = slsa.Provenance(requirements)

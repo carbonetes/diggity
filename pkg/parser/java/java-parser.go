@@ -14,7 +14,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/internal/docker"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -52,7 +51,7 @@ func FindJavaPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(java, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if match := regexp.MustCompile(jarPackagesRegex).FindString(content.Path); len(match) > 0 {
-				if err := extractJarFile(&content, req.Arguments.Dir); err != nil {
+				if err := extractJarFile(&content, req.Arguments.Dir, req.DockerTemp); err != nil {
 					err = errors.New("java-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
@@ -69,7 +68,7 @@ func FindJavaPackagesFromContent(req *bom.ParserRequirements) {
 }
 
 // Extract jar files
-func extractJarFile(location *model.Location, dir *string) error {
+func extractJarFile(location *model.Location, dir *string, dockerTemp *string) error {
 
 	buff, err := os.ReadFile(location.Path)
 	if err != nil {
@@ -92,7 +91,7 @@ func extractJarFile(location *model.Location, dir *string) error {
 		if match := regexp.MustCompile(jarPackagesRegex).FindString(zipFile.Name); len(match) > 0 {
 			dependencies = append(dependencies, zipFile)
 		} else if strings.Contains(zipFile.Name, pomFileName) {
-			file, err := os.Create(filepath.Join(docker.Dir(), pomFileName))
+			file, err := os.Create(filepath.Join(*dockerTemp, pomFileName))
 			if err != nil {
 				panic(err)
 			}
@@ -122,16 +121,16 @@ func extractJarFile(location *model.Location, dir *string) error {
 
 		if metadataFile != nil || pomPropertiesFile != nil {
 			paths := strings.Split(util.TrimUntilLayer(*location), string(os.PathSeparator))
-			_ = initPackage(paths[len(paths)-1], location, metadataFile, pomPropertiesFile, dir)
+			_ = initPackage(paths[len(paths)-1], location, metadataFile, pomPropertiesFile, dir, dockerTemp)
 		}
 	}
 
-	err = parseJarFiles(dependencies, location, dir)
+	err = parseJarFiles(dependencies, location, dir, dockerTemp)
 	return err
 }
 
 // Init java package
-func initPackage(name string, location *model.Location, manifestFile *zip.File, pomPropertiesFile *zip.File, dir *string) error {
+func initPackage(name string, location *model.Location, manifestFile *zip.File, pomPropertiesFile *zip.File, dir *string, dockerTemp *string) error {
 	endOfFile := regexp.MustCompile(jarPackagesRegex)
 	pkg := new(model.Package)
 	pkg.Metadata = Metadata{}
@@ -146,7 +145,7 @@ func initPackage(name string, location *model.Location, manifestFile *zip.File, 
 	splitName := strings.Split(name, "/")
 	fileName := splitName[len(splitName)-1]
 	if manifestFile != nil {
-		_ = parseManifest(manifestFile, pkg)
+		_ = parseManifest(manifestFile, pkg, dockerTemp)
 		parseLicenses(pkg)
 	}
 
@@ -252,9 +251,9 @@ func checkPackage(pkg *model.Package, layerHash string) {
 }
 
 // Parse jar files
-func parseJarFiles(dependencies []*zip.File, location *model.Location, dir *string) error {
+func parseJarFiles(dependencies []*zip.File, location *model.Location, dir *string, dockerTemp *string) error {
 
-	if err := os.Mkdir(docker.Dir(), fs.ModePerm); err != nil && !os.IsExist(err) {
+	if err := os.Mkdir(*dockerTemp, fs.ModePerm); err != nil && !os.IsExist(err) {
 		return err
 	}
 
@@ -262,7 +261,7 @@ func parseJarFiles(dependencies []*zip.File, location *model.Location, dir *stri
 
 		splitName := strings.Split(dependency.Name, "/")
 		fileName := splitName[len(splitName)-1]
-		jarFile, err := os.Create(filepath.Join(docker.Dir(), fileName))
+		jarFile, err := os.Create(filepath.Join(*dockerTemp, fileName))
 
 		if err != nil {
 			return err
@@ -277,7 +276,7 @@ func parseJarFiles(dependencies []*zip.File, location *model.Location, dir *stri
 			return err
 		}
 
-		err = findManifestAndPomPropertiesFromDependencyJarFile(jarFile, location, dependency.Name, dir)
+		err = findManifestAndPomPropertiesFromDependencyJarFile(jarFile, location, dependency.Name, dir, dockerTemp)
 		if err != nil {
 			return err
 		}
@@ -306,7 +305,7 @@ func generateAdditionalCPE(vendor string, product string, version string, pkg *m
 }
 
 // Find the manifest and pom properties files from the dependency jar file
-func findManifestAndPomPropertiesFromDependencyJarFile(jarFile *os.File, location *model.Location, name string, dir *string) error {
+func findManifestAndPomPropertiesFromDependencyJarFile(jarFile *os.File, location *model.Location, name string, dir *string, dockerTemp *string) error {
 
 	buff, err := os.ReadFile(jarFile.Name())
 	if err != nil {
@@ -330,7 +329,7 @@ func findManifestAndPomPropertiesFromDependencyJarFile(jarFile *os.File, locatio
 		if match := regexp.MustCompile(jarPackagesRegex).FindString(zipFile.Name); len(match) > 0 {
 			dependencies = append(dependencies, zipFile)
 		} else if strings.Contains(zipFile.Name, pomFileName) {
-			file, err := os.Create(filepath.Join(docker.Dir(), pomFileName))
+			file, err := os.Create(filepath.Join(*dockerTemp, pomFileName))
 			if err != nil {
 				panic(err)
 			}
@@ -358,12 +357,12 @@ func findManifestAndPomPropertiesFromDependencyJarFile(jarFile *os.File, locatio
 		metadataFile, pomPropertiesFile = checkZipfile(zipFile, metadataFile, pomPropertiesFile)
 
 		if metadataFile != nil || pomPropertiesFile != nil {
-			_ = initPackage(name, location, metadataFile, pomPropertiesFile, dir)
+			_ = initPackage(name, location, metadataFile, pomPropertiesFile, dir, dockerTemp)
 			pomPropertiesFile = nil
 			metadataFile = nil
 		}
 	}
-	_ = parseJarFiles(dependencies, location, dir)
+	_ = parseJarFiles(dependencies, location, dir, dockerTemp)
 	return nil
 }
 
@@ -393,9 +392,9 @@ func parseLicenses(pkg *model.Package) {
 }
 
 // Parse java manifest file
-func parseManifest(manifestFile *zip.File, pkg *model.Package) error {
+func parseManifest(manifestFile *zip.File, pkg *model.Package, dockerTemp *string) error {
 
-	createdManifest, err := os.Create(filepath.Join(docker.Dir(), strings.Replace(manifestFile.Name, "/", "_", -1)))
+	createdManifest, err := os.Create(filepath.Join(*dockerTemp, strings.Replace(manifestFile.Name, "/", "_", -1)))
 	if err != nil {
 		return err
 	}

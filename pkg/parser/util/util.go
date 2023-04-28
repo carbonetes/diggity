@@ -1,12 +1,12 @@
 package util
 
 import (
-	"errors"
 	"os"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/docker"
+	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 // ParserNames slice of supported parser names
@@ -29,6 +29,8 @@ var ParserNames = []string{
 	"hex",
 	"portage",
 }
+
+var log = logger.GetLogger()
 
 // TrimUntilLayer Returns file path without layer hash
 func TrimUntilLayer(location model.Location) string {
@@ -85,10 +87,14 @@ func FormatLockKeyVal(kv string) string {
 }
 
 // CleanUp clears temp files
-func CleanUp(errGroup *[]error) {
-	err := os.RemoveAll(docker.Dir())
+func CleanUp(req *bom.ParserRequirements) {
+	err := os.RemoveAll(*req.Dir)
 	if err != nil {
-		err = errors.New("clean-up: " + err.Error())
-		*errGroup = append(*errGroup, err)
+		log.Error(err)
+	}
+
+	err = os.RemoveAll(*req.DockerTemp)
+	if err != nil {
+		log.Error(err)
 	}
 }
