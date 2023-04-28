@@ -34,7 +34,7 @@ func FindAlpinePackagesFromContent(req *bom.ParserRequirements) {
 		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, installedPackagesPath) {
 
-				if err := parseInstalledPackages(content.Path, content.LayerHash, req.Arguments.DisableFileListing, req.Result.Packages); err != nil {
+				if err := parseInstalledPackages(content.Path, content.LayerHash, req.Arguments.DisableFileListing, req.SBOM.Packages); err != nil {
 					err = errors.New("apk-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

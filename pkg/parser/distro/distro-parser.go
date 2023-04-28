@@ -42,7 +42,7 @@ func ParseDistro(req *bom.ParserRequirements) {
 		err = errors.New("distro-parser: " + err.Error())
 		*req.Errors = append(*req.Errors, err)
 	}
-	req.Result.Distro = distro
+	req.SBOM.Distro = distro
 
 	defer req.WG.Done()
 }

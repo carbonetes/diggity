@@ -112,7 +112,7 @@ func Search(req *bom.ParserRequirements) {
 			MaxFileSize: req.Arguments.SecretMaxFileSize,
 		}
 		SecretResults.Secrets = secrets
-		req.Result.Secret = SecretResults
+		req.SBOM.Secret = SecretResults
 	}
 	defer req.WG.Done()
 }

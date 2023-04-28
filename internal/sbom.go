@@ -84,10 +84,8 @@ func Start(arguments *model.Arguments) {
 	requirements.WG.Wait()
 	util.CleanUp(requirements.Errors)
 
-	result := requirements.Result
-
 	if *arguments.Provenance != "" {
-		result.SLSA = slsa.Provenance(requirements)
+		requirements.SBOM.SLSA = slsa.Provenance(requirements)
 	}
 
 	ui.DoneSpinner(pb)

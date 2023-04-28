@@ -37,7 +37,7 @@ func FindGoModPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(goType, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if filepath.Base(content.Path) == goModPath {
-				if err := readGoModContent(&content, req.Result.Packages); err != nil {
+				if err := readGoModContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("go-mod-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

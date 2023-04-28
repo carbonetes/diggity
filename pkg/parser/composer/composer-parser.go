@@ -28,7 +28,7 @@ func FindComposerPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(composer, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, composerLock) {
-				if err := parseComposerPackages(&content, req.Result.Packages); err != nil {
+				if err := parseComposerPackages(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("composer-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

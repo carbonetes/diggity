@@ -30,12 +30,12 @@ func FindGemPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(gem, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, gemPackage) && strings.Contains(content.Path, spec) {
-				if err := readGemContent(&content, req.Result.Packages); err != nil {
+				if err := readGemContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("gem-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
 			} else if strings.Contains(content.Path, lockFile) {
-				if err := readGemLockContent(&content, req.Result.Packages); err != nil {
+				if err := readGemLockContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("gem-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

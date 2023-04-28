@@ -34,7 +34,7 @@ func FindCargoPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(rust, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if filepath.Base(content.Path) == cargoLock {
-				if err := readCargoContent(&content, req.Result.Packages); err != nil {
+				if err := readCargoContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("cargo-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

@@ -31,13 +31,13 @@ func FindConanPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(conan, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, conanFile) {
-				if err := readConanFileContent(&content, req.Result.Packages); err != nil {
+				if err := readConanFileContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("conan-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
 			}
 			if strings.Contains(content.Path, conanLock) {
-				if err := readConanLockContent(&content, req.Result.Packages); err != nil {
+				if err := readConanLockContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("conan-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

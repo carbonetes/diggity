@@ -35,13 +35,13 @@ func FindDartPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(dart, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if filepath.Base(content.Path) == pubspecYaml {
-				if err := parseDartPackages(&content, req.Result.Packages); err != nil {
+				if err := parseDartPackages(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("dart-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
 			}
 			if filepath.Base(content.Path) == pubspecLock {
-				if err := parseDartPackagesLock(&content, req.Result.Packages); err != nil {
+				if err := parseDartPackagesLock(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("dart-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

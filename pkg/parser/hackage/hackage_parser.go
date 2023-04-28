@@ -38,19 +38,19 @@ func FindHackagePackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(hackage, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if filepath.Base(content.Path) == stackYaml {
-				if err := readStackContent(&content, req.Result.Packages); err != nil {
+				if err := readStackContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("hackage-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
 			}
 			if filepath.Base(content.Path) == stackYamlLock {
-				if err := readStackLockContent(&content, req.Result.Packages); err != nil {
+				if err := readStackLockContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("hackage-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
 			}
 			if filepath.Base(content.Path) == cabalFreeze {
-				if err := readCabalFreezeContent(&content, req.Result.Packages); err != nil {
+				if err := readCabalFreezeContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("hackage-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

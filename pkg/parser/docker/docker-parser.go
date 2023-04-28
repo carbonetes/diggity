@@ -65,7 +65,7 @@ func ParseDockerProperties(req *bom.ParserRequirements) {
 		DockerManifest: dockerManifest,
 	}
 
-	req.Result.ImageInfo = ImageInfo
+	req.SBOM.ImageInfo = ImageInfo
 
 	defer req.WG.Done()
 }
