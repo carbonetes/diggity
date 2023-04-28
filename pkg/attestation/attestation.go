@@ -66,7 +66,7 @@ func checkCosign() {
 
 // Attest SBOM
 func attestBom(image string, predicate string, attestationOptions *model.AttestationOptions) {
-	args := fmt.Sprintf("attest --key %+v --type %+v --predicate %+v %+v",
+	args := fmt.Sprintf("attest --yes --key %+v --type %+v --predicate %+v %+v",
 		*attestationOptions.Key, *attestationOptions.AttestType, predicate, image)
 	attest := strings.Split(args, " ")
 
