@@ -21,7 +21,7 @@ func SetAnalysisRequestHandler(channelName string) {
 		func(msg *tm.Message) {
 			arguments := msg.Payload.(model.Arguments)
 			arguments.Output = (*model.Output)(&event)
-			result := scanner.Scan(&arguments)
+			result, _ := scanner.Scan(&arguments)
 			if err := tr.SendResponseMessage(channelName, result, msg.DestinationId); err != nil {
 				log.Fatalf("Error sending response message: %v", err)
 			}
