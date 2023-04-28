@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"time"
+
 	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/schollz/progressbar/v3"
 )
@@ -33,6 +35,7 @@ func RunSpinner(spinner *progressbar.ProgressBar) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		time.Sleep(40 * time.Millisecond)
 	}
 }
 
