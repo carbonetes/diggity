@@ -234,8 +234,3 @@ func ExtractFromDir(source *string) {
 	}
 
 }
-
-// CreateTempDir creates temp DIR for java parser when arguments is directory
-// func CreateTempDir() {
-// 	tempDir, _ = ioutils.TempDir("", "")
-// }
