@@ -63,7 +63,7 @@ var (
 )
 
 // Diggity scans the Docker images, Tar Files, and Codebases(directories) specified in the given model.Arguments struct and returns a sbom(model.Result) struct.
-func Scan(arguments *model.Arguments) *model.Result {
+func Scan(arguments *model.Arguments) (*model.SBOM, *[]error) {
 	requirements, err := bom.InitParsers(arguments)
 	if err != nil {
 		log.Fatal(err)
@@ -75,11 +75,9 @@ func Scan(arguments *model.Arguments) *model.Result {
 	requirements.WG.Wait()
 	util.CleanUp(requirements.Errors)
 
-	result := requirements.Result
-
 	if *arguments.Provenance != "" {
-		result.SLSA = slsa.Provenance(requirements)
+		requirements.SBOM.SLSA = slsa.Provenance(requirements)
 	}
 
-	return result
+	return requirements.SBOM, requirements.Errors
 }
