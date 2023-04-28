@@ -40,16 +40,6 @@ var (
 	timeout int = 60 //timeout in seconds
 )
 
-// Dir returns generated temporary directory string
-func Dir() string {
-	return tempDir
-}
-
-// ExtractedDir returns the extracted directory of tar file
-func ExtractedDir() string {
-	return extractDir
-}
-
 // ExtractImage extracts docker image contents
 func ExtractImage(args *model.Arguments, spinner *progressbar.ProgressBar) {
 	arguments = args
@@ -246,6 +236,6 @@ func ExtractFromDir(source *string) {
 }
 
 // CreateTempDir creates temp DIR for java parser when arguments is directory
-func CreateTempDir() {
-	tempDir, _ = ioutils.TempDir("", "")
-}
+// func CreateTempDir() {
+// 	tempDir, _ = ioutils.TempDir("", "")
+// }

@@ -11,7 +11,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/docker/docker/pkg/ioutils"
 	"github.com/google/uuid"
 )
 
@@ -21,9 +20,9 @@ const (
 )
 
 // ExtractImage extracts a Docker image to a temporary directory and returns the path to the directory.
-func ExtractImage(target *string) (*[]model.Location, *string) {
+func ExtractImage(target *string, dockerTemp *string) (*[]model.Location, *string) {
 	contents := new([]model.Location)
-	tarFile := SaveImageToTar(target)
+	tarFile := SaveImageToTar(target, dockerTemp)
 
 	// Create a directory to extract the Docker image to.
 	extractDir := strings.Replace(tarFile.Name(), ".tar", "", -1)
@@ -40,7 +39,7 @@ func ExtractImage(target *string) (*[]model.Location, *string) {
 	return contents, &extractDir
 }
 
-func SaveImageToTar(image *string) *os.File {
+func SaveImageToTar(image *string, dockerTemp *string) *os.File {
 	ids := new([]string)
 	*ids = append(*ids, *image)
 
@@ -52,12 +51,8 @@ func SaveImageToTar(image *string) *os.File {
 	defer reader.Close()
 
 	// Create a temporary directory to extract the Docker image to.
-	tempDir, err := ioutils.TempDir("", "")
-	if err != nil {
-		log.Fatal(err)
-	}
 	tarFileName := "diggity-tmp-" + uuid.NewString() + ".tar"
-	tarPath := filepath.Join(tempDir, tarFileName)
+	tarPath := filepath.Join(*dockerTemp, tarFileName)
 	tarFile, err := os.Create(tarPath)
 	if err != nil {
 		log.Fatal(err)
@@ -164,16 +159,12 @@ func processFile(tarReader *tar.Reader, target string, fileMode fs.FileMode, rec
 	return nil
 }
 
-func ExtractTarFile(tar *string) (*[]model.Location, *string) {
+func ExtractTarFile(tar *string, dockerTemp *string) (*[]model.Location, *string) {
 	contents := new([]model.Location)
-	dir, err := ioutils.TempDir("", "")
-	if err != nil {
-		log.Fatal(err.Error())
-	}
 
 	folder := "diggity-tmp-dir" + uuid.NewString()
-	target := filepath.Join(dir, folder)
-	err = os.Mkdir(target, fs.ModePerm)
+	target := filepath.Join(*dockerTemp, folder)
+	err := os.Mkdir(target, fs.ModePerm)
 	if err != nil {
 		log.Fatal(err)
 	}
