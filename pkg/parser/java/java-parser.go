@@ -63,7 +63,7 @@ func FindJavaPackagesFromContent(req *bom.ParserRequirements) {
 				}
 			}
 		}
-		*req.Result.Packages = append(*req.Result.Packages, maps.Values(Result)...)
+		*req.SBOM.Packages = append(*req.SBOM.Packages, maps.Values(Result)...)
 	}
 	defer req.WG.Done()
 }

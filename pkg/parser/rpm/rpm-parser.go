@@ -40,7 +40,7 @@ func FindRpmPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(rpmType, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, rpmPackagesPath) {
-				if err := readRpmContent(&content, req.Result.Packages); err != nil {
+				if err := readRpmContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("rpm-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

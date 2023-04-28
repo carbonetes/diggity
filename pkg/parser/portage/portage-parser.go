@@ -35,7 +35,7 @@ func FindPortagePackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(portage, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, portageDBPath) && strings.Contains(content.Path, portageContent) {
-				if err := readPortageContent(&content, req.Arguments.DisableFileListing, req.Result.Packages); err != nil {
+				if err := readPortageContent(&content, req.Arguments.DisableFileListing, req.SBOM.Packages); err != nil {
 					err = errors.New("portage-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

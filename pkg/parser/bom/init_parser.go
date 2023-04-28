@@ -16,7 +16,7 @@ type ParserRequirements struct {
 	Arguments *model.Arguments
 	Dir       *string
 	Contents  *[]model.Location
-	Result    *model.Result
+	SBOM    *model.SBOM
 	WG        sync.WaitGroup
 	Errors    *[]error
 }
@@ -37,7 +37,7 @@ func InitParsers(args *model.Arguments) (*ParserRequirements, error) {
 			Dir:       dir,
 			Contents:  contents,
 			Errors:    new([]error),
-			Result: &model.Result{
+			SBOM: &model.SBOM{
 				Packages: new([]model.Package),
 				Secret:   new(model.SecretResults),
 				Distro:   new(model.Distro),
@@ -56,7 +56,7 @@ func InitParsers(args *model.Arguments) (*ParserRequirements, error) {
 				Dir:       args.Dir,
 				Contents:  contents,
 				Errors:    new([]error),
-				Result: &model.Result{
+				SBOM: &model.SBOM{
 					Packages: new([]model.Package),
 					Secret:   new(model.SecretResults),
 					Distro:   new(model.Distro),
@@ -75,7 +75,7 @@ func InitParsers(args *model.Arguments) (*ParserRequirements, error) {
 				Dir:       dir,
 				Contents:  contents,
 				Errors:    new([]error),
-				Result: &model.Result{
+				SBOM: &model.SBOM{
 					Packages: new([]model.Package),
 					Secret:   new(model.SecretResults),
 					Distro:   new(model.Distro),

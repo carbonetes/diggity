@@ -35,7 +35,7 @@ func FindDebianPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(debian, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, dpkgStatusPath) && !strings.Contains(content.Path, dpkgOldStatusPath) {
-				if err := readContent(&content, req.Arguments.DisableFileListing, req.Result.Packages); err != nil {
+				if err := readContent(&content, req.Arguments.DisableFileListing, req.SBOM.Packages); err != nil {
 					err = errors.New("debian-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

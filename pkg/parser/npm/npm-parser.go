@@ -45,17 +45,17 @@ func FindNpmPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(npm, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if filepath.Base(content.Path) == npmPackage {
-				if err := readNpmContent(&content, req.Result.Packages); err != nil {
+				if err := readNpmContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("npm-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
 			} else if filepath.Base(content.Path) == npmLock {
-				if err := readNpmLockContent(&content, req.Result.Packages); err != nil {
+				if err := readNpmLockContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("npm-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
 			} else if filepath.Base(content.Path) == yarnLock {
-				if err := readYarnLockContent(&content, req.Result.Packages); err != nil {
+				if err := readYarnLockContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("npm-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

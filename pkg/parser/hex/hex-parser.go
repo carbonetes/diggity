@@ -34,13 +34,13 @@ func FindHexPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(hex, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if filepath.Base(content.Path) == rebarLock {
-				if err := parseHexRebarPacakges(&content, req.Result.Packages); err != nil {
+				if err := parseHexRebarPacakges(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("hex-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
 			}
 			if filepath.Base(content.Path) == mixLock {
-				if err := parseHexMixPackages(&content, req.Result.Packages); err != nil {
+				if err := parseHexMixPackages(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("hex-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

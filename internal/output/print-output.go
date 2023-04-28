@@ -25,11 +25,11 @@ var (
 
 // PrintResults prints the result based on the arguments
 func PrintResults(req *bom.ParserRequirements) {
-	Depulicate(req.Result.Packages)
-	SortResults(req.Result.Packages)
-	// SortResults(req.Result.Packages, result)
+	Depulicate(req.SBOM.Packages)
+	SortResults(req.SBOM.Packages)
+	// SortResults(req.SBOM.Packages, result)
 	// Table Output(Default)
-	selectOutputType(req.Arguments, req.Result)
+	selectOutputType(req.Arguments, req.SBOM)
 
 	if len(*req.Errors) > 0 {
 		for _, err := range *req.Errors {
@@ -39,7 +39,7 @@ func PrintResults(req *bom.ParserRequirements) {
 }
 
 // Select Output Type based on the User Input with aliases considered
-func selectOutputType(args *model.Arguments, results *model.Result) {
+func selectOutputType(args *model.Arguments, results *model.SBOM) {
 	for _, output := range strings.Split(strings.ToLower(args.Output.ToOutput()), ",") {
 		switch output {
 		case model.Table:

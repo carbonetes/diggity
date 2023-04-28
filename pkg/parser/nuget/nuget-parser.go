@@ -28,7 +28,7 @@ func FindNugetPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(nuget, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, dotnetPackage) {
-				if err := parseNugetPackages(&content, req.Result.Packages); err != nil {
+				if err := parseNugetPackages(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("nuget-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

@@ -41,20 +41,20 @@ func FindPythonPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(pip, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, pythonPackage) || strings.Contains(content.Path, pythonEgg) {
-				if err := readPythonContent(&content, req.Result.Packages); err != nil {
+				if err := readPythonContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("python-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
 			}
 			if filepath.Base(content.Path) == poetry {
-				if err := readPoetryContent(&content, req.Arguments.DisableFileListing, req.Result.Packages); err != nil {
+				if err := readPoetryContent(&content, req.Arguments.DisableFileListing, req.SBOM.Packages); err != nil {
 					err = errors.New("python-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
 			}
 			if strings.Contains(filepath.Base(content.Path), requirements) &&
 				strings.Contains(filepath.Base(content.Path), txt) {
-				if err := readRequirementsContent(&content, req.Result.Packages); err != nil {
+				if err := readRequirementsContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("python-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

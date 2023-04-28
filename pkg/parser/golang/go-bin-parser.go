@@ -37,7 +37,7 @@ func FindGoBinPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(goType, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if !strings.Contains(filepath.Base(content.Path), ".") {
-				if err := readGoBinContent(&content, req.Result.Packages); err != nil {
+				if err := readGoBinContent(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("go-bin-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}

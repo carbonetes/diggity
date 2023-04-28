@@ -29,7 +29,7 @@ func FindSwiftPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(pod, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
 			if filepath.Base(content.Path) == podfilelock {
-				if err := parseSwiftPackages(&content, req.Result.Packages); err != nil {
+				if err := parseSwiftPackages(&content, req.SBOM.Packages); err != nil {
 					err = errors.New("swift-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
