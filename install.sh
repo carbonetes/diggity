@@ -148,7 +148,14 @@ install_diggity() {
     shift $((OPTIND - 1))
     set +u
 
-    
+    #check that prereqs are present:
+    if which shasum; then
+      echo ''
+    else
+      echo 'please install shasum command before installing diggity'
+      return 1
+    fi
+
     downloadFolder=$(mktemp -d -t diggity-XXXXXXXXXX)
     trap 'rm -rf -- "$downloadFolder"' EXIT
     mkdir -p ${downloadFolder} # make sure download folder exists
