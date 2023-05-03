@@ -148,6 +148,9 @@ extract() (
 )
 
 install_diggity() {
+  # check shasum installed
+  check_shasum
+
   # parse flag
   while getopts "v:d:" arg; do
     case "${arg}" in
@@ -162,7 +165,6 @@ install_diggity() {
   trap 'rm -rf -- "$downloadFolder"' EXIT
   mkdir -p ${downloadFolder} # make sure download folder exists
   os=$(get_os)
-  check_shasum
   arch=$(get_arch)
   # if version is empty
   if [ -z "$version" ]; then
