@@ -79,13 +79,9 @@ get_os() {
 }
 
 check_shasum() {
-  os=$(get_os)
-
-  if [[ $os == "linux" ]]; then
-    if ! command -v shasum >/dev/null; then
-      echo "Error: shasum is not installed on your system. Please install shasum first before installing diggity"
-      exit 1
-    fi
+  if ! command -v shasum >/dev/null; then
+    echo "Error: shasum is not installed on your system. Please install shasum first before installing diggity"
+    exit 1
   fi
 }
 
@@ -148,6 +144,9 @@ extract() (
 )
 
 install_diggity() {
+  # check shasum
+  check_shasum
+
   # parse flag
   while getopts "v:d:" arg; do
     case "${arg}" in
@@ -162,7 +161,6 @@ install_diggity() {
   trap 'rm -rf -- "$downloadFolder"' EXIT
   mkdir -p ${downloadFolder} # make sure download folder exists
   os=$(get_os)
-  check_shasum
   arch=$(get_arch)
   # if version is empty
   if [ -z "$version" ]; then
