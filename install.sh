@@ -148,6 +148,7 @@ extract() (
 )
 
 install_diggity() {
+
   # check shasum installed
   check_shasum
 
