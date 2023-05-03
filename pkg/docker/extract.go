@@ -23,7 +23,7 @@ const (
 func ExtractImage(target *string, dockerTemp *string) (*[]model.Location, *string) {
 	contents := new([]model.Location)
 	tarFile := SaveImageToTar(target, dockerTemp)
-
+	defer tarFile.Close()
 	// Create a directory to extract the Docker image to.
 	extractDir := strings.Replace(tarFile.Name(), ".tar", "", -1)
 	err := os.Mkdir(extractDir, fs.ModePerm)
@@ -57,6 +57,7 @@ func SaveImageToTar(image *string, dockerTemp *string) *os.File {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer tarFile.Close()
 
 	// Copy the Docker image to the temporary file.
 	_, err = io.Copy(tarFile, reader)
@@ -125,6 +126,8 @@ func processFile(tarReader *tar.Reader, target string, fileMode fs.FileMode, rec
 		}
 		return err
 	}
+
+	defer f.Close()
 
 	if strings.Contains(f.Name(), "layer.tar") && recursive {
 		childDar := strings.Replace(f.Name(), "layer.tar", "", -1)

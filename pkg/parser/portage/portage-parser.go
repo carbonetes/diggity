@@ -106,6 +106,8 @@ func initPortageMetadata(p *model.Package, loc string, noFileListing *bool) erro
 		return err
 	}
 
+	defer file.Close()
+
 	// Get Size Metadata
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -178,6 +180,7 @@ func getPortageFiles(md *metadata.PortageMetadata, loc string) error {
 		}
 		return err
 	}
+	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {

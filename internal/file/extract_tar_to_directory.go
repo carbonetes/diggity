@@ -78,6 +78,7 @@ func processFile(tarReader *tar.Reader, target string, fileMode fs.FileMode, rec
 		}
 		return err
 	}
+	defer f.Close()
 
 	if strings.Contains(f.Name(), "layer.tar") && recursive {
 		childDar := strings.Replace(f.Name(), "layer.tar", "", -1)

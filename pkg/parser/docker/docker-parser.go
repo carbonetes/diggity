@@ -40,6 +40,12 @@ func ParseDockerProperties(req *bom.ParserRequirements) {
 		*req.Errors = append(*req.Errors, err)
 	}
 
+	err = tarDirectory.Close()
+	if err != nil {
+		err = errors.New("docker-parser: " + err.Error())
+		*req.Errors = append(*req.Errors, err)
+	}
+
 	for _, jsonFile := range files {
 		jsonFile, err := os.Open(jsonFile)
 		if err != nil {
@@ -57,6 +63,11 @@ func ParseDockerProperties(req *bom.ParserRequirements) {
 				err = errors.New("docker-parser: " + err.Error())
 				*req.Errors = append(*req.Errors, err)
 			}
+		}
+		err = jsonFile.Close()
+		if err != nil {
+			err = errors.New("docker-parser: " + err.Error())
+			*req.Errors = append(*req.Errors, err)
 		}
 	}
 

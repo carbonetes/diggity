@@ -42,6 +42,8 @@ func Search(req *bom.ParserRequirements) {
 				continue
 			}
 
+			defer file.Close()
+
 			// continue if the path is directory
 			fs, _ := os.Stat(content.Path)
 			if fs.Mode().IsDir() {

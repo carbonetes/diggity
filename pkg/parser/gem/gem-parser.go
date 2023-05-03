@@ -52,6 +52,8 @@ func readGemLockContent(location *model.Location, pkgs *[]model.Package) error {
 		return err
 	}
 
+	defer gemFile.Close()
+
 	scanner := bufio.NewScanner(gemFile)
 	for scanner.Scan() {
 		keyValue := scanner.Text()
@@ -99,6 +101,8 @@ func readGemContent(location *model.Location, pkgs *[]model.Package) error {
 	if err != nil {
 		return err
 	}
+
+	defer gemFile.Close()
 
 	scanner := bufio.NewScanner(gemFile)
 

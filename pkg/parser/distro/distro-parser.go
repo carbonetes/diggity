@@ -56,7 +56,7 @@ func parseLinuxDistribution(filenames []string) (*model.Distro, error) {
 
 	for _, filename := range filenames {
 		file, err := os.Open(filename)
-
+		defer file.Close()
 		if err != nil {
 			return release, err
 		}
