@@ -56,6 +56,7 @@ func parseHexRebarPacakges(location *model.Location, pkgs *[]model.Package) erro
 	if err != nil {
 		return err
 	}
+	defer file.Close()
 	// rebarMetadata := make(map[string]*model.Package)
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -96,6 +97,8 @@ func parseHexMixPackages(location *model.Location, pkgs *[]model.Package) error 
 	if err != nil {
 		return err
 	}
+
+	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 

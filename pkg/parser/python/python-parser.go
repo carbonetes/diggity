@@ -71,6 +71,8 @@ func readPythonContent(location *model.Location, pkgs *[]model.Package) error {
 		return err
 	}
 
+	defer file.Close()
+
 	scanner := bufio.NewScanner(file)
 
 	var value string

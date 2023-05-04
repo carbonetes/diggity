@@ -88,12 +88,7 @@ func FormatLockKeyVal(kv string) string {
 
 // CleanUp clears temp files
 func CleanUp(req *bom.ParserRequirements) {
-	err := os.RemoveAll(*req.Dir)
-	if err != nil {
-		log.Error(err)
-	}
-
-	err = os.RemoveAll(*req.DockerTemp)
+	err := os.RemoveAll(*req.DockerTemp)
 	if err != nil {
 		log.Error(err)
 	}

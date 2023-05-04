@@ -62,8 +62,11 @@ func FindHackagePackagesFromContent(req *bom.ParserRequirements) {
 
 // Read stack.yaml contents
 func readStackContent(location *model.Location, pkgs *[]model.Package) error {
-	stackBytes, _ := os.ReadFile(location.Path)
-	err := yaml.Unmarshal(stackBytes, &stackConfig)
+	stackBytes, err := os.ReadFile(location.Path)
+	if err != nil {
+		return err
+	}
+	err = yaml.Unmarshal(stackBytes, &stackConfig)
 
 	if err != nil {
 		// Skip invalid extra deps
@@ -84,8 +87,11 @@ func readStackContent(location *model.Location, pkgs *[]model.Package) error {
 
 // Read stack.yaml.lock contents
 func readStackLockContent(location *model.Location, pkgs *[]model.Package) error {
-	stackBytes, _ := os.ReadFile(location.Path)
-	err := yaml.Unmarshal(stackBytes, &stackLockConfig)
+	stackBytes, err := os.ReadFile(location.Path)
+	if err != nil {
+		return err
+	}
+	err = yaml.Unmarshal(stackBytes, &stackLockConfig)
 
 	if err != nil {
 		// Skip invalid extra deps

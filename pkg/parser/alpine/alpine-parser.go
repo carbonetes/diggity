@@ -104,6 +104,7 @@ func parseInstalledPackages(filename string, layer string, noFileListing *bool, 
 	if err != nil {
 		return err
 	}
+	defer reader.Close()
 	bContent, err := io.ReadAll(reader)
 	if err != nil {
 		return err

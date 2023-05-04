@@ -52,6 +52,8 @@ func readContent(location *model.Location, noFileListing *bool, pkgs *[]model.Pa
 		return err
 	}
 
+	defer file.Close()
+
 	scanner := bufio.NewScanner(file)
 
 	var value string

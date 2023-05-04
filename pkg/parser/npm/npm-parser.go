@@ -170,6 +170,9 @@ func readYarnLockContent(location *model.Location, pkgs *[]model.Package) error 
 	if err != nil {
 		return err
 	}
+
+	defer file.Close()
+
 	metadata := make(LockMetadata)
 	scanner := bufio.NewScanner(file)
 
