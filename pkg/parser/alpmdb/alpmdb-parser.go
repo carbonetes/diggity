@@ -1,14 +1,13 @@
 package alpmdb
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
+	"io"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 
+	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/util"
@@ -31,8 +30,9 @@ type Manifest map[string]interface{}
 func FindAlpmdbPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(alpmdb, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
-			if strings.Contains(content.Path, installedPackagesPath) {
-				if err := parseInstalledPackages(content.Path, content.LayerHash, req.Arguments.DisableFileListing, req.SBOM.Packages); err != nil {
+			if strings.Contains(content.Path, installedPackagesPath) && strings.Contains(content.Path, "/desc") {
+
+				if err := readDesc(content.Path, req.SBOM.Packages, content.LayerHash); err != nil {
 					err = errors.New("alpmdb-parser: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
@@ -42,80 +42,112 @@ func FindAlpmdbPackagesFromContent(req *bom.ParserRequirements) {
 	defer req.WG.Done()
 }
 
-// Init alpmdb package
-func initAlpmdbPackage(pkg *model.Package) {
-	pkg.Metadata = map[string]string{}
-	pkg.ID = uuid.NewString()
-	pkg.Type = alpmdb
-	pkg.Path = installedPackagesPath
-}
+func readDesc(path string, pkgs *[]model.Package, layer string) error {
 
-// Parse installed packages metadata
-func parseInstalledPackages(filename string, layer string, noFileListing *bool, pkgs *[]model.Package) error {
-	// Check if the file is valid
-	if !isValidFile(filename) {
-		return fmt.Errorf("%s is not a valid file", filename)
+	file, err := os.Open(path)
+	if err != nil {
+		return err
 	}
+	defer file.Close()
 
-	// Extract the package version from the filename
-	version, err := getVersionFromPath(filename)
+	data, err := io.ReadAll(file)
 	if err != nil {
 		return err
 	}
 
-	// Open the file
-	f, err := os.Open(filename)
-	if err != nil {
-		return err
+	contents := string(data)
+	metadata := make(map[string]string)
+	lines := strings.Split(contents, "\n")
+	for index, line := range lines {
+		line = strings.TrimSpace(line)
+
+		if line == "%PROVIDES%" {
+			for i := index + 1; i < len(lines); i++ {
+				l := strings.TrimSpace(lines[i])
+				if !(l == "") || !(strings.HasPrefix(l, "%")) {
+					metadata["PROVIDES"] += l + " "
+				}
+			}
+		} else if !strings.HasPrefix(line, "%") {
+			if len(line) > 0 {
+				key, value := parseMetadataLine(line)
+				if key != "" {
+					metadata[key] = value
+				}
+			}
+		} else {
+			if strings.Contains(line, "%") {
+				key := strings.ToLower(strings.ReplaceAll(line, "%", ""))
+				value := strings.TrimSpace(lines[index+1])
+				metadata[key] = value
+			}
+		}
 	}
-	defer f.Close()
 
-	// Parse the package metadata
-	var pkg model.Package
-	var manifest Manifest
-	if err := json.NewDecoder(f).Decode(&manifest); err != nil {
-		return err
-	}
+	pkg := newPackage(metadata, layer)
 
-	pkg.ID = uuid.New().String()
-	pkg.Name = manifest["pkgname"].(string)
-	pkg.Version = version
-	pkg.Path = filename
-	pkg.Type = libalpm
+	generateCPE(pkg)
 
-	// Check if package is not empty before append
-	if pkg.Name != "" && pkg.Version != "" {
-		*pkgs = append(*pkgs, pkg)
-	}
-
-	initAlpmdbPackage(&pkg)
-
-	// Add the package to the list
 	*pkgs = append(*pkgs, pkg)
 
 	return nil
 }
 
-func getVersionFromPath(path string) (string, error) {
-	// Extract the package version from the path using a regular expression.
-	// For example, if the path is "/var/lib/pacman/local/foo-1.2.3/files",
-	// this regular expression might match "1.2.3".
-	re := regexp.MustCompile(`.*\/([^-\/]*)-([\d.]*(-r\d+)?)\/.*`)
-	matches := re.FindStringSubmatch(path)
-
-	if len(matches) < 3 {
-		return "", errors.New("could not parse package version from path: " + path)
+func parseMetadataLine(line string) (string, string) {
+	fields := strings.SplitN(line, ":", 2)
+	if len(fields) == 2 {
+		return strings.TrimSpace(fields[0]), strings.TrimSpace(fields[1])
 	}
-
-	version := matches[2]
-	return version, nil
+	return "", ""
 }
 
-func isValidFile(path string) bool {
-	info, err := os.Stat(path)
-	if err != nil {
-		return false
-	}
+func newPackage(metadata map[string]string, layer string) model.Package {
 
-	return !info.IsDir()
+	return model.Package{
+		ID:          uuid.NewString(),
+		Name:        metadata["name"],
+		Type:        alpmdb,
+		Version:     metadata["version"],
+		Path:        installedPackagesPath,
+		Locations:   generateLocations(layer),
+		Description: metadata["desc"],
+		Licenses:    generateLicenses(metadata["license"]),
+		PURL:        generatePURL(metadata),
+		Metadata:    metadata,
+	}
+}
+
+func generateLocations(layer string) []model.Location {
+	return []model.Location{
+		{
+			LayerHash: layer,
+			Path:      installedPackagesPath,
+		},
+	}
+}
+
+func generateLicenses(value string) []string {
+	var licenses []string
+	for _, license := range strings.Split(value, " ") {
+		if !strings.Contains(strings.ToLower(license), "and") {
+			licenses = append(licenses, license)
+		}
+	}
+	return licenses
+}
+
+func generatePURL(metadata map[string]string) model.PURL {
+	arch, ok := metadata["arch"]
+	if !ok {
+		arch = ""
+	}
+	origin, ok := metadata["origin"]
+	if !ok {
+		origin = ""
+	}
+	return model.PURL("pkg" + `:` + alpmdb + `/` + "archlinux" + `/` + metadata["name"] + `@` + metadata["version"] + `?arch=` + arch + `&` + `upstream=` + origin + `&distro=` + "archlinux")
+}
+
+func generateCPE(pkg model.Package) {
+	cpe.NewCPE23(&pkg, "", pkg.Name, pkg.Version)
 }
