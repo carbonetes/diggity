@@ -28,6 +28,7 @@ var ParserNames = []string{
 	"pod",
 	"hex",
 	"portage",
+	"alpmdb",
 }
 
 var log = logger.GetLogger()
