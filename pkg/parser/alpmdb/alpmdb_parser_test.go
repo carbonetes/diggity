@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	path  = "desc"
+	path  = filepath.Join(installedPackagesPath + "db5.3-" + "5.3.28-2")
 	pkgs  = make([]model.Package, 0)
 	layer = "9b7240956cfbfefddcd91a2195bfb2ed2cd17bdff81f21111849d643dfaf8131"
 )
