@@ -149,5 +149,5 @@ func generatePURL(metadata map[string]string) model.PURL {
 }
 
 func generateCPE(pkg *model.Package) {
-	cpe.NewCPE23(pkg, "", pkg.Name, pkg.Version)
+	cpe.NewCPE23(pkg, "archlinux", pkg.Name, pkg.Version)
 }
