@@ -30,7 +30,7 @@ type Manifest map[string]interface{}
 func FindAlpmdbPackagesFromContent(req *bom.ParserRequirements) {
 	if util.ParserEnabled(alpmdb, req.Arguments.EnabledParsers) {
 		for _, content := range *req.Contents {
-			if strings.Contains(content.Path, installedPackagesPath) && strings.Contains(content.Path, "/desc") {
+			if strings.Contains(content.Path, installedPackagesPath) && strings.Contains(content.Path, "\\desc") {
 
 				if err := readDesc(content.Path, req.SBOM.Packages, content.LayerHash); err != nil {
 					err = errors.New("alpmdb-parser: " + err.Error())
