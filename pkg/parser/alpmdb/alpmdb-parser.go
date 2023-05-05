@@ -65,7 +65,7 @@ func readDesc(path string, pkgs *[]model.Package, layer string) error {
 			for i := index + 1; i < len(lines); i++ {
 				l := strings.TrimSpace(lines[i])
 				if !(l == "") || !(strings.HasPrefix(l, "%")) {
-					metadata["PROVIDES"] += l + " "
+					metadata["provides"] += l + " "
 				}
 			}
 		} else if !strings.HasPrefix(line, "%") {
