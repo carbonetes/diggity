@@ -86,7 +86,7 @@ func readDesc(path string, pkgs *[]model.Package, layer string) error {
 
 	pkg := newPackage(metadata, layer)
 
-	generateCPE(pkg)
+	generateCPE(&pkg)
 
 	*pkgs = append(*pkgs, pkg)
 
@@ -148,6 +148,6 @@ func generatePURL(metadata map[string]string) model.PURL {
 	return model.PURL("pkg" + `:` + alpmdb + `/` + "archlinux" + `/` + metadata["name"] + `@` + metadata["version"] + `?arch=` + arch + `&` + `upstream=` + origin + `&distro=` + "archlinux")
 }
 
-func generateCPE(pkg model.Package) {
-	cpe.NewCPE23(&pkg, "", pkg.Name, pkg.Version)
+func generateCPE(pkg *model.Package) {
+	cpe.NewCPE23(pkg, "", pkg.Name, pkg.Version)
 }
