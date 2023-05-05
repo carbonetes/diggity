@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	path  = filepath.Join(installedPackagesPath)
+	path  = "../../../docs/references/alpmdb/desc"
 	pkgs  = make([]model.Package, 0)
 	layer = "9b7240956cfbfefddcd91a2195bfb2ed2cd17bdff81f21111849d643dfaf8131"
 )
