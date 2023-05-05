@@ -8,6 +8,7 @@ import (
 	"github.com/carbonetes/diggity/internal/ui"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/alpine"
+	"github.com/carbonetes/diggity/pkg/parser/alpmdb"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/cargo"
 	"github.com/carbonetes/diggity/pkg/parser/composer"
@@ -58,6 +59,7 @@ var (
 		distro.ParseDistro,
 		docker.ParseDockerProperties,
 		secret.Search,
+		alpmdb.FindAlpmdbPackagesFromContent,
 	}
 )
 
