@@ -24,7 +24,7 @@ const (
 type DependencyMetadata map[string]interface{}
 
 // PrintGithubJSON Print Packages in Github JSON format
-func PrintGithubJSON(args *model.Arguments, results *model.SBOM) {
+func PrintGithubJSON(args *model.Arguments, outputType *string,results *model.SBOM) {
 	githubJSON, err := getGithubJSON(args, results)
 
 	if err != nil {
@@ -32,7 +32,7 @@ func PrintGithubJSON(args *model.Arguments, results *model.SBOM) {
 	}
 
 	if len(*args.OutputFile) > 0 {
-		save.ResultToFile(string(githubJSON), args.OutputFile)
+		save.ResultToFile(string(githubJSON), outputType, args.OutputFile)
 	} else {
 		fmt.Printf("%+v\n", string(githubJSON))
 	}

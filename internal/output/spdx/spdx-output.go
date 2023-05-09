@@ -14,7 +14,7 @@ import (
 var log = logger.GetLogger()
 
 // PrintSpdxJSON Print Packages in SPDX-JSON format
-func PrintSpdxJSON(args *model.Arguments, pkgs *[]model.Package) {
+func PrintSpdxJSON(args *model.Arguments, outputType *string, pkgs *[]model.Package) {
 	spdx := convert.ToSPDX(args, pkgs)
 	result, err := json.MarshalIndent(spdx, "", " ")
 	if err != nil {
@@ -26,25 +26,25 @@ func PrintSpdxJSON(args *model.Arguments, pkgs *[]model.Package) {
 	}
 
 	if len(*args.OutputFile) > 0 {
-		save.ResultToFile(string(result), args.OutputFile)
+		save.ResultToFile(string(result), outputType ,args.OutputFile)
 	} else {
 		fmt.Printf("%+v\n", string(result))
 	}
 }
 
 // PrintSpdxTagValue Print Packages in SPDX-TAG_VALUE format
-func PrintSpdxTagValue(args *model.Arguments, pkgs *[]model.Package) {
+func PrintSpdxTagValue(args *model.Arguments, outputType *string, pkgs *[]model.Package) {
 	spdx := convert.ToSPDXTagValue(args, pkgs)
 
 	if len(*args.OutputFile) > 0 {
-		save.ResultToFile(stringSliceToString(*spdx), args.OutputFile)
+		save.ResultToFile(stringSliceToString(*spdx), outputType, args.OutputFile)
 	} else {
 		fmt.Printf("%+v", stringSliceToString(*spdx))
 	}
 }
 
 // PrintSpdxYaml Print Packages in SPDX Yaml format
-func PrintSpdxYaml(args *model.Arguments, pkgs *[]model.Package) {
+func PrintSpdxYaml(args *model.Arguments, outputType *string, pkgs *[]model.Package) {
 	spdx := convert.ToSPDX(args, pkgs)
 	result, err := yaml.Marshal(spdx)
 	if err != nil {
@@ -52,7 +52,7 @@ func PrintSpdxYaml(args *model.Arguments, pkgs *[]model.Package) {
 	}
 
 	if len(*args.OutputFile) > 0 {
-		save.ResultToFile(string(result), args.OutputFile)
+		save.ResultToFile(string(result), outputType, args.OutputFile)
 	} else {
 		fmt.Printf("%+v\n", string(result))
 	}

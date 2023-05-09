@@ -43,29 +43,29 @@ func selectOutputType(args *model.Arguments, results *model.SBOM) {
 	for _, output := range strings.Split(strings.ToLower(args.Output.ToOutput()), ",") {
 		switch output {
 		case model.Table:
-			tabular.PrintTable(args, results.Packages)
+			tabular.PrintTable(args, &output, results.Packages)
 		case model.JSON.ToOutput():
 			result, err := json.MarshalIndent(results, "", " ")
 			if err != nil {
 				log.Fatal(err)
 			}
 			if len(*args.OutputFile) > 0 {
-				save.ResultToFile(string(result), args.OutputFile)
+				save.ResultToFile(string(result), &output, args.OutputFile)
 			} else {
 				fmt.Printf("%+v\n", string(result))
 			}
 		case model.CycloneDXXML:
-			cyclonedx.PrintCycloneDXXML(results.Packages, args.OutputFile)
+			cyclonedx.PrintCycloneDXXML(results.Packages, &output, args.OutputFile)
 		case model.CycloneDXJSON:
-			cyclonedx.PrintCycloneDXJSON(results.Packages, args.OutputFile)
+			cyclonedx.PrintCycloneDXJSON(results.Packages, &output, args.OutputFile)
 		case model.SPDXJSON:
-			spdx.PrintSpdxJSON(args, results.Packages)
+			spdx.PrintSpdxJSON(args, &output,results.Packages)
 		case model.SPDXTagValue:
-			spdx.PrintSpdxTagValue(args, results.Packages)
+			spdx.PrintSpdxTagValue(args ,&output, results.Packages)
 		case model.SPDXYML:
-			spdx.PrintSpdxYaml(args, results.Packages)
+			spdx.PrintSpdxYaml(args, &output, results.Packages)
 		case model.GithubJSON:
-			github.PrintGithubJSON(args, results)
+			github.PrintGithubJSON(args, &output, results)
 		}
 	}
 }

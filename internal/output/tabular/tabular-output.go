@@ -10,7 +10,7 @@ import (
 )
 
 // PrintTable Packages in Table format
-func PrintTable(args *model.Arguments, pkgs *[]model.Package) {
+func PrintTable(args *model.Arguments, output *string, pkgs *[]model.Package) {
 	table := simpletable.New()
 
 	table.Header = &simpletable.Header{
@@ -47,7 +47,7 @@ func PrintTable(args *model.Arguments, pkgs *[]model.Package) {
 	table.SetStyle(simpletable.StyleDefault)
 
 	if len(*args.OutputFile) > 0 {
-		save.ResultToFile(table.String(), args.OutputFile)
+		save.ResultToFile(table.String(), output, args.OutputFile)
 	} else {
 		table.Println()
 	}
