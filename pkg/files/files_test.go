@@ -2,7 +2,6 @@ package files
 
 import (
 	"os"
-	"strings"
 	"testing"
 )
 
@@ -14,22 +13,32 @@ func TestExists(t *testing.T) {
 }
 
 func TestGetFilesFromDir(t *testing.T) {
-	currentDirectory := os.TempDir()
-	newDirectory := strings.Replace(currentDirectory, "Temp", ".", -1)
+	filePath := "../../testFile.txt"
 
-	if _, err := os.Stat(newDirectory); os.IsNotExist(err) {
-		err := os.MkdirAll(newDirectory, 0666)
+	file, err := os.Create(filePath)
+	if err != nil{
+		t.Fatal(err.Error())
+	}
+	file.Close()
+
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		err := os.MkdirAll(filePath, 0666)
 		if err != nil{
 			 t.Fatal(err.Error())
 		}
 	}else{
-		err := os.Chmod(newDirectory,0666)
+		err := os.Chmod(filePath,0666)
 		if err != nil{
 			 t.Fatal(err.Error())
 		}
 	}
-	_ , err := GetFilesFromDir(newDirectory)
-	
+
+	_ , err = GetFilesFromDir(filePath)
+	if err != nil{
+		t.Fatal(err.Error())
+	}
+
+	err = os.Remove(filePath)
 	if err != nil{
 		t.Fatal(err.Error())
 	}
