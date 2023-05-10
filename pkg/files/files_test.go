@@ -8,7 +8,7 @@ import (
 
 func TestExists(t *testing.T) {
 	var dir = "jenkins:2.60.3"
-	if result := Exists(dir); result == true {
+	if result := Exists(dir); result {
 		t.Error("Test Failed: File exists.")
 	}
 }
