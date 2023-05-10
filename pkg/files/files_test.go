@@ -2,45 +2,55 @@ package files
 
 import (
 	"os"
-	"testing"
 	"path/filepath"
+	"testing"
 )
 
 func TestExists(t *testing.T) {
 	var dir = "jenkins:2.60.3"
-	if err := Exists(dir); err == true {
+	if result := Exists(dir); result == true {
 		t.Error("Test Failed: File exists.")
 	}
 }
 
 func TestGetFilesFromDir(t *testing.T) {
-	filePath := filepath.Join("../","../", "testFile.txt")
+	filePath := filepath.Join(os.TempDir(), "test_files")
 
 	file, err := os.Create(filePath)
-	if err != nil{
+	if err != nil {
 		t.Fatal(err.Error())
 	}
 	file.Close()
 
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		err := os.MkdirAll(filePath, 0666)
-		if err != nil{
-			 t.Fatal(err.Error())
-		}
-	}else{
-		err := os.Chmod(filePath,0666)
-		if err != nil{
-			 t.Fatal(err.Error())
+	_, err = os.Stat(filePath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			t.Error("Test Failed: File does not exist!")
+			t.Fail()
+		} else {
+			t.Error(err.Error())
+			t.Fail()
 		}
 	}
 
-	_ , err = GetFilesFromDir(filePath)
-	if err != nil{
-		t.Fatal(err.Error())
+	result, err := GetFilesFromDir(filePath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			t.Error("Test Failed: File does not exist!")
+			t.Fail()
+		} else {
+			t.Error(err.Error())
+			t.Fail()
+		}
+	}
+
+	if result == nil || len(*result) == 0 {
+		t.Error("Result is nil")
+		t.Fail()
 	}
 
 	err = os.Remove(filePath)
-	if err != nil{
-		t.Fatal(err.Error())
+	if err != nil {
+		t.Error(err.Error())
 	}
 }
