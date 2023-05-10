@@ -23,6 +23,7 @@ BOM Diggity’s primary purpose is to ensure the security and integrity of softw
 ### Supported Ecosystems
 
 - Alpine (apk)
+- Arch Linux (alpmdb)
 - Conan (conan.lock, conanfile.txt)
 - Dart (pubs)
 - Debian (dpkg)
@@ -171,7 +172,7 @@ secret-config:
   max-file-size: 10485760
   # explicitly define file extensions to consider for secret search. 
   extensions: []  # default extensions are added upon config file generation.
-# specify enabled parsers ([apk debian java npm composer python gem rpm dart nuget go rust conan hackage pod hex portage]) (default all)
+# specify enabled parsers ([apk debian java npm composer python gem rpm dart nuget go rust conan hackage pod hex portage alpmdb]) (default all)
 enabled-parsers: []
 # disables file listing from package metadata
 disable-file-listing: false

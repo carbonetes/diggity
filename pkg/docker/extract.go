@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	gzFile           = ".gz"                  // Invalid zip file
-	invalidCharRegex = `[,@<>:'"|?*#%&{}$=!]` // Invalid filename characters
+	gzFile           = ".gz"                 // Invalid zip file
+	invalidCharRegex = `[,@<>'"|?*#%&{}$=!]` // Invalid filename characters
 )
 
 // ExtractImage extracts a Docker image to a temporary directory and returns the path to the directory.
@@ -103,6 +103,11 @@ func UnTar(dst string, source string, recursive bool, contents *[]model.Location
 		switch header.Typeflag {
 		case tar.TypeDir:
 			if _, err := os.Stat(target); err != nil {
+				base := filepath.Base(target)
+				if strings.Contains(base, ":") {
+					newBase := strings.ReplaceAll(base, ":", "-")
+					target = strings.ReplaceAll(target, base, newBase)
+				}
 				if err := os.MkdirAll(target, fs.ModePerm); err != nil {
 					return err
 				}
@@ -118,13 +123,9 @@ func UnTar(dst string, source string, recursive bool, contents *[]model.Location
 
 func processFile(tarReader *tar.Reader, target string, fileMode fs.FileMode, recursive bool, contents *[]model.Location) error {
 	f, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, fileMode)
-
 	if err != nil {
-		// Skip incorrect names
-		if strings.Contains(err.Error(), "The filename, directory name, or volume label syntax is incorrect.") {
-			return err
-		}
-		return err
+		//skipping when file cannot be opened
+		return nil // replace and use log to debug
 	}
 
 	defer f.Close()
