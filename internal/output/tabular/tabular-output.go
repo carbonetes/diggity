@@ -5,12 +5,11 @@ import (
 
 	"github.com/carbonetes/diggity/internal/output/save"
 	"github.com/carbonetes/diggity/pkg/model"
-
 	"github.com/alexeyco/simpletable"
 )
 
 // PrintTable Packages in Table format
-func PrintTable(args *model.Arguments, pkgs *[]model.Package) {
+func PrintTable(args *model.Arguments, outputType *string, pkgs *[]model.Package) {
 	table := simpletable.New()
 
 	table.Header = &simpletable.Header{
@@ -47,7 +46,7 @@ func PrintTable(args *model.Arguments, pkgs *[]model.Package) {
 	table.SetStyle(simpletable.StyleDefault)
 
 	if len(*args.OutputFile) > 0 {
-		save.ResultToFile(table.String(), args.OutputFile)
+		save.ResultToFile(table.String(), outputType, args.OutputFile)
 	} else {
 		table.Println()
 	}
