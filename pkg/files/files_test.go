@@ -3,6 +3,7 @@ package files
 import (
 	"os"
 	"testing"
+	"path/filepath"
 )
 
 func TestExists(t *testing.T) {
@@ -13,7 +14,7 @@ func TestExists(t *testing.T) {
 }
 
 func TestGetFilesFromDir(t *testing.T) {
-	filePath := "../../testFile.txt"
+	filePath := filepath.Join("../","../", "testFile.txt")
 
 	file, err := os.Create(filePath)
 	if err != nil{
