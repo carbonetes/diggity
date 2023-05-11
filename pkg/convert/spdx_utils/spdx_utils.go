@@ -181,7 +181,7 @@ func DownloadLocation(p *model.Package) string {
 	var url string
 
 	switch m := p.Metadata.(type) {
-	case alpine.Manifest:
+	case alpine.Metadata:
 		if val, ok := m["PackageURL"]; ok {
 			url = val.(string)
 		}
@@ -233,7 +233,7 @@ func Originator(p *model.Package) (string, string) {
 		}
 
 	// Cases with metadata declared within the parser
-	case alpine.Manifest:
+	case alpine.Metadata:
 		if val, ok := m["Maintainer"]; ok {
 			originator = val.(string)
 		}

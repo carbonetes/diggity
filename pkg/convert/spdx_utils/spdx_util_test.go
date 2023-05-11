@@ -118,7 +118,7 @@ var (
 			"cpe:2.3:a:scanelf:scanelf:1.3.4-r0:*:*:*:*:*:*:*",
 		},
 		PURL: model.PURL("pkg:alpine/scanelf@1.3.4-r0?arch=x86_64\u0026upstream=pax-utils\u0026distro="),
-		Metadata: alpine.Manifest{
+		Metadata: alpine.Metadata{
 			"Architecture":         "x86_64",
 			"BuildTimestamp":       "1651005390",
 			"GitCommitHashApk":     "d7ae612a3cc5f827289d915783b4cbf8c7207947",
