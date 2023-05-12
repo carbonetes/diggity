@@ -2,10 +2,13 @@ package util
 
 import (
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/pkg/model"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // ParserNames slice of supported parser names
@@ -21,7 +24,7 @@ var ParserNames = []string{
 	"dart",
 	"nuget",
 	"go",
-	"rust",
+	"rust-crate",
 	"conan",
 	"hackage",
 	"pod",
@@ -29,6 +32,8 @@ var ParserNames = []string{
 	"portage",
 	"alpm",
 }
+
+var caser = cases.Title(language.English)
 
 var log = logger.GetLogger()
 
@@ -92,4 +97,18 @@ func CleanUp(path string) {
 	if err != nil {
 		log.Error(err)
 	}
+}
+
+func SplitContentsByEmptyLine(contents string) []string {
+	attributes := regexp.
+		MustCompile("\r\n").
+		ReplaceAllString(contents, "\n")
+
+	return regexp.
+		MustCompile(`\n\s*\n`).
+		Split(attributes, -1)
+}
+
+func ToTitle(str string) string {
+	return caser.String(str)
 }
