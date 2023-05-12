@@ -17,13 +17,13 @@ func parseInstalledPackages(location *model.Location, req *bom.ParserRequirement
 
 	reader, err := os.Open(location.Path)
 	if err != nil {
-		err = errors.New("apk-parser: " + err.Error())
+		err = errors.New(parserErr + err.Error())
 		*req.Errors = append(*req.Errors, err)
 	}
 	defer reader.Close()
 	data, err := io.ReadAll(reader)
 	if err != nil {
-		err = errors.New("apk-parser: " + err.Error())
+		err = errors.New(parserErr + err.Error())
 		*req.Errors = append(*req.Errors, err)
 	}
 	contents := string(data)

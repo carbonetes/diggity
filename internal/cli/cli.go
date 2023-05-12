@@ -13,11 +13,9 @@ var log = logger.GetLogger()
 func Start(arguments *model.Arguments) {
 	sbom, errs := scanner.Scan(arguments)
 	ui.DoneSpinner()
-	if errs != nil {
-		if len(*errs) > 0 {
-			for _, err := range *errs {
-				log.Warningln(err.Error())
-			}
+	if len(*errs) > 0 {
+		for _, err := range *errs {
+			log.Warningln(err.Error())
 		}
 	}
 	output.PrintResults(sbom, arguments)

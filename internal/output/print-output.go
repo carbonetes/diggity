@@ -67,20 +67,21 @@ func Depulicate(pkgs *[]model.Package) {
 	for _, pkg := range *pkgs {
 		if _, exists := result[pkg.Name+":"+pkg.Version+":"+pkg.Type]; !exists {
 			result[pkg.Name+":"+pkg.Version+":"+pkg.Type] = pkg
-		} else {
-			idx := 0
-			if len(pkg.Locations) > 0 {
-				idx = len(pkg.Locations) - 1
-				for _, l := range pkg.Locations {
-					if l != pkg.Locations[idx] {
-						pkg.Locations = append(pkg.Locations, model.Location{
-							Path:      pkg.Path,
-							LayerHash: "sha256:" + pkg.Locations[idx].LayerHash,
-						})
-						result[pkg.Name+":"+pkg.Version+":"+pkg.Type] = pkg
-					}
-				}
+			continue
+		}
+		if len(pkg.Locations) == 0 {
+			continue
+		}
+		idx := len(pkg.Locations) - 1
+		for _, l := range pkg.Locations {
+			if l == pkg.Locations[idx] {
+				continue
 			}
+			pkg.Locations = append(pkg.Locations, model.Location{
+				Path:      pkg.Path,
+				LayerHash: "sha256:" + pkg.Locations[idx].LayerHash,
+			})
+			result[pkg.Name+":"+pkg.Version+":"+pkg.Type] = pkg
 		}
 	}
 	*pkgs = maps.Values(result)
