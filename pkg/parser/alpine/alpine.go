@@ -1,28 +1,29 @@
 package alpine
 
 import (
-	"errors"
+	"path/filepath"
 	"strings"
 
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/util"
 )
 
+const Type string = "apk"
+
+// Used filepath for path variables
+var InstalledPackagesPath = filepath.Join("lib", "apk", "db", "installed")
+
 // FindAlpinePackagesFromContent check for alpine-os files in the file contents
 func FindAlpinePackagesFromContent(req *bom.ParserRequirements) {
 	if !util.ParserEnabled(Type, req.Arguments.EnabledParsers) {
+		req.WG.Done()
 		return
 	}
+
 	for _, content := range *req.Contents {
-		if !strings.Contains(content.Path, InstalledPackagesPath) {
-			continue
+		if strings.Contains(content.Path, InstalledPackagesPath) {
+			parseInstalledPackages(&content, req)
 		}
-		if err := parseInstalledPackages(&content, req); err != nil {
-			err = errors.New("apk-parser: " + err.Error())
-			*req.Errors = append(*req.Errors, err)
-		}
-
 	}
-
 	defer req.WG.Done()
 }

@@ -7,6 +7,8 @@ import (
 	"github.com/google/uuid"
 )
 
+const alpine string = "alpine"
+
 // Parse PURL
 func setPURL(pkg *model.Package) {
 	arch, ok := pkg.Metadata.(Metadata)["Architecture"]
