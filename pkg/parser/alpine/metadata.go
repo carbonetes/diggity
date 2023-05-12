@@ -21,72 +21,40 @@ func parseMetadata(attributes []string, listFiles bool) Metadata {
 		} else {
 			value = strings.TrimSpace(value + attribute)
 		}
-
+		//Attribute values are based on https://gitlab.alpinelinux.org/alpine/apk-tools/-/blob/master/src/package.c
 		switch key {
 		case "A":
-			{
-				metadata["Architecture"] = value
-			}
+			metadata["Architecture"] = value
 		case "C":
-			{
-				metadata["PullChecksum"] = value
-			}
+			metadata["PullChecksum"] = value
 		case "D", "r":
-			{
-				metadata["PullDependencies"] = value
-			}
+			metadata["PullDependencies"] = value
 		case "I":
-			{
-				metadata["PackageInstalledSize"] = value
-			}
+			metadata["PackageInstalledSize"] = value
 		case "L":
-			{
-				metadata["License"] = value
-			}
+			metadata["License"] = value
 		case "M":
-			{
-				metadata["Permissions"] = value
-			}
+			metadata["Permissions"] = value
 		case "P":
-			{
-				metadata["Name"] = value
-			}
+			metadata["Name"] = value
 		case "S":
-			{
-				metadata["Size"] = value
-			}
+			metadata["Size"] = value
 		case "T":
-			{
-				metadata["Description"] = value
-			}
+			metadata["Description"] = value
 		case "U":
-			{
-				metadata["URL"] = value
-			}
+			metadata["URL"] = value
 		case "V":
-			{
-				metadata["Version"] = value
-			}
+			metadata["Version"] = value
 		case "c":
-			{
-				metadata["GitCommitHashApk"] = value
-			}
+			metadata["GitCommitHashApk"] = value
 		case "m":
-			{
-				metadata["Maintainer"] = value
-			}
+			metadata["Maintainer"] = value
 		case "o":
-			{
-				metadata["Origin"] = value
-			}
+			metadata["Origin"] = value
 		case "p":
-			{
-				metadata["Provides"] = value
-			}
+			metadata["Provides"] = value
 		case "t":
-			{
-				metadata["BuildTimestamp"] = value
-			}
+			metadata["BuildTimestamp"] = value
 		}
 		if listFiles {
 			files := getAlpineFiles(attribute)

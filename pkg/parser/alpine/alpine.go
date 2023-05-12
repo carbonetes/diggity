@@ -8,7 +8,10 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/util"
 )
 
-const Type string = "apk"
+const (
+	Type      string = "apk"
+	parserErr string = "alpine-parser: "
+)
 
 // Used filepath for path variables
 var InstalledPackagesPath = filepath.Join("lib", "apk", "db", "installed")
