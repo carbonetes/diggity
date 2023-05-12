@@ -8,7 +8,10 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/util"
 )
 
-const Type string = "alpm"
+const (
+	Type   string = "alpm"
+	parserErr string = "alpm-parser: "
+)
 
 var InstalledPackagesPath = filepath.Join("var", "lib", "pacman", "local")
 

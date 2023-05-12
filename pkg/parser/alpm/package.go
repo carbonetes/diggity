@@ -13,9 +13,18 @@ func newPackage(metadata Metadata) *model.Package {
 	return &model.Package{
 		ID:          uuid.NewString(),
 		Name:        metadata["Name"].(string),
+		PURL:        setPURL(metadata),
 		Type:        Type,
 		Version:     metadata["Version"].(string),
-		Description: metadata["Description"].(string),
+		Description: metadata["Desc"].(string),
 		Metadata:    metadata,
 	}
+}
+
+func setPURL(metadata Metadata) model.PURL {
+	arch, ok := metadata["Arch"].(string)
+	if !ok {
+		arch = ""
+	}
+	return model.PURL("pkg:" + Type + "/archlinux/" + metadata["Name"].(string) + `@` + metadata["Version"].(string) + `?arch=` + arch + `&distro=` + "archlinux")
 }

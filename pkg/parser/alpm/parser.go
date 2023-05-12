@@ -4,7 +4,7 @@ import (
 	"errors"
 	"io"
 	"os"
-	"regexp"
+	"strings"
 
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -15,7 +15,7 @@ func parseInstalledPackage(location *model.Location, req *bom.ParserRequirements
 
 	file, err := os.Open(location.Path)
 	if err != nil {
-		err = errors.New("alpmdb-parser: " + err.Error())
+		err = errors.New(parserErr + err.Error())
 		*req.Errors = append(*req.Errors, err)
 		return
 	}
@@ -23,20 +23,28 @@ func parseInstalledPackage(location *model.Location, req *bom.ParserRequirements
 
 	data, err := io.ReadAll(file)
 	if err != nil {
-		err = errors.New("alpmdb-parser: " + err.Error())
+		err = errors.New(parserErr + err.Error())
 		*req.Errors = append(*req.Errors, err)
 		return
 	}
 
 	contents := string(data)
-	attributes := splitAttributes(contents)
+	attributes := util.SplitContentsByEmptyLine(contents)
 	metadata := parseMetadata(attributes)
 
 	if !*req.Arguments.DisableFileListing {
-		files := getAlpmFiles(location.Path)
-		if files != nil {
+		files, backups, err := getAlpmFiles(location.Path)
+		if err != nil {
+			err = errors.New(parserErr + err.Error())
+			*req.Errors = append(*req.Errors, err)
+		}
+		if len(*backups) > 0 {
 			metadata["Files"] = make([]string, len(*files))
 			metadata["Files"] = files
+		}
+		if len(*backups) > 0 {
+			metadata["Backups"] = make([]string, len(*files))
+			metadata["Backups"] = backups
 		}
 	}
 
@@ -45,27 +53,18 @@ func parseInstalledPackage(location *model.Location, req *bom.ParserRequirements
 		return
 	}
 
+	pkg.Path = strings.Replace(util.TrimUntilLayer(*location), "\\desc", "", -1)
+
 	newLocation := model.Location{
 		LayerHash: location.LayerHash,
 		Path:      util.TrimUntilLayer(*location),
 	}
 	pkg.Locations = append(pkg.Locations, newLocation)
 
-	if metadata["License"] != nil {
-		pkg.Licenses = append(pkg.Licenses, metadata["License"].([]string)...)
+	if metadata["Licenses"] != nil {
+		pkg.Licenses = append(pkg.Licenses, metadata["Licenses"].([]string)...)
 	}
 
 	generateAlpmCpes(pkg)
 	*req.SBOM.Packages = append(*req.SBOM.Packages, *pkg)
-}
-
-func splitAttributes(contents string) []string {
-	attributes := regexp.
-		MustCompile("\r\n").
-		ReplaceAllString(contents, "\n")
-
-	return regexp.
-		MustCompile(`\n\s*\n`).
-		Split(attributes, -1)
-
 }

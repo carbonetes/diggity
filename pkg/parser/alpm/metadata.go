@@ -1,64 +1,26 @@
 package alpm
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/carbonetes/diggity/pkg/parser/util"
+)
 
 func parseMetadata(attributes []string) Metadata {
 	var metadata = make(Metadata)
+	// Attributes based on https://gitlab.archlinux.org/pacman/pacman/-/blob/master/lib/libalpm/be_local.c
 	for _, attribute := range attributes {
 		if attribute == "" {
 			continue
 		}
 		attribute = strings.TrimSpace(attribute)
 		properties := strings.Split(attribute, "\n")
-		key := properties[0]
+		key := util.ToTitle(strings.ReplaceAll(properties[0], "%", ""))
 		values := properties[1:]
-
-		// Attributes based on https://gitlab.archlinux.org/pacman/pacman/-/blob/master/lib/libalpm/be_local.c
-		switch key {
-		case "%NAME%":
-			metadata["Name"] = values[0]
-		case "%VERSION%":
-			metadata["Version"] = values[0]
-		case "%BASE%":
-			metadata["Base"] = values[0]
-		case "%DESC%":
-			metadata["Description"] = values[0]
-		case "%GROUP%":
-			metadata["Group"] = values
-		case "%URL%":
-			metadata["URL"] = values[0]
-		case "%ARCH":
-			metadata["Architecture"] = values[0]
-		case "%BUILDDATE%":
-			metadata["BuildDate"] = values[0]
-		case "%INSTALLDATE%":
-			metadata["InstallDate"] = values[0]
-		case "%PACKAGER%":
-			metadata["Packager"] = values[0]
-		case "%SIZE%":
-			metadata["Size"] = values[0]
-		case "%REASON%":
-			metadata["Reason"] = values[0]
-		case "%LICENSE%":
-			metadata["Licenses"] = values
-		case "%VALIDATION%":
-			metadata["Validation"] = values[0]
-		case "%REPLACES%":
-			metadata["Replaces"] = values
-		case "%DEPENDS%":
-			metadata["Depends"] = values
-		case "%OPTDEPENDS%":
-			metadata["OptDepends"] = values
-		case "%MAKEDEPENDS%":
-			metadata["MakeDepends"] = values
-		case "%CHECKDEPENDS%":
-			metadata["CheckDepends"] = values
-		case "%CONFLICTS%":
-			metadata["Conflicts"] = values
-		case "%PROVIDES%":
-			metadata["Provides"] = values
-		case "%XDATA%":
-			metadata["XData"] = values
+		if len(values) > 1 {
+			metadata[key] = values
+		} else {
+			metadata[key] = values[0]
 		}
 	}
 	return metadata
