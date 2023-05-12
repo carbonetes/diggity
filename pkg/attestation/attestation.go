@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	sbom "github.com/carbonetes/diggity/internal"
+	"github.com/carbonetes/diggity/internal/cli"
 	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/internal/ui"
 	"github.com/carbonetes/diggity/pkg/model"
@@ -38,16 +38,14 @@ func Attest(image string, attestationOptions *model.AttestationOptions) {
 	}
 
 	// Attest specified BOM file
-	attestSpinner := ui.InitSpinner("Attesting SBOM...")
-	go ui.RunSpinner(attestSpinner)
+	ui.OnSbomAttestation()
 	attestBom(image, predicate, attestationOptions)
-	ui.DoneSpinner(attestSpinner)
+	ui.DoneSpinner()
 
 	// Get Attestation
-	verifySpinner := ui.InitSpinner("Verifying Attestation...")
-	go ui.RunSpinner(verifySpinner)
+	ui.OnVerifyingAttestation()
 	getAttestation(image, attestationOptions)
-	ui.DoneSpinner(verifySpinner)
+	ui.DoneSpinner()
 }
 
 // Check if cosign is installed on machine
@@ -127,7 +125,7 @@ func generateBom(image string, arguments *model.Arguments, outputType string, pr
 	Arguments.Output = (*model.Output)(&outputType)
 
 	// Start SBOM
-	sbom.Start(&Arguments)
+	cli.Start(&Arguments)
 
 	return bomPath
 }
