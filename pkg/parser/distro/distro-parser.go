@@ -8,7 +8,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
@@ -29,7 +28,7 @@ func ParseDistro(req *bom.ParserRequirements) {
 
 	osFilesRegex := `etc\/(\S+)-release|etc\\(\S+)-release|usr\\(\S+)-release|usr\/lib\/(\S+)-release|usr\/(\S+)-release`
 	fileRegexp, _ := regexp.Compile(osFilesRegex)
-	for _, content := range file.Contents {
+	for _, content := range *req.Contents {
 		if match := fileRegexp.MatchString(content.Path); match {
 			relatedOsFiles = append(relatedOsFiles, content.Path)
 		}

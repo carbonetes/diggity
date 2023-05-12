@@ -9,7 +9,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/file"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	parserUtil "github.com/carbonetes/diggity/pkg/parser/util"
@@ -30,7 +29,7 @@ func Search(req *bom.ParserRequirements) {
 		secrets = nil
 	} else {
 		extensions := initSecretExtensions(req.Arguments.SecretExtensions)
-		for _, content := range file.Contents {
+		for _, content := range *req.Contents {
 
 			// validate filename if accepted for secret search
 			if !validateFilename(filepath.Base(content.Path), extensions) {

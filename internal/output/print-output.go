@@ -13,7 +13,6 @@ import (
 	"github.com/carbonetes/diggity/internal/output/spdx"
 	"github.com/carbonetes/diggity/internal/output/tabular"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"golang.org/x/exp/maps"
 )
 
@@ -24,18 +23,10 @@ var (
 )
 
 // PrintResults prints the result based on the arguments
-func PrintResults(req *bom.ParserRequirements) {
-	Depulicate(req.SBOM.Packages)
-	SortResults(req.SBOM.Packages)
-	// SortResults(req.SBOM.Packages, result)
-	// Table Output(Default)
-	selectOutputType(req.Arguments, req.SBOM)
-
-	if len(*req.Errors) > 0 {
-		for _, err := range *req.Errors {
-			log.Errorf("[warning]: %+v\n", err)
-		}
-	}
+func PrintResults(sbom *model.SBOM, args *model.Arguments) {
+	Depulicate(sbom.Packages)
+	SortResults(sbom.Packages)
+	selectOutputType(args, sbom)
 }
 
 // Select Output Type based on the User Input with aliases considered

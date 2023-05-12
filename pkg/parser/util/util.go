@@ -6,7 +6,6 @@ import (
 
 	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
 // ParserNames slice of supported parser names
@@ -28,7 +27,7 @@ var ParserNames = []string{
 	"pod",
 	"hex",
 	"portage",
-	"alpmdb",
+	"alpm",
 }
 
 var log = logger.GetLogger()
@@ -88,8 +87,8 @@ func FormatLockKeyVal(kv string) string {
 }
 
 // CleanUp clears temp files
-func CleanUp(req *bom.ParserRequirements) {
-	err := os.RemoveAll(*req.DockerTemp)
+func CleanUp(path string) {
+	err := os.RemoveAll(path)
 	if err != nil {
 		log.Error(err)
 	}

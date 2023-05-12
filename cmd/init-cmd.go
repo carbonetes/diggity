@@ -7,13 +7,13 @@ import (
 	"os"
 	"strings"
 
+	"github.com/carbonetes/diggity/internal/cli"
 	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/ui"
 	versionPackage "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/attestation"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/util"
-
-	sbom "github.com/carbonetes/diggity/internal"
 
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
@@ -83,7 +83,10 @@ var (
 				}
 				os.Exit(127)
 			}
-			sbom.Start(Arguments)
+			if !*Arguments.Quiet {
+				ui.Enable()
+			}
+			cli.Start(Arguments)
 		},
 	}
 
