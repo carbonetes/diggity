@@ -17,7 +17,6 @@ func newPackage(location *model.Location, conanMetadata interface{}) *model.Pack
 	var name, version string
 	switch md := conanMetadata.(type) {
 	case metadata.ConanMetadata:
-		log.Print("sdfsdf")
 		name, version = md.Name, md.Version
 		pkg.Metadata = md
 		log.Print(name)

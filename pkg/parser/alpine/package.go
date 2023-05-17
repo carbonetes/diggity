@@ -40,7 +40,6 @@ func newPackage(content string, listFiles bool) *model.Package {
 	pkg.Name = metadata["Name"].(string)
 	pkg.Version = metadata["Version"].(string)
 	pkg.Type = Type
-	pkg.Path = InstalledPackagesPath
 	pkg.Description = metadata["Description"].(string)
 	pkg.Metadata = metadata
 	setPURL(&pkg)

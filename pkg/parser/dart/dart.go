@@ -1,7 +1,6 @@
 package dart
 
 import (
-	"log"
 	"path/filepath"
 
 	"github.com/carbonetes/diggity/pkg/parser/bom"
@@ -21,7 +20,6 @@ func FindDartPackagesFromContent(req *bom.ParserRequirements) {
 	}
 
 	for _, content := range *req.Contents {
-		log.Print(content.Path)
 		if filepath.Base(content.Path) == "pubspec.yaml" {
 			parseDartPackages(&content, req)
 		}

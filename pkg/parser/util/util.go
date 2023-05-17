@@ -14,7 +14,7 @@ import (
 // ParserNames slice of supported parser names
 var ParserNames = []string{
 	"apk",
-	"debian",
+	"deb",
 	"java",
 	"npm",
 	"php",
@@ -51,6 +51,7 @@ func TrimUntilLayer(location model.Location) string {
 
 		index++
 	}
+	directory = strings.ReplaceAll(directory, "\\", "/")
 	return directory
 }
 

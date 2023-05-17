@@ -38,8 +38,11 @@ func parseInstalledPackages(location *model.Location, req *bom.ParserRequirement
 		if pkg == nil {
 			continue
 		}
-
-		pkg.Locations = append(pkg.Locations, *location)
+		pkg.Path = util.TrimUntilLayer(*location)
+		pkg.Locations = append(pkg.Locations, model.Location{
+			Path:      pkg.Path,
+			LayerHash: location.LayerHash,
+		})
 		for _, content := range *req.Contents {
 			if strings.Contains(content.Path, pkg.Name) {
 				location := model.Location{

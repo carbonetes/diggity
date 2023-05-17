@@ -8,3 +8,14 @@ type File struct {
 	Permissions string      `json:"permissions,omitempty"`
 	Digest      interface{} `json:"digest,omitempty"`
 }
+
+type Conffile struct {
+	Path         string `json:"path"`
+	Digest       Digest `json:"digest"`
+	IsConfigFile bool   `json:"isConfigFile"`
+}
+
+type Digest struct {
+	Algorithm string `json:"algorithm"`
+	Value     string `json:"value"`
+}
