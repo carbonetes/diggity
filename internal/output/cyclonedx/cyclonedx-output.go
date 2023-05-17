@@ -14,8 +14,8 @@ import (
 var log = logger.GetLogger()
 
 // PrintCycloneDXXML Print Packages in XML format
-func PrintCycloneDXXML(pkgs *[]model.Package, filename *string) {
-	cdx := convert.ToCDX(pkgs)
+func PrintCycloneDXXML(sbom *model.SBOM, filename *string) {
+	cdx := convert.ToCDX(sbom)
 	result, err := xml.MarshalIndent(cdx, "", " ")
 	if err != nil {
 		log.Fatal(err)
@@ -28,8 +28,8 @@ func PrintCycloneDXXML(pkgs *[]model.Package, filename *string) {
 }
 
 // PrintCycloneDXJSON Print Packages in Cyclonedx Json format
-func PrintCycloneDXJSON(pkgs *[]model.Package, filename *string) {
-	cdx := convert.ToCDX(pkgs)
+func PrintCycloneDXJSON(sbom *model.SBOM, filename *string) {
+	cdx := convert.ToCDX(sbom)
 	result, err := json.ToJSON(cdx)
 	if err != nil {
 		log.Fatal(err)

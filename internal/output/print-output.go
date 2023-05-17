@@ -46,9 +46,9 @@ func selectOutputType(args *model.Arguments, results *model.SBOM) {
 				fmt.Printf("%+v\n", string(result))
 			}
 		case model.CycloneDXXML:
-			cyclonedx.PrintCycloneDXXML(results.Packages, args.OutputFile)
+			cyclonedx.PrintCycloneDXXML(results, args.OutputFile)
 		case model.CycloneDXJSON:
-			cyclonedx.PrintCycloneDXJSON(results.Packages, args.OutputFile)
+			cyclonedx.PrintCycloneDXJSON(results, args.OutputFile)
 		case model.SPDXJSON:
 			spdx.PrintSpdxJSON(args, results.Packages)
 		case model.SPDXTagValue:
