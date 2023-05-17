@@ -1,11 +1,11 @@
 package cyclonedx
 
 import (
-	"encoding/json"
 	"encoding/xml"
 	"fmt"
 
 	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/output/json.go"
 	"github.com/carbonetes/diggity/internal/output/save"
 	"github.com/carbonetes/diggity/pkg/convert"
 	"github.com/carbonetes/diggity/pkg/model"
@@ -30,7 +30,7 @@ func PrintCycloneDXXML(pkgs *[]model.Package, filename *string) {
 // PrintCycloneDXJSON Print Packages in Cyclonedx Json format
 func PrintCycloneDXJSON(pkgs *[]model.Package, filename *string) {
 	cdx := convert.ToCDX(pkgs)
-	result, err := json.MarshalIndent(cdx, "", " ")
+	result, err := json.ToJSON(cdx)
 	if err != nil {
 		log.Fatal(err)
 	}

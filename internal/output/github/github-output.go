@@ -1,12 +1,13 @@
 package github
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/output/json.go"
 	"github.com/carbonetes/diggity/internal/output/save"
 	versionPackage "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/model"
@@ -23,12 +24,14 @@ const (
 // DependencyMetadata dependency metadata
 type DependencyMetadata map[string]interface{}
 
+var log = logger.GetLogger()
+
 // PrintGithubJSON Print Packages in Github JSON format
 func PrintGithubJSON(args *model.Arguments, results *model.SBOM) {
 	githubJSON, err := getGithubJSON(args, results)
 
 	if err != nil {
-		panic(err)
+		log.Error(err)
 	}
 
 	if len(*args.OutputFile) > 0 {
@@ -63,7 +66,11 @@ func getGithubJSON(args *model.Arguments, results *model.SBOM) ([]byte, error) {
 		Manifests: getPackageManifests(image, results.Packages),
 		Scanned:   time.Now().Format(time.RFC3339),
 	}
-	return json.MarshalIndent(result, "", " ")
+	jsonResult, err := json.ToJSON(result)
+	if err != nil {
+		return nil, err
+	}
+	return jsonResult, nil
 }
 
 // getSnapshotMetadata returns distro metadata

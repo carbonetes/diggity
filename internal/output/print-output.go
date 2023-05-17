@@ -1,7 +1,6 @@
 package output
 
 import (
-	"encoding/json"
 	"fmt"
 	"sort"
 	"strings"
@@ -9,6 +8,7 @@ import (
 	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/internal/output/cyclonedx"
 	"github.com/carbonetes/diggity/internal/output/github"
+	"github.com/carbonetes/diggity/internal/output/json.go"
 	"github.com/carbonetes/diggity/internal/output/save"
 	"github.com/carbonetes/diggity/internal/output/spdx"
 	"github.com/carbonetes/diggity/internal/output/tabular"
@@ -36,7 +36,7 @@ func selectOutputType(args *model.Arguments, results *model.SBOM) {
 		case model.Table:
 			tabular.PrintTable(args, results.Packages)
 		case model.JSON.ToOutput():
-			result, err := json.MarshalIndent(results, "", " ")
+			result, err := json.ToJSON(results)
 			if err != nil {
 				log.Fatal(err)
 			}
