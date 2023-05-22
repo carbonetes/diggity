@@ -22,7 +22,7 @@ var (
 		Path:    "bypass",
 		Locations: []model.Location{
 			{
-				Path: filepath.Join("hex_core", "mix.lock"),
+				Path: filepath.Join("hex_core", mixLock),
 			},
 		},
 		Description: "",
@@ -66,7 +66,7 @@ var (
 		Path:    "plug_cowboy",
 		Locations: []model.Location{
 			{
-				Path: filepath.Join("hex_core", "mix.lock"),
+				Path: filepath.Join("hex_core", mixLock),
 			},
 		},
 		Description: "",
@@ -98,7 +98,7 @@ func TestParseHexRebarPackages(t *testing.T) {
 }
 
 func TestParseHexMixPackages(t *testing.T) {
-	mixLockPath := filepath.Join("..", "..", "..", "docs", "references", "hex", "mix.lock")
+	mixLockPath := filepath.Join("..", "..", "..", "docs", "references", "hex", mixLock)
 	testLocation := model.Location{Path: mixLockPath}
 	pkgs := new([]model.Package)
 	err := parseHexMixPackages(&testLocation, pkgs)

@@ -2,25 +2,14 @@ package hex
 
 import (
 	"bufio"
-	"errors"
+	"os"
 	"regexp"
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/util"
 	"github.com/google/uuid"
-
-	"os"
-
-	"path/filepath"
-)
-
-const (
-	rebarLock = "rebar.lock"
-	mixLock   = "mix.lock"
-	hex       = "hex"
 )
 
 // Metadata hex metadata
@@ -28,27 +17,6 @@ type Metadata metadata.HexMetadata
 
 var rebarLockRegex = regexp.MustCompile(`[\[{<">},: \]\n]+`)
 var mixLockRegex = regexp.MustCompile(`[%{}\n" ,:]+`)
-
-// FindHexPackagesFromContent - find hex packages from content
-func FindHexPackagesFromContent(req *bom.ParserRequirements) {
-	if util.ParserEnabled(hex, req.Arguments.EnabledParsers) {
-		for _, content := range *req.Contents {
-			if filepath.Base(content.Path) == rebarLock {
-				if err := parseHexRebarPacakges(&content, req.SBOM.Packages); err != nil {
-					err = errors.New("hex-parser: " + err.Error())
-					*req.Errors = append(*req.Errors, err)
-				}
-			}
-			if filepath.Base(content.Path) == mixLock {
-				if err := parseHexMixPackages(&content, req.SBOM.Packages); err != nil {
-					err = errors.New("hex-parser: " + err.Error())
-					*req.Errors = append(*req.Errors, err)
-				}
-			}
-		}
-	}
-	defer req.WG.Done()
-}
 
 // Parse hex package metadata - rebar
 func parseHexRebarPacakges(location *model.Location, pkgs *[]model.Package) error {
@@ -69,7 +37,7 @@ func parseHexRebarPacakges(location *model.Location, pkgs *[]model.Package) erro
 			pkg.ID = uuid.NewString()
 			pkg.Name = name
 			pkg.Version = version
-			pkg.Type = hex
+			pkg.Type = Type
 			pkg.Path = name
 			pkg.Locations = append(pkg.Locations, model.Location{
 				Path:      util.TrimUntilLayer(*location),
@@ -115,7 +83,7 @@ func parseHexMixPackages(location *model.Location, pkgs *[]model.Package) error 
 		pkg.ID = uuid.NewString()
 		pkg.Name = name
 		pkg.Version = version
-		pkg.Type = hex
+		pkg.Type = Type
 		pkg.Path = name
 		pkg.Locations = append(pkg.Locations, model.Location{
 			Path:      util.TrimUntilLayer(*location),
@@ -134,9 +102,4 @@ func parseHexMixPackages(location *model.Location, pkgs *[]model.Package) error 
 		}
 	}
 	return nil
-}
-
-// Parse PURL
-func parseHexPURL(pkg *model.Package) {
-	pkg.PURL = model.PURL("pkg" + ":" + "hex" + "/" + pkg.Name + "@" + pkg.Version)
 }
