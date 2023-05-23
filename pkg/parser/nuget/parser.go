@@ -21,15 +21,15 @@ func parseNugetPackages(location *model.Location, req *bom.ParserRequirements) {
 		*req.Errors = append(*req.Errors, err)
 	}
 
-	var dotnetMetadata metadata.DotnetDeps
-	if err := json.Unmarshal(byteValue, &dotnetMetadata); err != nil {
+	var metadata metadata.DotnetDeps
+	if err := json.Unmarshal(byteValue, &metadata); err != nil {
 		err = errors.New(parserErr + err.Error())
 		*req.Errors = append(*req.Errors, err)
 	}
 
-	if len(dotnetMetadata.Libraries) > 0 {
+	if len(metadata.Libraries) > 0 {
 
-		for keyValue, lib := range dotnetMetadata.Libraries {
+		for keyValue, lib := range metadata.Libraries {
 			if lib.Type != "package" {
 				continue
 			}
