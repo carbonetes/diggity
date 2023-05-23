@@ -1,4 +1,4 @@
-package java
+package maven
 
 import (
 	"path/filepath"
@@ -7,6 +7,8 @@ import (
 
 	"github.com/carbonetes/diggity/pkg/model"
 )
+
+//TODO: reduce the code complexities here
 
 type (
 	GenerateAdditionalCPEResult struct {
