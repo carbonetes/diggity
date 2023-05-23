@@ -17,7 +17,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/golang/gomod"
 	"github.com/carbonetes/diggity/pkg/parser/hackage"
 	"github.com/carbonetes/diggity/pkg/parser/hex"
-	"github.com/carbonetes/diggity/pkg/parser/java"
+	"github.com/carbonetes/diggity/pkg/parser/java/maven"
 	"github.com/carbonetes/diggity/pkg/parser/npm"
 	"github.com/carbonetes/diggity/pkg/parser/nuget"
 	"github.com/carbonetes/diggity/pkg/parser/portage"
@@ -33,7 +33,7 @@ var (
 	All = parsers{
 		alpine.FindAlpinePackagesFromContent,
 		debian.FindDebianPackagesFromContent,
-		java.FindJavaPackagesFromContent,
+		maven.FindJavaPackagesFromContent,
 		npm.FindNpmPackagesFromContent,
 		composer.FindComposerPackagesFromContent,
 		python.FindPythonPackagesFromContent,
