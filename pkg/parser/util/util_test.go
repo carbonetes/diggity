@@ -2,8 +2,6 @@ package util
 
 import (
 	"testing"
-
-	"github.com/carbonetes/diggity/pkg/model"
 )
 
 type (
@@ -13,10 +11,10 @@ type (
 		expected int
 	}
 
-	TrimUntilLayerResult struct {
-		location model.Location
-		expected string
-	}
+	// TrimUntilLayerResult struct {
+	// 	location model.Location
+	// 	expected string
+	// }
 
 	StringSliceContainsResult struct {
 		s        []string
