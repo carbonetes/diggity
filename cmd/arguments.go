@@ -1,22 +1,15 @@
 package cmd
 
 import (
-	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/cli"
 	"github.com/carbonetes/diggity/internal/logger"
-	"github.com/carbonetes/diggity/internal/ui"
 	versionPackage "github.com/carbonetes/diggity/internal/version"
-	"github.com/carbonetes/diggity/pkg/attestation"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/util"
-
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v2"
 )
 
 var (
@@ -51,131 +44,6 @@ var (
 		OutputType: new(string),
 		BomArgs:    new(model.Arguments),
 		Provenance: new(string),
-	}
-
-	diggity = &cobra.Command{
-		Use:   "diggity",
-		Args:  cobra.MaximumNArgs(1),
-		Short: "BOM diggity SBOM Analyzer",
-		Long:  `BOM Diggity's primary purpose is to ensure the security and integrity of software programs. It incorporates secret analysis allowing the user to secure crucial information before deploying any parts of the application to the public.`,
-		PreRun: func(cmd *cobra.Command, args []string) {
-			if len(args) == 0 && !flagHasArg() {
-				_ = cmd.Help()
-				os.Exit(0)
-			}
-			ValidateOutputArg(string(*Arguments.Output))
-		},
-		Run: func(cmd *cobra.Command, args []string) {
-
-			if len(args) > 0 {
-				if flagHasArg() {
-					log.Println(`"diggity [-d, --dir]" or diggity "[-t, --tar]" does not support with argument image`)
-					os.Exit(127)
-				}
-				Arguments.Image = &args[0]
-			} else if image != nil {
-				Arguments.Image = image
-			} else if flagHasArg() {
-				//continue to sbom.Start
-			} else {
-				if len(args) == 0 || len(*Arguments.Image) == 0 {
-					log.Printf(`"diggity [-i, --image]" is required or at least 1 argument "diggity [image]"`)
-				}
-				os.Exit(127)
-			}
-			if !*Arguments.Quiet {
-				ui.Enable()
-			}
-			cli.Start(Arguments)
-		},
-	}
-
-	version = &cobra.Command{
-		Use:   "version",
-		Short: "Display Build Version Info Diggity",
-		Long:  "Display Build Version Info Diggity",
-		Args:  cobra.MaximumNArgs(0),
-		RunE: func(_ *cobra.Command, _ []string) error {
-
-			versionInfo := versionPackage.FromBuild()
-			switch versionOutputFormat {
-			case "text":
-				// Version
-				fmt.Println("Application:         ", versionInfo.AppName)
-				fmt.Println("Version:             ", versionInfo.Version)
-				fmt.Println("Build Date:          ", versionInfo.BuildDate)
-				// Git
-				fmt.Println("Git Commit:          ", versionInfo.GitCommit)
-				fmt.Println("Git Description:     ", versionInfo.GitDesc)
-				// Golang
-				fmt.Println("Go Version:          ", versionInfo.GoVersion)
-				fmt.Println("Compiler:            ", versionInfo.Compiler)
-				fmt.Println("Platform:            ", versionInfo.Platform)
-			case "json":
-
-				jsonFormat := json.NewEncoder(os.Stdout)
-				jsonFormat.SetEscapeHTML(false)
-				jsonFormat.SetIndent("", " ")
-				err := jsonFormat.Encode(&struct {
-					model.Version
-				}{
-					Version: versionInfo,
-				})
-				if err != nil {
-					return fmt.Errorf("show version information error: %+v", err)
-				}
-			default:
-				return fmt.Errorf("unrecognize output format: %s", versionOutputFormat)
-			}
-			return nil
-		},
-	}
-
-	config = &cobra.Command{
-		Use:   "config",
-		Short: "Display current configuration of diggity",
-		Long:  "Display current configuration of diggity",
-		Args:  cobra.MaximumNArgs(0),
-		Run: func(cmd *cobra.Command, args []string) {
-			// Reset config file if specified
-			if resetConfig {
-				resetConfiguration()
-				return
-			}
-
-			// Display contents of config file
-			if displayConfig {
-				config, _ := yaml.Marshal(DefaultConfig)
-				log.Printf("%s", string(config))
-				return
-			}
-
-			// Display path of config file
-			if getConfigPath {
-				log.Printf("Configuration directory: %s", os.Getenv("CONFIG_PATH"))
-				return
-			}
-
-			// Show help
-			_ = cmd.Help()
-
-		},
-	}
-
-	attest = &cobra.Command{
-		Use:   "attest",
-		Short: "Attest generated SBOM.",
-		Long:  "Generate and verify in-toto SBOM attesations with Cosign integrated with Diggity.",
-		Args:  cobra.MaximumNArgs(1),
-		PreRun: func(cmd *cobra.Command, args []string) {
-			if len(args) == 0 && !flagHasArg() {
-				_ = cmd.Help()
-				os.Exit(0)
-			}
-		},
-		Run: func(cmd *cobra.Command, args []string) {
-			attestation.Attest(args[0], &attestationOptions)
-		},
 	}
 )
 
@@ -235,87 +103,7 @@ func init() {
 	diggity.CompletionOptions.DisableDefaultCmd = true
 }
 
-// Initialize diggity yaml configuration
-func intializeConfiguration() {
-
-	home, err := os.UserHomeDir()
-	if err != nil {
-		err = errors.New("init-cmd: " + err.Error())
-		log.Fatal(err)
-	}
-
-	ConfigDirectory = home + string(os.PathSeparator) + ".diggity.yaml"
-
-	// Skip if file exists
-	createConfiguration()
-
-	os.Setenv("CONFIG_PATH", ConfigDirectory)
-}
-
-// Reset diggity config yaml file
-func resetConfiguration() {
-	err := os.Remove(ConfigDirectory)
-
-	if err != nil {
-		log.Print("[warning]: Unable to delete existing configuration file.")
-	}
-
-	createConfiguration()
-	log.Println("Restored default configuration file.")
-}
-
-// Create diggity config yaml file
-func createConfiguration() {
-	if _, err := os.Stat(ConfigDirectory); errors.Is(err, os.ErrNotExist) {
-
-		secretConfig := model.SecretConfig{
-			Disabled:    false,
-			SecretRegex: "API_KEY|SECRET_KEY|DOCKER_AUTH",
-			Excludes:    &[]string{},
-			MaxFileSize: 10485760,
-			Extensions:  &model.DefaultSecretExtensions,
-		}
-		attestationConfig := model.AttestationConfig{
-			Key:      "cosign.key",
-			Pub:      "cosign.pub",
-			Password: "",
-		}
-		DefaultConfig = model.Configuration{
-			SecretConfig:   secretConfig,
-			EnabledParsers: []string{},
-			Output:         &[]string{},
-			Quiet:          false,
-			OutputFile:     "",
-			Registry: model.Registry{
-				URI:      "",
-				Username: "",
-				Password: "",
-				Token:    "",
-			},
-			AttestationConfig: attestationConfig,
-		}
-
-		yamlDefaultConfig, err := yaml.Marshal(&DefaultConfig)
-
-		if err != nil {
-			err = errors.New("init-cmd: " + err.Error())
-			log.Fatal(err)
-		}
-
-		err = os.WriteFile(ConfigDirectory, yamlDefaultConfig, 0644)
-		if err != nil {
-			err = errors.New("init-cmd: " + err.Error())
-			log.Fatal(err)
-		}
-	} else {
-		// Read existing configuration instead
-		configFile, _ := os.ReadFile(ConfigDirectory)
-		err = yaml.Unmarshal(configFile, &DefaultConfig)
-		if err != nil {
-			panic(err)
-		}
-	}
-}
+// TODO: reduce code complexity
 
 // Define either model.Argument or model.Configuration will be prioritized
 func setPrioritizedArg() {
