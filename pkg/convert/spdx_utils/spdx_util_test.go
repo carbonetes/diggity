@@ -11,7 +11,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/alpine"
 	"github.com/carbonetes/diggity/pkg/parser/debian"
 	"github.com/carbonetes/diggity/pkg/parser/gem"
-	"github.com/carbonetes/diggity/pkg/parser/java"
+	"github.com/carbonetes/diggity/pkg/parser/java/maven"
 	spdx22 "github.com/spdx/tools-golang/spdx/v2_2"
 )
 
@@ -216,8 +216,8 @@ var (
 			"cpe:2.3:a:unixsocket:jnr_unixsocket:0.18:*:*:*:*:*:*:*",
 		},
 		PURL: model.PURL("pkg:maven/com.github.jnr/jnr-unixsocket@0.18"),
-		Metadata: java.Metadata{
-			"Manifest": java.Manifest{
+		Metadata: maven.Metadata{
+			"Manifest": maven.Manifest{
 				"Archiver-Version":       "Plexus Archiver",
 				"Bnd-LastModified":       "1489175442092",
 				"Build-Jdk":              "1.8.0_121",
