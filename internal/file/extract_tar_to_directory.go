@@ -21,7 +21,7 @@ const (
 var Contents = make([]*model.Location, 0)
 
 // UnTar extract all files from source into dst (directory)
-func UnTar(dst string, source string, recursive bool) error {
+func UnTar(dst string, source string, recursive bool) error { 
 	r := regexp.MustCompile(invalidCharRegex)
 
 	reader, err := os.Open(source)
