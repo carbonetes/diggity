@@ -24,20 +24,21 @@ var Contents = make([]*model.Location, 0)
 func UnTar(dst string, source string, recursive bool) error {
 	r := regexp.MustCompile(invalidCharRegex)
 
-	reader, _ := os.Open(source)
+	reader, err := os.Open(source)
+	if err != nil {
+		return err
+	}
 	defer reader.Close()
+
 	tarReader := tar.NewReader(reader)
 
 	for {
 		header, err := tarReader.Next()
 		switch {
-
 		case err == io.EOF:
 			return nil
-
 		case err != nil:
 			return err
-
 		case header == nil:
 			continue
 		}
@@ -60,7 +61,49 @@ func UnTar(dst string, source string, recursive bool) error {
 			}
 
 		case tar.TypeReg:
-			if err := processFile(tarReader, target, os.FileMode(header.Mode), recursive); err != nil {
+			if strings.Contains(target, "layer.tar") && recursive {
+				childDir := strings.TrimSuffix(target, "layer.tar")
+				if err := os.Mkdir(childDir, fs.ModePerm); err != nil {
+					return err
+				}
+
+				if err := processNestedTar(childDir, tarReader); err != nil {
+					return err
+				}
+			} else {
+				if err := processFile(target, tarReader, os.FileMode(header.Mode), recursive); err != nil {
+					return err
+				}
+			}
+		}
+	}
+}
+
+// Process nested tar file
+func processNestedTar(childDir string, parentReader *tar.Reader) error {
+	for {
+		header, err := parentReader.Next()
+		switch {
+		case err == io.EOF:
+			return nil
+		case err != nil:
+			return err
+		case header == nil:
+			continue
+		}
+
+		target := filepath.Join(childDir, header.Name)
+
+		switch header.Typeflag {
+		case tar.TypeDir:
+			if _, err := os.Stat(target); err != nil {
+				if err := os.MkdirAll(target, fs.ModePerm); err != nil {
+					return err
+				}
+			}
+
+		case tar.TypeReg:
+			if err := processFile(target, parentReader, os.FileMode(header.Mode), true); err != nil {
 				return err
 			}
 		}
@@ -68,9 +111,8 @@ func UnTar(dst string, source string, recursive bool) error {
 }
 
 // Get the content path of the file, and its children, if any
-func processFile(tarReader *tar.Reader, target string, fileMode fs.FileMode, recursive bool) error {
+func processFile(target string, tarReader *tar.Reader, fileMode fs.FileMode, recursive bool) error {
 	f, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, fileMode)
-
 	if err != nil {
 		// Skip incorrect names
 		if strings.Contains(err.Error(), "The filename, directory name, or volume label syntax is incorrect.") {
@@ -80,20 +122,12 @@ func processFile(tarReader *tar.Reader, target string, fileMode fs.FileMode, rec
 	}
 	defer f.Close()
 
-	if strings.Contains(f.Name(), "layer.tar") && recursive {
-		childDar := strings.Replace(f.Name(), "layer.tar", "", -1)
-		_ = os.Mkdir(childDar, fs.ModePerm)
-
-		defer func() {
-			_ = UnTar(childDar, f.Name(), true)
-		}()
-	}
 	_, err = io.Copy(f, tarReader)
-
 	if err != nil {
 		return err
 	}
-	paths := strings.Split(f.Name(), string(os.PathSeparator))
+
+	paths := strings.Split(target, string(os.PathSeparator))
 
 	// Layer SHA Regex
 	regex := regexp.MustCompile(`\b[A-Fa-f0-9]{64}\b`)
@@ -105,10 +139,7 @@ func processFile(tarReader *tar.Reader, target string, fileMode fs.FileMode, rec
 		}
 	}
 
-	Contents = append(Contents, &model.Location{Path: f.Name(), LayerHash: path})
-	if err := f.Close(); err != nil {
-		return err
-	}
+	Contents = append(Contents, &model.Location{Path: target, LayerHash: path})
 
 	return nil
 }
