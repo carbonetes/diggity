@@ -13,7 +13,7 @@ func getAlpmFiles(path string) (*[]string, *[]string, error) {
 	var backups []string
 	path = strings.Replace(path, "desc", "files", -1)
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return nil, nil, err
+		return nil, nil, nil
 	}
 
 	file, err := os.Open(path)
