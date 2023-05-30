@@ -19,7 +19,7 @@ var (
 
 func TestAlpm(t *testing.T) {
 	if _, err := os.Stat(target); os.IsNotExist(err) {
-		t.Error(errors.New("alpm not found"))
+		t.Error(errors.New("alpm reference not found"))
 	}
 	args.Dir = &target
 
@@ -41,7 +41,6 @@ func TestAlpm(t *testing.T) {
 	}
 
 	for index, p := range *req.SBOM.Packages {
-		t.Log(p.ID)
 		if len(p.ID) == 0 {
 			t.Error(errors.New("Empty package id has been detected at index " + fmt.Sprint(index)))
 		}
