@@ -30,7 +30,7 @@ type (
 var (
 	portagePackage1 = model.Package{
 		Name:    filepath.Join("dev-util", "gperf"),
-		Type:    portage,
+		Type:    Type,
 		Version: "3.1-r1",
 		Path:    filepath.Join("dev-util", "gperf-3.1-r1"),
 		Locations: []model.Location{
@@ -51,7 +51,7 @@ var (
 	}
 	portagePackage2 = model.Package{
 		Name:    filepath.Join("acct-group", "audio"),
-		Type:    portage,
+		Type:    Type,
 		Version: "0-r1",
 		Path:    filepath.Join("acct-group", "audio-0-r1"),
 		Locations: []model.Location{

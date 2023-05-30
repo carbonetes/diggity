@@ -8,7 +8,6 @@ import (
 	"github.com/CycloneDX/cyclonedx-go"
 	versionPackage "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/distro"
 	"github.com/google/uuid"
 )
 
@@ -35,15 +34,15 @@ const (
 	version          = 1
 )
 
-func ToCDX(pkgs *[]model.Package) *cyclonedx.BOM {
+func ToCDX(sbom *model.SBOM) *cyclonedx.BOM {
 
 	//initialize component
-	components := make([]cyclonedx.Component, len(*pkgs))
-	for i, p := range *pkgs {
+	components := make([]cyclonedx.Component, len(*sbom.Packages))
+	for i, p := range *sbom.Packages {
 		components[i] = convertToComponent(&p)
 	}
 
-	components = append(components, addDistroComponent(distro.Distro()))
+	components = append(components, addDistroComponent(sbom.Distro))
 
 	return &cyclonedx.BOM{
 		BOMFormat:    cycloneDX,

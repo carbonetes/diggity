@@ -1,10 +1,10 @@
 package spdx
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/output/json.go"
 	"github.com/carbonetes/diggity/internal/output/save"
 	"github.com/carbonetes/diggity/pkg/convert"
 	"github.com/carbonetes/diggity/pkg/model"
@@ -16,7 +16,7 @@ var log = logger.GetLogger()
 // PrintSpdxJSON Print Packages in SPDX-JSON format
 func PrintSpdxJSON(args *model.Arguments, outputType *string, pkgs *[]model.Package) {
 	spdx := convert.ToSPDX(args, pkgs)
-	result, err := json.MarshalIndent(spdx, "", " ")
+	result, err := json.ToJSON(spdx)
 	if err != nil {
 		log.Fatal(err)
 	}

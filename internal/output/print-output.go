@@ -1,7 +1,6 @@
 package output
 
 import (
-	"encoding/json"
 	"fmt"
 	"sort"
 	"strings"
@@ -9,11 +8,11 @@ import (
 	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/internal/output/cyclonedx"
 	"github.com/carbonetes/diggity/internal/output/github"
+	"github.com/carbonetes/diggity/internal/output/json.go"
 	"github.com/carbonetes/diggity/internal/output/save"
 	"github.com/carbonetes/diggity/internal/output/spdx"
 	"github.com/carbonetes/diggity/internal/output/tabular"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"golang.org/x/exp/maps"
 )
 
@@ -24,18 +23,10 @@ var (
 )
 
 // PrintResults prints the result based on the arguments
-func PrintResults(req *bom.ParserRequirements) {
-	Depulicate(req.SBOM.Packages)
-	SortResults(req.SBOM.Packages)
-	// SortResults(req.SBOM.Packages, result)
-	// Table Output(Default)
-	selectOutputType(req.Arguments, req.SBOM)
-
-	if len(*req.Errors) > 0 {
-		for _, err := range *req.Errors {
-			log.Errorf("[warning]: %+v\n", err)
-		}
-	}
+func PrintResults(sbom *model.SBOM, args *model.Arguments) {
+	Depulicate(sbom.Packages)
+	SortResults(sbom.Packages)
+	selectOutputType(args, sbom)
 }
 
 // Select Output Type based on the User Input with aliases considered
@@ -45,7 +36,7 @@ func selectOutputType(args *model.Arguments, results *model.SBOM) {
 		case model.Table:
 			tabular.PrintTable(args, &output, results.Packages)
 		case model.JSON.ToOutput():
-			result, err := json.MarshalIndent(results, "", " ")
+			result, err := json.ToJSON(results)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -55,9 +46,9 @@ func selectOutputType(args *model.Arguments, results *model.SBOM) {
 				fmt.Printf("%+v\n", string(result))
 			}
 		case model.CycloneDXXML:
-			cyclonedx.PrintCycloneDXXML(results.Packages, &output, args.OutputFile)
+			cyclonedx.PrintCycloneDXXML(results, &output, args.OutputFile)
 		case model.CycloneDXJSON:
-			cyclonedx.PrintCycloneDXJSON(results.Packages, &output, args.OutputFile)
+			cyclonedx.PrintCycloneDXJSON(results, &output, args.OutputFile)
 		case model.SPDXJSON:
 			spdx.PrintSpdxJSON(args, &output, results.Packages)
 		case model.SPDXTagValue:
@@ -65,7 +56,7 @@ func selectOutputType(args *model.Arguments, results *model.SBOM) {
 		case model.SPDXYML:
 			spdx.PrintSpdxYaml(args, &output, results.Packages)
 		case model.GithubJSON:
-			github.PrintGithubJSON(args, &output,results)
+			github.PrintGithubJSON(args, &output, results)
 		}
 	}
 }
@@ -76,20 +67,21 @@ func Depulicate(pkgs *[]model.Package) {
 	for _, pkg := range *pkgs {
 		if _, exists := result[pkg.Name+":"+pkg.Version+":"+pkg.Type]; !exists {
 			result[pkg.Name+":"+pkg.Version+":"+pkg.Type] = pkg
-		} else {
-			idx := 0
-			if len(pkg.Locations) > 0 {
-				idx = len(pkg.Locations) - 1
-				for _, l := range pkg.Locations {
-					if l != pkg.Locations[idx] {
-						pkg.Locations = append(pkg.Locations, model.Location{
-							Path:      pkg.Path,
-							LayerHash: "sha256:" + pkg.Locations[idx].LayerHash,
-						})
-						result[pkg.Name+":"+pkg.Version+":"+pkg.Type] = pkg
-					}
-				}
+			continue
+		}
+		if len(pkg.Locations) == 0 {
+			continue
+		}
+		idx := len(pkg.Locations) - 1
+		for _, l := range pkg.Locations {
+			if l == pkg.Locations[idx] {
+				continue
 			}
+			pkg.Locations = append(pkg.Locations, model.Location{
+				Path:      pkg.Path,
+				LayerHash: "sha256:" + pkg.Locations[idx].LayerHash,
+			})
+			result[pkg.Name+":"+pkg.Version+":"+pkg.Type] = pkg
 		}
 	}
 	*pkgs = maps.Values(result)

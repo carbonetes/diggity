@@ -2,34 +2,38 @@ package util
 
 import (
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // ParserNames slice of supported parser names
 var ParserNames = []string{
 	"apk",
-	"debian",
+	"deb",
 	"java",
 	"npm",
-	"composer",
+	"php",
 	"python",
 	"gem",
 	"rpm",
 	"dart",
 	"nuget",
 	"go",
-	"rust",
+	"rust-crate",
 	"conan",
 	"hackage",
 	"pod",
 	"hex",
 	"portage",
-	"alpmdb",
+	"alpm",
 }
+
+var caser = cases.Title(language.English)
 
 var log = logger.GetLogger()
 
@@ -47,6 +51,7 @@ func TrimUntilLayer(location model.Location) string {
 
 		index++
 	}
+	directory = strings.ReplaceAll(directory, "\\", "/")
 	return directory
 }
 
@@ -88,9 +93,23 @@ func FormatLockKeyVal(kv string) string {
 }
 
 // CleanUp clears temp files
-func CleanUp(req *bom.ParserRequirements) {
-	err := os.RemoveAll(*req.DockerTemp)
+func CleanUp(path string) {
+	err := os.RemoveAll(path)
 	if err != nil {
 		log.Error(err)
 	}
+}
+
+func SplitContentsByEmptyLine(contents string) []string {
+	attributes := regexp.
+		MustCompile("\r\n").
+		ReplaceAllString(contents, "\n")
+
+	return regexp.
+		MustCompile(`\n\s*\n`).
+		Split(attributes, -1)
+}
+
+func ToTitle(str string) string {
+	return caser.String(str)
 }

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/ui"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/pkg/ioutils"
@@ -48,6 +49,7 @@ func GetImageID(target *string, credential *types.AuthConfig) *string {
 // FindImageFromLocal searches for a Docker image of the given target on the local system.
 // If found, it returns its ID; otherwise it returns nil.
 func FindImageFromLocal(target *string) *string {
+	ui.OnCheckingImageFromLocal(*target)
 	images, err := docker.ImageList(context.Background(), types.ImageListOptions{})
 	if err != nil {
 		log.Fatal(err)
@@ -67,6 +69,7 @@ func FindImageFromLocal(target *string) *string {
 // PullPublicImage attempts to pull a public Docker image of the given target from Docker Hub.
 // If successful, it returns the image ID; otherwise it waits for timeout seconds and retries.
 func PullPublicImage(target *string) *string {
+	ui.OnPullingPublicImage(*target)
 	reader, err := docker.ImagePull(context.Background(), *target, types.ImagePullOptions{})
 
 	if err != nil {
@@ -94,6 +97,7 @@ func PullPublicImage(target *string) *string {
 // using the provided authentication credentials. If successful, it returns the image ID;
 // otherwise it waits for timeout seconds and retries.
 func PullImageFromRegistry(target *string, credential *types.AuthConfig) *string {
+	ui.OnPullingImageFromRegistry(*target)
 	data, err := json.Marshal(credential)
 	if err != nil {
 		log.Fatal(err)

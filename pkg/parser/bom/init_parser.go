@@ -6,6 +6,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/carbonetes/diggity/internal/ui"
 	"github.com/carbonetes/diggity/pkg/docker"
 	client "github.com/carbonetes/diggity/pkg/docker"
 	"github.com/carbonetes/diggity/pkg/files"
@@ -32,7 +33,9 @@ func InitParsers(args *model.Arguments) (*ParserRequirements, error) {
 		dockerTemp := docker.CreateTempDir()
 		credential := model.NewRegistryAuth(args)
 		imageId := client.GetImageID(args.Image, credential)
+		ui.OnExtractingImage(*args.Image)
 		contents, dir := client.ExtractImage(imageId, dockerTemp)
+		ui.OnScanningImage(*args.Image)
 		return &ParserRequirements{
 			Arguments:  args,
 			Dir:        dir,
@@ -53,6 +56,7 @@ func InitParsers(args *model.Arguments) (*ParserRequirements, error) {
 			if err != nil {
 				log.Fatal(err)
 			}
+			ui.OnScanningDir(*args.Dir)
 			return &ParserRequirements{
 				Arguments:  args,
 				Dir:        args.Dir,
@@ -73,6 +77,7 @@ func InitParsers(args *model.Arguments) (*ParserRequirements, error) {
 		if files.Exists(*args.Tar) {
 			dockerTemp := docker.CreateTempDir()
 			contents, dir := client.ExtractTarFile(args.Tar, dockerTemp)
+			ui.OnScanningTar(*args.Tar)
 			return &ParserRequirements{
 				Arguments:  args,
 				Dir:        dir,
