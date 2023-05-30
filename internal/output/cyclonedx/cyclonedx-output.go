@@ -14,28 +14,28 @@ import (
 var log = logger.GetLogger()
 
 // PrintCycloneDXXML Print Packages in XML format
-func PrintCycloneDXXML(sbom *model.SBOM, filename *string) {
+func PrintCycloneDXXML(sbom *model.SBOM, output, filename *string) {
 	cdx := convert.ToCDX(sbom)
 	result, err := xml.MarshalIndent(cdx, "", " ")
 	if err != nil {
 		log.Fatal(err)
 	}
 	if len(*filename) > 0 {
-		save.ResultToFile(string(result), filename)
+		save.ResultToFile(string(result), output, filename)
 	} else {
 		fmt.Printf("%+v\n", string(result))
 	}
 }
 
 // PrintCycloneDXJSON Print Packages in Cyclonedx Json format
-func PrintCycloneDXJSON(sbom *model.SBOM, filename *string) {
+func PrintCycloneDXJSON(sbom *model.SBOM, output, filename *string) {
 	cdx := convert.ToCDX(sbom)
 	result, err := json.ToJSON(cdx)
 	if err != nil {
 		log.Fatal(err)
 	}
 	if len(*filename) > 0 {
-		save.ResultToFile(string(result), filename)
+		save.ResultToFile(string(result), output, filename)
 	} else {
 		fmt.Printf("%+v\n", string(result))
 	}
