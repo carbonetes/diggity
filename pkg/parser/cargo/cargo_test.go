@@ -19,7 +19,7 @@ var (
 
 func TestCargo(t *testing.T) {
 	if _, err := os.Stat(target); os.IsNotExist(err) {
-		t.Error(errors.New("cargo not found"))
+		t.Error(errors.New("cargo reference not found"))
 	}
 
 	args.Dir = &target
