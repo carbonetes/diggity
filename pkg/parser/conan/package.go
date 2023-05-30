@@ -1,7 +1,6 @@
 package conan
 
 import (
-	"log"
 	"strings"
 
 	"github.com/carbonetes/diggity/pkg/model"
@@ -19,7 +18,6 @@ func newPackage(location *model.Location, conanMetadata interface{}) *model.Pack
 	case metadata.ConanMetadata:
 		name, version = md.Name, md.Version
 		pkg.Metadata = md
-		log.Print(name)
 	case metadata.ConanLockNode:
 		name, version = parseRef(md.Ref)
 		pkg.Metadata = md
