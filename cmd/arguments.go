@@ -182,7 +182,10 @@ func setAttestArgs() {
 		*attestationOptions.Password = attestationConfig.Password
 	}
 	if attest.Flags().Lookup("output").Changed {
-		ValidateOutputArg(*attestationOptions.OutputType)
+		err := ValidateOutputArg(*attestationOptions.OutputType)
+		if err != nil {
+			log.Error(err)
+		}
 	}
 }
 
