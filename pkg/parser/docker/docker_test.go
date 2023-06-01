@@ -9,9 +9,11 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/docker"
 )
 
+const dockerReference string = "diggity-tmp-385abb3c-df38-44dd-b30f-467ba364ee3a"
+
 var (
 	args   = model.NewArguments()
-	target = filepath.Join("..", "..", "..", "docs", "references", "docker")
+	target = filepath.Join("..", "..", "..", "docs", "references", "docker", dockerReference)
 )
 
 func TestDocker(t *testing.T) {
