@@ -42,17 +42,27 @@ func TestGoBin(t *testing.T) {
 	}
 
 	for index, p := range *req.SBOM.Packages {
-		if len(p.ID) == 0 {
-			t.Error(errors.New("Empty package id has been detected at index " + fmt.Sprint(index)))
-		}
-		if len(p.Name) == 0 {
-			t.Error(errors.New("Empty package name has been detected at index " + fmt.Sprint(index)))
-		}
-		if len(p.CPEs) == 0 {
-			t.Error(errors.New("Empty package cpe has been detected at index " + fmt.Sprint(index)))
-		}
-		if p.Metadata == nil {
-			t.Error(errors.New("Nil package metadata has been detected at index " + fmt.Sprint(index)))
-		}
+		checkPackageFields(t, p, index)
+	}
+}
+
+func checkPackageFields(t *testing.T, p model.Package, index int) {
+	if len(p.ID) == 0 {
+		t.Error(errors.New("Empty package id has been detected at index " + fmt.Sprint(index)))
+	}
+	if len(p.Name) == 0 {
+		t.Error(errors.New("Empty package name has been detected at index " + fmt.Sprint(index)))
+	}
+	if len(p.Version) == 0 {
+		t.Error(errors.New("Empty package version has been detected at index " + fmt.Sprint(index)))
+	}
+	if len(p.Type) == 0 {
+		t.Error(errors.New("Empty package type has been detected at index " + fmt.Sprint(index)))
+	}
+	if len(p.CPEs) == 0 {
+		t.Error(errors.New("Empty package cpe has been detected at index " + fmt.Sprint(index)))
+	}
+	if p.Metadata == nil {
+		t.Error(errors.New("Nil package metadata has been detected at index " + fmt.Sprint(index)))
 	}
 }
