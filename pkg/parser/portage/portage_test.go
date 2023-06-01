@@ -17,7 +17,7 @@ var (
 	target = filepath.Join("..", "..", "..", "docs", "references", "portage")
 )
 
-func TestNpm(t *testing.T) {
+func TestPortage(t *testing.T) {
 	if _, err := os.Stat(target); os.IsNotExist(err) {
 		t.Error(errors.New("Npm reference not found"))
 		t.FailNow()
