@@ -17,7 +17,7 @@ var (
 	target = filepath.Join("..", "..", "..", "docs", "references", "hackage")
 )
 
-func TestGoBin(t *testing.T) {
+func TestHackage(t *testing.T) {
 	if _, err := os.Stat(target); os.IsNotExist(err) {
 		t.Error(errors.New("Hackage reference not found"))
 		t.FailNow()
