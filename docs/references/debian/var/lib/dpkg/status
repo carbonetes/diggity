@@ -34,9 +34,9 @@ Package: apt
 Status: install ok installed
 Priority: required
 Section: admin
-Installed-Size: 4197
+Installed-Size: 4337
 Maintainer: APT Development Team <deity@lists.debian.org>
-Architecture: s390x
+Architecture: amd64
 Version: 2.2.4
 Replaces: apt-transport-https (<< 1.5~alpha4~), apt-utils (<< 1.3~exp2~)
 Provides: apt-transport-https (= 2.2.4)
@@ -69,17 +69,17 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: admin
-Installed-Size: 340
+Installed-Size: 341
 Maintainer: Santiago Vila <sanvila@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
-Version: 11.1+deb11u4
+Version: 11.1+deb11u6
 Replaces: base, dpkg (<= 1.15.0), miscutils
 Provides: base
 Pre-Depends: awk
 Breaks: debian-security-support (<< 2019.04.25), initscripts (<< 2.88dsf-13.3), sendfile (<< 2.1b.20080616-5.2~)
 Conffiles:
- /etc/debian_version 80d59b7d29fd4e31b2f5b294ab9e3162
+ /etc/debian_version c50b5d071261092b9c531ceb0198d3fb
  /etc/dpkg/origins/debian c47b6815f67ad1aeccb0d4529bd0b990
  /etc/host.conf 4eb63731c9f5e30903ac4fc07a7fe3d6
  /etc/issue d641c0f23eff38a71ce34b34044b65c1
@@ -98,7 +98,7 @@ Priority: required
 Section: admin
 Installed-Size: 243
 Maintainer: Colin Watson <cjwatson@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Version: 3.5.51
 Replaces: base
@@ -115,9 +115,9 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: shells
-Installed-Size: 6580
+Installed-Size: 6469
 Maintainer: Matthias Klose <doko@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Version: 5.1-2+deb11u1
 Replaces: bash-completion (<< 20060301-0), bash-doc (<= 2.05-1)
@@ -150,7 +150,7 @@ Priority: required
 Section: utils
 Installed-Size: 394
 Maintainer: util-linux packagers <util-linux@packages.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Source: util-linux (2.36.1-8+deb11u1)
 Version: 1:2.36.1-8+deb11u1
@@ -167,11 +167,12 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: utils
-Installed-Size: 17827
+Installed-Size: 17478
 Maintainer: Michael Stone <mstone@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
-Version: 8.32-4
+Source: coreutils (8.32-4)
+Version: 8.32-4+b1
 Pre-Depends: libacl1 (>= 2.2.23), libattr1 (>= 1:2.4.44), libc6 (>= 2.28), libgmp10, libselinux1 (>= 3.1~)
 Description: GNU core utilities
  This package contains the basic file, shell and text manipulation
@@ -193,13 +194,13 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: shells
-Installed-Size: 233
+Installed-Size: 221
 Maintainer: Andrej Shadura <andrewsh@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Version: 0.5.11+git20200708+dd9ef66-5
 Depends: debianutils (>= 2.15), dpkg (>= 1.19.1), debconf (>= 0.5) | debconf-2.0
-Pre-Depends: libc6 (>= 2.11)
+Pre-Depends: libc6 (>= 2.14)
 Description: POSIX-compliant shell
  The Debian Almquist Shell (dash) is a POSIX-compliant shell derived
  from ash.
@@ -260,9 +261,9 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: utils
-Installed-Size: 218
+Installed-Size: 230
 Maintainer: Clint Adams <clint@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Version: 4.11.2
 Pre-Depends: libc6 (>= 2.15)
@@ -280,9 +281,9 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: utils
-Installed-Size: 1622
+Installed-Size: 1598
 Maintainer: Santiago Vila <sanvila@debian.org>
-Architecture: s390x
+Architecture: amd64
 Version: 1:3.7-5
 Replaces: diff
 Pre-Depends: libc6 (>= 2.17)
@@ -308,11 +309,11 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: admin
-Installed-Size: 7017
+Installed-Size: 6980
 Maintainer: Dpkg Developers <debian-dpkg@lists.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
-Version: 1.20.11
+Version: 1.20.12
 Depends: tar (>= 1.28-1)
 Pre-Depends: libbz2-1.0, libc6 (>= 2.15), liblzma5 (>= 5.2.2), libselinux1 (>= 3.1~), zlib1g (>= 1:1.1.4)
 Suggests: apt, debsig-verify
@@ -334,17 +335,17 @@ Package: e2fsprogs
 Status: install ok installed
 Priority: required
 Section: admin
-Installed-Size: 1519
+Installed-Size: 1511
 Maintainer: Theodore Y. Ts'o <tytso@mit.edu>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Version: 1.46.2-2
 Depends: logsave
-Pre-Depends: libblkid1 (>= 2.36), libc6 (>= 2.11), libcom-err2 (>= 1.43.9), libext2fs2 (= 1.46.2-2), libss2 (>= 1.38), libuuid1 (>= 2.16)
+Pre-Depends: libblkid1 (>= 2.36), libc6 (>= 2.14), libcom-err2 (>= 1.43.9), libext2fs2 (= 1.46.2-2), libss2 (>= 1.38), libuuid1 (>= 2.16)
 Recommends: e2fsprogs-l10n
 Suggests: gpart, parted, fuse2fs, e2fsck-static
 Conffiles:
- /etc/cron.d/e2scrub_all aa0f11ee5aea96b7ccda6237da3040dd
+ /etc/cron.d/e2scrub_all bc533e09f3b3d96bfe1633ad57eb7026
  /etc/e2scrub.conf df38534cc670c70a91cf9b035845d244
  /etc/mke2fs.conf 72b349d890a9b5cca06c7804cd0c8d1d
 Description: ext2/ext3/ext4 file system utilities
@@ -363,9 +364,9 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: utils
-Installed-Size: 1991
+Installed-Size: 1959
 Maintainer: Andreas Metzler <ametzler@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Version: 4.8.0-1
 Pre-Depends: libc6 (>= 2.17), libselinux1 (>= 3.1~)
@@ -384,7 +385,7 @@ Priority: required
 Section: libs
 Installed-Size: 261
 Maintainer: Debian GCC Maintainers <debian-gcc@lists.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: gcc-10
 Version: 10.2.1-6
@@ -400,7 +401,7 @@ Priority: required
 Section: libs
 Installed-Size: 262
 Maintainer: Debian GCC Maintainers <debian-gcc@lists.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: gcc-9
 Version: 9.3.0-22
@@ -414,9 +415,9 @@ Package: gpgv
 Status: install ok installed
 Priority: important
 Section: utils
-Installed-Size: 906
+Installed-Size: 882
 Maintainer: Debian GnuPG Maintainers <pkg-gnupg-maint@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Source: gnupg2
 Version: 2.2.27-2+deb11u2
@@ -439,14 +440,14 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: utils
-Installed-Size: 1107
+Installed-Size: 1091
 Maintainer: Anibal Monsalve Salazar <anibal@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Version: 3.6-1
 Provides: rgrep
 Depends: dpkg (>= 1.15.4) | install-info
-Pre-Depends: libc6 (>= 2.5), libpcre3
+Pre-Depends: libc6 (>= 2.14), libpcre3
 Suggests: libpcre3 (>= 7.7)
 Conflicts: rgrep
 Description: GNU grep, egrep and fgrep
@@ -469,9 +470,9 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: utils
-Installed-Size: 246
+Installed-Size: 242
 Maintainer: Milan Kupcevic <milan@debian.org>
-Architecture: s390x
+Architecture: amd64
 Version: 1.10-4+deb11u1
 Depends: dpkg (>= 1.15.4) | install-info
 Pre-Depends: libc6 (>= 2.17)
@@ -488,9 +489,9 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: admin
-Installed-Size: 46
+Installed-Size: 50
 Maintainer: Michael Meskes <meskes@debian.org>
-Architecture: s390x
+Architecture: amd64
 Version: 3.23
 Replaces: nis (<< 3.17-30)
 Pre-Depends: libc6 (>= 2.4)
@@ -529,13 +530,13 @@ Package: libacl1
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 70
+Installed-Size: 71
 Maintainer: Guillem Jover <guillem@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: acl
 Version: 2.2.53-10
-Depends: libc6 (>= 2.4)
+Depends: libc6 (>= 2.14)
 Description: access control list - shared library
  This package contains the shared library containing the POSIX 1003.1e
  draft standard 17 functions for manipulating access control lists.
@@ -545,9 +546,9 @@ Package: libapt-pkg6.0
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 3412
+Installed-Size: 3373
 Maintainer: APT Development Team <deity@lists.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: apt
 Version: 2.2.4
@@ -575,9 +576,9 @@ Package: libattr1
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 52
+Installed-Size: 56
 Maintainer: Guillem Jover <guillem@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: attr
 Version: 1:2.4.48-6
@@ -616,11 +617,11 @@ Priority: optional
 Section: libs
 Installed-Size: 154
 Maintainer: Laurent Bigonville <bigon@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: audit
 Version: 1:3.0-2
-Depends: libaudit-common (>= 1:3.0-2), libc6 (>= 2.8), libcap-ng0 (>= 0.7.9)
+Depends: libaudit-common (>= 1:3.0-2), libc6 (>= 2.14), libcap-ng0 (>= 0.7.9)
 Description: Dynamic library for security auditing
  The audit-libs package contains the dynamic libraries needed for
  applications to use the audit framework. It is used to monitor systems for
@@ -631,9 +632,9 @@ Package: libblkid1
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 433
+Installed-Size: 421
 Maintainer: util-linux packagers <util-linux@packages.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: util-linux
 Version: 2.36.1-8+deb11u1
@@ -649,9 +650,9 @@ Package: libbz2-1.0
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 108
+Installed-Size: 104
 Maintainer: Anibal Monsalve Salazar <anibal@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: bzip2
 Version: 1.0.8-4
@@ -676,12 +677,12 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: libs
-Installed-Size: 3465
+Installed-Size: 3736
 Maintainer: GNU Libc Maintainers <debian-glibc@lists.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Source: glibc
-Version: 2.31-13+deb11u3
+Version: 2.31-13+deb11u5
 Depends: libc6 (>> 2.31), libc6 (<< 2.32)
 Recommends: manpages
 Conffiles:
@@ -706,19 +707,19 @@ Package: libc6
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 10787
+Installed-Size: 12837
 Maintainer: GNU Libc Maintainers <debian-glibc@lists.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: glibc
-Version: 2.31-13+deb11u3
-Replaces: libc6-s390x
+Version: 2.31-13+deb11u5
+Replaces: libc6-amd64
 Depends: libgcc-s1, libcrypt1
 Recommends: libidn2-0 (>= 2.0.5~), libnss-nis, libnss-nisplus
 Suggests: glibc-doc, debconf | debconf-2.0, libc-l10n, locales
 Breaks: busybox (<< 1.30.1-6), hurd (<< 1:0.9.git20170910-1), ioquake3 (<< 1.36+u20200211.f2c61c1~dfsg-2~), iraf-fitsutil (<< 2018.07.06-4), libgegl-0.4-0 (<< 0.4.18), libtirpc1 (<< 0.2.3), locales (<< 2.31), locales-all (<< 2.31), macs (<< 2.2.7.1-3~), nocache (<< 1.1-1~), nscd (<< 2.31), openarena (<< 0.8.8+dfsg-4~), openssh-server (<< 1:8.1p1-5), r-cran-later (<< 0.7.5+dfsg-2), wcc (<< 0.0.2+dfsg-3)
 Conffiles:
- /etc/ld.so.conf.d/s390x-linux-gnu.conf c267d4df9ff5454afd21339f73e1ecd8
+ /etc/ld.so.conf.d/x86_64-linux-gnu.conf d4e7a7b88a71b5ffd9e2644e71a0cfab
 Description: GNU C Library: Shared libraries
  Contains the standard libraries that are used by nearly all programs on
  the system. This package includes shared versions of the standard C library
@@ -729,9 +730,9 @@ Package: libcap-ng0
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 44
+Installed-Size: 48
 Maintainer: Pierre Chifflier <pollux@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: libcap-ng (0.7.9-2.2)
 Version: 0.7.9-2.2+b1
@@ -752,9 +753,9 @@ Package: libcom-err2
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 93
+Installed-Size: 97
 Maintainer: Theodore Y. Ts'o <tytso@mit.edu>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: e2fsprogs
 Version: 1.46.2-2
@@ -773,9 +774,9 @@ Protected: yes
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 230
+Installed-Size: 226
 Maintainer: Marco d'Itri <md@linux.it>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: libxcrypt
 Version: 1:4.4.18-4
@@ -793,9 +794,9 @@ Package: libdb5.3
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 1835
+Installed-Size: 1818
 Maintainer: Debian Berkeley DB Team <team+bdb@tracker.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: db5.3
 Version: 5.3.28+dfsg1-0.8
@@ -809,9 +810,9 @@ Package: libdebconfclient0
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 69
+Installed-Size: 74
 Maintainer: Debian Install System Team <debian-boot@lists.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: cdebconf
 Version: 0.260
@@ -827,9 +828,9 @@ Package: libext2fs2
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 597
+Installed-Size: 578
 Maintainer: Theodore Y. Ts'o <tytso@mit.edu>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: e2fsprogs
 Version: 1.46.2-2
@@ -852,13 +853,13 @@ Package: libffi7
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 58
+Installed-Size: 66
 Maintainer: Debian GCC Maintainers <debian-gcc@lists.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: libffi
 Version: 3.3-6
-Depends: libc6 (>= 2.7)
+Depends: libc6 (>= 2.14)
 Description: Foreign Function Interface library runtime
  A foreign function interface is the popular name for the interface that
  allows code written in one language to call code written in another
@@ -870,16 +871,16 @@ Protected: yes
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 83
+Installed-Size: 116
 Maintainer: Debian GCC Maintainers <debian-gcc@lists.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: gcc-10
 Version: 10.2.1-6
 Replaces: libgcc1 (<< 1:10)
 Provides: libgcc1 (= 1:10.2.1-6)
-Depends: gcc-10-base (= 10.2.1-6), libc6 (>= 2.2.4)
-Breaks: cryptsetup-initramfs (<< 2:2.2.2-3~), libgcc-7-dev (<< 7.5.0-4), libgcc-8-dev (<< 8.3.0-27), libgcc-9-dev (<< 9.2.1-26)
+Depends: gcc-10-base (= 10.2.1-6), libc6 (>= 2.14)
+Breaks: cryptsetup-initramfs (<< 2:2.2.2-3~)
 Description: GCC support library
  Shared version of the support library, a library of internal subroutines
  that GCC uses to overcome shortcomings of particular machines, or
@@ -891,9 +892,9 @@ Package: libgcrypt20
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 1005
+Installed-Size: 1355
 Maintainer: Debian GnuTLS Maintainers <pkg-gnutls-maint@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Version: 1.8.7-6
 Depends: libc6 (>= 2.15), libgpg-error0 (>= 1.25)
@@ -914,13 +915,13 @@ Package: libgmp10
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 915
+Installed-Size: 863
 Maintainer: Debian Science Team <debian-science-maintainers@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: gmp
 Version: 2:6.2.1+dfsg-1+deb11u1
-Depends: libc6 (>= 2.7)
+Depends: libc6 (>= 2.14)
 Breaks: libmath-gmp-perl (<< 2.20-1), libmath-prime-util-gmp-perl (<< 0.51-2), postgresql-pgmp (<< 1.0.3-1)
 Description: Multiprecision arithmetic library
  GNU MP is a programmer's library for arbitrary precision
@@ -935,12 +936,12 @@ Package: libgnutls30
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 2979
+Installed-Size: 3143
 Maintainer: Debian GnuTLS Maintainers <pkg-gnutls-maint@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: gnutls28
-Version: 3.7.1-5+deb11u2
+Version: 3.7.1-5+deb11u3
 Depends: libgmp10 (>= 2:6.0.0), libc6 (>= 2.25), libhogweed6 (>= 3.6), libidn2-0 (>= 2.0.0), libnettle8 (>= 3.7~), libp11-kit0 (>= 0.23.18.1), libtasn1-6 (>= 4.14), libunistring2 (>= 0.9.7)
 Suggests: gnutls-bin
 Description: GNU TLS library - main runtime library
@@ -964,13 +965,13 @@ Package: libgpg-error0
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 187
+Installed-Size: 188
 Maintainer: Debian GnuPG Maintainers <pkg-gnupg-maint@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: libgpg-error
 Version: 1.38-2
-Depends: libc6 (>= 2.7)
+Depends: libc6 (>= 2.14)
 Recommends: libgpg-error-l10n
 Description: GnuPG development runtime library
  Library that defines common error values, messages, and common
@@ -985,13 +986,13 @@ Package: libgssapi-krb5-2
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 455
+Installed-Size: 451
 Maintainer: Sam Hartman <hartmans@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: krb5
-Version: 1.18.3-6+deb11u1
-Depends: libc6 (>= 2.27), libcom-err2 (>= 1.43.9), libk5crypto3 (>= 1.16), libkrb5-3 (= 1.18.3-6+deb11u1), libkrb5support0 (>= 1.15~beta1)
+Version: 1.18.3-6+deb11u3
+Depends: libc6 (>= 2.27), libcom-err2 (>= 1.43.9), libk5crypto3 (>= 1.16), libkrb5-3 (= 1.18.3-6+deb11u3), libkrb5support0 (>= 1.15~beta1)
 Suggests: krb5-doc, krb5-user
 Breaks: moonshot-gss-eap (<= 1.0)
 Description: MIT Kerberos runtime libraries - krb5 GSS-API Mechanism
@@ -1010,13 +1011,13 @@ Package: libhogweed6
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 466
+Installed-Size: 455
 Maintainer: Magnus Holmgren <holmgren@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: nettle
 Version: 3.7.3-1
-Depends: libc6 (>= 2.4), libgmp10 (>= 2:6.1.0), libnettle8
+Depends: libc6 (>= 2.14), libgmp10 (>= 2:6.1.0), libnettle8
 Description: low level cryptographic library (public-key cryptos)
  Nettle is a cryptographic library that is designed to fit easily in more or
  less any context: In crypto toolkits for object-oriented languages (C++,
@@ -1039,13 +1040,13 @@ Package: libidn2-0
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 304
+Installed-Size: 300
 Maintainer: Debian Libidn team <help-libidn@gnu.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: libidn2
 Version: 2.3.0-5
-Depends: libc6 (>= 2.4), libunistring2 (>= 0.9.7)
+Depends: libc6 (>= 2.14), libunistring2 (>= 0.9.7)
 Description: Internationalized domain names (IDNA2008/TR46) library
  Libidn2 implements the revised algorithm for internationalized domain
  names called IDNA2008/TR46.
@@ -1059,10 +1060,10 @@ Priority: optional
 Section: libs
 Installed-Size: 296
 Maintainer: Sam Hartman <hartmans@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: krb5
-Version: 1.18.3-6+deb11u1
+Version: 1.18.3-6+deb11u3
 Depends: libc6 (>= 2.25), libkrb5support0 (>= 1.16)
 Suggests: krb5-doc, krb5-user
 Breaks: libgssapi-krb5-2 (<= 1.18~), libkrb5-3 (<= 1.18~)
@@ -1082,13 +1083,13 @@ Package: libkeyutils1
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 42
+Installed-Size: 46
 Maintainer: Christian Kastner <ckk@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: keyutils
 Version: 1.6.1-2
-Depends: libc6 (>= 2.7)
+Depends: libc6 (>= 2.14)
 Description: Linux Key Management Utilities (library)
  Keyutils is a set of utilities for managing the key retention facility in the
  kernel, which can be used by filesystems, block devices and more to gain and
@@ -1103,13 +1104,13 @@ Package: libkrb5-3
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 1127
+Installed-Size: 1108
 Maintainer: Sam Hartman <hartmans@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: krb5
-Version: 1.18.3-6+deb11u1
-Depends: libc6 (>= 2.25), libcom-err2 (>= 1.43.9), libk5crypto3 (>= 1.15~beta1), libkeyutils1 (>= 1.5.9), libkrb5support0 (= 1.18.3-6+deb11u1), libssl1.1 (>= 1.1.0)
+Version: 1.18.3-6+deb11u3
+Depends: libc6 (>= 2.25), libcom-err2 (>= 1.43.9), libk5crypto3 (>= 1.15~beta1), libkeyutils1 (>= 1.5.9), libkrb5support0 (= 1.18.3-6+deb11u3), libssl1.1 (>= 1.1.0)
 Recommends: krb5-locales
 Suggests: krb5-doc, krb5-user
 Breaks: libapache2-mod-auth-kerb (<= 5.4-2.4), libsmbclient (<= 2:3.6.1-2), sssd (<= 1.2.1-4.3)
@@ -1129,12 +1130,12 @@ Package: libkrb5support0
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 168
+Installed-Size: 169
 Maintainer: Sam Hartman <hartmans@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: krb5
-Version: 1.18.3-6+deb11u1
+Version: 1.18.3-6+deb11u3
 Depends: libc6 (>= 2.25)
 Breaks: libgssapi-krb5-2 (<< 1.13~alpha1-1), libk5crypto3 (<< 1.16), libkadm5clnt-mit9 (<< 1.13~alpha1-1), libkadm5srv-mit9 (<< 1.13~alpha1-1), libkdb5-8 (<< 1.16)
 Description: MIT Kerberos runtime libraries - Support library
@@ -1153,14 +1154,14 @@ Package: liblz4-1
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 161
+Installed-Size: 157
 Maintainer: Nobuhiro Iwamatsu <iwamatsu@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: lz4
 Version: 1.9.3-2
 Replaces: liblz4-1a
-Depends: libc6 (>= 2.2)
+Depends: libc6 (>= 2.14)
 Breaks: liblz4-1a
 Description: Fast LZ compression algorithm library - runtime
  LZ4 is a very fast lossless compression algorithm, providing compression speed
@@ -1175,9 +1176,9 @@ Package: liblzma5
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 289
+Installed-Size: 277
 Maintainer: Jonathan Nieder <jrnieder@gmail.com>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: xz-utils
 Version: 5.2.5-2.1~deb11u1
@@ -1197,9 +1198,9 @@ Package: libmount1
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 493
+Installed-Size: 477
 Maintainer: util-linux packagers <util-linux@packages.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: util-linux
 Version: 2.36.1-8+deb11u1
@@ -1214,11 +1215,11 @@ Priority: optional
 Section: libs
 Installed-Size: 480
 Maintainer: Magnus Holmgren <holmgren@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: nettle
 Version: 3.7.3-1
-Depends: libc6 (>= 2.4)
+Depends: libc6 (>= 2.17)
 Description: low level cryptographic library (symmetric and one-way cryptos)
  Nettle is a cryptographic library that is designed to fit easily in more or
  less any context: In crypto toolkits for object-oriented languages (C++,
@@ -1243,11 +1244,11 @@ Priority: optional
 Section: libs
 Installed-Size: 127
 Maintainer: GNU Libc Maintainers <debian-glibc@lists.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: libnsl
 Version: 1.3.0-2
-Depends: libc6 (>= 2.8), libtirpc3 (>= 1.0.2)
+Depends: libc6 (>= 2.14), libtirpc3 (>= 1.0.2)
 Description: Public client interface for NIS(YP) and NIS+
  This package contains the libnsl library, which contains the public client
  interface for NIS(YP) and NIS+. This code was formerly part of glibc, but is
@@ -1258,9 +1259,9 @@ Package: libp11-kit0
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 1489
+Installed-Size: 1401
 Maintainer: Debian GnuTLS Maintainers <pkg-gnutls-maint@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: p11-kit
 Version: 0.23.22-1
@@ -1281,9 +1282,9 @@ Package: libpam-modules
 Status: install ok installed
 Priority: required
 Section: admin
-Installed-Size: 888
+Installed-Size: 1048
 Maintainer: Steve Langasek <vorlon@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: pam
 Version: 1.4.0-9+deb11u1
@@ -1310,14 +1311,14 @@ Package: libpam-modules-bin
 Status: install ok installed
 Priority: required
 Section: admin
-Installed-Size: 218
+Installed-Size: 227
 Maintainer: Steve Langasek <vorlon@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Source: pam
 Version: 1.4.0-9+deb11u1
 Replaces: libpam-modules (<< 1.1.3-8)
-Depends: libaudit1 (>= 1:2.2.1), libc6 (>= 2.4), libcrypt1 (>= 1:4.3.0), libpam0g (>= 0.99.7.1), libselinux1 (>= 3.1~)
+Depends: libaudit1 (>= 1:2.2.1), libc6 (>= 2.14), libcrypt1 (>= 1:4.3.0), libpam0g (>= 0.99.7.1), libselinux1 (>= 3.1~)
 Description: Pluggable Authentication Modules for PAM - helper binaries
  This package contains helper binaries used by the standard set of PAM
  modules in the libpam-modules package.
@@ -1349,14 +1350,14 @@ Package: libpam0g
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 240
+Installed-Size: 244
 Maintainer: Steve Langasek <vorlon@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: pam
 Version: 1.4.0-9+deb11u1
 Replaces: libpam0g-util
-Depends: libaudit1 (>= 1:2.2.1), libc6 (>= 2.8), debconf (>= 0.5) | debconf-2.0
+Depends: libaudit1 (>= 1:2.2.1), libc6 (>= 2.14), debconf (>= 0.5) | debconf-2.0
 Suggests: libpam-doc
 Description: Pluggable Authentication Modules library
  Contains the shared library for Linux-PAM, a library that enables the
@@ -1371,13 +1372,13 @@ Package: libpcre2-8-0
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 440
+Installed-Size: 664
 Maintainer: Matthew Vernon <matthew@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: pcre2
-Version: 10.36-2
-Depends: libc6 (>= 2.4)
+Version: 10.36-2+deb11u1
+Depends: libc6 (>= 2.14)
 Description: New Perl Compatible Regular Expression Library- 8 bit runtime files
  This is PCRE2, the new implementation of PCRE, a library of functions
  to support regular expressions whose syntax and semantics are as
@@ -1392,13 +1393,13 @@ Package: libpcre3
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 493
+Installed-Size: 669
 Maintainer: Matthew Vernon <matthew@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: pcre3
 Version: 2:8.39-13
-Depends: libc6 (>= 2.4)
+Depends: libc6 (>= 2.14)
 Breaks: approx (<< 4.4-1~), cduce (<< 0.5.3-2~), cmigrep (<< 1.5-7~), galax (<< 1.1-7~), libpcre-ocaml (<< 6.0.1~), liquidsoap (<< 0.9.2-3~), ocsigen (<< 1.3.3-1~)
 Conflicts: libpcre3-dev (<= 4.3-3)
 Description: Old Perl 5 Compatible Regular Expression Library - runtime files
@@ -1414,9 +1415,9 @@ Package: libseccomp2
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 166
+Installed-Size: 158
 Maintainer: Kees Cook <kees@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: libseccomp
 Version: 2.5.1-1+deb11u1
@@ -1431,13 +1432,13 @@ Package: libselinux1
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 219
+Installed-Size: 207
 Maintainer: Debian SELinux maintainers <selinux-devel@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: libselinux
 Version: 3.1-3
-Depends: libc6 (>= 2.8), libpcre2-8-0 (>= 10.22)
+Depends: libc6 (>= 2.14), libpcre2-8-0 (>= 10.22)
 Description: SELinux runtime shared libraries
  This package provides the shared libraries for Security-enhanced
  Linux that provides interfaces (e.g. library functions for the
@@ -1493,13 +1494,13 @@ Package: libsemanage1
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 314
+Installed-Size: 307
 Maintainer: Debian SELinux maintainers <selinux-devel@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: libsemanage (3.1-1)
 Version: 3.1-1+b2
-Depends: libsemanage-common (= 3.1-1), libaudit1 (>= 1:2.2.1), libbz2-1.0, libc6 (>= 2.8), libselinux1 (>= 3.1), libsepol1 (>= 3.1)
+Depends: libsemanage-common (= 3.1-1), libaudit1 (>= 1:2.2.1), libbz2-1.0, libc6 (>= 2.14), libselinux1 (>= 3.1), libsepol1 (>= 3.1)
 Breaks: policycoreutils (<< 3.0), selinux-policy-default (<< 2:2.20140421-10~), selinux-policy-mls (<< 2:2.20140421-10~)
 Description: SELinux policy management library
  This package provides the shared libraries for SELinux policy management.
@@ -1525,13 +1526,13 @@ Package: libsepol1
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 786
+Installed-Size: 743
 Maintainer: Debian SELinux maintainers <selinux-devel@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: libsepol
 Version: 3.1-1
-Depends: libc6 (>= 2.8)
+Depends: libc6 (>= 2.14)
 Description: SELinux library for manipulating binary security policies
  Security-enhanced Linux is a patch of the Linux kernel and a number
  of utilities with enhanced security functionality designed to add
@@ -1553,9 +1554,9 @@ Package: libsmartcols1
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 340
+Installed-Size: 328
 Maintainer: util-linux packagers <util-linux@packages.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: util-linux
 Version: 2.36.1-8+deb11u1
@@ -1568,9 +1569,9 @@ Package: libss2
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 105
+Installed-Size: 113
 Maintainer: Theodore Y. Ts'o <tytso@mit.edu>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: e2fsprogs
 Version: 1.46.2-2
@@ -1588,12 +1589,12 @@ Package: libssl1.1
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 3722
+Installed-Size: 4124
 Maintainer: Debian OpenSSL Team <pkg-openssl-devel@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: openssl
-Version: 1.1.1n-0+deb11u3
+Version: 1.1.1n-0+deb11u4
 Depends: libc6 (>= 2.25), debconf (>= 0.5) | debconf-2.0
 Breaks: isync (<< 1.3.0-2), lighttpd (<< 1.4.49-2), python-boto (<< 2.44.0-1.1), python-httplib2 (<< 0.11.3-1), python-imaplib2 (<< 2.57-5), python3-boto (<< 2.44.0-1.1), python3-imaplib2 (<< 2.57-5)
 Description: Secure Sockets Layer toolkit - shared libraries
@@ -1608,14 +1609,14 @@ Package: libstdc++6
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 2649
+Installed-Size: 2351
 Maintainer: Debian GCC Maintainers <debian-gcc@lists.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: gcc-10
 Version: 10.2.1-6
 Replaces: libstdc++6-10-dbg (<< 4.9.0-3)
-Depends: gcc-10-base (= 10.2.1-6), libc6 (>= 2.29), libgcc-s1 (>= 4.2)
+Depends: gcc-10-base (= 10.2.1-6), libc6 (>= 2.23), libgcc-s1 (>= 4.2)
 Breaks: gcc-4.3 (<< 4.3.6-1), gcc-4.4 (<< 4.4.6-4), gcc-4.5 (<< 4.5.3-2)
 Conflicts: scim (<< 1.4.2-1)
 Description: GNU Standard C++ Library v3
@@ -1631,12 +1632,12 @@ Package: libsystemd0
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 890
+Installed-Size: 865
 Maintainer: Debian systemd Maintainers <pkg-systemd-maintainers@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: systemd
-Version: 247.3-7
+Version: 247.3-7+deb11u1
 Pre-Depends: libc6 (>= 2.30), libgcrypt20 (>= 1.8.0), liblz4-1 (>= 0.0~r122), liblzma5 (>= 5.1.1alpha+20120614), libzstd1 (>= 1.4.0)
 Description: systemd utility library
  The libsystemd0 library provides interfaces to various systemd components.
@@ -1648,10 +1649,10 @@ Priority: optional
 Section: libs
 Installed-Size: 124
 Maintainer: Debian GnuTLS Maintainers <pkg-gnutls-maint@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
-Version: 4.16.0-2
-Depends: libc6 (>= 2.4)
+Version: 4.16.0-2+deb11u1
+Depends: libc6 (>= 2.14)
 Description: Manage ASN.1 structures (runtime)
  Manage ASN1 (Abstract Syntax Notation One) structures.
  The main features of this library are:
@@ -1669,9 +1670,9 @@ Package: libtinfo6
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 540
+Installed-Size: 536
 Maintainer: Craig Small <csmall@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: ncurses
 Version: 6.2+20201114-2
@@ -1710,9 +1711,9 @@ Package: libtirpc3
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 237
+Installed-Size: 229
 Maintainer: Josue Ortega <josue@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: libtirpc
 Version: 1.3.1-1+deb11u1
@@ -1728,12 +1729,12 @@ Package: libudev1
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 286
+Installed-Size: 282
 Maintainer: Debian systemd Maintainers <pkg-systemd-maintainers@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: systemd
-Version: 247.3-7
+Version: 247.3-7+deb11u1
 Depends: libc6 (>= 2.30)
 Description: libudev shared library
  This library provides access to udev device information.
@@ -1743,13 +1744,13 @@ Package: libunistring2
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 1611
+Installed-Size: 1592
 Maintainer: Jörg Frings-Fürst <debian@jff.email>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: libunistring
 Version: 0.9.10-4
-Depends: libc6 (>= 2.7)
+Depends: libc6 (>= 2.14)
 Description: Unicode string library for C
  The 'libunistring' library implements Unicode strings (in the UTF-8,
  UTF-16, and UTF-32 encodings), together with functions for Unicode
@@ -1767,7 +1768,7 @@ Priority: optional
 Section: libs
 Installed-Size: 129
 Maintainer: util-linux packagers <util-linux@packages.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: util-linux
 Version: 2.36.1-8+deb11u1
@@ -1787,13 +1788,13 @@ Package: libxxhash0
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 57
+Installed-Size: 114
 Maintainer: Norbert Preining <norbert@preining.info>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: xxhash
 Version: 0.8.0-2
-Depends: libc6 (>= 2.4)
+Depends: libc6 (>= 2.14)
 Description: shared library for xxhash
  xxHash is an Extremely fast Hash algorithm, running at RAM speed limits.
  It successfully completes the SMHasher test suite which evaluates collision,
@@ -1807,13 +1808,13 @@ Package: libzstd1
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 984
+Installed-Size: 904
 Maintainer: Debian Med Packaging Team <debian-med-packaging@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: libzstd
 Version: 1.4.8+dfsg-2.1
-Depends: libc6 (>= 2.4)
+Depends: libc6 (>= 2.14)
 Description: fast lossless compression algorithm
  Zstd, short for Zstandard, is a fast lossless compression algorithm, targeting
  real-time compression scenarios at zlib-level compression ratio.
@@ -1826,14 +1827,14 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: admin
-Installed-Size: 2323
+Installed-Size: 2335
 Maintainer: Shadow package maintainers <pkg-shadow-devel@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Source: shadow
 Version: 1:4.8.1-1
 Replaces: manpages-de (<< 0.5-3), manpages-tr (<< 1.0.5), manpages-zh (<< 1.5.1-1)
-Pre-Depends: libaudit1 (>= 1:2.2.1), libc6 (>= 2.7), libcrypt1 (>= 1:4.1.0), libpam0g (>= 0.99.7.1), libpam-runtime, libpam-modules (>= 1.1.8-1)
+Pre-Depends: libaudit1 (>= 1:2.2.1), libc6 (>= 2.14), libcrypt1 (>= 1:4.1.0), libpam0g (>= 0.99.7.1), libpam-runtime, libpam-modules (>= 1.1.8-1)
 Breaks: util-linux (<< 2.32-0.2~)
 Conflicts: amavisd-new (<< 2.3.3-8), backupninja (<< 0.9.3-5), echolot (<< 2.1.8-4), gnunet (<< 0.7.0c-2), python-4suite (<< 0.99cvs20060405-1)
 Conffiles:
@@ -1853,12 +1854,12 @@ Priority: optional
 Section: admin
 Installed-Size: 93
 Maintainer: Theodore Y. Ts'o <tytso@mit.edu>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Source: e2fsprogs
 Version: 1.46.2-2
 Replaces: e2fsprogs (<< 1.45.3-1)
-Depends: libc6 (>= 2.4)
+Depends: libc6 (>= 2.14)
 Breaks: e2fsprogs (<< 1.45.3-1)
 Description: save the output of a command in a log file
  The logsave program will execute cmd_prog with the specified
@@ -1892,9 +1893,9 @@ Package: mawk
 Status: install ok installed
 Priority: required
 Section: interpreters
-Installed-Size: 258
+Installed-Size: 242
 Maintainer: Boyuan Yang <byang@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Version: 1.3.4.20200120-2
 Provides: awk
@@ -1920,7 +1921,7 @@ Priority: required
 Section: admin
 Installed-Size: 438
 Maintainer: util-linux packagers <util-linux@packages.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Source: util-linux
 Version: 2.36.1-8+deb11u1
@@ -1961,13 +1962,13 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: utils
-Installed-Size: 625
+Installed-Size: 645
 Maintainer: Craig Small <csmall@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Source: ncurses
 Version: 6.2+20201114-2
-Pre-Depends: libc6 (>= 2.7), libtinfo6 (>= 6.2+20200912), libtinfo6 (<< 6.3~)
+Pre-Depends: libc6 (>= 2.14), libtinfo6 (>= 6.2+20200912), libtinfo6 (<< 6.3~)
 Description: terminal-related programs and man pages
  The ncurses library routines are a terminal-independent method of
  updating character screens with reasonable optimization.
@@ -1981,14 +1982,14 @@ Package: passwd
 Status: install ok installed
 Priority: required
 Section: admin
-Installed-Size: 2720
+Installed-Size: 2736
 Maintainer: Shadow package maintainers <pkg-shadow-devel@lists.alioth.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Source: shadow
 Version: 1:4.8.1-1
 Replaces: manpages-tr (<< 1.0.5), manpages-zh (<< 1.5.1-1)
-Depends: libaudit1 (>= 1:2.2.1), libc6 (>= 2.8), libcrypt1 (>= 1:4.1.0), libpam0g (>= 0.99.7.1), libselinux1 (>= 2.1.9), libsemanage1 (>= 2.0.3), libpam-modules
+Depends: libaudit1 (>= 1:2.2.1), libc6 (>= 2.14), libcrypt1 (>= 1:4.1.0), libpam0g (>= 0.99.7.1), libselinux1 (>= 2.1.9), libsemanage1 (>= 2.0.3), libpam-modules
 Conffiles:
  /etc/default/useradd 559e87e86a6d1cb4b7f60a6f691d5150
  /etc/pam.d/chfn 4d466e00a348ba426130664d795e8afa
@@ -2008,9 +2009,9 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: perl
-Installed-Size: 7802
+Installed-Size: 7664
 Maintainer: Niko Tyni <ntyni@debian.org>
-Architecture: s390x
+Architecture: amd64
 Source: perl
 Version: 5.32.1-4+deb11u2
 Replaces: libfile-path-perl (<< 2.16), libfile-temp-perl (<< 0.2309), libio-socket-ip-perl (<< 0.39), libscalar-list-utils-perl (<< 1:1.55), libsocket-perl (<< 2.029), libxsloader-perl (<< 0.30), perl (<< 5.10.1-12), perl-modules (<< 5.20.1-3)
@@ -2033,12 +2034,12 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: utils
-Installed-Size: 895
+Installed-Size: 883
 Maintainer: Clint Adams <clint@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Version: 4.7-1
-Pre-Depends: libacl1 (>= 2.2.51-8), libc6 (>= 2.7), libselinux1 (>= 1.32)
+Pre-Depends: libacl1 (>= 2.2.51-8), libc6 (>= 2.14), libselinux1 (>= 1.32)
 Description: GNU stream editor for filtering/transforming text
  sed reads the specified files or the standard input if no
  files are specified, makes editing changes according to a
@@ -2051,13 +2052,13 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: admin
-Installed-Size: 67
+Installed-Size: 79
 Maintainer: Debian sysvinit maintainers <debian-init-diversity@chiark.greenend.org.uk>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Source: sysvinit
 Version: 2.96-7+deb11u1
-Depends: lsb-base (>= 11.0.0~), libc6 (>= 2.4)
+Depends: lsb-base (>= 11.0.0~), libc6 (>= 2.14)
 Description: System-V-like utilities
  This package contains the important System-V-like utilities.
  .
@@ -2070,9 +2071,9 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: utils
-Installed-Size: 3212
+Installed-Size: 3152
 Maintainer: Janos Lenart <ocsi@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Version: 1.34+dfsg-1
 Replaces: cpio (<< 2.4.2-39)
@@ -2092,11 +2093,11 @@ Package: tzdata
 Status: install ok installed
 Priority: required
 Section: localization
-Installed-Size: 3403
+Installed-Size: 3413
 Maintainer: GNU Libc Maintainers <debian-glibc@lists.debian.org>
 Architecture: all
 Multi-Arch: foreign
-Version: 2021a-1+deb11u5
+Version: 2021a-1+deb11u9
 Provides: tzdata-bullseye
 Depends: debconf (>= 0.5) | debconf-2.0
 Description: time zone and daylight-saving time data
@@ -2112,9 +2113,9 @@ Essential: yes
 Status: install ok installed
 Priority: required
 Section: utils
-Installed-Size: 4489
+Installed-Size: 4615
 Maintainer: util-linux packagers <util-linux@packages.debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: foreign
 Version: 2.36.1-8+deb11u1
 Replaces: bash-completion (<< 1:2.8), initscripts (<< 2.88dsf-59.2~), login (<< 1:4.5-1.1~), mount (<< 2.29.2-3~), s390-tools (<< 2.2.0-1~), setpriv (<< 2.32.1-0.2~), sysvinit-utils (<< 2.88dsf-59.1~)
@@ -2123,6 +2124,8 @@ Pre-Depends: libaudit1 (>= 1:2.2.1), libblkid1 (>= 2.31.1), libc6 (>= 2.25), lib
 Suggests: dosfstools, kbd, util-linux-locales
 Breaks: bash-completion (<< 1:2.8), grml-debootstrap (<< 0.68), mount (<< 2.29.2-3~), s390-tools (<< 2.2.0-1~), setpriv (<< 2.32.1-0.2~), sysvinit-utils (<< 2.88dsf-59.4~)
 Conffiles:
+ /etc/default/hwclock 02f94aaf57aff4e2e6751ec7b877a997
+ /etc/init.d/hwclock.sh c06bc68c12cbdd9c7f60ba25ee587efe
  /etc/pam.d/runuser b8b44b045259525e0fae9e38fdb2aeeb
  /etc/pam.d/runuser-l 2106ea05877e8913f34b2c77fa02be45
  /etc/pam.d/su 60fbbe65c90d741bc0d380543cefe8af
@@ -2139,14 +2142,14 @@ Package: zlib1g
 Status: install ok installed
 Priority: optional
 Section: libs
-Installed-Size: 170
+Installed-Size: 167
 Maintainer: Mark Brown <broonie@debian.org>
-Architecture: s390x
+Architecture: amd64
 Multi-Arch: same
 Source: zlib
-Version: 1:1.2.11.dfsg-2+deb11u1
+Version: 1:1.2.11.dfsg-2+deb11u2
 Provides: libz1
-Depends: libc6 (>= 2.4)
+Depends: libc6 (>= 2.14)
 Breaks: libxml2 (<< 2.7.6.dfsg-2), texlive-binaries (<< 2009-12)
 Conflicts: zlib1 (<= 1:1.0.4-7)
 Description: compression library - runtime
