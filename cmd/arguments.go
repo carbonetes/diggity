@@ -214,14 +214,14 @@ func setArrayArgs() {
 }
 
 // ValidateOutputArg checks if output types specified are valid
-func ValidateOutputArg(outputType string) {
+func ValidateOutputArg(outputType string) error {
 	for _, output := range strings.Split(outputType, ",") {
 		// Validate from Default Output Types
 		if _, ok := model.OutputTypes[strings.ToLower(output)]; !ok {
-			log.Printf("[warning]: Invalid output type: %+v \nSupported output types: %+v", output, model.OutputList)
-			os.Exit(0)
+			return fmt.Errorf("Invalid output type: %+v \nSupported output types: %+v", output, model.OutputList)
 		}
 	}
+	return nil
 }
 
 // SplitArgs splits arguments with comma, if any
