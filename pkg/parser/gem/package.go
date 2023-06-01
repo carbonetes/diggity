@@ -11,18 +11,23 @@ import (
 func newGemLockPackage(attributes []string) *model.Package {
 	var pkg model.Package
 	pkg.ID = uuid.NewString()
-	pkg.Name = attributes[0]
+	name, version := attributes[0], strings.Trim(attributes[1], "()")
+	pkg.Name = name
 	pkg.Type = Type
-	pkg.Path = attributes[0]
-	pkg.Version = strings.Trim(attributes[1], "()")
+	pkg.Path = name
+	pkg.Version = version
 	//generate cpe
 	generateCpes(&pkg, nil)
+	metadata := make(Metadata)
+	metadata["name"] = name
+	metadata["version"] = version
+	pkg.Metadata = metadata
 	return &pkg
 }
 
 // Initialize package
 func newPackage(metadata Metadata) *model.Package {
-	var pkg model.Package
+	var pkg = new(model.Package)
 	var licenses = make([]string, 0)
 	re := regexp.MustCompile(`[^\w^,^ ]`)
 
@@ -42,7 +47,7 @@ func newPackage(metadata Metadata) *model.Package {
 	pkg.Type = Type
 
 	//parseURL
-	setPurl(&pkg)
+	setPurl(pkg)
 
 	//check if metadata key is exist. if exist delete key to avoid duplicates
 	if _, ok := metadata["metadata"].(string); ok {
@@ -56,13 +61,13 @@ func newPackage(metadata Metadata) *model.Package {
 			arrAuthors := strings.Split(tmpAuthors, ", ")
 			metadata["authors"] = arrAuthors
 			for _, tmpAuthor := range arrAuthors {
-				generateCpes(&pkg, &tmpAuthor)
+				generateCpes(pkg, &tmpAuthor)
 			}
 		} else {
 			var authors = make([]string, 0)
 			authors = append(authors, tmpAuthors)
 			metadata["authors"] = authors
-			generateCpes(&pkg, &tmpAuthors)
+			generateCpes(pkg, &tmpAuthors)
 		}
 	}
 
@@ -80,7 +85,7 @@ func newPackage(metadata Metadata) *model.Package {
 	metadata["licenses"] = licenses
 	pkg.Metadata = metadata
 
-	return &pkg
+	return pkg
 }
 
 // Parse PURL
