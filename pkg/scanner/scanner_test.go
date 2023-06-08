@@ -10,12 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockParser func(*bom.ParserRequirements)
-
-func (m mockParser) Init(req *bom.ParserRequirements) {
-	m(req)
-}
-
 var (
 	testImage     string = "alpine"
 	testDirectory string = filepath.Join("..", "..", "docs", "references")
