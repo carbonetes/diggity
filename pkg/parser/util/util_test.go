@@ -1,6 +1,7 @@
 package util_test
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/carbonetes/diggity/pkg/model"
@@ -9,6 +10,10 @@ import (
 )
 
 type (
+	TrimUntilLayerResult struct {
+		location model.Location
+		expected string
+	}
 	IndexOfResult struct {
 		array    []string
 		s        string
@@ -33,15 +38,44 @@ type (
 	}
 )
 
-func TestTrimUntilLayer(t *testing.T) {
-	// Test case 1: location with layer hash in the middle of path
-	location := model.Location{
-		Path:      "\\diggity-tmp-faba00cf-a55c-4635-b0b6-1f648498e790\\187d3fbd6d78f45ee5d316f07a4e3721c8e4e91b75cbf9ee0ab0ac1bcbef78e8\\lib\\apk\\db\\installed",
-		LayerHash: "187d3fbd6d78f45ee5d316f07a4e3721c8e4e91b75cbf9ee0ab0ac1bcbef78e8",
+var (
+	utilLocation1 = model.Location{
+		Path:      filepath.Join("AppData", "Local", "Temp", "3175519915", "diggity-tmp-714678a1-5579-42fb-8e8f-0d8e2101c803", "f1a5f5ce6b163fac7f09b47645c56d2ab676bdcdb268eef06a4d9b782a75bfd0", "var", "lib", "dpkg", "status"),
+		LayerHash: "f1a5f5ce6b163fac7f09b47645c56d2ab676bdcdb268eef06a4d9b782a75bfd0",
 	}
-	expected := "lib/apk/db/installed"
-	result := util.TrimUntilLayer(location)
-	assert.Equal(t, result, expected)
+	utilLocation2 = model.Location{
+		Path:      filepath.Join("AppData", "Local", "Temp", "921108149", "diggity-tmp-cb5342d2-f2dd-4eb3-b6c0-0e2c9f023279", "0cd4836a36e094e1870a2e6c2578a7ad9d9cb42a7313944a6d05ab72892fc3c3", "bin", "gost"),
+		LayerHash: "0cd4836a36e094e1870a2e6c2578a7ad9d9cb42a7313944a6d05ab72892fc3c3",
+	}
+	utilLocation3 = model.Location{
+		Path:      filepath.Join("AppData", "Local", "Temp", "3175519915", "diggity-tmp-614678a1-5579-42fb-8e8f-0d8e2101c803", "69a15d957a7a6f77e3fe31f330da5f4b6b582f228917a713a7a9e59449a3f413", "var", "lib", "rpm", "Packages"),
+		LayerHash: "69a15d957a7a6f77e3fe31f330da5f4b6b582f228917a713a7a9e59449a3f413",
+	}
+	utilLocation4 = model.Location{
+		Path:      filepath.Join("AppData", "Local", "Temp", "3175519915", "diggity-tmp-614678a1-5579-42fb-8e8f-0d8e2101c803", "69a15d957a7a6f77e3fe31f330da5f4b6b582f228917a713a7a9e59449a3f413", "lib", "apk", "db", "installed"),
+		LayerHash: "69a15d957a7a6f77e3fe31f330da5f4b6b582f228917a713a7a9e59449a3f413",
+	}
+	utilLocation5 = model.Location{
+		Path: filepath.Join("AppData", "Local", "Temp", "4207199802", "diggity-tmp-c25a6d61-6bb0-4d23-90db-8aee8fe0516c", "1ea8aec45877fad7de4c11ccdf09146ce8ac4be9fe84c8ad036564f5d10b441b",
+			"usr", "share", "powershell", ".store", "powershell.linux", "7.1.3", "powershell.linux", "7.1.3", "tools", "net5.0", "any", "pwsh.deps.json"),
+		LayerHash: "1ea8aec45877fad7de4c11ccdf09146ce8ac4be9fe84c8ad036564f5d10b441b",
+	}
+)
+
+func TestTrimUntilLayer(t *testing.T) {
+	tests := []TrimUntilLayerResult{
+		{utilLocation1, "var/lib/dpkg/status"},
+		{utilLocation2, "bin/gost"},
+		{utilLocation3, "var/lib/rpm/Packages"},
+		{utilLocation4, "lib/apk/db/installed"},
+		{utilLocation5, "usr/share/powershell/.store/powershell.linux/7.1.3/powershell.linux/7.1.3/tools/net5.0/any/pwsh.deps.json"},
+	}
+
+	for _, test := range tests {
+		result := util.TrimUntilLayer(test.location)
+		assert.Equal(t, test.expected, result)
+
+	}
 }
 
 func TestIndexOf(t *testing.T) {
@@ -128,10 +162,10 @@ func TestSplitContentsByEmptyLine(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result := util.SplitContentsByEmptyLine(tt.contents)
-			assert.DeepEqual(t, tt.expected, result)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			result := util.SplitContentsByEmptyLine(test.contents)
+			assert.DeepEqual(t, test.expected, result)
 		})
 	}
 }
