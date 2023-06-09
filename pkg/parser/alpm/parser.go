@@ -38,11 +38,12 @@ func parseInstalledPackage(location *model.Location, req *bom.ParserRequirements
 			err = errors.New(parserErr + err.Error())
 			*req.Errors = append(*req.Errors, err)
 		}
-		if len(*backups) > 0 {
+
+		if files != nil && len(*files) > 0 {
 			metadata["Files"] = make([]string, len(*files))
 			metadata["Files"] = files
 		}
-		if len(*backups) > 0 {
+		if backups != nil && len(*backups) > 0 {
 			metadata["Backups"] = make([]string, len(*files))
 			metadata["Backups"] = backups
 		}

@@ -2,14 +2,13 @@ package alpm
 
 import (
 	"path/filepath"
-	"strings"
 
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/util"
 )
 
 const (
-	Type   string = "alpm"
+	Type      string = "alpm"
 	parserErr string = "alpm-parser: "
 )
 
@@ -24,7 +23,7 @@ func FindAlpmPackagesFromContent(req *bom.ParserRequirements) {
 	}
 
 	for _, location := range *req.Contents {
-		if strings.Contains(location.Path, InstalledPackagesPath) && strings.Contains(location.Path, "\\desc") {
+		if filepath.Base(location.Path) == "desc" {
 			parseInstalledPackage(&location, req)
 		}
 	}
