@@ -7,7 +7,7 @@ import (
 
 	"github.com/carbonetes/diggity/cmd"
 	"github.com/carbonetes/diggity/pkg/model"
-	"gotest.tools/v3/assert"
+	"gotest.tools/assert"
 )
 
 func TestValidateOutputArg(t *testing.T) {
