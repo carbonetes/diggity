@@ -19,7 +19,7 @@ var (
 
 func TestAlpm(t *testing.T) {
 	if _, err := os.Stat(target); os.IsNotExist(err) {
-		t.Error(errors.New("Alpm not found"))
+		t.Error(errors.New("Alpm reference not found"))
 	}
 	args.Dir = &target
 
