@@ -1,4 +1,4 @@
-package alpm_test
+package conan_test
 
 import (
 	"errors"
@@ -8,27 +8,28 @@ import (
 	"testing"
 
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/alpm"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/conan"
 )
 
 var (
 	args   = model.NewArguments()
-	target = filepath.Join("..", "..", "..", "docs", "references", "alpm")
+	target = filepath.Join("..", "..", "..", "docs", "references", "conan")
 )
 
-func TestAlpm(t *testing.T) {
+func TestConan(t *testing.T) {
 	if _, err := os.Stat(target); os.IsNotExist(err) {
-		t.Error(errors.New("Alpm reference not found"))
+		t.Error(errors.New("Conan reference not found"))
 	}
-	args.Dir = &target
 
+	args.Dir = &target
 	req, err := bom.InitParsers(args)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	req.WG.Add(1)
-	alpm.FindAlpmPackagesFromContent(req)
+	conan.FindConanPackagesFromContent(req)
 	req.WG.Wait()
 	if len(*req.Errors) > 0 {
 		for _, err := range *req.Errors {
@@ -65,4 +66,3 @@ func checkPackageFields(t *testing.T, p model.Package, index int) {
 		t.Error(errors.New("Nil package metadata has been detected at index " + fmt.Sprint(index)))
 	}
 }
-

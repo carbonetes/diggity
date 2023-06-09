@@ -1,7 +1,7 @@
 package composer
 
 import (
-	"strings"
+	"path/filepath"
 
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/util"
@@ -17,10 +17,9 @@ func FindComposerPackagesFromContent(req *bom.ParserRequirements) {
 	}
 
 	for _, content := range *req.Contents {
-		if !strings.Contains(content.Path, composerLock) {
-			continue
+		if filepath.Base(content.Path) == composerLock {
+			parseComposerPackages(&content, req)
 		}
-		parseComposerPackages(&content, req)
 	}
 
 	defer req.WG.Done()

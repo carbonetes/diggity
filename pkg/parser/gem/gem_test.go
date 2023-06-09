@@ -1,4 +1,4 @@
-package alpm_test
+package gem_test
 
 import (
 	"errors"
@@ -8,18 +8,18 @@ import (
 	"testing"
 
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/alpm"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/gem"
 )
 
 var (
 	args   = model.NewArguments()
-	target = filepath.Join("..", "..", "..", "docs", "references", "alpm")
+	target = filepath.Join("..", "..", "..", "docs", "references", "gem")
 )
 
-func TestAlpm(t *testing.T) {
+func TestGem(t *testing.T) {
 	if _, err := os.Stat(target); os.IsNotExist(err) {
-		t.Error(errors.New("Alpm reference not found"))
+		t.Error(errors.New("Gem reference not found"))
 	}
 	args.Dir = &target
 
@@ -28,8 +28,8 @@ func TestAlpm(t *testing.T) {
 		t.Fatal(err)
 	}
 	req.WG.Add(1)
-	alpm.FindAlpmPackagesFromContent(req)
-	req.WG.Wait()
+	gem.FindGemPackagesFromContent(req)
+		req.WG.Wait()
 	if len(*req.Errors) > 0 {
 		for _, err := range *req.Errors {
 			t.Error(err)
@@ -65,4 +65,3 @@ func checkPackageFields(t *testing.T, p model.Package, index int) {
 		t.Error(errors.New("Nil package metadata has been detected at index " + fmt.Sprint(index)))
 	}
 }
-
