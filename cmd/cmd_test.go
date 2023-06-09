@@ -1,4 +1,4 @@
-package test
+package cmd_test
 
 import (
 	"testing"
@@ -23,7 +23,7 @@ var rootCmd = &cobra.Command{
 	PreRun: preRun,
 }
 
-func TestCli(t *testing.T) {
+func TestCmd(t *testing.T) {
 	Execute()
 }
 

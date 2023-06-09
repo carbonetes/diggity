@@ -19,7 +19,10 @@ var (
 				_ = cmd.Help()
 				os.Exit(0)
 			}
-			ValidateOutputArg(string(*Arguments.Output))
+			err := ValidateOutputArg(string(*Arguments.Output))
+			if err != nil {
+				log.Error(err)
+			}
 		},
 		Run: func(cmd *cobra.Command, args []string) {
 
