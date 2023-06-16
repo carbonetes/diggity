@@ -13,10 +13,10 @@ import (
 	spdx22 "github.com/spdx/tools-golang/spdx/v2_2"
 )
 
-func ToSPDX(args *model.Arguments, pkgs *[]model.Package) *spdx22.Document {
+func ToSPDX(target string, pkgs *[]model.Package) *spdx22.Document {
 	return &spdx22.Document{
 		SPDXIdentifier: spdxutils.Ref + spdxutils.Doc,
-		DocumentName:   spdxutils.FormatName(args),
+		DocumentName:   target,
 		SPDXVersion:    spdxutils.Version,
 		CreationInfo: &spdx22.CreationInfo{
 			Created:            time.Now().UTC().String(),
@@ -24,7 +24,7 @@ func ToSPDX(args *model.Arguments, pkgs *[]model.Package) *spdx22.Document {
 			LicenseListVersion: spdxutils.LicenseListVersion,
 		},
 		DataLicense:       spdxutils.DataLicense,
-		DocumentNamespace: spdxutils.FormatNamespace(spdxutils.FormatName(args)),
+		DocumentNamespace: spdxutils.FormatNamespace(target),
 		Packages:          spdxJSONPackages(pkgs),
 	}
 }
