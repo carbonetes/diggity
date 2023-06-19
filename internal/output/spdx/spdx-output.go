@@ -7,6 +7,7 @@ import (
 	"github.com/carbonetes/diggity/internal/output/json.go"
 	"github.com/carbonetes/diggity/internal/output/save"
 	"github.com/carbonetes/diggity/pkg/convert"
+	spdxutils "github.com/carbonetes/diggity/pkg/convert/spdx_utils"
 	"github.com/carbonetes/diggity/pkg/model"
 	"gopkg.in/yaml.v3"
 )
@@ -15,7 +16,7 @@ var log = logger.GetLogger()
 
 // PrintSpdxJSON Print Packages in SPDX-JSON format
 func PrintSpdxJSON(args *model.Arguments, outputType *string, pkgs *[]model.Package) {
-	spdx := convert.ToSPDX(args, pkgs)
+	spdx := convert.ToSPDX(spdxutils.FormatName(args), pkgs)
 	result, err := json.ToJSON(spdx)
 	if err != nil {
 		log.Fatal(err)
@@ -37,7 +38,7 @@ func PrintSpdxTagValue(args *model.Arguments, outputType *string, pkgs *[]model.
 	spdx := convert.ToSPDXTagValue(args, pkgs)
 
 	if len(*args.OutputFile) > 0 {
-		save.ResultToFile(stringSliceToString(*spdx),outputType, args.OutputFile)
+		save.ResultToFile(stringSliceToString(*spdx), outputType, args.OutputFile)
 	} else {
 		fmt.Printf("%+v", stringSliceToString(*spdx))
 	}
@@ -45,7 +46,7 @@ func PrintSpdxTagValue(args *model.Arguments, outputType *string, pkgs *[]model.
 
 // PrintSpdxYaml Print Packages in SPDX Yaml format
 func PrintSpdxYaml(args *model.Arguments, outputType *string, pkgs *[]model.Package) {
-	spdx := convert.ToSPDX(args, pkgs)
+	spdx := convert.ToSPDX(spdxutils.FormatName(args), pkgs)
 	result, err := yaml.Marshal(spdx)
 	if err != nil {
 		log.Fatal(err)
