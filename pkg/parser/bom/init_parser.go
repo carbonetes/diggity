@@ -32,7 +32,7 @@ func InitParsers(args *model.Arguments) (*ParserRequirements, error) {
 		}
 		dockerTemp := docker.CreateTempDir()
 		credential := model.NewRegistryAuth(args)
-		imageId := client.GetImageID(args.Image, credential)
+		imageId := client.GetImageID(args.Image, credential, !*args.DisablePullTimeout)
 		ui.OnExtractingImage(*args.Image)
 		contents, dir := client.ExtractImage(imageId, dockerTemp)
 		ui.OnScanningImage(*args.Image)

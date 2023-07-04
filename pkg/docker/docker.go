@@ -33,23 +33,23 @@ func init() {
 // (if required). If the image is available locally, it returns the local image ID. Otherwise, it
 // attempts to pull the image from a registry using the provided credentials. If credentials are not
 // provided, it attempts to pull a public image.
-func GetImageID(target *string, credential *types.AuthConfig) *string {
+func GetImageID(target *string, credential *types.AuthConfig, hasTimeOut bool) *string {
+	ui.OnCheckingImageFromLocal(*target)
 	imageId := FindImageFromLocal(target)
 	if imageId != nil {
 		return imageId
 	}
 
 	if credential != nil {
-		return PullImageFromRegistry(target, credential)
+		return PullImageFromRegistry(target, credential, hasTimeOut)
 	} else {
-		return PullPublicImage(target)
+		return PullPublicImage(target, hasTimeOut)
 	}
 }
 
 // FindImageFromLocal searches for a Docker image of the given target on the local system.
 // If found, it returns its ID; otherwise it returns nil.
 func FindImageFromLocal(target *string) *string {
-	ui.OnCheckingImageFromLocal(*target)
 	images, err := docker.ImageList(context.Background(), types.ImageListOptions{})
 	if err != nil {
 		log.Fatal(err)
@@ -68,7 +68,7 @@ func FindImageFromLocal(target *string) *string {
 
 // PullPublicImage attempts to pull a public Docker image of the given target from Docker Hub.
 // If successful, it returns the image ID; otherwise it waits for timeout seconds and retries.
-func PullPublicImage(target *string) *string {
+func PullPublicImage(target *string, hasTimeOut bool) *string {
 	ui.OnPullingPublicImage(*target)
 	reader, err := docker.ImagePull(context.Background(), *target, types.ImagePullOptions{})
 
@@ -83,7 +83,9 @@ func PullPublicImage(target *string) *string {
 			return FindImageFromLocal(target)
 		}
 		time.Sleep(1 * time.Second)
-		timer++
+		if hasTimeOut {
+			timer++
+		}
 	}
 
 	if timer >= timeout {
@@ -96,7 +98,7 @@ func PullPublicImage(target *string) *string {
 // PullImageFromRegistry attempts to pull a Docker image of the given target from a registry,
 // using the provided authentication credentials. If successful, it returns the image ID;
 // otherwise it waits for timeout seconds and retries.
-func PullImageFromRegistry(target *string, credential *types.AuthConfig) *string {
+func PullImageFromRegistry(target *string, credential *types.AuthConfig, hasTimeOut bool) *string {
 	ui.OnPullingImageFromRegistry(*target)
 	data, err := json.Marshal(credential)
 	if err != nil {
@@ -118,7 +120,9 @@ func PullImageFromRegistry(target *string, credential *types.AuthConfig) *string
 			return FindImageFromLocal(target)
 		}
 		time.Sleep(1 * time.Second)
-		timer++
+		if hasTimeOut {
+			timer++
+		}
 	}
 
 	if timer >= timeout {
