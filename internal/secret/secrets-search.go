@@ -16,15 +16,11 @@ import (
 	"golang.org/x/tools/godoc/util"
 )
 
-var (
-	// Secrets collected secretes
-	secrets = make([]model.Secret, 0)
-	// SecretResults the final result that will be displayed
-	SecretResults = &model.SecretResults{}
-)
-
 // Search search secrets in all file contents that does not exceed the max-file-size argument
 func Search(req *bom.ParserRequirements) {
+	// SecretResults the final result that will be displayed
+	SecretResults := &model.SecretResults{}
+	secrets := make([]model.Secret, 0)
 	if *req.Arguments.DisableSecretSearch {
 		secrets = nil
 	} else {
