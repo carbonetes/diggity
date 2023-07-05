@@ -18,99 +18,101 @@ import (
 
 // Search search secrets in all file contents that does not exceed the max-file-size argument
 func Search(req *bom.ParserRequirements) {
+	if *req.Arguments.DisableSecretSearch {
+		req.WG.Done()
+		return
+	}
 	// SecretResults the final result that will be displayed
 	SecretResults := &model.SecretResults{}
 	secrets := make([]model.Secret, 0)
-	if *req.Arguments.DisableSecretSearch {
-		secrets = nil
-	} else {
-		extensions := initSecretExtensions(req.Arguments.SecretExtensions)
-		for _, content := range *req.Contents {
 
-			// validate filename if accepted for secret search
-			if !validateFilename(filepath.Base(content.Path), extensions) {
-				continue
-			}
+	extensions := initSecretExtensions(req.Arguments.SecretExtensions)
+	for _, content := range *req.Contents {
 
-			file, _ := os.Open(content.Path)
-			if file == nil {
-				continue
-			}
+		// validate filename if accepted for secret search
+		if !validateFilename(filepath.Base(content.Path), extensions) {
+			continue
+		}
 
-			defer file.Close()
+		file, _ := os.Open(content.Path)
+		if file == nil {
+			continue
+		}
 
-			// continue if the path is directory
-			fs, _ := os.Stat(content.Path)
-			if fs.Mode().IsDir() {
-				continue
-			}
+		defer file.Close()
 
-			buf, err := os.ReadFile(content.Path)
+		// continue if the path is directory
+		fs, _ := os.Stat(content.Path)
+		if fs.Mode().IsDir() {
+			continue
+		}
+
+		buf, err := os.ReadFile(content.Path)
+		if err != nil {
+			err = errors.New("secrets: " + err.Error())
+			*req.Errors = append(*req.Errors, err)
+		}
+		stat, err := file.Stat()
+		if err != nil {
+			err = errors.New("secrets: " + err.Error())
+			*req.Errors = append(*req.Errors, err)
+		}
+
+		if isExcluded(file.Name(), req.Arguments.ExcludedFilenames) {
+			continue
+		}
+
+		if stat.Size() >= req.Arguments.SecretMaxFileSize && !util.IsText(buf) {
+			file.Close()
+			continue
+		}
+
+		if stat, err := file.Stat(); !stat.IsDir() {
+
 			if err != nil {
 				err = errors.New("secrets: " + err.Error())
 				*req.Errors = append(*req.Errors, err)
 			}
-			stat, err := file.Stat()
-			if err != nil {
-				err = errors.New("secrets: " + err.Error())
-				*req.Errors = append(*req.Errors, err)
-			}
 
-			if isExcluded(file.Name(), req.Arguments.ExcludedFilenames) {
-				continue
-			}
+			scanner := bufio.NewScanner(file)
 
-			if stat.Size() >= req.Arguments.SecretMaxFileSize && !util.IsText(buf) {
-				file.Close()
-				continue
-			}
+			lineNumber := 1
+			for scanner.Scan() {
+				scannerText := scanner.Text()
+				if match := regexp.MustCompile(*req.Arguments.SecretContentRegex).FindString(scannerText); len(match) > 0 {
+					secrets = append(secrets, model.Secret{
+						ContentRegexName: match,
+						FilePath:         parserUtil.TrimUntilLayer(model.Location{Path: content.Path, LayerHash: content.LayerHash}),
+						LineNumber:       fmt.Sprintf("%d", lineNumber),
+						FileName:         stat.Name(),
+					})
+				}
 
-			if stat, err := file.Stat(); !stat.IsDir() {
-
-				if err != nil {
+				lineNumber++
+				if err := scanner.Err(); err != nil {
+					if err == bufio.ErrTooLong {
+						continue
+					}
 					err = errors.New("secrets: " + err.Error())
 					*req.Errors = append(*req.Errors, err)
 				}
-
-				scanner := bufio.NewScanner(file)
-
-				lineNumber := 1
-				for scanner.Scan() {
-					scannerText := scanner.Text()
-					if match := regexp.MustCompile(*req.Arguments.SecretContentRegex).FindString(scannerText); len(match) > 0 {
-						secrets = append(secrets, model.Secret{
-							ContentRegexName: match,
-							FilePath:         parserUtil.TrimUntilLayer(model.Location{Path: content.Path, LayerHash: content.LayerHash}),
-							LineNumber:       fmt.Sprintf("%d", lineNumber),
-							FileName:         stat.Name(),
-						})
-					}
-
-					lineNumber++
-					if err := scanner.Err(); err != nil {
-						if err == bufio.ErrTooLong {
-							continue
-						}
-						err = errors.New("secrets: " + err.Error())
-						*req.Errors = append(*req.Errors, err)
-					}
-				}
-
 			}
 
-			file.Close()
-
 		}
 
-		SecretResults.Configuration = model.SecretConfig{
-			Disabled:    *req.Arguments.DisableSecretSearch,
-			SecretRegex: *req.Arguments.SecretContentRegex,
-			Excludes:    req.Arguments.ExcludedFilenames,
-			MaxFileSize: req.Arguments.SecretMaxFileSize,
-		}
-		SecretResults.Secrets = secrets
-		req.SBOM.Secret = SecretResults
+		file.Close()
+
 	}
+
+	SecretResults.Configuration = model.SecretConfig{
+		Disabled:    *req.Arguments.DisableSecretSearch,
+		SecretRegex: *req.Arguments.SecretContentRegex,
+		Excludes:    req.Arguments.ExcludedFilenames,
+		MaxFileSize: req.Arguments.SecretMaxFileSize,
+	}
+	SecretResults.Secrets = secrets
+	req.SBOM.Secret = SecretResults
+
 	defer req.WG.Done()
 }
 
