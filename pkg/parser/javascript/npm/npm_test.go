@@ -9,12 +9,12 @@ import (
 
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
-	"github.com/carbonetes/diggity/pkg/parser/npm"
+	"github.com/carbonetes/diggity/pkg/parser/javascript/npm"
 )
 
 var (
 	args   = model.NewArguments()
-	target = filepath.Join("..", "..", "..", "docs", "references", "npm")
+	target = filepath.Join("..", "..", "..", "..", "docs", "references", "npm")
 )
 
 func TestNpm(t *testing.T) {
