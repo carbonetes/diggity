@@ -59,8 +59,6 @@ func readLockFile(location *model.Location, req *bom.ParserRequirements) {
 			continue
 		}
 
-		// fmt.Printf("%s:%s", name, version)
-
 		pkg := newPackage(name, version)
 		generateCPEs(pkg)
 		pkg.Path = util.TrimUntilLayer(*location)
@@ -91,7 +89,6 @@ func readLockFile(location *model.Location, req *bom.ParserRequirements) {
 
 		name := strings.Join(values[:len(values)-1], separator)
 		version := values[len(values)-1]
-		// name, version := nameVersion[0], nameVersion[1]
 
 		pkg := newPackage(name, version)
 		generateCPEs(pkg)
