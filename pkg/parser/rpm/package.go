@@ -6,34 +6,27 @@ import (
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/util"
 	"github.com/google/uuid"
 	rpmdb "github.com/knqyf263/go-rpmdb/pkg"
 )
 
 // Initialize RPM package contents
-func initRpmPackage(p *model.Package, location *model.Location, rpmPkg *rpmdb.PackageInfo) *model.Package {
+func initRpmPackage(location *model.Location, rpmPkg *rpmdb.PackageInfo) *model.Package {
+	var p model.Package
 	p.ID = uuid.NewString()
 	p.Type = Type
-	p.Path = rpmPackagesPath
 	p.Name = rpmPkg.Name
 	p.Version = fmt.Sprintf("%+v-%+v", rpmPkg.Version, rpmPkg.Release)
 	p.Description = rpmPkg.Summary
 
 	// get licenses
-	formatLicenses(p, rpmPkg.License)
-
-	// get locations
-	p.Locations = append(p.Locations, model.Location{
-		Path:      util.TrimUntilLayer(*location),
-		LayerHash: location.LayerHash,
-	})
+	formatLicenses(&p, rpmPkg.License)
 
 	// get purl
-	parseRpmPackageURL(p, rpmPkg.Arch)
+	parseRpmPackageURL(&p, rpmPkg.Arch)
 
 	// set and fill final metadata
-	initFinalRpmMetadata(p, rpmPkg)
+	initFinalRpmMetadata(&p, rpmPkg)
 	// p.Metadata = rpmPkg
 
 	// format version
@@ -46,9 +39,9 @@ func initRpmPackage(p *model.Package, location *model.Location, rpmPkg *rpmdb.Pa
 	}
 
 	// get CPEs
-	cpe.NewCPE23(p, formatVendor(rpmPkg.Vendor), rpmPkg.Name, cpeVersion)
+	cpe.NewCPE23(&p, formatVendor(rpmPkg.Vendor), rpmPkg.Name, cpeVersion)
 
-	return p
+	return &p
 }
 
 // Parse PURL
