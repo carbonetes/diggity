@@ -23,7 +23,8 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/portage"
 	"github.com/carbonetes/diggity/pkg/parser/python"
 	"github.com/carbonetes/diggity/pkg/parser/rpm"
-	"github.com/carbonetes/diggity/pkg/parser/swift"
+	"github.com/carbonetes/diggity/pkg/parser/swift/cocoapods"
+	"github.com/carbonetes/diggity/pkg/parser/swift/swiftpackagemanager"
 )
 
 type parsers []func(*bom.ParserRequirements)
@@ -48,7 +49,8 @@ var (
 		conan.FindConanPackagesFromContent,
 		portage.FindPortagePackagesFromContent,
 		hex.FindHexPackagesFromContent,
-		swift.FindSwiftPackagesFromContent,
+		cocoapods.FindSwiftPackagesFromContent,
+		swiftpackagemanager.FindSwiftPackagesFromContent,
 		distro.ParseDistro,
 		docker.ParseDockerProperties,
 		secret.Search,
