@@ -1,4 +1,4 @@
-package swift
+package cocoapods
 
 import (
 	"github.com/carbonetes/diggity/internal/cpe"

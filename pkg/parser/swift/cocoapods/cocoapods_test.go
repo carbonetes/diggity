@@ -1,4 +1,4 @@
-package swift_test
+package cocoapods_test
 
 import (
 	"errors"
@@ -9,7 +9,7 @@ import (
 
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
-	"github.com/carbonetes/diggity/pkg/parser/swift"
+	"github.com/carbonetes/diggity/pkg/parser/swift/cocoapods"
 )
 
 var (
@@ -29,7 +29,7 @@ func TestSwift(t *testing.T) {
 		t.Fatal(err)
 	}
 	req.WG.Add(1)
-	swift.FindSwiftPackagesFromContent(req)
+	cocoapods.FindSwiftPackagesFromContent(req)
 	req.WG.Wait()
 	if len(*req.Errors) > 0 {
 		for _, err := range *req.Errors {

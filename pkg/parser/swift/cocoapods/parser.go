@@ -1,4 +1,4 @@
-package swift
+package cocoapods
 
 import (
 	"errors"
@@ -11,7 +11,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const parserErr string = "swift-parser: "
+const parserErr string = "cocoapods-parser: "
 
 func parseSwiftPackages(location *model.Location, req *bom.ParserRequirements) {
 	byteValue, err := os.ReadFile(location.Path)
