@@ -14,7 +14,7 @@ import (
 
 var (
 	args   = model.NewArguments()
-	target = filepath.Join("..", "..", "..", "docs", "references", "swift")
+	target = filepath.Join("..", "..", "..", "..", "docs", "references", "swift")
 )
 
 func TestSwift(t *testing.T) {
