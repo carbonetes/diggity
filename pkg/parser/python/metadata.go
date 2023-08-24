@@ -29,6 +29,11 @@ func parseMetadataFiles(m Metadata, path string) error {
 			continue
 		}
 		keyValues := strings.Split(line, ",")
+
+		if len(keyValues) != 2 {
+			continue
+		}
+
 		pathValue = keyValues[0]
 		tmpValue := keyValues[1]
 		if tmpValue != "" {
