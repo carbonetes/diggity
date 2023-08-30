@@ -21,6 +21,8 @@ func readRpmContent(location *model.Location, req *bom.ParserRequirements) {
 		return
 	}
 
+	defer f.Close()
+
 	tmp, err := os.CreateTemp("", "rpmdb_")
 	if err != nil {
 		err = errors.New("rpm-parser: " + err.Error())
@@ -36,8 +38,9 @@ func readRpmContent(location *model.Location, req *bom.ParserRequirements) {
 		*req.Errors = append(*req.Errors, err)
 		return
 	}
-	// fmt.Println(location.Path)
+
 	db, err := rpmdb.Open(tmp.Name())
+
 	if err != nil {
 		err = errors.New("rpm-parser: " + err.Error())
 		*req.Errors = append(*req.Errors, err)
