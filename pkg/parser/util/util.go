@@ -17,6 +17,7 @@ var ParserNames = []string{
 	"deb",
 	"java",
 	"npm",
+	"pnpm",
 	"php",
 	"python",
 	"gem",

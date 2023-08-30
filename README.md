@@ -32,7 +32,7 @@ BOM Diggity’s primary purpose is to ensure the security and integrity of softw
 - Hackage (cabal, stack)
 - Hex (rebar3, mix)
 - Java (jar, ear, war, par, sar)
-- JavaScript (npm, yarn)
+- JavaScript (npm, yarn, pnpm)
 - Jenkins Plugins (jpi, hpi)
 - Objective-C (cocoapods)
 - PHP (composer)

@@ -18,7 +18,8 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/hackage"
 	"github.com/carbonetes/diggity/pkg/parser/hex"
 	"github.com/carbonetes/diggity/pkg/parser/java/maven"
-	"github.com/carbonetes/diggity/pkg/parser/npm"
+	"github.com/carbonetes/diggity/pkg/parser/javascript/npm"
+	"github.com/carbonetes/diggity/pkg/parser/javascript/pnpm"
 	"github.com/carbonetes/diggity/pkg/parser/nuget"
 	"github.com/carbonetes/diggity/pkg/parser/portage"
 	"github.com/carbonetes/diggity/pkg/parser/python"
@@ -53,5 +54,6 @@ var (
 		docker.ParseDockerProperties,
 		secret.Search,
 		alpm.FindAlpmPackagesFromContent,
+		pnpm.FindPnpmPackagesFromContent,
 	}
 )
