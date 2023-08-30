@@ -1,4 +1,4 @@
-package swift
+package swiftpackagemanager
 
 import (
 	"github.com/carbonetes/diggity/internal/cpe"

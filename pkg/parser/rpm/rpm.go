@@ -2,7 +2,6 @@ package rpm
 
 import (
 	"path/filepath"
-	"strings"
 
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/util"
@@ -11,7 +10,7 @@ import (
 const Type = "rpm"
 
 var (
-	rpmPackagesPath = filepath.Join("rpm", "Packages")
+	rpmDBFiles = []string{"Packages", "Packages.db", "rpmdb.sqlite"}
 )
 
 // FindRpmPackagesFromContent Find rpm/Packages in the file content.
@@ -23,7 +22,8 @@ func FindRpmPackagesFromContent(req *bom.ParserRequirements) {
 	}
 
 	for _, content := range *req.Contents {
-		if strings.Contains(content.Path, rpmPackagesPath) {
+		base := filepath.Base(content.Path)
+		if util.StringSliceContains(rpmDBFiles, base) {
 			readRpmContent(&content, req)
 		}
 	}

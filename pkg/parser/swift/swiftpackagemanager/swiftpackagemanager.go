@@ -1,4 +1,4 @@
-package swift
+package swiftpackagemanager
 
 import (
 	"path/filepath"
@@ -7,13 +7,13 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/util"
 )
 
-const (
-	podfilelock = "Podfile.lock"
-	pubname     = "name"
-	Type        = "pod"
+var (
+	manifestFiles = []string{"Package.resolved", ".package.resolved"}
+	Type          = "swift"
 )
 
-// FindSwiftPackagesFromContent - find swift and objective-c packages from content
+const parserErr string = "swift-parser: "
+
 func FindSwiftPackagesFromContent(req *bom.ParserRequirements) {
 	if !util.ParserEnabled(Type, req.Arguments.EnabledParsers) {
 		req.WG.Done()
@@ -21,10 +21,10 @@ func FindSwiftPackagesFromContent(req *bom.ParserRequirements) {
 	}
 
 	for _, content := range *req.Contents {
-		if filepath.Base(content.Path) == podfilelock {
+		base := filepath.Base(content.Path)
+		if util.StringSliceContains(manifestFiles, base) {
 			parseSwiftPackages(&content, req)
 		}
 	}
-
 	defer req.WG.Done()
 }
