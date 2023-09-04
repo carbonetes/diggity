@@ -3,28 +3,29 @@ package swiftpackagemanager
 import (
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
+	"github.com/google/uuid"
 )
 
 func newV1Package(pin *metadata.Pin) *model.Package {
-	var p model.Package
-	p.Name = pin.Name
-	p.Version = pin.State.Version
-	p.Type = Type
-	p.PURL = setPurl(pin.Name, pin.State.Version)
-	p.Metadata = pin
-	generateCpes(&p)
-	return &p
+	return &model.Package{
+		ID:       uuid.NewString(),
+		Name:     pin.Name,
+		Version:  pin.State.Version,
+		Type:     Type,
+		PURL:     setPurl(pin.Name, pin.State.Version),
+		Metadata: *pin,
+	}
 }
 
 func newV2Package(pin *metadata.Pin) *model.Package {
-	var p model.Package
-	p.Name = pin.Identity
-	p.Version = pin.State.Version
-	p.Type = Type
-	p.PURL = setPurl(pin.Identity, pin.State.Version)
-	p.Metadata = pin
-	generateCpes(&p)
-	return &p
+	return &model.Package{
+		ID:       uuid.NewString(),
+		Name:     pin.Identity,
+		Version:  pin.State.Version,
+		Type:     Type,
+		PURL:     setPurl(pin.Identity, pin.State.Version),
+		Metadata: *pin,
+	}
 }
 
 func setPurl(name, version string) model.PURL {
