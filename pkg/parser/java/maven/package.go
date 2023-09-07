@@ -107,6 +107,9 @@ func initPackage(name string, location *model.Location, manifestFile *zip.File, 
 
 	if len(*dir) > 0 || pkg.Name != "" && pkg.Version != "" {
 		checkPackage(pkg, location.LayerHash, result)
+	} else if len(*dir) > 0 || pkg.Name != "" && pkg.Version == "" {
+		pkg.Version = "0.0.0"
+		checkPackage(pkg, location.LayerHash, result)
 	}
 	return nil
 }
