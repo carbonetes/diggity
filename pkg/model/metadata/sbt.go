@@ -1,8 +1,8 @@
 package metadata
 
 type SbtMetadata struct {
-	Vendor  string
-	Name    string
-	Version string
-	Config  string
+	Vendor  string `json:"vendor"`
+	Name    string `json:"name"`
+	Version string `json:"version"`
+	Config  string `json:"config,omitempty"`
 }

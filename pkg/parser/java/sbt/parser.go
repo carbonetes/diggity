@@ -3,6 +3,7 @@ package sbt
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"os"
 	"regexp"
 	"strings"
@@ -57,7 +58,7 @@ func parserSbtPackages(location *model.Location, req *bom.ParserRequirements) {
 		sbtMetadata.Version = removeDoubleQoute(values[2])
 
 		// Check if version has config value
-		splitConfigValue(sbtMetadata)
+		sbtMetadata = splitConfigValue(values[2], sbtMetadata)
 
 		sbtMetadata.Version = sanitizeVersion(sbtMetadata.Version)
 
@@ -84,13 +85,14 @@ func sanitizeVersion(version string) string {
 	return allowedPattern.ReplaceAllString(version, "")
 }
 
-func splitConfigValue(sbtMetadata metadata.SbtMetadata) {
-	
-	if strings.Contains(sbtMetadata.Version, "%") {
+func splitConfigValue(version string, sbtMetadata metadata.SbtMetadata) metadata.SbtMetadata {
+	if strings.Contains(version, "%") {
 		splitVersionConfig := strings.SplitN(sbtMetadata.Version, "%", 2)
 		sbtMetadata.Version = splitVersionConfig[0]
 		sbtMetadata.Config = splitVersionConfig[1]
-	}
+		fmt.Println(splitVersionConfig)
+	} 
+	return sbtMetadata
 }
 
 func variableAsVersion(lines []string, variableAsVersion string) string {
