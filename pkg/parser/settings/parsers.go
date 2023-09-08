@@ -18,6 +18,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/hackage"
 	"github.com/carbonetes/diggity/pkg/parser/hex"
 	"github.com/carbonetes/diggity/pkg/parser/java/maven"
+	"github.com/carbonetes/diggity/pkg/parser/java/sbt"
 	"github.com/carbonetes/diggity/pkg/parser/javascript/npm"
 	"github.com/carbonetes/diggity/pkg/parser/javascript/pnpm"
 	"github.com/carbonetes/diggity/pkg/parser/nuget"
@@ -57,5 +58,6 @@ var (
 		secret.Search,
 		alpm.FindAlpmPackagesFromContent,
 		pnpm.FindPnpmPackagesFromContent,
+		sbt.FindSbtPackagesFromContent,
 	}
 )
