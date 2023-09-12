@@ -39,6 +39,8 @@ func readRpmContent(location *model.Location, req *bom.ParserRequirements) {
 		return
 	}
 
+	defer tmp.Close()
+
 	db, err := rpmdb.Open(tmp.Name())
 
 	if err != nil {
