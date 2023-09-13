@@ -1,0 +1,3659 @@
+{
+ "packages": [
+  {
+   "id": "58313a97-13b9-468f-8727-011745402fd8",
+   "name": "activation",
+   "type": "gradle",
+   "version": "1.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:javax.activation:activation:1.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:javax:activation:1.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:activation:activation:1.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/activation@1.1",
+   "metadata": {
+    "Vendor": "javax.activation",
+    "Name": "activation",
+    "Version": "1.1"
+   }
+  },
+  {
+   "id": "8521d818-ec32-434e-b644-5b4451ba1362",
+   "name": "annotations",
+   "type": "gradle",
+   "version": "13.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.jetbrains:annotations:13.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:annotations:13.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jetbrains:annotations:13.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:annotations:annotations:13.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/annotations@13.0",
+   "metadata": {
+    "Vendor": "org.jetbrains",
+    "Name": "annotations",
+    "Version": "13.0"
+   }
+  },
+  {
+   "id": "a99cd95b-390e-455d-b606-0ad9960e7fc3",
+   "name": "antlr",
+   "type": "gradle",
+   "version": "2.7.7",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:antlr:antlr:2.7.7:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/antlr@2.7.7",
+   "metadata": {
+    "Vendor": "antlr",
+    "Name": "antlr",
+    "Version": "2.7.7"
+   }
+  },
+  {
+   "id": "9007e2e9-e771-41fc-8831-7b52bd08775a",
+   "name": "antlr-runtime",
+   "type": "gradle",
+   "version": "3.4",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.antlr:antlr-runtime:3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.antlr:antlr_runtime:3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:antlr-runtime:3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:antlr:antlr-runtime:3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:antlr-runtime:antlr-runtime:3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:antlr-runtime:antlr_runtime:3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:antlr_runtime:antlr_runtime:3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:antlr_runtime:antlr-runtime:3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:antlr:antlr_runtime:3.4:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/antlr-runtime@3.4",
+   "metadata": {
+    "Vendor": "org.antlr",
+    "Name": "antlr-runtime",
+    "Version": "3.4"
+   }
+  },
+  {
+   "id": "be8a9ff8-553a-4a61-bdf6-a8ebf25cca40",
+   "name": "antlr4-runtime",
+   "type": "gradle",
+   "version": "4.8-1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.antlr:antlr4-runtime:4.8-1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.antlr:antlr4_runtime:4.8-1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:antlr4-runtime:4.8-1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:antlr:antlr4-runtime:4.8-1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:antlr4-runtime:antlr4-runtime:4.8-1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:antlr4-runtime:antlr4_runtime:4.8-1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:antlr4_runtime:antlr4_runtime:4.8-1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:antlr4_runtime:antlr4-runtime:4.8-1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:antlr4:antlr4-runtime:4.8-1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:antlr4:antlr4_runtime:4.8-1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/antlr4-runtime@4.8-1",
+   "metadata": {
+    "Vendor": "org.antlr",
+    "Name": "antlr4-runtime",
+    "Version": "4.8-1"
+   }
+  },
+  {
+   "id": "2dbf1582-0b95-49b0-882a-7ac38619accc",
+   "name": "biz.aQute.bnd.embedded-repo",
+   "type": "gradle",
+   "version": "6.4.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:biz.aQute.bnd:biz.aQute.bnd.embedded-repo:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz.aQute.bnd:biz.aQute.bnd.embedded_repo:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz:biz.aQute.bnd.embedded-repo:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:aQute:biz.aQute.bnd.embedded-repo:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:bnd:biz.aQute.bnd.embedded-repo:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz.aQute.bnd.embedded-repo:biz.aQute.bnd.embedded-repo:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz.aQute.bnd.embedded-repo:biz.aQute.bnd.embedded_repo:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz.aQute.bnd.embedded_repo:biz.aQute.bnd.embedded_repo:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz.aQute.bnd.embedded_repo:biz.aQute.bnd.embedded-repo:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz.aQute.bnd.embedded:biz.aQute.bnd.embedded-repo:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz.aQute.bnd.embedded:biz.aQute.bnd.embedded_repo:6.4.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/biz.aQute.bnd.embedded-repo@6.4.0",
+   "metadata": {
+    "Vendor": "biz.aQute.bnd",
+    "Name": "biz.aQute.bnd.embedded-repo",
+    "Version": "6.4.0"
+   }
+  },
+  {
+   "id": "8a7f89a4-1799-45b1-bd57-0a0f85e8bb2b",
+   "name": "biz.aQute.bnd.gradle",
+   "type": "gradle",
+   "version": "6.4.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:biz.aQute.bnd:biz.aQute.bnd.gradle:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz:biz.aQute.bnd.gradle:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:aQute:biz.aQute.bnd.gradle:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:bnd:biz.aQute.bnd.gradle:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz.aQute.bnd.gradle:biz.aQute.bnd.gradle:6.4.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/biz.aQute.bnd.gradle@6.4.0",
+   "metadata": {
+    "Vendor": "biz.aQute.bnd",
+    "Name": "biz.aQute.bnd.gradle",
+    "Version": "6.4.0"
+   }
+  },
+  {
+   "id": "9830a531-899d-4098-8c69-ce6b5b113056",
+   "name": "biz.aQute.bnd.util",
+   "type": "gradle",
+   "version": "6.4.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:biz.aQute.bnd:biz.aQute.bnd.util:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz:biz.aQute.bnd.util:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:aQute:biz.aQute.bnd.util:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:bnd:biz.aQute.bnd.util:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz.aQute.bnd.util:biz.aQute.bnd.util:6.4.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/biz.aQute.bnd.util@6.4.0",
+   "metadata": {
+    "Vendor": "biz.aQute.bnd",
+    "Name": "biz.aQute.bnd.util",
+    "Version": "6.4.0"
+   }
+  },
+  {
+   "id": "95281df5-52cc-4ea4-a74c-b0283d2a7ade",
+   "name": "biz.aQute.bndlib",
+   "type": "gradle",
+   "version": "6.4.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:biz.aQute.bnd:biz.aQute.bndlib:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz:biz.aQute.bndlib:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:aQute:biz.aQute.bndlib:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:bnd:biz.aQute.bndlib:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz.aQute.bndlib:biz.aQute.bndlib:6.4.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/biz.aQute.bndlib@6.4.0",
+   "metadata": {
+    "Vendor": "biz.aQute.bnd",
+    "Name": "biz.aQute.bndlib",
+    "Version": "6.4.0"
+   }
+  },
+  {
+   "id": "cc709fd4-7693-4ba1-abeb-4024566341ea",
+   "name": "biz.aQute.repository",
+   "type": "gradle",
+   "version": "6.4.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:biz.aQute.bnd:biz.aQute.repository:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz:biz.aQute.repository:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:aQute:biz.aQute.repository:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:bnd:biz.aQute.repository:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz.aQute.repository:biz.aQute.repository:6.4.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/biz.aQute.repository@6.4.0",
+   "metadata": {
+    "Vendor": "biz.aQute.bnd",
+    "Name": "biz.aQute.repository",
+    "Version": "6.4.0"
+   }
+  },
+  {
+   "id": "bb417de8-26cf-482f-af0c-9989d3da979d",
+   "name": "biz.aQute.resolve",
+   "type": "gradle",
+   "version": "6.4.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:biz.aQute.bnd:biz.aQute.resolve:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz:biz.aQute.resolve:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:aQute:biz.aQute.resolve:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:bnd:biz.aQute.resolve:6.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:biz.aQute.resolve:biz.aQute.resolve:6.4.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/biz.aQute.resolve@6.4.0",
+   "metadata": {
+    "Vendor": "biz.aQute.bnd",
+    "Name": "biz.aQute.resolve",
+    "Version": "6.4.0"
+   }
+  },
+  {
+   "id": "8b517c9c-df32-444a-a002-c29e26635a5d",
+   "name": "checker-qual",
+   "type": "gradle",
+   "version": "2.11.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.checkerframework:checker-qual:2.11.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.checkerframework:checker_qual:2.11.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:checker-qual:2.11.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:checkerframework:checker-qual:2.11.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:checker-qual:checker-qual:2.11.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:checker-qual:checker_qual:2.11.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:checker_qual:checker_qual:2.11.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:checker_qual:checker-qual:2.11.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:checker:checker-qual:2.11.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:checker:checker_qual:2.11.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/checker-qual@2.11.1",
+   "metadata": {
+    "Vendor": "org.checkerframework",
+    "Name": "checker-qual",
+    "Version": "2.11.1"
+   }
+  },
+  {
+   "id": "209e05d2-1112-4096-ad16-35ec30081cdd",
+   "name": "checkstyle",
+   "type": "gradle",
+   "version": "8.33",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.puppycrawl.tools:checkstyle:8.33:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:checkstyle:8.33:*:*:*:*:*:*:*",
+    "cpe:2.3:a:puppycrawl:checkstyle:8.33:*:*:*:*:*:*:*",
+    "cpe:2.3:a:tools:checkstyle:8.33:*:*:*:*:*:*:*",
+    "cpe:2.3:a:checkstyle:checkstyle:8.33:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/checkstyle@8.33",
+   "metadata": {
+    "Vendor": "com.puppycrawl.tools",
+    "Name": "checkstyle",
+    "Version": "8.33"
+   }
+  },
+  {
+   "id": "186960e0-7811-4e6e-aa9f-9795c2199cfd",
+   "name": "commons-beanutils",
+   "type": "gradle",
+   "version": "1.9.4",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:commons-beanutils:commons-beanutils:1.9.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons-beanutils:commons_beanutils:1.9.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons_beanutils:commons_beanutils:1.9.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons_beanutils:commons-beanutils:1.9.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons:commons-beanutils:1.9.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons:commons_beanutils:1.9.4:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/commons-beanutils@1.9.4",
+   "metadata": {
+    "Vendor": "commons-beanutils",
+    "Name": "commons-beanutils",
+    "Version": "1.9.4"
+   }
+  },
+  {
+   "id": "6b010142-c335-457c-bf25-8ae78999b259",
+   "name": "commons-collections",
+   "type": "gradle",
+   "version": "3.2.2",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:commons-collections:commons-collections:3.2.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons-collections:commons_collections:3.2.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons_collections:commons_collections:3.2.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons_collections:commons-collections:3.2.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons:commons-collections:3.2.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons:commons_collections:3.2.2:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/commons-collections@3.2.2",
+   "metadata": {
+    "Vendor": "commons-collections",
+    "Name": "commons-collections",
+    "Version": "3.2.2"
+   }
+  },
+  {
+   "id": "37faef04-04c7-48f4-8208-0af01f2747f3",
+   "name": "commons-logging",
+   "type": "gradle",
+   "version": "1.2",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:commons-logging:commons-logging:1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons-logging:commons_logging:1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons_logging:commons_logging:1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons_logging:commons-logging:1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons:commons-logging:1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons:commons_logging:1.2:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/commons-logging@1.2",
+   "metadata": {
+    "Vendor": "commons-logging",
+    "Name": "commons-logging",
+    "Version": "1.2"
+   }
+  },
+  {
+   "id": "259ff0c9-064f-435b-bdba-06cf4de59499",
+   "name": "commons-pool2",
+   "type": "gradle",
+   "version": "2.2",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.apache.commons:commons-pool2:2.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.apache.commons:commons_pool2:2.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:commons-pool2:2.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:apache:commons-pool2:2.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons:commons-pool2:2.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons-pool2:commons-pool2:2.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons-pool2:commons_pool2:2.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons_pool2:commons_pool2:2.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons_pool2:commons-pool2:2.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:commons:commons_pool2:2.2:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/commons-pool2@2.2",
+   "metadata": {
+    "Vendor": "org.apache.commons",
+    "Name": "commons-pool2",
+    "Version": "2.2"
+   }
+  },
+  {
+   "id": "ea15777a-02bf-4044-90e5-c7a78b727f68",
+   "name": "concurrent-trees",
+   "type": "gradle",
+   "version": "2.6.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.googlecode.concurrent-trees:concurrent-trees:2.6.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.googlecode.concurrent-trees:concurrent_trees:2.6.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.googlecode.concurrent_trees:concurrent_trees:2.6.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.googlecode.concurrent_trees:concurrent-trees:2.6.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:concurrent-trees:2.6.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:googlecode:concurrent-trees:2.6.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:concurrent-trees:concurrent-trees:2.6.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:concurrent-trees:concurrent_trees:2.6.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:concurrent_trees:concurrent_trees:2.6.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:concurrent_trees:concurrent-trees:2.6.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:concurrent:concurrent-trees:2.6.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:concurrent:concurrent_trees:2.6.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/concurrent-trees@2.6.1",
+   "metadata": {
+    "Vendor": "com.googlecode.concurrent-trees",
+    "Name": "concurrent-trees",
+    "Version": "2.6.1"
+   }
+  },
+  {
+   "id": "8546cb5a-8be7-4f9c-b973-a897d4067f79",
+   "name": "durian-collect",
+   "type": "gradle",
+   "version": "1.2.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.diffplug.durian:durian-collect:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.diffplug.durian:durian_collect:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:durian-collect:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:diffplug:durian-collect:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian:durian-collect:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian-collect:durian-collect:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian-collect:durian_collect:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian_collect:durian_collect:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian_collect:durian-collect:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian:durian_collect:1.2.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/durian-collect@1.2.0",
+   "metadata": {
+    "Vendor": "com.diffplug.durian",
+    "Name": "durian-collect",
+    "Version": "1.2.0"
+   }
+  },
+  {
+   "id": "b31018b8-a4ab-411f-b59b-982e0cc384e8",
+   "name": "durian-core",
+   "type": "gradle",
+   "version": "1.2.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.diffplug.durian:durian-core:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.diffplug.durian:durian_core:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:durian-core:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:diffplug:durian-core:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian:durian-core:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian-core:durian-core:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian-core:durian_core:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian_core:durian_core:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian_core:durian-core:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian:durian_core:1.2.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/durian-core@1.2.0",
+   "metadata": {
+    "Vendor": "com.diffplug.durian",
+    "Name": "durian-core",
+    "Version": "1.2.0"
+   }
+  },
+  {
+   "id": "e753761f-9d63-4803-9cda-ed5ca73c9e5b",
+   "name": "durian-io",
+   "type": "gradle",
+   "version": "1.2.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.diffplug.durian:durian-io:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.diffplug.durian:durian_io:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:durian-io:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:diffplug:durian-io:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian:durian-io:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian-io:durian-io:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian-io:durian_io:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian_io:durian_io:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian_io:durian-io:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian:durian_io:1.2.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/durian-io@1.2.0",
+   "metadata": {
+    "Vendor": "com.diffplug.durian",
+    "Name": "durian-io",
+    "Version": "1.2.0"
+   }
+  },
+  {
+   "id": "c2e8f7c9-0c25-42be-ae0b-a0a46102b7cb",
+   "name": "durian-swt.os",
+   "type": "gradle",
+   "version": "4.2.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.diffplug.durian:durian-swt.os:4.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.diffplug.durian:durian_swt.os:4.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:durian-swt.os:4.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:diffplug:durian-swt.os:4.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian:durian-swt.os:4.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian-swt.os:durian-swt.os:4.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian-swt.os:durian_swt.os:4.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian_swt.os:durian_swt.os:4.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian_swt.os:durian-swt.os:4.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:durian:durian_swt.os:4.2.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/durian-swt.os@4.2.0",
+   "metadata": {
+    "Vendor": "com.diffplug.durian",
+    "Name": "durian-swt.os",
+    "Version": "4.2.0"
+   }
+  },
+  {
+   "id": "2038f2b8-89a5-4886-9acd-1913cd49ae71",
+   "name": "error_prone_annotations",
+   "type": "gradle",
+   "version": "2.3.4",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.google.errorprone:error_prone_annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.google.errorprone:error-prone_annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.google.errorprone:error-prone-annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:error_prone_annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:google:error_prone_annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:errorprone:error_prone_annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:error_prone_annotations:error_prone_annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:error_prone_annotations:error-prone_annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:error_prone_annotations:error-prone-annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:error-prone_annotations:error-prone-annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:error-prone_annotations:error_prone-annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:error-prone_annotations:error_prone_annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:error-prone-annotations:error_prone_annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:error-prone-annotations:error-prone_annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:error-prone-annotations:error-prone-annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:error:error-prone-annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:error:error_prone-annotations:2.3.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:error:error_prone_annotations:2.3.4:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/error_prone_annotations@2.3.4",
+   "metadata": {
+    "Vendor": "com.google.errorprone",
+    "Name": "error_prone_annotations",
+    "Version": "2.3.4"
+   }
+  },
+  {
+   "id": "7b59b885-02f2-4e6f-b591-4b1ea3c7b3d4",
+   "name": "failureaccess",
+   "type": "gradle",
+   "version": "1.0.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.google.guava:failureaccess:1.0.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:failureaccess:1.0.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:google:failureaccess:1.0.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:guava:failureaccess:1.0.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:failureaccess:failureaccess:1.0.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/failureaccess@1.0.1",
+   "metadata": {
+    "Vendor": "com.google.guava",
+    "Name": "failureaccess",
+    "Version": "1.0.1"
+   }
+  },
+  {
+   "id": "4e3a1ac7-08c8-47ed-9d09-970ee8fd21f6",
+   "name": "FastInfoset",
+   "type": "gradle",
+   "version": "1.2.16",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.sun.xml.fastinfoset:FastInfoset:1.2.16:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:FastInfoset:1.2.16:*:*:*:*:*:*:*",
+    "cpe:2.3:a:sun:FastInfoset:1.2.16:*:*:*:*:*:*:*",
+    "cpe:2.3:a:xml:FastInfoset:1.2.16:*:*:*:*:*:*:*",
+    "cpe:2.3:a:fastinfoset:FastInfoset:1.2.16:*:*:*:*:*:*:*",
+    "cpe:2.3:a:FastInfoset:FastInfoset:1.2.16:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/FastInfoset@1.2.16",
+   "metadata": {
+    "Vendor": "com.sun.xml.fastinfoset",
+    "Name": "FastInfoset",
+    "Version": "1.2.16"
+   }
+  },
+  {
+   "id": "9f0484f1-511a-447c-bab9-19b376391de4",
+   "name": "gradle-contacts-plugin",
+   "type": "gradle",
+   "version": "7.0.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.netflix.nebula:gradle-contacts-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:gradle_contacts-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:gradle_contacts_plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:gradle-contacts-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:netflix:gradle-contacts-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:gradle-contacts-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-contacts-plugin:gradle-contacts-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-contacts-plugin:gradle_contacts-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-contacts-plugin:gradle_contacts_plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_contacts-plugin:gradle_contacts_plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_contacts-plugin:gradle-contacts_plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_contacts-plugin:gradle-contacts-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_contacts_plugin:gradle-contacts-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_contacts_plugin:gradle_contacts-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_contacts_plugin:gradle_contacts_plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle_contacts_plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle-contacts_plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle-contacts-plugin:7.0.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/gradle-contacts-plugin@7.0.0",
+   "metadata": {
+    "Vendor": "com.netflix.nebula",
+    "Name": "gradle-contacts-plugin",
+    "Version": "7.0.0"
+   }
+  },
+  {
+   "id": "a2589335-ae30-4153-8fa2-bc26a90ab486",
+   "name": "gradle-dependency-lock-plugin",
+   "type": "gradle",
+   "version": "13.1.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.netflix.nebula:gradle-dependency-lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:gradle_dependency-lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:gradle_dependency_lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:gradle_dependency_lock_plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:gradle-dependency-lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:netflix:gradle-dependency-lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:gradle-dependency-lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-dependency-lock-plugin:gradle-dependency-lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-dependency-lock-plugin:gradle_dependency-lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-dependency-lock-plugin:gradle_dependency_lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-dependency-lock-plugin:gradle_dependency_lock_plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_dependency-lock-plugin:gradle_dependency_lock_plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_dependency-lock-plugin:gradle-dependency_lock_plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_dependency-lock-plugin:gradle-dependency-lock_plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_dependency-lock-plugin:gradle-dependency-lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_dependency_lock-plugin:gradle-dependency-lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_dependency_lock-plugin:gradle_dependency-lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_dependency_lock-plugin:gradle_dependency_lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_dependency_lock-plugin:gradle_dependency_lock_plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_dependency_lock_plugin:gradle_dependency_lock_plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_dependency_lock_plugin:gradle-dependency_lock_plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_dependency_lock_plugin:gradle-dependency-lock_plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_dependency_lock_plugin:gradle-dependency-lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle-dependency-lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle_dependency-lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle_dependency_lock-plugin:13.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle_dependency_lock_plugin:13.1.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/gradle-dependency-lock-plugin@13.1.0",
+   "metadata": {
+    "Vendor": "com.netflix.nebula",
+    "Name": "gradle-dependency-lock-plugin",
+    "Version": "13.1.0"
+   }
+  },
+  {
+   "id": "8e8f4ab0-4157-41ec-bd86-87bb87afbdfb",
+   "name": "gradle-download-task",
+   "type": "gradle",
+   "version": "5.2.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:de.undercouch:gradle-download-task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:de.undercouch:gradle_download-task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:de.undercouch:gradle_download_task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:de:gradle-download-task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:undercouch:gradle-download-task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-download-task:gradle-download-task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-download-task:gradle_download-task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-download-task:gradle_download_task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_download-task:gradle_download_task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_download-task:gradle-download_task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_download-task:gradle-download-task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_download_task:gradle-download-task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_download_task:gradle_download-task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_download_task:gradle_download_task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle_download_task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle-download_task:5.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle-download-task:5.2.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/gradle-download-task@5.2.1",
+   "metadata": {
+    "Vendor": "de.undercouch",
+    "Name": "gradle-download-task",
+    "Version": "5.2.1"
+   }
+  },
+  {
+   "id": "1beede28-d755-4e09-a1f7-2da833069865",
+   "name": "gradle-info-plugin",
+   "type": "gradle",
+   "version": "12.0.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.netflix.nebula:gradle-info-plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:gradle_info-plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:gradle_info_plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:gradle-info-plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:netflix:gradle-info-plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:gradle-info-plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-info-plugin:gradle-info-plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-info-plugin:gradle_info-plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-info-plugin:gradle_info_plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_info-plugin:gradle_info_plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_info-plugin:gradle-info_plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_info-plugin:gradle-info-plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_info_plugin:gradle-info-plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_info_plugin:gradle_info-plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_info_plugin:gradle_info_plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle_info_plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle-info_plugin:12.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle-info-plugin:12.0.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/gradle-info-plugin@12.0.0",
+   "metadata": {
+    "Vendor": "com.netflix.nebula",
+    "Name": "gradle-info-plugin",
+    "Version": "12.0.0"
+   }
+  },
+  {
+   "id": "4506be6a-c10b-4a91-863a-92adec7e56d6",
+   "name": "gradle-scm-plugin",
+   "type": "gradle",
+   "version": "7.0.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.netflix.nebula:gradle-scm-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:gradle_scm-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:gradle_scm_plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:gradle-scm-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:netflix:gradle-scm-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:gradle-scm-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-scm-plugin:gradle-scm-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-scm-plugin:gradle_scm-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-scm-plugin:gradle_scm_plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_scm-plugin:gradle_scm_plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_scm-plugin:gradle-scm_plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_scm-plugin:gradle-scm-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_scm_plugin:gradle-scm-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_scm_plugin:gradle_scm-plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle_scm_plugin:gradle_scm_plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle_scm_plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle-scm_plugin:7.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:gradle-scm-plugin:7.0.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/gradle-scm-plugin@7.0.0",
+   "metadata": {
+    "Vendor": "com.netflix.nebula",
+    "Name": "gradle-scm-plugin",
+    "Version": "7.0.0"
+   }
+  },
+  {
+   "id": "f70a48c3-18c7-49c5-8084-46d3c6c8a030",
+   "name": "grgit-core",
+   "type": "gradle",
+   "version": "4.1.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.ajoberstar.grgit:grgit-core:4.1.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.ajoberstar.grgit:grgit_core:4.1.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:grgit-core:4.1.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:ajoberstar:grgit-core:4.1.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:grgit:grgit-core:4.1.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:grgit-core:grgit-core:4.1.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:grgit-core:grgit_core:4.1.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:grgit_core:grgit_core:4.1.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:grgit_core:grgit-core:4.1.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:grgit:grgit_core:4.1.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/grgit-core@4.1.1",
+   "metadata": {
+    "Vendor": "org.ajoberstar.grgit",
+    "Name": "grgit-core",
+    "Version": "4.1.1"
+   }
+  },
+  {
+   "id": "f4c4680f-6ae6-4e06-97f1-8c4c2e4c87ac",
+   "name": "guava",
+   "type": "gradle",
+   "version": "29.0-jre",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.google.guava:guava:29.0-jre:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:guava:29.0-jre:*:*:*:*:*:*:*",
+    "cpe:2.3:a:google:guava:29.0-jre:*:*:*:*:*:*:*",
+    "cpe:2.3:a:guava:guava:29.0-jre:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/guava@29.0-jre",
+   "metadata": {
+    "Vendor": "com.google.guava",
+    "Name": "guava",
+    "Version": "29.0-jre"
+   }
+  },
+  {
+   "id": "bad50171-d316-47a3-b20f-821237ae7198",
+   "name": "istack-commons-runtime",
+   "type": "gradle",
+   "version": "3.0.8",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.sun.istack:istack-commons-runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.sun.istack:istack_commons-runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.sun.istack:istack_commons_runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:istack-commons-runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:sun:istack-commons-runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:istack:istack-commons-runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:istack-commons-runtime:istack-commons-runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:istack-commons-runtime:istack_commons-runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:istack-commons-runtime:istack_commons_runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:istack_commons-runtime:istack_commons_runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:istack_commons-runtime:istack-commons_runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:istack_commons-runtime:istack-commons-runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:istack_commons_runtime:istack-commons-runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:istack_commons_runtime:istack_commons-runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:istack_commons_runtime:istack_commons_runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:istack:istack_commons_runtime:3.0.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:istack:istack-commons_runtime:3.0.8:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/istack-commons-runtime@3.0.8",
+   "metadata": {
+    "Vendor": "com.sun.istack",
+    "Name": "istack-commons-runtime",
+    "Version": "3.0.8"
+   }
+  },
+  {
+   "id": "dcf0e27b-1c5d-4017-961c-9fd14338d34d",
+   "name": "j2objc-annotations",
+   "type": "gradle",
+   "version": "1.3",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.google.j2objc:j2objc-annotations:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.google.j2objc:j2objc_annotations:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:j2objc-annotations:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:google:j2objc-annotations:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:j2objc:j2objc-annotations:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:j2objc-annotations:j2objc-annotations:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:j2objc-annotations:j2objc_annotations:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:j2objc_annotations:j2objc_annotations:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:j2objc_annotations:j2objc-annotations:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:j2objc:j2objc_annotations:1.3:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/j2objc-annotations@1.3",
+   "metadata": {
+    "Vendor": "com.google.j2objc",
+    "Name": "j2objc-annotations",
+    "Version": "1.3"
+   }
+  },
+  {
+   "id": "d371f986-b8f4-41cb-90ce-62a53019f48b",
+   "name": "jackson-bom",
+   "type": "gradle",
+   "version": "2.11.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.fasterxml.jackson:jackson-bom:2.11.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.fasterxml.jackson:jackson_bom:2.11.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:jackson-bom:2.11.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:fasterxml:jackson-bom:2.11.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jackson:jackson-bom:2.11.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jackson-bom:jackson-bom:2.11.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jackson-bom:jackson_bom:2.11.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jackson_bom:jackson_bom:2.11.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jackson_bom:jackson-bom:2.11.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jackson:jackson_bom:2.11.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jackson-bom@2.11.0",
+   "metadata": {
+    "Vendor": "com.fasterxml.jackson",
+    "Name": "jackson-bom",
+    "Version": "2.11.0"
+   }
+  },
+  {
+   "id": "c0e84d06-796a-4aab-9f68-395e596ba781",
+   "name": "jakarta.activation-api",
+   "type": "gradle",
+   "version": "1.2.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:jakarta.activation:jakarta.activation-api:1.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jakarta.activation:jakarta.activation_api:1.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jakarta:jakarta.activation-api:1.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:activation:jakarta.activation-api:1.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jakarta.activation-api:jakarta.activation-api:1.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jakarta.activation-api:jakarta.activation_api:1.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jakarta.activation_api:jakarta.activation_api:1.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jakarta.activation_api:jakarta.activation-api:1.2.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jakarta.activation-api@1.2.1",
+   "metadata": {
+    "Vendor": "jakarta.activation",
+    "Name": "jakarta.activation-api",
+    "Version": "1.2.1"
+   }
+  },
+  {
+   "id": "8556ea31-3084-47cd-bac5-7f5eab62de16",
+   "name": "jakarta.xml.bind-api",
+   "type": "gradle",
+   "version": "2.3.2",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:jakarta.xml.bind:jakarta.xml.bind-api:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jakarta.xml.bind:jakarta.xml.bind_api:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jakarta:jakarta.xml.bind-api:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:xml:jakarta.xml.bind-api:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:bind:jakarta.xml.bind-api:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jakarta.xml.bind-api:jakarta.xml.bind-api:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jakarta.xml.bind-api:jakarta.xml.bind_api:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jakarta.xml.bind_api:jakarta.xml.bind_api:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jakarta.xml.bind_api:jakarta.xml.bind-api:2.3.2:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jakarta.xml.bind-api@2.3.2",
+   "metadata": {
+    "Vendor": "jakarta.xml.bind",
+    "Name": "jakarta.xml.bind-api",
+    "Version": "2.3.2"
+   }
+  },
+  {
+   "id": "b128f413-395d-4634-bb59-bed87795cade",
+   "name": "japicmp",
+   "type": "gradle",
+   "version": "0.15.7",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.github.siom79.japicmp:japicmp:0.15.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:japicmp:0.15.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:github:japicmp:0.15.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:siom79:japicmp:0.15.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:japicmp:japicmp:0.15.7:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/japicmp@0.15.7",
+   "metadata": {
+    "Vendor": "com.github.siom79.japicmp",
+    "Name": "japicmp",
+    "Version": "0.15.7"
+   }
+  },
+  {
+   "id": "97d86438-56e2-4c75-b0a4-0872871e003e",
+   "name": "japicmp-gradle-plugin",
+   "type": "gradle",
+   "version": "0.4.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:me.champeau.gradle:japicmp-gradle-plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:me.champeau.gradle:japicmp_gradle-plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:me.champeau.gradle:japicmp_gradle_plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:me:japicmp-gradle-plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:champeau:japicmp-gradle-plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:japicmp-gradle-plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:japicmp-gradle-plugin:japicmp-gradle-plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:japicmp-gradle-plugin:japicmp_gradle-plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:japicmp-gradle-plugin:japicmp_gradle_plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:japicmp_gradle-plugin:japicmp_gradle_plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:japicmp_gradle-plugin:japicmp-gradle_plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:japicmp_gradle-plugin:japicmp-gradle-plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:japicmp_gradle_plugin:japicmp-gradle-plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:japicmp_gradle_plugin:japicmp_gradle-plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:japicmp_gradle_plugin:japicmp_gradle_plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:japicmp:japicmp_gradle_plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:japicmp:japicmp-gradle_plugin:0.4.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:japicmp:japicmp-gradle-plugin:0.4.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/japicmp-gradle-plugin@0.4.1",
+   "metadata": {
+    "Vendor": "me.champeau.gradle",
+    "Name": "japicmp-gradle-plugin",
+    "Version": "0.4.1"
+   }
+  },
+  {
+   "id": "1093b44e-3d48-4245-b5b9-55a1fad295fe",
+   "name": "java-semver",
+   "type": "gradle",
+   "version": "0.9.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.github.zafarkhaja:java-semver:0.9.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.github.zafarkhaja:java_semver:0.9.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:java-semver:0.9.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:github:java-semver:0.9.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:zafarkhaja:java-semver:0.9.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:java-semver:java-semver:0.9.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:java-semver:java_semver:0.9.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:java_semver:java_semver:0.9.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:java_semver:java-semver:0.9.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:java:java-semver:0.9.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:java:java_semver:0.9.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/java-semver@0.9.0",
+   "metadata": {
+    "Vendor": "com.github.zafarkhaja",
+    "Name": "java-semver",
+    "Version": "0.9.0"
+   }
+  },
+  {
+   "id": "316200cb-ffec-497c-9727-f8285a64b213",
+   "name": "JavaEWAH",
+   "type": "gradle",
+   "version": "1.1.13",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.googlecode.javaewah:JavaEWAH:1.1.13:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:JavaEWAH:1.1.13:*:*:*:*:*:*:*",
+    "cpe:2.3:a:googlecode:JavaEWAH:1.1.13:*:*:*:*:*:*:*",
+    "cpe:2.3:a:javaewah:JavaEWAH:1.1.13:*:*:*:*:*:*:*",
+    "cpe:2.3:a:JavaEWAH:JavaEWAH:1.1.13:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/JavaEWAH@1.1.13",
+   "metadata": {
+    "Vendor": "com.googlecode.javaewah",
+    "Name": "JavaEWAH",
+    "Version": "1.1.13"
+   }
+  },
+  {
+   "id": "9a8da195-ae73-4cb3-a208-63f992558e26",
+   "name": "javassist",
+   "type": "gradle",
+   "version": "3.24.0-GA",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.javassist:javassist:3.24.0-GA:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:javassist:3.24.0-GA:*:*:*:*:*:*:*",
+    "cpe:2.3:a:javassist:javassist:3.24.0-GA:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/javassist@3.24.0-GA",
+   "metadata": {
+    "Vendor": "org.javassist",
+    "Name": "javassist",
+    "Version": "3.24.0-GA"
+   }
+  },
+  {
+   "id": "6b22fc77-74e5-4b44-b91d-5090efed184d",
+   "name": "jaxb-runtime",
+   "type": "gradle",
+   "version": "2.3.2",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.glassfish.jaxb:jaxb-runtime:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.glassfish.jaxb:jaxb_runtime:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:jaxb-runtime:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:glassfish:jaxb-runtime:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jaxb:jaxb-runtime:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jaxb-runtime:jaxb-runtime:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jaxb-runtime:jaxb_runtime:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jaxb_runtime:jaxb_runtime:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jaxb_runtime:jaxb-runtime:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jaxb:jaxb_runtime:2.3.2:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jaxb-runtime@2.3.2",
+   "metadata": {
+    "Vendor": "org.glassfish.jaxb",
+    "Name": "jaxb-runtime",
+    "Version": "2.3.2"
+   }
+  },
+  {
+   "id": "c7452d33-c9f2-4dff-b5d3-407e160be943",
+   "name": "jna",
+   "type": "gradle",
+   "version": "5.7.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:net.java.dev.jna:jna:5.7.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:net:jna:5.7.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:java:jna:5.7.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:dev:jna:5.7.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jna:jna:5.7.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jna@5.7.0",
+   "metadata": {
+    "Vendor": "net.java.dev.jna",
+    "Name": "jna",
+    "Version": "5.7.0"
+   }
+  },
+  {
+   "id": "19b30f96-9a14-4303-a60b-99352c208120",
+   "name": "jna-platform",
+   "type": "gradle",
+   "version": "5.7.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:net.java.dev.jna:jna-platform:5.7.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:net.java.dev.jna:jna_platform:5.7.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:net:jna-platform:5.7.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:java:jna-platform:5.7.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:dev:jna-platform:5.7.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jna:jna-platform:5.7.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jna-platform:jna-platform:5.7.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jna-platform:jna_platform:5.7.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jna_platform:jna_platform:5.7.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jna_platform:jna-platform:5.7.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jna:jna_platform:5.7.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jna-platform@5.7.0",
+   "metadata": {
+    "Vendor": "net.java.dev.jna",
+    "Name": "jna-platform",
+    "Version": "5.7.0"
+   }
+  },
+  {
+   "id": "871d65a8-ef8c-47ca-8288-b3fe148e263b",
+   "name": "joda-time",
+   "type": "gradle",
+   "version": "2.10",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:joda-time:joda-time:2.10:*:*:*:*:*:*:*",
+    "cpe:2.3:a:joda-time:joda_time:2.10:*:*:*:*:*:*:*",
+    "cpe:2.3:a:joda_time:joda_time:2.10:*:*:*:*:*:*:*",
+    "cpe:2.3:a:joda_time:joda-time:2.10:*:*:*:*:*:*:*",
+    "cpe:2.3:a:joda:joda-time:2.10:*:*:*:*:*:*:*",
+    "cpe:2.3:a:joda:joda_time:2.10:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/joda-time@2.10",
+   "metadata": {
+    "Vendor": "joda-time",
+    "Name": "joda-time",
+    "Version": "2.10"
+   }
+  },
+  {
+   "id": "9002faf3-36ca-4001-802c-2b6f080eea1d",
+   "name": "jsch.agentproxy.connector-factory",
+   "type": "gradle",
+   "version": "0.0.7",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.jcraft:jsch.agentproxy.connector-factory:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.jcraft:jsch.agentproxy.connector_factory:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:jsch.agentproxy.connector-factory:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jcraft:jsch.agentproxy.connector-factory:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.connector-factory:jsch.agentproxy.connector-factory:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.connector-factory:jsch.agentproxy.connector_factory:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.connector_factory:jsch.agentproxy.connector_factory:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.connector_factory:jsch.agentproxy.connector-factory:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.connector:jsch.agentproxy.connector-factory:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.connector:jsch.agentproxy.connector_factory:0.0.7:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jsch.agentproxy.connector-factory@0.0.7",
+   "metadata": {
+    "Vendor": "com.jcraft",
+    "Name": "jsch.agentproxy.connector-factory",
+    "Version": "0.0.7"
+   }
+  },
+  {
+   "id": "7379cf67-05c6-4739-a5a3-c726a242ebc9",
+   "name": "jsch.agentproxy.core",
+   "type": "gradle",
+   "version": "0.0.7",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.jcraft:jsch.agentproxy.core:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:jsch.agentproxy.core:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jcraft:jsch.agentproxy.core:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.core:jsch.agentproxy.core:0.0.7:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jsch.agentproxy.core@0.0.7",
+   "metadata": {
+    "Vendor": "com.jcraft",
+    "Name": "jsch.agentproxy.core",
+    "Version": "0.0.7"
+   }
+  },
+  {
+   "id": "66eaf097-4f89-4336-9793-5850bd2ce440",
+   "name": "jsch.agentproxy.pageant",
+   "type": "gradle",
+   "version": "0.0.7",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.jcraft:jsch.agentproxy.pageant:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:jsch.agentproxy.pageant:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jcraft:jsch.agentproxy.pageant:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.pageant:jsch.agentproxy.pageant:0.0.7:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jsch.agentproxy.pageant@0.0.7",
+   "metadata": {
+    "Vendor": "com.jcraft",
+    "Name": "jsch.agentproxy.pageant",
+    "Version": "0.0.7"
+   }
+  },
+  {
+   "id": "4dc4b5fc-6d44-4613-b84e-db0e6105ca9b",
+   "name": "jsch.agentproxy.sshagent",
+   "type": "gradle",
+   "version": "0.0.7",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.jcraft:jsch.agentproxy.sshagent:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:jsch.agentproxy.sshagent:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jcraft:jsch.agentproxy.sshagent:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.sshagent:jsch.agentproxy.sshagent:0.0.7:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jsch.agentproxy.sshagent@0.0.7",
+   "metadata": {
+    "Vendor": "com.jcraft",
+    "Name": "jsch.agentproxy.sshagent",
+    "Version": "0.0.7"
+   }
+  },
+  {
+   "id": "80010abf-e46d-45db-ba68-2fc61abf3eb7",
+   "name": "jsch.agentproxy.svnkit-trilead-ssh2",
+   "type": "gradle",
+   "version": "0.0.7",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.jcraft:jsch.agentproxy.svnkit-trilead-ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.jcraft:jsch.agentproxy.svnkit_trilead-ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.jcraft:jsch.agentproxy.svnkit_trilead_ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:jsch.agentproxy.svnkit-trilead-ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jcraft:jsch.agentproxy.svnkit-trilead-ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.svnkit-trilead-ssh2:jsch.agentproxy.svnkit-trilead-ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.svnkit-trilead-ssh2:jsch.agentproxy.svnkit_trilead-ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.svnkit-trilead-ssh2:jsch.agentproxy.svnkit_trilead_ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.svnkit_trilead-ssh2:jsch.agentproxy.svnkit_trilead_ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.svnkit_trilead-ssh2:jsch.agentproxy.svnkit-trilead_ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.svnkit_trilead-ssh2:jsch.agentproxy.svnkit-trilead-ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.svnkit_trilead_ssh2:jsch.agentproxy.svnkit-trilead-ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.svnkit_trilead_ssh2:jsch.agentproxy.svnkit_trilead-ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.svnkit_trilead_ssh2:jsch.agentproxy.svnkit_trilead_ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.svnkit:jsch.agentproxy.svnkit_trilead_ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.svnkit:jsch.agentproxy.svnkit-trilead_ssh2:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.svnkit:jsch.agentproxy.svnkit-trilead-ssh2:0.0.7:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jsch.agentproxy.svnkit-trilead-ssh2@0.0.7",
+   "metadata": {
+    "Vendor": "com.jcraft",
+    "Name": "jsch.agentproxy.svnkit-trilead-ssh2",
+    "Version": "0.0.7"
+   }
+  },
+  {
+   "id": "1336a911-8c99-4c82-af86-ef890c408e3c",
+   "name": "jsch.agentproxy.usocket-jna",
+   "type": "gradle",
+   "version": "0.0.7",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.jcraft:jsch.agentproxy.usocket-jna:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.jcraft:jsch.agentproxy.usocket_jna:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:jsch.agentproxy.usocket-jna:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jcraft:jsch.agentproxy.usocket-jna:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.usocket-jna:jsch.agentproxy.usocket-jna:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.usocket-jna:jsch.agentproxy.usocket_jna:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.usocket_jna:jsch.agentproxy.usocket_jna:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.usocket_jna:jsch.agentproxy.usocket-jna:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.usocket:jsch.agentproxy.usocket-jna:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.usocket:jsch.agentproxy.usocket_jna:0.0.7:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jsch.agentproxy.usocket-jna@0.0.7",
+   "metadata": {
+    "Vendor": "com.jcraft",
+    "Name": "jsch.agentproxy.usocket-jna",
+    "Version": "0.0.7"
+   }
+  },
+  {
+   "id": "393b6451-03d8-4b33-a415-d092f7d0aee0",
+   "name": "jsch.agentproxy.usocket-nc",
+   "type": "gradle",
+   "version": "0.0.7",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.jcraft:jsch.agentproxy.usocket-nc:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.jcraft:jsch.agentproxy.usocket_nc:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:jsch.agentproxy.usocket-nc:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jcraft:jsch.agentproxy.usocket-nc:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.usocket-nc:jsch.agentproxy.usocket-nc:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.usocket-nc:jsch.agentproxy.usocket_nc:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.usocket_nc:jsch.agentproxy.usocket_nc:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.usocket_nc:jsch.agentproxy.usocket-nc:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.usocket:jsch.agentproxy.usocket-nc:0.0.7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsch.agentproxy.usocket:jsch.agentproxy.usocket_nc:0.0.7:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jsch.agentproxy.usocket-nc@0.0.7",
+   "metadata": {
+    "Vendor": "com.jcraft",
+    "Name": "jsch.agentproxy.usocket-nc",
+    "Version": "0.0.7"
+   }
+  },
+  {
+   "id": "7ff1f9d7-0523-4af2-912c-16b2cc8d96f1",
+   "name": "jsr305",
+   "type": "gradle",
+   "version": "3.0.2",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.google.code.findbugs:jsr305:3.0.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:jsr305:3.0.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:google:jsr305:3.0.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:code:jsr305:3.0.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:findbugs:jsr305:3.0.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jsr305:jsr305:3.0.2:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jsr305@3.0.2",
+   "metadata": {
+    "Vendor": "com.google.code.findbugs",
+    "Name": "jsr305",
+    "Version": "3.0.2"
+   }
+  },
+  {
+   "id": "6c8bbb4b-1388-4d99-ab9c-e729c42a07d6",
+   "name": "jzlib",
+   "type": "gradle",
+   "version": "1.1.2",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.jcraft:jzlib:1.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:jzlib:1.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jcraft:jzlib:1.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jzlib:jzlib:1.1.2:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/jzlib@1.1.2",
+   "metadata": {
+    "Vendor": "com.jcraft",
+    "Name": "jzlib",
+    "Version": "1.1.2"
+   }
+  },
+  {
+   "id": "4a7f7f41-31b9-4f10-989d-f987456ab16b",
+   "name": "kotlin-stdlib",
+   "type": "gradle",
+   "version": "1.7.20",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.jetbrains.kotlin:kotlin-stdlib:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.jetbrains.kotlin:kotlin_stdlib:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:kotlin-stdlib:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jetbrains:kotlin-stdlib:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin:kotlin-stdlib:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin-stdlib:kotlin-stdlib:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin-stdlib:kotlin_stdlib:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib:kotlin_stdlib:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib:kotlin-stdlib:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin:kotlin_stdlib:1.7.20:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/kotlin-stdlib@1.7.20",
+   "metadata": {
+    "Vendor": "org.jetbrains.kotlin",
+    "Name": "kotlin-stdlib",
+    "Version": "1.7.20"
+   }
+  },
+  {
+   "id": "c3824694-956b-4073-821b-1381ed59c2f7",
+   "name": "kotlin-stdlib-common",
+   "type": "gradle",
+   "version": "1.7.20",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.jetbrains.kotlin:kotlin-stdlib-common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.jetbrains.kotlin:kotlin_stdlib-common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.jetbrains.kotlin:kotlin_stdlib_common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:kotlin-stdlib-common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jetbrains:kotlin-stdlib-common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin:kotlin-stdlib-common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin-stdlib-common:kotlin-stdlib-common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin-stdlib-common:kotlin_stdlib-common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin-stdlib-common:kotlin_stdlib_common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib-common:kotlin_stdlib_common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib-common:kotlin-stdlib_common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib-common:kotlin-stdlib-common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib_common:kotlin-stdlib-common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib_common:kotlin_stdlib-common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib_common:kotlin_stdlib_common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin:kotlin_stdlib_common:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin:kotlin-stdlib_common:1.7.20:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/kotlin-stdlib-common@1.7.20",
+   "metadata": {
+    "Vendor": "org.jetbrains.kotlin",
+    "Name": "kotlin-stdlib-common",
+    "Version": "1.7.20"
+   }
+  },
+  {
+   "id": "be9d443c-7947-4229-a9ff-d10534254438",
+   "name": "kotlin-stdlib-jdk7",
+   "type": "gradle",
+   "version": "1.7.20",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.jetbrains.kotlin:kotlin_stdlib-jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.jetbrains.kotlin:kotlin_stdlib_jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:kotlin-stdlib-jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jetbrains:kotlin-stdlib-jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin:kotlin-stdlib-jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin-stdlib-jdk7:kotlin-stdlib-jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin-stdlib-jdk7:kotlin_stdlib-jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin-stdlib-jdk7:kotlin_stdlib_jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib-jdk7:kotlin_stdlib_jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib-jdk7:kotlin-stdlib_jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib-jdk7:kotlin-stdlib-jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib_jdk7:kotlin-stdlib-jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib_jdk7:kotlin_stdlib-jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib_jdk7:kotlin_stdlib_jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin:kotlin_stdlib_jdk7:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin:kotlin-stdlib_jdk7:1.7.20:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/kotlin-stdlib-jdk7@1.7.20",
+   "metadata": {
+    "Vendor": "org.jetbrains.kotlin",
+    "Name": "kotlin-stdlib-jdk7",
+    "Version": "1.7.20"
+   }
+  },
+  {
+   "id": "732cd9a4-c449-41bd-8381-c4df0541897b",
+   "name": "kotlin-stdlib-jdk8",
+   "type": "gradle",
+   "version": "1.7.20",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.jetbrains.kotlin:kotlin_stdlib-jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.jetbrains.kotlin:kotlin_stdlib_jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:kotlin-stdlib-jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jetbrains:kotlin-stdlib-jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin:kotlin-stdlib-jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin-stdlib-jdk8:kotlin-stdlib-jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin-stdlib-jdk8:kotlin_stdlib-jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin-stdlib-jdk8:kotlin_stdlib_jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib-jdk8:kotlin_stdlib_jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib-jdk8:kotlin-stdlib_jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib-jdk8:kotlin-stdlib-jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib_jdk8:kotlin-stdlib-jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib_jdk8:kotlin_stdlib-jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin_stdlib_jdk8:kotlin_stdlib_jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin:kotlin_stdlib_jdk8:1.7.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:kotlin:kotlin-stdlib_jdk8:1.7.20:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/kotlin-stdlib-jdk8@1.7.20",
+   "metadata": {
+    "Vendor": "org.jetbrains.kotlin",
+    "Name": "kotlin-stdlib-jdk8",
+    "Version": "1.7.20"
+   }
+  },
+  {
+   "id": "f037403a-2ea2-4558-8459-732798faadf2",
+   "name": "license-gradle-plugin",
+   "type": "gradle",
+   "version": "0.16.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle.plugin.com.hierynomus.gradle.plugins:license_gradle-plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle.plugin.com.hierynomus.gradle.plugins:license_gradle_plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle:license-gradle-plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plugin:license-gradle-plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:license-gradle-plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:hierynomus:license-gradle-plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plugins:license-gradle-plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license-gradle-plugin:license-gradle-plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license-gradle-plugin:license_gradle-plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license-gradle-plugin:license_gradle_plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license_gradle-plugin:license_gradle_plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license_gradle-plugin:license-gradle_plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license_gradle-plugin:license-gradle-plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license_gradle_plugin:license-gradle-plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license_gradle_plugin:license_gradle-plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license_gradle_plugin:license_gradle_plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license:license_gradle_plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license:license-gradle_plugin:0.16.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license:license-gradle-plugin:0.16.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/license-gradle-plugin@0.16.1",
+   "metadata": {
+    "Vendor": "gradle.plugin.com.hierynomus.gradle.plugins",
+    "Name": "license-gradle-plugin",
+    "Version": "0.16.1"
+   }
+  },
+  {
+   "id": "f510bb53-e21a-487b-809c-e5db9684183d",
+   "name": "license-maven-plugin",
+   "type": "gradle",
+   "version": "3.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.mycila:license-maven-plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.mycila:license_maven-plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.mycila:license_maven_plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:license-maven-plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:mycila:license-maven-plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license-maven-plugin:license-maven-plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license-maven-plugin:license_maven-plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license-maven-plugin:license_maven_plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license_maven-plugin:license_maven_plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license_maven-plugin:license-maven_plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license_maven-plugin:license-maven-plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license_maven_plugin:license-maven-plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license_maven_plugin:license_maven-plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license_maven_plugin:license_maven_plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license:license_maven_plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license:license-maven_plugin:3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:license:license-maven-plugin:3.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/license-maven-plugin@3.0",
+   "metadata": {
+    "Vendor": "com.mycila",
+    "Name": "license-maven-plugin",
+    "Version": "3.0"
+   }
+  },
+  {
+   "id": "2fcc4b24-05e1-4913-a780-17f751d857a0",
+   "name": "listenablefuture",
+   "type": "gradle",
+   "version": "9999.0-empty-to-avoid-conflict-with-guava",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava:*:*:*:*:*:*:*",
+    "cpe:2.3:a:google:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava:*:*:*:*:*:*:*",
+    "cpe:2.3:a:guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava:*:*:*:*:*:*:*",
+    "cpe:2.3:a:listenablefuture:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/listenablefuture@9999.0-empty-to-avoid-conflict-with-guava",
+   "metadata": {
+    "Vendor": "com.google.guava",
+    "Name": "listenablefuture",
+    "Version": "9999.0-empty-to-avoid-conflict-with-guava"
+   }
+  },
+  {
+   "id": "ede961cf-ec32-4d27-ae52-4590f098f0f2",
+   "name": "logback-classic",
+   "type": "gradle",
+   "version": "1.2.3",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:ch.qos.logback:logback-classic:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:ch.qos.logback:logback_classic:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:ch:logback-classic:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:qos:logback-classic:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:logback:logback-classic:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:logback-classic:logback-classic:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:logback-classic:logback_classic:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:logback_classic:logback_classic:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:logback_classic:logback-classic:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:logback:logback_classic:1.2.3:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/logback-classic@1.2.3",
+   "metadata": {
+    "Vendor": "ch.qos.logback",
+    "Name": "logback-classic",
+    "Version": "1.2.3"
+   }
+  },
+  {
+   "id": "699748c9-d6cb-4f07-a7e0-4d2fcb0d61e6",
+   "name": "logback-core",
+   "type": "gradle",
+   "version": "1.2.3",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:ch.qos.logback:logback-core:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:ch.qos.logback:logback_core:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:ch:logback-core:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:qos:logback-core:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:logback:logback-core:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:logback-core:logback-core:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:logback-core:logback_core:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:logback_core:logback_core:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:logback_core:logback-core:1.2.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:logback:logback_core:1.2.3:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/logback-core@1.2.3",
+   "metadata": {
+    "Vendor": "ch.qos.logback",
+    "Name": "logback-core",
+    "Version": "1.2.3"
+   }
+  },
+  {
+   "id": "183bed9a-e148-409f-a27c-8b0d93555723",
+   "name": "maven-settings",
+   "type": "gradle",
+   "version": "3.0.4",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.apache.maven:maven-settings:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.apache.maven:maven_settings:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:maven-settings:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:apache:maven-settings:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven:maven-settings:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven-settings:maven-settings:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven-settings:maven_settings:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven_settings:maven_settings:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven_settings:maven-settings:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven:maven_settings:3.0.4:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/maven-settings@3.0.4",
+   "metadata": {
+    "Vendor": "org.apache.maven",
+    "Name": "maven-settings",
+    "Version": "3.0.4"
+   }
+  },
+  {
+   "id": "24d59a5f-0d4b-4bf6-bc4e-66184c6687ff",
+   "name": "maven-settings-builder",
+   "type": "gradle",
+   "version": "3.0.4",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.apache.maven:maven-settings-builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.apache.maven:maven_settings-builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.apache.maven:maven_settings_builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:maven-settings-builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:apache:maven-settings-builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven:maven-settings-builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven-settings-builder:maven-settings-builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven-settings-builder:maven_settings-builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven-settings-builder:maven_settings_builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven_settings-builder:maven_settings_builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven_settings-builder:maven-settings_builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven_settings-builder:maven-settings-builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven_settings_builder:maven-settings-builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven_settings_builder:maven_settings-builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven_settings_builder:maven_settings_builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven:maven_settings_builder:3.0.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:maven:maven-settings_builder:3.0.4:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/maven-settings-builder@3.0.4",
+   "metadata": {
+    "Vendor": "org.apache.maven",
+    "Name": "maven-settings-builder",
+    "Version": "3.0.4"
+   }
+  },
+  {
+   "id": "46bf2483-6554-4950-a801-b358e6c70752",
+   "name": "moshi",
+   "type": "gradle",
+   "version": "1.12.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.squareup.moshi:moshi:1.12.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:moshi:1.12.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:squareup:moshi:1.12.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:moshi:moshi:1.12.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/moshi@1.12.0",
+   "metadata": {
+    "Vendor": "com.squareup.moshi",
+    "Name": "moshi",
+    "Version": "1.12.0"
+   }
+  },
+  {
+   "id": "12b6d141-5c4f-41e1-ba56-d89e70f38a96",
+   "name": "mycila-xmltool",
+   "type": "gradle",
+   "version": "4.4.ga",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.mycila:mycila-xmltool:4.4.ga:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.mycila:mycila_xmltool:4.4.ga:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:mycila-xmltool:4.4.ga:*:*:*:*:*:*:*",
+    "cpe:2.3:a:mycila:mycila-xmltool:4.4.ga:*:*:*:*:*:*:*",
+    "cpe:2.3:a:mycila-xmltool:mycila-xmltool:4.4.ga:*:*:*:*:*:*:*",
+    "cpe:2.3:a:mycila-xmltool:mycila_xmltool:4.4.ga:*:*:*:*:*:*:*",
+    "cpe:2.3:a:mycila_xmltool:mycila_xmltool:4.4.ga:*:*:*:*:*:*:*",
+    "cpe:2.3:a:mycila_xmltool:mycila-xmltool:4.4.ga:*:*:*:*:*:*:*",
+    "cpe:2.3:a:mycila:mycila_xmltool:4.4.ga:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/mycila-xmltool@4.4.ga",
+   "metadata": {
+    "Vendor": "com.mycila",
+    "Name": "mycila-xmltool",
+    "Version": "4.4.ga"
+   }
+  },
+  {
+   "id": "6eb9d57b-7fac-4105-bebb-038a53b09dd4",
+   "name": "nebula-dependencies-comparison",
+   "type": "gradle",
+   "version": "0.2.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.netflix.nebula:nebula-dependencies-comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:nebula_dependencies-comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:nebula_dependencies_comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:nebula-dependencies-comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:netflix:nebula-dependencies-comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula-dependencies-comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-dependencies-comparison:nebula-dependencies-comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-dependencies-comparison:nebula_dependencies-comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-dependencies-comparison:nebula_dependencies_comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_dependencies-comparison:nebula_dependencies_comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_dependencies-comparison:nebula-dependencies_comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_dependencies-comparison:nebula-dependencies-comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_dependencies_comparison:nebula-dependencies-comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_dependencies_comparison:nebula_dependencies-comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_dependencies_comparison:nebula_dependencies_comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula_dependencies_comparison:0.2.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula-dependencies_comparison:0.2.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/nebula-dependencies-comparison@0.2.1",
+   "metadata": {
+    "Vendor": "com.netflix.nebula",
+    "Name": "nebula-dependencies-comparison",
+    "Version": "0.2.1"
+   }
+  },
+  {
+   "id": "177ea593-793b-47f1-bb41-2342d2b5e9bc",
+   "name": "nebula-gradle-interop",
+   "type": "gradle",
+   "version": "2.0.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.netflix.nebula:nebula-gradle-interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:nebula_gradle-interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:nebula_gradle_interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:nebula-gradle-interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:netflix:nebula-gradle-interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula-gradle-interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-gradle-interop:nebula-gradle-interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-gradle-interop:nebula_gradle-interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-gradle-interop:nebula_gradle_interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_gradle-interop:nebula_gradle_interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_gradle-interop:nebula-gradle_interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_gradle-interop:nebula-gradle-interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_gradle_interop:nebula-gradle-interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_gradle_interop:nebula_gradle-interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_gradle_interop:nebula_gradle_interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula_gradle_interop:2.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula-gradle_interop:2.0.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/nebula-gradle-interop@2.0.0",
+   "metadata": {
+    "Vendor": "com.netflix.nebula",
+    "Name": "nebula-gradle-interop",
+    "Version": "2.0.0"
+   }
+  },
+  {
+   "id": "78a5a1d2-35b5-4c8b-adca-0a3db04fd4de",
+   "name": "nebula-project-plugin",
+   "type": "gradle",
+   "version": "10.1.2",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.netflix.nebula:nebula-project-plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:nebula_project-plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:nebula_project_plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:nebula-project-plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:netflix:nebula-project-plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula-project-plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-project-plugin:nebula-project-plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-project-plugin:nebula_project-plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-project-plugin:nebula_project_plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_project-plugin:nebula_project_plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_project-plugin:nebula-project_plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_project-plugin:nebula-project-plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_project_plugin:nebula-project-plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_project_plugin:nebula_project-plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_project_plugin:nebula_project_plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula_project_plugin:10.1.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula-project_plugin:10.1.2:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/nebula-project-plugin@10.1.2",
+   "metadata": {
+    "Vendor": "com.netflix.nebula",
+    "Name": "nebula-project-plugin",
+    "Version": "10.1.2"
+   }
+  },
+  {
+   "id": "710ed2e1-b6b6-494d-9d93-612f39d6dac0",
+   "name": "nebula-publishing-plugin",
+   "type": "gradle",
+   "version": "20.1.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.netflix.nebula:nebula-publishing-plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:nebula_publishing-plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:nebula_publishing_plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:nebula-publishing-plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:netflix:nebula-publishing-plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula-publishing-plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-publishing-plugin:nebula-publishing-plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-publishing-plugin:nebula_publishing-plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-publishing-plugin:nebula_publishing_plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_publishing-plugin:nebula_publishing_plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_publishing-plugin:nebula-publishing_plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_publishing-plugin:nebula-publishing-plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_publishing_plugin:nebula-publishing-plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_publishing_plugin:nebula_publishing-plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_publishing_plugin:nebula_publishing_plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula_publishing_plugin:20.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula-publishing_plugin:20.1.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/nebula-publishing-plugin@20.1.0",
+   "metadata": {
+    "Vendor": "com.netflix.nebula",
+    "Name": "nebula-publishing-plugin",
+    "Version": "20.1.0"
+   }
+  },
+  {
+   "id": "1d49715f-bbcc-4f5c-9ef4-1292bbe0928b",
+   "name": "nebula-release-plugin",
+   "type": "gradle",
+   "version": "17.1.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.netflix.nebula:nebula-release-plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:nebula_release-plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.netflix.nebula:nebula_release_plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:nebula-release-plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:netflix:nebula-release-plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula-release-plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-release-plugin:nebula-release-plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-release-plugin:nebula_release-plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula-release-plugin:nebula_release_plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_release-plugin:nebula_release_plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_release-plugin:nebula-release_plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_release-plugin:nebula-release-plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_release_plugin:nebula-release-plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_release_plugin:nebula_release-plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula_release_plugin:nebula_release_plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula_release_plugin:17.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nebula:nebula-release_plugin:17.1.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/nebula-release-plugin@17.1.0",
+   "metadata": {
+    "Vendor": "com.netflix.nebula",
+    "Name": "nebula-release-plugin",
+    "Version": "17.1.0"
+   }
+  },
+  {
+   "id": "afcacbec-ebaa-4a60-90aa-bcd7d104fa4f",
+   "name": "nohttp",
+   "type": "gradle",
+   "version": "0.0.11",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:io.spring.nohttp:nohttp:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io:nohttp:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:nohttp:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nohttp:nohttp:0.0.11:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/nohttp@0.0.11",
+   "metadata": {
+    "Vendor": "io.spring.nohttp",
+    "Name": "nohttp",
+    "Version": "0.0.11"
+   }
+  },
+  {
+   "id": "961c2708-87de-43bd-92f8-e2fa3e253ff5",
+   "name": "nohttp-checkstyle",
+   "type": "gradle",
+   "version": "0.0.11",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:io.spring.nohttp:nohttp-checkstyle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io.spring.nohttp:nohttp_checkstyle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io:nohttp-checkstyle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:nohttp-checkstyle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nohttp:nohttp-checkstyle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nohttp-checkstyle:nohttp-checkstyle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nohttp-checkstyle:nohttp_checkstyle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nohttp_checkstyle:nohttp_checkstyle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nohttp_checkstyle:nohttp-checkstyle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nohttp:nohttp_checkstyle:0.0.11:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/nohttp-checkstyle@0.0.11",
+   "metadata": {
+    "Vendor": "io.spring.nohttp",
+    "Name": "nohttp-checkstyle",
+    "Version": "0.0.11"
+   }
+  },
+  {
+   "id": "8afc0f9a-ce68-45db-8b70-4a6a6444c949",
+   "name": "nohttp-gradle",
+   "type": "gradle",
+   "version": "0.0.11",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:io.spring.nohttp:nohttp-gradle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io.spring.nohttp:nohttp_gradle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io:nohttp-gradle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:nohttp-gradle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nohttp:nohttp-gradle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nohttp-gradle:nohttp-gradle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nohttp-gradle:nohttp_gradle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nohttp_gradle:nohttp_gradle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nohttp_gradle:nohttp-gradle:0.0.11:*:*:*:*:*:*:*",
+    "cpe:2.3:a:nohttp:nohttp_gradle:0.0.11:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/nohttp-gradle@0.0.11",
+   "metadata": {
+    "Vendor": "io.spring.nohttp",
+    "Name": "nohttp-gradle",
+    "Version": "0.0.11"
+   }
+  },
+  {
+   "id": "78336ef4-ecaf-4f93-b46d-b08ce7a6643b",
+   "name": "okhttp",
+   "type": "gradle",
+   "version": "4.10.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.squareup.okhttp3:okhttp:4.10.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:okhttp:4.10.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:squareup:okhttp:4.10.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:okhttp3:okhttp:4.10.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:okhttp:okhttp:4.10.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/okhttp@4.10.0",
+   "metadata": {
+    "Vendor": "com.squareup.okhttp3",
+    "Name": "okhttp",
+    "Version": "4.10.0"
+   }
+  },
+  {
+   "id": "d6e7edd2-dc4c-4a22-ace7-46b9428e7801",
+   "name": "okio",
+   "type": "gradle",
+   "version": "3.0.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.squareup.okio:okio:3.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:okio:3.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:squareup:okio:3.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:okio:okio:3.0.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/okio@3.0.0",
+   "metadata": {
+    "Vendor": "com.squareup.okio",
+    "Name": "okio",
+    "Version": "3.0.0"
+   }
+  },
+  {
+   "id": "357d963c-463e-4592-8bf0-c1d98c9b25cd",
+   "name": "okio-jvm",
+   "type": "gradle",
+   "version": "3.0.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.squareup.okio:okio-jvm:3.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.squareup.okio:okio_jvm:3.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:okio-jvm:3.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:squareup:okio-jvm:3.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:okio:okio-jvm:3.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:okio-jvm:okio-jvm:3.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:okio-jvm:okio_jvm:3.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:okio_jvm:okio_jvm:3.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:okio_jvm:okio-jvm:3.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:okio:okio_jvm:3.0.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/okio-jvm@3.0.0",
+   "metadata": {
+    "Vendor": "com.squareup.okio",
+    "Name": "okio-jvm",
+    "Version": "3.0.0"
+   }
+  },
+  {
+   "id": "ea184aa9-3f80-4974-a5cd-1f2a5a6885fd",
+   "name": "org.eclipse.jgit",
+   "type": "gradle",
+   "version": "6.5.0.202303070854-r",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.eclipse.jgit:org.eclipse.jgit:6.5.0.202303070854-r:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:org.eclipse.jgit:6.5.0.202303070854-r:*:*:*:*:*:*:*",
+    "cpe:2.3:a:eclipse:org.eclipse.jgit:6.5.0.202303070854-r:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jgit:org.eclipse.jgit:6.5.0.202303070854-r:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/org.eclipse.jgit@6.5.0.202303070854-r",
+   "metadata": {
+    "Vendor": "org.eclipse.jgit",
+    "Name": "org.eclipse.jgit",
+    "Version": "6.5.0.202303070854-r"
+   }
+  },
+  {
+   "id": "6062c080-ade0-4f03-a5e1-fcedc5a1860b",
+   "name": "org.eclipse.osgi",
+   "type": "gradle",
+   "version": "3.18.300",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.eclipse.platform:org.eclipse.osgi:3.18.300:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:org.eclipse.osgi:3.18.300:*:*:*:*:*:*:*",
+    "cpe:2.3:a:eclipse:org.eclipse.osgi:3.18.300:*:*:*:*:*:*:*",
+    "cpe:2.3:a:platform:org.eclipse.osgi:3.18.300:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.eclipse.osgi:org.eclipse.osgi:3.18.300:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/org.eclipse.osgi@3.18.300",
+   "metadata": {
+    "Vendor": "org.eclipse.platform",
+    "Name": "org.eclipse.osgi",
+    "Version": "3.18.300"
+   }
+  },
+  {
+   "id": "4b63b57e-b456-476a-bbbe-585d7b70e687",
+   "name": "org.osgi.dto",
+   "type": "gradle",
+   "version": "1.0.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.osgi:org.osgi.dto:1.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:org.osgi.dto:1.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:osgi:org.osgi.dto:1.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.osgi.dto:org.osgi.dto:1.0.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/org.osgi.dto@1.0.0",
+   "metadata": {
+    "Vendor": "org.osgi",
+    "Name": "org.osgi.dto",
+    "Version": "1.0.0"
+   }
+  },
+  {
+   "id": "d4536dcb-588b-4e58-83fc-b557b22fe431",
+   "name": "org.osgi.framework",
+   "type": "gradle",
+   "version": "1.8.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.osgi:org.osgi.framework:1.8.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:org.osgi.framework:1.8.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:osgi:org.osgi.framework:1.8.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.osgi.framework:org.osgi.framework:1.8.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/org.osgi.framework@1.8.0",
+   "metadata": {
+    "Vendor": "org.osgi",
+    "Name": "org.osgi.framework",
+    "Version": "1.8.0"
+   }
+  },
+  {
+   "id": "5cfdc96b-deba-4983-ab71-17667a57076f",
+   "name": "org.osgi.resource",
+   "type": "gradle",
+   "version": "1.0.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.osgi:org.osgi.resource:1.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:org.osgi.resource:1.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:osgi:org.osgi.resource:1.0.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.osgi.resource:org.osgi.resource:1.0.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/org.osgi.resource@1.0.0",
+   "metadata": {
+    "Vendor": "org.osgi",
+    "Name": "org.osgi.resource",
+    "Version": "1.0.0"
+   }
+  },
+  {
+   "id": "bc4dbb73-84a0-4946-92a5-2fa9227fb6f8",
+   "name": "org.osgi.service.coordinator",
+   "type": "gradle",
+   "version": "1.0.2",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.osgi:org.osgi.service.coordinator:1.0.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:org.osgi.service.coordinator:1.0.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:osgi:org.osgi.service.coordinator:1.0.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.osgi.service.coordinator:org.osgi.service.coordinator:1.0.2:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/org.osgi.service.coordinator@1.0.2",
+   "metadata": {
+    "Vendor": "org.osgi",
+    "Name": "org.osgi.service.coordinator",
+    "Version": "1.0.2"
+   }
+  },
+  {
+   "id": "814ea7d8-2fff-4d77-9abd-f720a1c51c6a",
+   "name": "org.osgi.service.log",
+   "type": "gradle",
+   "version": "1.3.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.osgi:org.osgi.service.log:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:org.osgi.service.log:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:osgi:org.osgi.service.log:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.osgi.service.log:org.osgi.service.log:1.3.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/org.osgi.service.log@1.3.0",
+   "metadata": {
+    "Vendor": "org.osgi",
+    "Name": "org.osgi.service.log",
+    "Version": "1.3.0"
+   }
+  },
+  {
+   "id": "fa6720ce-5d0a-4040-a2fc-cda8c77e3e92",
+   "name": "org.osgi.service.repository",
+   "type": "gradle",
+   "version": "1.1.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.osgi:org.osgi.service.repository:1.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:org.osgi.service.repository:1.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:osgi:org.osgi.service.repository:1.1.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.osgi.service.repository:org.osgi.service.repository:1.1.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/org.osgi.service.repository@1.1.0",
+   "metadata": {
+    "Vendor": "org.osgi",
+    "Name": "org.osgi.service.repository",
+    "Version": "1.1.0"
+   }
+  },
+  {
+   "id": "99714d6a-5cdb-4115-ba23-c6b95760b575",
+   "name": "org.osgi.service.resolver",
+   "type": "gradle",
+   "version": "1.1.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.osgi:org.osgi.service.resolver:1.1.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:org.osgi.service.resolver:1.1.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:osgi:org.osgi.service.resolver:1.1.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.osgi.service.resolver:org.osgi.service.resolver:1.1.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/org.osgi.service.resolver@1.1.1",
+   "metadata": {
+    "Vendor": "org.osgi",
+    "Name": "org.osgi.service.resolver",
+    "Version": "1.1.1"
+   }
+  },
+  {
+   "id": "57788fbe-5d87-43ca-a395-4f082fd6fce8",
+   "name": "org.osgi.util.function",
+   "type": "gradle",
+   "version": "1.2.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.osgi:org.osgi.util.function:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:org.osgi.util.function:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:osgi:org.osgi.util.function:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.osgi.util.function:org.osgi.util.function:1.2.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/org.osgi.util.function@1.2.0",
+   "metadata": {
+    "Vendor": "org.osgi",
+    "Name": "org.osgi.util.function",
+    "Version": "1.2.0"
+   }
+  },
+  {
+   "id": "ec810aa2-38e4-4d37-99ea-2e67ace52725",
+   "name": "org.osgi.util.promise",
+   "type": "gradle",
+   "version": "1.2.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.osgi:org.osgi.util.promise:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:org.osgi.util.promise:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:osgi:org.osgi.util.promise:1.2.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.osgi.util.promise:org.osgi.util.promise:1.2.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/org.osgi.util.promise@1.2.0",
+   "metadata": {
+    "Vendor": "org.osgi",
+    "Name": "org.osgi.util.promise",
+    "Version": "1.2.0"
+   }
+  },
+  {
+   "id": "9d3f46c5-b75f-4ebf-aa72-8280f4995966",
+   "name": "org.osgi.util.tracker",
+   "type": "gradle",
+   "version": "1.5.4",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.osgi:org.osgi.util.tracker:1.5.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:org.osgi.util.tracker:1.5.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:osgi:org.osgi.util.tracker:1.5.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.osgi.util.tracker:org.osgi.util.tracker:1.5.4:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/org.osgi.util.tracker@1.5.4",
+   "metadata": {
+    "Vendor": "org.osgi",
+    "Name": "org.osgi.util.tracker",
+    "Version": "1.5.4"
+   }
+  },
+  {
+   "id": "74c5f160-ad0c-4a1f-9fa5-249014301c0b",
+   "name": "osgi.annotation",
+   "type": "gradle",
+   "version": "8.0.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.osgi:osgi.annotation:8.0.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:osgi.annotation:8.0.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:osgi:osgi.annotation:8.0.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:osgi.annotation:osgi.annotation:8.0.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/osgi.annotation@8.0.1",
+   "metadata": {
+    "Vendor": "org.osgi",
+    "Name": "osgi.annotation",
+    "Version": "8.0.1"
+   }
+  },
+  {
+   "id": "43999bcc-655b-48cd-89ae-c1be63463518",
+   "name": "p4java",
+   "type": "gradle",
+   "version": "2015.2.1365273",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.perforce:p4java:2015.2.1365273:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:p4java:2015.2.1365273:*:*:*:*:*:*:*",
+    "cpe:2.3:a:perforce:p4java:2015.2.1365273:*:*:*:*:*:*:*",
+    "cpe:2.3:a:p4java:p4java:2015.2.1365273:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/p4java@2015.2.1365273",
+   "metadata": {
+    "Vendor": "com.perforce",
+    "Name": "p4java",
+    "Version": "2015.2.1365273"
+   }
+  },
+  {
+   "id": "89ee6146-0bc8-429d-8239-023020afeaab",
+   "name": "picocli",
+   "type": "gradle",
+   "version": "4.3.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:info.picocli:picocli:4.3.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:info:picocli:4.3.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:picocli:picocli:4.3.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/picocli@4.3.1",
+   "metadata": {
+    "Vendor": "info.picocli",
+    "Name": "picocli",
+    "Version": "4.3.1"
+   }
+  },
+  {
+   "id": "22f0b191-d8b0-4f21-bf11-2e0e02fbfaab",
+   "name": "platform",
+   "type": "gradle",
+   "version": "3.4.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:net.java.dev.jna:platform:3.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:net:platform:3.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:java:platform:3.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:dev:platform:3.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jna:platform:3.4.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:platform:platform:3.4.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/platform@3.4.0",
+   "metadata": {
+    "Vendor": "net.java.dev.jna",
+    "Name": "platform",
+    "Version": "3.4.0"
+   }
+  },
+  {
+   "id": "866b8c0c-8b12-4e04-8eb5-eaf9be78f856",
+   "name": "plexus-cipher",
+   "type": "gradle",
+   "version": "1.4",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.sonatype.plexus:plexus-cipher:1.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.sonatype.plexus:plexus_cipher:1.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:plexus-cipher:1.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:sonatype:plexus-cipher:1.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus:plexus-cipher:1.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus-cipher:plexus-cipher:1.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus-cipher:plexus_cipher:1.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_cipher:plexus_cipher:1.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_cipher:plexus-cipher:1.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus:plexus_cipher:1.4:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/plexus-cipher@1.4",
+   "metadata": {
+    "Vendor": "org.sonatype.plexus",
+    "Name": "plexus-cipher",
+    "Version": "1.4"
+   }
+  },
+  {
+   "id": "e8f1e142-69b0-4959-95e7-07b36e83bc51",
+   "name": "plexus-component-annotations",
+   "type": "gradle",
+   "version": "1.5.5",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.codehaus.plexus:plexus-component-annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.codehaus.plexus:plexus_component-annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.codehaus.plexus:plexus_component_annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:plexus-component-annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:codehaus:plexus-component-annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus:plexus-component-annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus-component-annotations:plexus-component-annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus-component-annotations:plexus_component-annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus-component-annotations:plexus_component_annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_component-annotations:plexus_component_annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_component-annotations:plexus-component_annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_component-annotations:plexus-component-annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_component_annotations:plexus-component-annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_component_annotations:plexus_component-annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_component_annotations:plexus_component_annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus:plexus_component_annotations:1.5.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus:plexus-component_annotations:1.5.5:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/plexus-component-annotations@1.5.5",
+   "metadata": {
+    "Vendor": "org.codehaus.plexus",
+    "Name": "plexus-component-annotations",
+    "Version": "1.5.5"
+   }
+  },
+  {
+   "id": "0d151a55-2928-4ff0-9874-52c869fdace2",
+   "name": "plexus-interpolation",
+   "type": "gradle",
+   "version": "1.14",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.codehaus.plexus:plexus-interpolation:1.14:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.codehaus.plexus:plexus_interpolation:1.14:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:plexus-interpolation:1.14:*:*:*:*:*:*:*",
+    "cpe:2.3:a:codehaus:plexus-interpolation:1.14:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus:plexus-interpolation:1.14:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus-interpolation:plexus-interpolation:1.14:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus-interpolation:plexus_interpolation:1.14:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_interpolation:plexus_interpolation:1.14:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_interpolation:plexus-interpolation:1.14:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus:plexus_interpolation:1.14:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/plexus-interpolation@1.14",
+   "metadata": {
+    "Vendor": "org.codehaus.plexus",
+    "Name": "plexus-interpolation",
+    "Version": "1.14"
+   }
+  },
+  {
+   "id": "0dc13f36-e0df-48c7-b4e5-d8d6e274f0cc",
+   "name": "plexus-sec-dispatcher",
+   "type": "gradle",
+   "version": "1.3",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.sonatype.plexus:plexus-sec-dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.sonatype.plexus:plexus_sec-dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.sonatype.plexus:plexus_sec_dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:plexus-sec-dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:sonatype:plexus-sec-dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus:plexus-sec-dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus-sec-dispatcher:plexus-sec-dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus-sec-dispatcher:plexus_sec-dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus-sec-dispatcher:plexus_sec_dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_sec-dispatcher:plexus_sec_dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_sec-dispatcher:plexus-sec_dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_sec-dispatcher:plexus-sec-dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_sec_dispatcher:plexus-sec-dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_sec_dispatcher:plexus_sec-dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_sec_dispatcher:plexus_sec_dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus:plexus_sec_dispatcher:1.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus:plexus-sec_dispatcher:1.3:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/plexus-sec-dispatcher@1.3",
+   "metadata": {
+    "Vendor": "org.sonatype.plexus",
+    "Name": "plexus-sec-dispatcher",
+    "Version": "1.3"
+   }
+  },
+  {
+   "id": "1e1075fc-ec86-4c76-a028-bb6f391178b6",
+   "name": "plexus-utils",
+   "type": "gradle",
+   "version": "2.0.6",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.codehaus.plexus:plexus-utils:2.0.6:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.codehaus.plexus:plexus_utils:2.0.6:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:plexus-utils:2.0.6:*:*:*:*:*:*:*",
+    "cpe:2.3:a:codehaus:plexus-utils:2.0.6:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus:plexus-utils:2.0.6:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus-utils:plexus-utils:2.0.6:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus-utils:plexus_utils:2.0.6:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_utils:plexus_utils:2.0.6:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus_utils:plexus-utils:2.0.6:*:*:*:*:*:*:*",
+    "cpe:2.3:a:plexus:plexus_utils:2.0.6:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/plexus-utils@2.0.6",
+   "metadata": {
+    "Vendor": "org.codehaus.plexus",
+    "Name": "plexus-utils",
+    "Version": "2.0.6"
+   }
+  },
+  {
+   "id": "1842323c-cc69-4e55-80f6-0eee0f08b470",
+   "name": "publish-plugin",
+   "type": "gradle",
+   "version": "1.3.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:io.github.gradle-nexus:publish-plugin:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io.github.gradle-nexus:publish_plugin:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io.github.gradle_nexus:publish_plugin:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io.github.gradle_nexus:publish-plugin:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io:publish-plugin:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:github:publish-plugin:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:gradle-nexus:publish-plugin:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:publish-plugin:publish-plugin:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:publish-plugin:publish_plugin:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:publish_plugin:publish_plugin:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:publish_plugin:publish-plugin:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:publish:publish-plugin:1.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:publish:publish_plugin:1.3.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/publish-plugin@1.3.0",
+   "metadata": {
+    "Vendor": "io.github.gradle-nexus",
+    "Name": "publish-plugin",
+    "Version": "1.3.0"
+   }
+  },
+  {
+   "id": "a29afd44-67a8-4042-b1c6-5e3793be2b25",
+   "name": "Saxon-HE",
+   "type": "gradle",
+   "version": "9.9.1-7",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:net.sf.saxon:Saxon-HE:9.9.1-7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:net.sf.saxon:Saxon_HE:9.9.1-7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:net:Saxon-HE:9.9.1-7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:sf:Saxon-HE:9.9.1-7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:saxon:Saxon-HE:9.9.1-7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:Saxon-HE:Saxon-HE:9.9.1-7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:Saxon-HE:Saxon_HE:9.9.1-7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:Saxon_HE:Saxon_HE:9.9.1-7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:Saxon_HE:Saxon-HE:9.9.1-7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:Saxon:Saxon-HE:9.9.1-7:*:*:*:*:*:*:*",
+    "cpe:2.3:a:Saxon:Saxon_HE:9.9.1-7:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/Saxon-HE@9.9.1-7",
+   "metadata": {
+    "Vendor": "net.sf.saxon",
+    "Name": "Saxon-HE",
+    "Version": "9.9.1-7"
+   }
+  },
+  {
+   "id": "1b7d971f-7688-4c4f-bfa3-6e792e3e080f",
+   "name": "sequence-library",
+   "type": "gradle",
+   "version": "1.0.3",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:de.regnis.q.sequence:sequence-library:1.0.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:de.regnis.q.sequence:sequence_library:1.0.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:de:sequence-library:1.0.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:regnis:sequence-library:1.0.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:q:sequence-library:1.0.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:sequence:sequence-library:1.0.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:sequence-library:sequence-library:1.0.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:sequence-library:sequence_library:1.0.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:sequence_library:sequence_library:1.0.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:sequence_library:sequence-library:1.0.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:sequence:sequence_library:1.0.3:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/sequence-library@1.0.3",
+   "metadata": {
+    "Vendor": "de.regnis.q.sequence",
+    "Name": "sequence-library",
+    "Version": "1.0.3"
+   }
+  },
+  {
+   "id": "7a020aab-6a00-48ec-bfc5-0afdbfaaeffd",
+   "name": "slf4j-api",
+   "type": "gradle",
+   "version": "1.7.36",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.slf4j:slf4j-api:1.7.36:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.slf4j:slf4j_api:1.7.36:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:slf4j-api:1.7.36:*:*:*:*:*:*:*",
+    "cpe:2.3:a:slf4j:slf4j-api:1.7.36:*:*:*:*:*:*:*",
+    "cpe:2.3:a:slf4j-api:slf4j-api:1.7.36:*:*:*:*:*:*:*",
+    "cpe:2.3:a:slf4j-api:slf4j_api:1.7.36:*:*:*:*:*:*:*",
+    "cpe:2.3:a:slf4j_api:slf4j_api:1.7.36:*:*:*:*:*:*:*",
+    "cpe:2.3:a:slf4j_api:slf4j-api:1.7.36:*:*:*:*:*:*:*",
+    "cpe:2.3:a:slf4j:slf4j_api:1.7.36:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/slf4j-api@1.7.36",
+   "metadata": {
+    "Vendor": "org.slf4j",
+    "Name": "slf4j-api",
+    "Version": "1.7.36"
+   }
+  },
+  {
+   "id": "75bf1fd0-a08a-4a06-9f09-2af4b76565b9",
+   "name": "solstice",
+   "type": "gradle",
+   "version": "1.3.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:dev.equo.ide:solstice:1.3.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:dev:solstice:1.3.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:equo:solstice:1.3.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:ide:solstice:1.3.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:solstice:solstice:1.3.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/solstice@1.3.1",
+   "metadata": {
+    "Vendor": "dev.equo.ide",
+    "Name": "solstice",
+    "Version": "1.3.1"
+   }
+  },
+  {
+   "id": "31a85a84-aaa6-4e7c-91dd-1de9d2e2bea5",
+   "name": "spotless-lib",
+   "type": "gradle",
+   "version": "2.39.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.diffplug.spotless:spotless-lib:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.diffplug.spotless:spotless_lib:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:spotless-lib:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:diffplug:spotless-lib:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless:spotless-lib:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless-lib:spotless-lib:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless-lib:spotless_lib:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless_lib:spotless_lib:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless_lib:spotless-lib:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless:spotless_lib:2.39.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/spotless-lib@2.39.0",
+   "metadata": {
+    "Vendor": "com.diffplug.spotless",
+    "Name": "spotless-lib",
+    "Version": "2.39.0"
+   }
+  },
+  {
+   "id": "305eb78b-830d-4f9e-83d0-e90c6fa9a5b3",
+   "name": "spotless-lib-extra",
+   "type": "gradle",
+   "version": "2.39.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.diffplug.spotless:spotless-lib-extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.diffplug.spotless:spotless_lib-extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.diffplug.spotless:spotless_lib_extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:spotless-lib-extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:diffplug:spotless-lib-extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless:spotless-lib-extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless-lib-extra:spotless-lib-extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless-lib-extra:spotless_lib-extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless-lib-extra:spotless_lib_extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless_lib-extra:spotless_lib_extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless_lib-extra:spotless-lib_extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless_lib-extra:spotless-lib-extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless_lib_extra:spotless-lib-extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless_lib_extra:spotless_lib-extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless_lib_extra:spotless_lib_extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless:spotless_lib_extra:2.39.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless:spotless-lib_extra:2.39.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/spotless-lib-extra@2.39.0",
+   "metadata": {
+    "Vendor": "com.diffplug.spotless",
+    "Name": "spotless-lib-extra",
+    "Version": "2.39.0"
+   }
+  },
+  {
+   "id": "8e07f935-ea08-422b-a7a1-a4152ea41709",
+   "name": "spotless-plugin-gradle",
+   "type": "gradle",
+   "version": "6.19.0",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.diffplug.spotless:spotless-plugin-gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.diffplug.spotless:spotless_plugin-gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.diffplug.spotless:spotless_plugin_gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:spotless-plugin-gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:diffplug:spotless-plugin-gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless:spotless-plugin-gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless-plugin-gradle:spotless-plugin-gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless-plugin-gradle:spotless_plugin-gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless-plugin-gradle:spotless_plugin_gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless_plugin-gradle:spotless_plugin_gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless_plugin-gradle:spotless-plugin_gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless_plugin-gradle:spotless-plugin-gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless_plugin_gradle:spotless-plugin-gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless_plugin_gradle:spotless_plugin-gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless_plugin_gradle:spotless_plugin_gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless:spotless_plugin_gradle:6.19.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spotless:spotless-plugin_gradle:6.19.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/spotless-plugin-gradle@6.19.0",
+   "metadata": {
+    "Vendor": "com.diffplug.spotless",
+    "Name": "spotless-plugin-gradle",
+    "Version": "6.19.0"
+   }
+  },
+  {
+   "id": "4d7db69f-d45e-47da-9bf3-b546499ebb57",
+   "name": "spring-asm",
+   "type": "gradle",
+   "version": "3.1.3.RELEASE",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.springframework:spring-asm:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.springframework:spring_asm:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:spring-asm:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:springframework:spring-asm:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring-asm:spring-asm:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring-asm:spring_asm:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_asm:spring_asm:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_asm:spring-asm:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:spring-asm:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:spring_asm:3.1.3.RELEASE:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/spring-asm@3.1.3.RELEASE",
+   "metadata": {
+    "Vendor": "org.springframework",
+    "Name": "spring-asm",
+    "Version": "3.1.3.RELEASE"
+   }
+  },
+  {
+   "id": "fff99780-e4bd-48a7-835f-b8596a1b8565",
+   "name": "spring-core",
+   "type": "gradle",
+   "version": "3.1.3.RELEASE",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.springframework:spring-core:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.springframework:spring_core:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:spring-core:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:springframework:spring-core:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring-core:spring-core:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring-core:spring_core:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_core:spring_core:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_core:spring-core:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:spring-core:3.1.3.RELEASE:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:spring_core:3.1.3.RELEASE:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/spring-core@3.1.3.RELEASE",
+   "metadata": {
+    "Vendor": "org.springframework",
+    "Name": "spring-core",
+    "Version": "3.1.3.RELEASE"
+   }
+  },
+  {
+   "id": "fcab0efa-2bd8-4da1-9eec-076d5a99b04d",
+   "name": "spring-javaformat-formatter-shaded",
+   "type": "gradle",
+   "version": "0.0.39",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:io.spring.javaformat:spring-javaformat-formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io.spring.javaformat:spring_javaformat-formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io.spring.javaformat:spring_javaformat_formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io.spring.javaformat:spring_javaformat_formatter_shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io:spring-javaformat-formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:spring-javaformat-formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:javaformat:spring-javaformat-formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring-javaformat-formatter-shaded:spring-javaformat-formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring-javaformat-formatter-shaded:spring_javaformat-formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring-javaformat-formatter-shaded:spring_javaformat_formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring-javaformat-formatter-shaded:spring_javaformat_formatter_shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat-formatter-shaded:spring_javaformat_formatter_shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat-formatter-shaded:spring-javaformat_formatter_shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat-formatter-shaded:spring-javaformat-formatter_shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat-formatter-shaded:spring-javaformat-formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_formatter-shaded:spring-javaformat-formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_formatter-shaded:spring_javaformat-formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_formatter-shaded:spring_javaformat_formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_formatter-shaded:spring_javaformat_formatter_shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_formatter_shaded:spring_javaformat_formatter_shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_formatter_shaded:spring-javaformat_formatter_shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_formatter_shaded:spring-javaformat-formatter_shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_formatter_shaded:spring-javaformat-formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:spring_javaformat-formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:spring_javaformat_formatter-shaded:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:spring_javaformat_formatter_shaded:0.0.39:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/spring-javaformat-formatter-shaded@0.0.39",
+   "metadata": {
+    "Vendor": "io.spring.javaformat",
+    "Name": "spring-javaformat-formatter-shaded",
+    "Version": "0.0.39"
+   }
+  },
+  {
+   "id": "286b02f4-6278-489e-a5b1-524a1ba37f14",
+   "name": "spring-javaformat-gradle-plugin",
+   "type": "gradle",
+   "version": "0.0.39",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io.spring.javaformat:spring_javaformat-gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io.spring.javaformat:spring_javaformat_gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io.spring.javaformat:spring_javaformat_gradle_plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:io:spring-javaformat-gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:spring-javaformat-gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:javaformat:spring-javaformat-gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring-javaformat-gradle-plugin:spring-javaformat-gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring-javaformat-gradle-plugin:spring_javaformat-gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring-javaformat-gradle-plugin:spring_javaformat_gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring-javaformat-gradle-plugin:spring_javaformat_gradle_plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat-gradle-plugin:spring_javaformat_gradle_plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat-gradle-plugin:spring-javaformat_gradle_plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat-gradle-plugin:spring-javaformat-gradle_plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat-gradle-plugin:spring-javaformat-gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_gradle-plugin:spring-javaformat-gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_gradle-plugin:spring_javaformat-gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_gradle-plugin:spring_javaformat_gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_gradle-plugin:spring_javaformat_gradle_plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_gradle_plugin:spring_javaformat_gradle_plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_gradle_plugin:spring-javaformat_gradle_plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_gradle_plugin:spring-javaformat-gradle_plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring_javaformat_gradle_plugin:spring-javaformat-gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:spring_javaformat-gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:spring_javaformat_gradle-plugin:0.0.39:*:*:*:*:*:*:*",
+    "cpe:2.3:a:spring:spring_javaformat_gradle_plugin:0.0.39:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/spring-javaformat-gradle-plugin@0.0.39",
+   "metadata": {
+    "Vendor": "io.spring.javaformat",
+    "Name": "spring-javaformat-gradle-plugin",
+    "Version": "0.0.39"
+   }
+  },
+  {
+   "id": "8bb33d94-a611-4baa-ae61-e0d334596019",
+   "name": "sqljet",
+   "type": "gradle",
+   "version": "1.1.10",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.tmatesoft.sqljet:sqljet:1.1.10:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:sqljet:1.1.10:*:*:*:*:*:*:*",
+    "cpe:2.3:a:tmatesoft:sqljet:1.1.10:*:*:*:*:*:*:*",
+    "cpe:2.3:a:sqljet:sqljet:1.1.10:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/sqljet@1.1.10",
+   "metadata": {
+    "Vendor": "org.tmatesoft.sqljet",
+    "Name": "sqljet",
+    "Version": "1.1.10"
+   }
+  },
+  {
+   "id": "693be21d-6049-4117-b99b-2c154c35c8ba",
+   "name": "stax-ex",
+   "type": "gradle",
+   "version": "1.8.1",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.jvnet.staxex:stax-ex:1.8.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org.jvnet.staxex:stax_ex:1.8.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:stax-ex:1.8.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jvnet:stax-ex:1.8.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:staxex:stax-ex:1.8.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:stax-ex:stax-ex:1.8.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:stax-ex:stax_ex:1.8.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:stax_ex:stax_ex:1.8.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:stax_ex:stax-ex:1.8.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:stax:stax-ex:1.8.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:stax:stax_ex:1.8.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/stax-ex@1.8.1",
+   "metadata": {
+    "Vendor": "org.jvnet.staxex",
+    "Name": "stax-ex",
+    "Version": "1.8.1"
+   }
+  },
+  {
+   "id": "c5e48906-512a-4806-af40-510c1e1df70a",
+   "name": "svnkit",
+   "type": "gradle",
+   "version": "1.8.12",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.tmatesoft.svnkit:svnkit:1.8.12:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:svnkit:1.8.12:*:*:*:*:*:*:*",
+    "cpe:2.3:a:tmatesoft:svnkit:1.8.12:*:*:*:*:*:*:*",
+    "cpe:2.3:a:svnkit:svnkit:1.8.12:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/svnkit@1.8.12",
+   "metadata": {
+    "Vendor": "org.tmatesoft.svnkit",
+    "Name": "svnkit",
+    "Version": "1.8.12"
+   }
+  },
+  {
+   "id": "70b2044d-d6af-4792-9ce2-c8d27c460ed1",
+   "name": "trilead-ssh2",
+   "type": "gradle",
+   "version": "1.0.0-build220",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.trilead:trilead-ssh2:1.0.0-build220:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com.trilead:trilead_ssh2:1.0.0-build220:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:trilead-ssh2:1.0.0-build220:*:*:*:*:*:*:*",
+    "cpe:2.3:a:trilead:trilead-ssh2:1.0.0-build220:*:*:*:*:*:*:*",
+    "cpe:2.3:a:trilead-ssh2:trilead-ssh2:1.0.0-build220:*:*:*:*:*:*:*",
+    "cpe:2.3:a:trilead-ssh2:trilead_ssh2:1.0.0-build220:*:*:*:*:*:*:*",
+    "cpe:2.3:a:trilead_ssh2:trilead_ssh2:1.0.0-build220:*:*:*:*:*:*:*",
+    "cpe:2.3:a:trilead_ssh2:trilead-ssh2:1.0.0-build220:*:*:*:*:*:*:*",
+    "cpe:2.3:a:trilead:trilead_ssh2:1.0.0-build220:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/trilead-ssh2@1.0.0-build220",
+   "metadata": {
+    "Vendor": "com.trilead",
+    "Name": "trilead-ssh2",
+    "Version": "1.0.0-build220"
+   }
+  },
+  {
+   "id": "803ceb1c-7d61-4724-ad26-62b8818edda3",
+   "name": "txw2",
+   "type": "gradle",
+   "version": "2.3.2",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.glassfish.jaxb:txw2:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:txw2:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:glassfish:txw2:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:jaxb:txw2:2.3.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:txw2:txw2:2.3.2:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/txw2@2.3.2",
+   "metadata": {
+    "Vendor": "org.glassfish.jaxb",
+    "Name": "txw2",
+    "Version": "2.3.2"
+   }
+  },
+  {
+   "id": "ed08c480-890e-457e-9923-16d93a665386",
+   "name": "xmltool",
+   "type": "gradle",
+   "version": "3.3",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:com.mycila.xmltool:xmltool:3.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:com:xmltool:3.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:mycila:xmltool:3.3:*:*:*:*:*:*:*",
+    "cpe:2.3:a:xmltool:xmltool:3.3:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/xmltool@3.3",
+   "metadata": {
+    "Vendor": "com.mycila.xmltool",
+    "Name": "xmltool",
+    "Version": "3.3"
+   }
+  },
+  {
+   "id": "1bf0ae5a-f4f7-4692-95cc-9e0c00b77fbf",
+   "name": "xz",
+   "type": "gradle",
+   "version": "1.9",
+   "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+   "locations": [
+    {
+     "path": "docs/references/java/gradle/buildscript-gradle.lockfile",
+     "layerHash": ""
+    }
+   ],
+   "cpes": [
+    "cpe:2.3:a:org.tukaani:xz:1.9:*:*:*:*:*:*:*",
+    "cpe:2.3:a:org:xz:1.9:*:*:*:*:*:*:*",
+    "cpe:2.3:a:tukaani:xz:1.9:*:*:*:*:*:*:*",
+    "cpe:2.3:a:xz:xz:1.9:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:java/xz@1.9",
+   "metadata": {
+    "Vendor": "org.tukaani",
+    "Name": "xz",
+    "Version": "1.9"
+   }
+  }
+ ],
+ "secrets": {
+  "applied-configuration": {
+   "disabled": false,
+   "secretRegex": "",
+   "excludesFilenames": null,
+   "maxFileSize": 0
+  },
+  "secrets": null
+ },
+ "imageInfo": {
+  "DockerConfig": {
+   "architecture": "",
+   "config": {
+    "Env": null,
+    "Entrypoint": null,
+    "Cmd": null,
+    "WorkingDir": "",
+    "ArgsEscaped": false,
+    "OnBuild": null
+   },
+   "created": "",
+   "history": null,
+   "os": "",
+   "rootFS": {
+    "type": "",
+    "diff_ids": null
+   },
+   "variant": ""
+  },
+  "DockerManifest": null
+ },
+ "distro": {},
+ "slsa": {}
+}

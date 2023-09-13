@@ -17,6 +17,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/golang/gomod"
 	"github.com/carbonetes/diggity/pkg/parser/hackage"
 	"github.com/carbonetes/diggity/pkg/parser/hex"
+	"github.com/carbonetes/diggity/pkg/parser/java/gradle"
 	"github.com/carbonetes/diggity/pkg/parser/java/maven"
 	"github.com/carbonetes/diggity/pkg/parser/javascript/npm"
 	"github.com/carbonetes/diggity/pkg/parser/javascript/pnpm"
@@ -58,6 +59,7 @@ var (
 		secret.Search,
 		alpm.FindAlpmPackagesFromContent,
 		pnpm.FindPnpmPackagesFromContent,
+		gradle.FindGradlePackagesFromContent,
 		nix.FindNixPackagesFromContent,
 	}
 )
