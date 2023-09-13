@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/google/uuid"
 	rpmdb "github.com/knqyf263/go-rpmdb/pkg"
@@ -12,56 +11,44 @@ import (
 
 // Initialize RPM package contents
 func initRpmPackage(location *model.Location, rpmPkg *rpmdb.PackageInfo) *model.Package {
-	var p model.Package
-	p.ID = uuid.NewString()
-	p.Type = Type
-	p.Name = rpmPkg.Name
-	p.Version = fmt.Sprintf("%+v-%+v", rpmPkg.Version, rpmPkg.Release)
-	p.Description = rpmPkg.Summary
-
-	// get licenses
-	formatLicenses(&p, rpmPkg.License)
-
-	// get purl
-	parseRpmPackageURL(&p, rpmPkg.Arch)
-
-	// set and fill final metadata
-	initFinalRpmMetadata(&p, rpmPkg)
-	// p.Metadata = rpmPkg
-
-	// format version
-	var cpeVersion string
-	if rpmPkg.EpochNum() != 0 {
-		cpeVersion = fmt.Sprintf("%+v\\:%+v", rpmPkg.EpochNum(), p.Version)
-		p.Version = fmt.Sprintf("%+v:%+v", rpmPkg.EpochNum(), p.Version)
-	} else {
-		cpeVersion = p.Version
+	p := model.Package{
+		ID:          uuid.NewString(),
+		Type:        Type,
+		Name:        rpmPkg.Name,
+		Version:     fmt.Sprintf("%+v-%+v", rpmPkg.Version, rpmPkg.Release),
+		Description: rpmPkg.Summary,
 	}
 
-	// get CPEs
-	cpe.NewCPE23(&p, formatVendor(rpmPkg.Vendor), rpmPkg.Name, cpeVersion)
+	// Get licenses
+	p.Licenses = formatLicenses(rpmPkg.License)
 
+	// Get purl
+	p.PURL = model.PURL(fmt.Sprintf("pkg:%s/%s@%s?arch=%s", Type, p.Name, p.Version, rpmPkg.Arch))
+
+	// Set and fill final metadata
+	initFinalRpmMetadata(&p, rpmPkg)
+
+	// Format version and get CPEs
+	// p.CPEs = []string{cpe.NewCPE23(formatVendor(rpmPkg.Vendor), rpmPkg.Name, cpeVersion)}
+	generateCpes(&p, rpmPkg.Name, formatVendor(rpmPkg.Vendor), formatCPEVersion(rpmPkg))
 	return &p
 }
 
-// Parse PURL
-func parseRpmPackageURL(pkg *model.Package, architecture string) {
-	pkg.PURL = model.PURL("pkg" + ":" + Type + "/" + pkg.Name + "@" + pkg.Version + "?arch=" + architecture)
-}
-
 // Format licenses
-func formatLicenses(pkg *model.Package, licenses string) {
-	if len(licenses) > 0 && licenses != " " {
-		if strings.Contains(licenses, " and ") {
-			pkg.Licenses = strings.Split(licenses, " and ")
-		} else if strings.Contains(licenses, " or ") {
-			pkg.Licenses = strings.Split(licenses, " or ")
-		} else {
-			pkg.Licenses = []string{licenses}
+func formatLicenses(licensesGroup string) []string {
+	if len(licensesGroup) > 0 && licensesGroup != " " {
+		licenses := []string{}
+		subgroups := strings.Split(licensesGroup, " and ")
+
+		for _, group := range subgroups {
+			group = strings.TrimSuffix(strings.TrimPrefix(group, "("), ")")
+			licenses = append(licenses, strings.Split(group, " or ")...)
 		}
-	} else {
-		pkg.Licenses = []string{}
+
+		return deduplicateLicenses(licenses)
 	}
+
+	return []string{licensesGroup}
 }
 
 // Format vendor for CPEs
@@ -76,4 +63,28 @@ func formatVendor(vendor string) string {
 	default:
 		return strings.TrimSpace(strings.ToLower(vendor))
 	}
+}
+
+// Format CPE version
+func formatCPEVersion(rpmPkg *rpmdb.PackageInfo) string {
+	if rpmPkg.EpochNum() != 0 {
+		return fmt.Sprintf("%+v:%+v", rpmPkg.EpochNum(), rpmPkg.Version)
+	}
+	return rpmPkg.Version
+}
+
+// Deduplicate licenses
+func deduplicateLicenses(licenses []string) []string {
+	uniqueLicenses := make(map[string]struct{})
+
+	for _, license := range licenses {
+		uniqueLicenses[license] = struct{}{}
+	}
+
+	deduplicated := make([]string, 0, len(uniqueLicenses))
+	for license := range uniqueLicenses {
+		deduplicated = append(deduplicated, license)
+	}
+
+	return deduplicated
 }
