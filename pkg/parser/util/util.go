@@ -33,6 +33,7 @@ var ParserNames = []string{
 	"portage",
 	"alpm",
 	"gradle",
+	"nix",
 }
 
 var caser = cases.Title(language.English)

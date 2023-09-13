@@ -33,6 +33,7 @@ func parseSwiftPackages(location *model.Location, req *bom.ParserRequirements) {
 	case 1:
 		for _, pin := range packagemetadata.Object.Pins {
 			pkg := newV1Package(&pin)
+			generateCpes(pkg)
 			pkg.Path = util.TrimUntilLayer(*location)
 			pkg.Locations = append(pkg.Locations, model.Location{
 				Path:      pkg.Path,
@@ -43,6 +44,7 @@ func parseSwiftPackages(location *model.Location, req *bom.ParserRequirements) {
 	case 2:
 		for _, pin := range packagemetadata.Pins {
 			pkg := newV2Package(&pin)
+			generateCpes(pkg)
 			pkg.Path = util.TrimUntilLayer(*location)
 			pkg.Locations = append(pkg.Locations, model.Location{
 				Path:      pkg.Path,

@@ -1,0 +1,22 @@
+=head2 Mon Oct  5 06:13:22 2020: C<Module> L<CGI|CGI>
+
+=over 4
+
+=item *
+
+C<installed into: /nix/store/c49kqxdygf54jfbgig1b48z9jgm945g6-perl5.36.0-CGI-4.51/lib/perl5/site_perl/5.36.0>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 4.51>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+

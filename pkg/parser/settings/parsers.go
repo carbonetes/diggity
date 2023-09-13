@@ -21,6 +21,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/java/maven"
 	"github.com/carbonetes/diggity/pkg/parser/javascript/npm"
 	"github.com/carbonetes/diggity/pkg/parser/javascript/pnpm"
+	"github.com/carbonetes/diggity/pkg/parser/nix"
 	"github.com/carbonetes/diggity/pkg/parser/nuget"
 	"github.com/carbonetes/diggity/pkg/parser/portage"
 	"github.com/carbonetes/diggity/pkg/parser/python"
@@ -59,5 +60,6 @@ var (
 		alpm.FindAlpmPackagesFromContent,
 		pnpm.FindPnpmPackagesFromContent,
 		gradle.FindGradlePackagesFromContent,
+		nix.FindNixPackagesFromContent,
 	}
 )
