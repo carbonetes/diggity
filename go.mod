@@ -3,9 +3,9 @@ module github.com/carbonetes/diggity
 go 1.19
 
 require (
-	github.com/CycloneDX/cyclonedx-go v0.7.1
+	github.com/CycloneDX/cyclonedx-go v0.7.2
 	github.com/alexeyco/simpletable v1.0.0
-	github.com/carbonetes/jacked v1.2.1
+	github.com/carbonetes/jacked v1.5.1
 	github.com/docker/docker v20.10.22+incompatible
 	github.com/facebookincubator/nvdtools v0.1.5
 	github.com/google/uuid v1.3.0
@@ -14,7 +14,7 @@ require (
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spdx/tools-golang v0.4.0
 	github.com/spf13/cobra v1.6.1
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.4
 	github.com/t-tomalak/logrus-easy-formatter v0.0.0-20190827215021-c074f06c5816
 	golang.org/x/exp v0.0.0-20230315142452-642cacee5cc0
 	golang.org/x/mod v0.7.0
@@ -59,7 +59,6 @@ require (
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/term v0.4.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
-	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gotest.tools/v3 v3.5.0 // indirect
 	lukechampine.com/uint128 v1.2.0 // indirect
 	modernc.org/cc/v3 v3.40.0 // indirect
