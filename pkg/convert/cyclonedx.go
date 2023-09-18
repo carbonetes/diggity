@@ -8,12 +8,13 @@ import (
 	"github.com/CycloneDX/cyclonedx-go"
 	versionPackage "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/model"
+	jacked "github.com/carbonetes/jacked/pkg/core/convert"
 	"github.com/google/uuid"
 )
 
 var (
 	// XMLN cyclonedx
-	XMLN = fmt.Sprintf("http://cyclonedx.org/schema/bom/%+v", cyclonedx.SpecVersion1_4)
+	XMLN = fmt.Sprintf("http://cyclonedx.org/schema/bom/%+v", cyclonedx.SpecVersion1_5)
 )
 
 const (
@@ -38,20 +39,38 @@ func ToCDX(sbom *model.SBOM) *cyclonedx.BOM {
 
 	//initialize component
 	components := make([]cyclonedx.Component, len(*sbom.Packages))
+	vulns := new([]cyclonedx.Vulnerability)
 	for i, p := range *sbom.Packages {
 		components[i] = convertToComponent(&p)
+
+		if p.Vulnerabilities == nil {
+			continue
+		}
+
+		if len(*p.Vulnerabilities) == 0 {
+			continue
+		}
+
+		for _, v := range *p.Vulnerabilities {
+			*vulns = append(*vulns, *jacked.ToVex(&components[i], &v))
+		}
 	}
 
 	components = append(components, addDistroComponent(sbom.Distro))
 
+	if len(*vulns) == 0 {
+		vulns = nil
+	}
+
 	return &cyclonedx.BOM{
-		BOMFormat:    cycloneDX,
-		SpecVersion:  cyclonedx.SpecVersion1_4,
-		XMLNS:        XMLN,
-		SerialNumber: uuid.NewString(),
-		Version:      version,
-		Metadata:     getFromSource(),
-		Components:   &components,
+		BOMFormat:       cycloneDX,
+		SpecVersion:     cyclonedx.SpecVersion1_4,
+		XMLNS:           XMLN,
+		SerialNumber:    uuid.NewString(),
+		Version:         version,
+		Metadata:        getFromSource(),
+		Components:      &components,
+		Vulnerabilities: vulns,
 	}
 }
 
