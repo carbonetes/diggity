@@ -31,8 +31,8 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v3
         with:
-          go-version: ${{ env.GO_CURRENT_VERSION }}
-          stable: ${{ env.GO_STABLE_VERSION }}
+          go-version: 1.19
+          check-latest: true
           cache: true
         
       - name: Run Unit Test Scripts 
