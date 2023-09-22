@@ -3,48 +3,83 @@
 <img src="material/diggity-black.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
 </p>
 
-# Diggity
+# BOM Diggity
 [![Github All Releases](https://img.shields.io/github/downloads/carbonetes/diggity/total.svg)]()
 [![Go Report Card](https://goreportcard.com/badge/github.com/carbonetes/diggity)](https://goreportcard.com/report/github.com/carbonetes/diggity)
 [![GitHub release](https://img.shields.io/github/release/carbonetes/diggity.svg)](https://github.com/carbonetes/diggity/releases/latest)
 [![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/carbonetes/diggity.svg)](https://github.com/carbonetes/diggity)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/carbonetes/diggity/blob/main/LICENSE)
 
-BOM Diggity’s primary purpose is to ensure the security and integrity of software programs. It incorporates secret analysis allowing the user to secure crucial information before deploying any parts of the application to the public.
+BOM Diggity is an innovative open-source tool developed to streamline the critical process of generating comprehensive Software Bill of Materials (SBOMs) for software projects of all sizes. In an era where software supply chain security and transparency have taken center stage, having an accurate and up-to-date SBOM is essential for developers, organizations, and the entire software ecosystem.
 
-## Features
-- 📁 | Generates SBOMs for container images, filesystems, archives, and more.
-- 🔍 | Scans sensitive information and secrets
-- 🔧 | Configuration that helps user's preference using the tool.
-- ⛑ | Works with major operating system and many packages.
-- 🗃 | Works seamlessly with [Jacked](https://github.com/carbonetes/jacked) (a vulnerability scanner)
-- 🗄 | Converts between SBOM formats such as; CycloneDX, SPDX, and Diggity's own format.
+## Integration with Jacked
+Diggity seamlessly integrates with our complementary open-source project, [Jacked](https://github.com/carbonetes/jacked). Jacked specializes in open-source vulnerability analysis, providing robust security insights for your software components. Diggity and Jacked offer a comprehensive solution for not only generating SBOMs but also assessing and mitigating security risks in your software supply chain.
 
-### Supported Ecosystems
+### The Significance of a Software Bill of Materials (SBOM)
+A Software Bill of Materials (SBOM) serves as a holistic inventory, cataloging every component, dependency, and third-party library that makes up a software application. This transparency-rich resource offers numerous benefits:
 
-- Alpine (apk)
-- Arch Linux (alpmdb)
+- **Security Assurance**: Identifying and addressing vulnerabilities within your software stack is made more accessible with a well-maintained SBOM.
+- **Compliance Confidence**: Ensure compliance with licensing and legal requirements by having a clear understanding of your software's composition.
+- **Enhanced Trust** Disclose your software's building blocks to users and stakeholders, fostering trust and transparency.
+- **Operational Efficiency**: Streamline maintenance, updates, and collaboration within your development teams.
+
+### Key Features That Empower You
+Diggity empowers developers, DevOps teams, and organizations with a range of features designed to make SBOM generation and management a seamless part of your software development process:
+- **Automated Scanning**: Diggity automatically scans your project's source code and dependencies, intelligently piecing together an SBOM. This automation significantly reduces the manual effort required for creating and maintaining SBOMs.
+- **Multiple SBOM Formats**: Flexibility is key. Diggity supports various industry-standard SBOM formats, including CycloneDX and SPDX, ensuring compatibility with your existing toolchain and compliance requirements.
+- **Customization Options**: Tailor Diggity's SBOM generation process to the unique needs of your project. Customize component identification rules and output formats to match your project's specifics.
+- **Seamless Integration**: Integrate Diggity into your CI/CD pipelines effortlessly. Continuously update SBOMs as your project evolves, ensuring that your SBOMs remain accurate and up-to-date.
+- **Detailed Reporting**: Stay informed with detailed reports. Diggity provides insights into identified components, vulnerabilities, and licensing information, enabling proactive risk management and decision-making.
+
+## Supported Ecosystems 
+
+### Package Managers and Build Tools
+- APK (/apk/db/installed)
+- DPKG (/dpkg/status)
+- RPM (Packages, Packages.db, rpmdb.sqlite)
+- Pacman (/packman/local/*)
 - Conan (conan.lock, conanfile.txt)
-- Dart (pubs)
-- Debian (dpkg)
-- Dotnet (deps.json)
-- Go (go.mod, Go binaries)
-- Hackage (cabal, stack)
-- Hex (rebar3, mix)
-- Java (jar, ear, war, par, sar)
-- JavaScript (npm, yarn, pnpm)
-- Jenkins Plugins (jpi, hpi)
-- Objective-C (cocoapods)
-- PHP (composer)
-- Python (wheel, egg, poetry, requirements.txt)
-- Red Hat (rpm)
-- Ruby (gem)
-- Rust (cargo.lock)
-- Swift (cocoapods)
+- Pub Package Manager (pubspec.yaml, pubspec.lock)
+- NPM (package.json, package-lock.json)
+- Yarn (yarn.json)
+- PNPM (pnpm-lock.yaml)
+- NuGet (*.deps.json)
+- Go Modules (go.mod, /gobin/*)
+- Cabal (stack.yaml, stack.yaml.lock, cabal.project.freeze)
+- Hex (rebar.lock, mix.lock)
+- Maven (pom.xml, pom.properties, MANIFEST.MF)
+- Graddle (buildscript-gradle.lockfile, .build.gradle)
+- Composer (composer.lock)
+- Pip (wheel, *.egg-info, requirements.txt, METADATA)
+- Poetry (poetry.lock)
+- RubyGems (*.gemspec, Gemfile.lock)
+- Cargo (cargo.lock)
+- Cocoapods (Podfile.lock)
+- Swift Package Manager (Package.resolved, .package.resolved)
+- Nix (/nix/store/*)
 
-# Installation 📥
+### Languages
+- Java
+- Python
+- PHP
+- Javascript
+- Rust
+- Swift
+- Objective-C
+- Ruby
+- C/C++
+- Go
+- Dart
+- C#/F#/Visual Basic
+- Haskell
+- Erlang
 
-## Installation Support OS 💽
+### Plugins
+- Jenkins Plugins (*.jpi, *.hpi)
+
+## Installation
+
+### Distributions
 - Mac
   - darwin_amd64.tar.gz
   - darwin_arm64.tar.gz
@@ -57,13 +92,13 @@ BOM Diggity’s primary purpose is to ensure the security and integrity of softw
     - linux_amd64.rpm
     - linux_arm64.rpm
     - linux_ppc64le.rpm
-  - tar.gz
+  - archive
     - linux_amd64.tar.gz
     - linux_arm64.tar.gz
     - linux_ppc64le.tar.gz
 - Windows
   - windows_amd64.zip
-## Recommended
+### Recommended
 ```bash
 curl -sSfL https://raw.githubusercontent.com/carbonetes/diggity/main/install.sh | sh -s -- -d /usr/local/bin
 ```
@@ -84,31 +119,51 @@ scoop bucket add diggity https://github.com/carbonetes/diggity-bucket
 scoop install diggity
 ```
 
-## Getting Started 🚀 
+## Getting Started
 
-### SBOM
-To generate an SBOM for a container image:
+**Note**: Before you begin, make sure you have both Diggity and Docker installed on your system.
+
+Start by pulling the container image for which you want to generate an SBOM. You can use the docker pull command to retrieve the image from a container registry. Replace `your-image:tag` with the actual image and tag you want to analyze.
+```bash
+docker pull your-image:tag
 ```
-diggity <image>
+
+Diggity can now analyze your container image to identify its software components and generate an SBOM. Run the following command to perform the analysis:
 ```
-<details>
+diggity your-image:tag -o sbom.json
+```
+- `your-image:tag`: Replace this with the name and tag of the container image you pulled.
+- `-o sbom.json`: This option specifies the output file for the generated SBOM. You can choose any file name and format you prefer.
+<br />
+
+Diggity will inspect the container image's filesystem and metadata to identify installed packages, libraries, and other dependencies.
+
+<!-- <details>
 <summary>Result</summary>
 
 ![Diggity](material/diggity.gif)
 
-</details>
+</details> -->
 
-## Supported sources
-Diggity can generate an SBOM from a variety of sources:
-
+## Scanning Tarball and Directory
+Use the following command to analyze the contents of the Tar file:
+```bash
+diggity /path/to/your/file.tar -o sbom.json
 ```
-# parse a container image archive (from the result of `docker image save ...`) using -t (or --tar) option:
-diggity -t path/to/image.tar
+- `/path/to/your/file.tar`: Replace this with the actual path to your Tar file.
+<br />
 
-# parse a directory using -d (or --dir) option:
-diggity -d path/to/dir
+Diggity will inspect the contents of the Tar file and identify software components and dependencies.
 
+
+And, to analyze the contents of the directory:
+```bash
+diggity /path/to/your/directory -o sbom.json
 ```
+- `/path/to/your/directory`: Replace this with the actual path to your directory.
+<br />
+
+Diggity will scan the directory's files and identify software components, libraries, and dependencies.
 
 ## Secret detection
   - User-defined patterns
@@ -145,11 +200,11 @@ The output format for Diggity is also configurable using the
 Available `formats` include:
 - `table`: A columnar summary (default).
 - `json`: Use this to get as much information out of Diggity.
-- `cyclonedx-xml`: An XML report conforming to the [CycloneDX 1.4 specification](https://cyclonedx.org/specification/overview/).
-- `cyclonedx-json`: A JSON report conforming to the [CycloneDX 1.4 specification](https://cyclonedx.org/specification/overview/).
-- `spdx-tag-value`: A tag-value formatted report conforming to the [SPDX 2.2 specification](https://spdx.github.io/spdx-spec/).
-- `spdx-json`: A JSON report conforming to the [SPDX 2.2 JSON Schema](https://github.com/spdx/spdx-spec/blob/v2.2/schemas/spdx-schema.json) format.
-- `spdx-yml`: A YAML report conforming to the [SPDX 2.2 YAML Schema](https://github.com/spdx/spdx-spec/blob/development/v2.2.2/examples/SPDXYAMLExample-2.2.spdx.yaml) format.
+- `cyclonedx-xml`: An XML report conforming to the [CycloneDX 1.5 specification](https://github.com/CycloneDX/specification/blob/master/schema/bom-1.5.xsd).
+- `cyclonedx-json`: A JSON report conforming to the [CycloneDX 1.5 specification](https://github.com/CycloneDX/specification/blob/master/schema/bom-1.5.schema.json).
+- `spdx-tag-value`: A tag-value formatted report conforming to the [SPDX 2.3 specification](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXTagExample-v2.3.spdx).
+- `spdx-json`: A JSON report conforming to the [SPDX 2.3 JSON Schema](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXJSONExample-v2.3.spdx.json) format.
+- `spdx-yml`: A YAML report conforming to the [SPDX 2.3 YAML Schema](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXYAMLExample-2.3.spdx.yaml) format.
 - `github-json`: A JSON report conforming to the [dependency snapshot](https://docs.github.com/en/rest/dependency-graph/dependency-submission?apiVersion=2022-11-28) format of Github.
 
 
@@ -328,6 +383,13 @@ You can also include your provenance metadata in SBOM attestations using the fol
  diggity attest <image> --provenance <path/to/provenance_file>
 ```
 
-## License
+## Contribute to the Project
+We enthusiastically welcome contributions from the community! Whether you're interested in reporting issues, submitting pull requests, enhancing documentation, or just offering suggestions, your participation is invaluable. Find more details in our [Contribution Guidelines](https://github.com/carbonetes/diggity/blob/main/CONTRIBUTING.md).
 
-[Apache 2.0](https://choosealicense.com/licenses/mit/)
+## Get in Touch
+Have questions, ideas, or need assistance? Don't hesitate to reach out to us at [eng@carbonetes.com](mailto:eng@carbonetes.com). We're here to support you.
+<br />
+Diggity is committed to simplifying SBOM generation, enhancing software security, and fostering transparency across the software development landscape. Join us in this mission!
+
+## License
+Diggity is released under the permissive [Apache 2.0](https://choosealicense.com/licenses/apache-2.0/), promoting openness and collaboration.
