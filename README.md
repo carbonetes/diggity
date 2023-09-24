@@ -88,13 +88,6 @@ diggity your-image:tag -o sbom.json
 
 Diggity will inspect the container image's filesystem and metadata to identify installed packages, libraries, and other dependencies.
 
-<!-- <details>
-<summary>Result</summary>
-
-![Diggity](material/diggity.gif)
-
-</details> -->
-
 ## Scanning Tarball and Directory
 Use the following command to analyze the contents of the Tar file:
 ```bash
@@ -160,24 +153,12 @@ Diggity will scan the directory's files and identify software components, librar
 ### Plugins
 - Jenkins Plugins (*.jpi, *.hpi)
 
-## Secret detection
-  - User-defined patterns
-  - Efficient scanning of container images
+## Available Commands and their flags with description:
+Diggity offers a range of commands and flags to customize its behavior and cater to different use cases. Below, you'll find a summary of available commands along with their respective flags and brief descriptions:
 
-<details>
-<summary>Result</summary>
+These commands and flags provide fine-grained control over how you use Diggity, allowing you to configure settings, generate SBOM attestations, choose output formats, and tailor the tool to your specific requirements.
 
-![Diggity](material/secret-result.png)
-
-</details>
-
-## Useful Commands and Flags 🚩
-```
-diggity [command] [flag]
-```
-### Available Commands and their flags with description:
-
-```
+```sh
 diggity config [flag]
 ```
 |     Flag      |               Description                |
@@ -189,19 +170,49 @@ diggity config [flag]
 
 ### Output formats
 
-The output format for Diggity is also configurable using the
-`-o` (or `--output`) option:
+Diggity provides a variety of output formats to suit your preferences and integration needs:
 
-Available `formats` include:
-- `table`: A columnar summary (default).
-- `json`: Use this to get as much information out of Diggity.
-- `cyclonedx-xml`: An XML report conforming to the [CycloneDX 1.5 specification](https://github.com/CycloneDX/specification/blob/master/schema/bom-1.5.xsd).
-- `cyclonedx-json`: A JSON report conforming to the [CycloneDX 1.5 specification](https://github.com/CycloneDX/specification/blob/master/schema/bom-1.5.schema.json).
-- `spdx-tag-value`: A tag-value formatted report conforming to the [SPDX 2.3 specification](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXTagExample-v2.3.spdx).
-- `spdx-json`: A JSON report conforming to the [SPDX 2.3 JSON Schema](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXJSONExample-v2.3.spdx.json) format.
-- `spdx-yml`: A YAML report conforming to the [SPDX 2.3 YAML Schema](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXYAMLExample-2.3.spdx.yaml) format.
-- `github-json`: A JSON report conforming to the [dependency snapshot](https://docs.github.com/en/rest/dependency-graph/dependency-submission?apiVersion=2022-11-28) format of Github.
+- `table`: This is the default format, presenting a columnar summary of the software components and their details. It's easy to read and provides a quick overview.
 
+- `json`: Choose JSON for a structured and machine-readable output. JSON is ideal if you want to integrate Diggity's SBOM data into other tools or systems.
+
+- `cyclonedx-xml`: Generate an SBOM in CycloneDX-compliant XML format. CycloneDX is a recognized industry standard for SBOMs, ensuring compatibility with a wide range of tools and platforms.[CycloneDX 1.5 XML Schema](https://github.com/CycloneDX/specification/blob/master/schema/bom-1.5.xsd)
+
+- `cyclonedx-json`: Similar to the XML format, CycloneDX JSON provides a machine-readable representation of the SBOM in JSON format, facilitating interoperability and automation.[CycloneDX 1.5 JSON Schema](https://github.com/CycloneDX/specification/blob/master/schema/bom-1.5.schema.json)
+
+- `spdx-json`: Generate an SBOM in SPDX-compliant JSON format. SPDX is another industry-standard format for software component identification, licensing, and compliance.[SPDX 2.3 JSON Schema](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXJSONExample-v2.3.spdx.json)
+
+- `spdx-tag-value`: This format presents the SBOM as a tag-value pair report conforming to the SPDX specification. It's a concise and human-readable format suitable for SPDX compliance reporting.[SPDX 2.3 Tag Schema](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXTagExample-v2.3.spdx)
+
+- `spdx-yaml`: Similar to the tag-value format, SPDX YAML offers a more structured and easy-to-read representation of the SBOM in YAML format.[SPDX 2.3 YAML Schema](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXYAMLExample-2.3.spdx.yaml)
+
+- `github-json`: This format aligns with the dependency snapshot format of GitHub, making it compatible with GitHub's dependency tracking and security features.[Dependency Snapshot](https://docs.github.com/en/rest/dependency-graph/dependency-submission?apiVersion=2022-11-28)
+
+With these output formats, Diggity provides flexibility to cater to your specific needs, whether it's for sharing, integration, compliance reporting, or further analysis of your software components.
+
+## Secret detection
+Diggity includes a powerful secret detection feature that scans for sensitive information within your software components. This functionality is crucial for identifying and mitigating security risks associated with the presence of secrets, credentials, or sensitive data in your codebase.
+- **User-Defined Patterns**: Customize secret detection by specifying regex patterns for secrets you want to identify, such as API keys, access tokens, or sensitive configuration information.
+- **Efficient Scanning of Container Images**: Diggity efficiently scans container images for secrets, ensuring that your deployment artifacts remain free from potentially harmful information.
+
+```json
+"secrets": {
+  "applied-configuration": {
+   "disabled": false,
+   "secretRegex": "API_KEY|SECRET_KEY|DOCKER_AUTH",
+   "excludesFilenames": [],
+   "maxFileSize": 10485760
+  },
+  "secrets": [
+   {
+    "contentRegexName": "SECRET_KEY",
+    "fileName": "gpg",
+    "filePath": "usr/bin/gpg",
+    "lineNumber": "2921"
+   },
+  ]
+ },
+```
 
 ## Configuration
 
