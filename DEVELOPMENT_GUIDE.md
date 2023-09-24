@@ -1,20 +1,6 @@
 # Development Guidelines
 Welcome to the development community of Diggity! These guidelines are designed to help you contribute effectively to our project and ensure a smooth and collaborative development process.
 
-## Table of Contents
-- Prerequisites
-- Build and Run
-- Version Control
-- Coding Standards
-- Branching Strategy
-- Commit Guidelines
-- Code Reviews
-- Testing
-- Documentation
-- Continuous Integration (CI)
-- Reporting Issues
-- Getting Help
-
 ## Prerequisites
 Before you begin, ensure that you have the following prerequisites installed on your system:
 
