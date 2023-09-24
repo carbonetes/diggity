@@ -77,7 +77,6 @@ Start by pulling the container image for which you want to generate an SBOM. You
 ```bash
 docker pull your-image:tag
 ```
-
 Diggity can now analyze your container image to identify its software components and generate an SBOM. Run the following command to perform the analysis:
 ```
 diggity your-image:tag -o sbom.json
@@ -95,9 +94,7 @@ diggity /path/to/your/file.tar -o sbom.json
 ```
 - `/path/to/your/file.tar`: Replace this with the actual path to your Tar file.
 <br />
-
 Diggity will inspect the contents of the Tar file and identify software components and dependencies.
-
 
 And, to analyze the contents of the directory:
 ```bash
@@ -170,23 +167,20 @@ diggity config [flag]
 
 ### Output formats
 
-Diggity provides a variety of output formats to suit your preferences and integration needs:
+Diggity provides a variety of output formats to suit your preferences and integration needs. To generate a Software Bill of Materials (SBOM) in your preferred output format, use the following command structure:
 
+```sh
+diggity <target> -o <output-format>
+```
+**Choose the format that best suits your needs from the following options:**
 - `table`: This is the default format, presenting a columnar summary of the software components and their details. It's easy to read and provides a quick overview.
-
 - `json`: Choose JSON for a structured and machine-readable output. JSON is ideal if you want to integrate Diggity's SBOM data into other tools or systems.
-
-- `cyclonedx-xml`: Generate an SBOM in CycloneDX-compliant XML format. CycloneDX is a recognized industry standard for SBOMs, ensuring compatibility with a wide range of tools and platforms.[CycloneDX 1.5 XML Schema](https://github.com/CycloneDX/specification/blob/master/schema/bom-1.5.xsd)
-
-- `cyclonedx-json`: Similar to the XML format, CycloneDX JSON provides a machine-readable representation of the SBOM in JSON format, facilitating interoperability and automation.[CycloneDX 1.5 JSON Schema](https://github.com/CycloneDX/specification/blob/master/schema/bom-1.5.schema.json)
-
-- `spdx-json`: Generate an SBOM in SPDX-compliant JSON format. SPDX is another industry-standard format for software component identification, licensing, and compliance.[SPDX 2.3 JSON Schema](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXJSONExample-v2.3.spdx.json)
-
-- `spdx-tag-value`: This format presents the SBOM as a tag-value pair report conforming to the SPDX specification. It's a concise and human-readable format suitable for SPDX compliance reporting.[SPDX 2.3 Tag Schema](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXTagExample-v2.3.spdx)
-
-- `spdx-yaml`: Similar to the tag-value format, SPDX YAML offers a more structured and easy-to-read representation of the SBOM in YAML format.[SPDX 2.3 YAML Schema](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXYAMLExample-2.3.spdx.yaml)
-
-- `github-json`: This format aligns with the dependency snapshot format of GitHub, making it compatible with GitHub's dependency tracking and security features.[Dependency Snapshot](https://docs.github.com/en/rest/dependency-graph/dependency-submission?apiVersion=2022-11-28)
+- `cyclonedx-xml`: Generate an SBOM in CycloneDX-compliant XML format. CycloneDX is a recognized industry standard for SBOMs, ensuring compatibility with a wide range of tools and platforms. [CycloneDX 1.5 XML Schema](https://github.com/CycloneDX/specification/blob/master/schema/bom-1.5.xsd)
+- `cyclonedx-json`: Similar to the XML format, CycloneDX JSON provides a machine-readable representation of the SBOM in JSON format, facilitating interoperability and automation. [CycloneDX 1.5 JSON Schema](https://github.com/CycloneDX/specification/blob/master/schema/bom-1.5.schema.json)
+- `spdx-json`: Generate an SBOM in SPDX-compliant JSON format. SPDX is another industry-standard format for software component identification, licensing, and compliance. [SPDX 2.3 JSON Schema](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXJSONExample-v2.3.spdx.json)
+- `spdx-tag-value`: This format presents the SBOM as a tag-value pair report conforming to the SPDX specification. It's a concise and human-readable format suitable for SPDX compliance reporting. [SPDX 2.3 Tag Schema](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXTagExample-v2.3.spdx)
+- `spdx-yaml`: Similar to the tag-value format, SPDX YAML offers a more structured and easy-to-read representation of the SBOM in YAML format. [SPDX 2.3 YAML Schema](https://github.com/spdx/spdx-spec/blob/development/v2.3.1/examples/SPDXYAMLExample-2.3.spdx.yaml)
+- `github-json`: This format aligns with the dependency snapshot format of GitHub, making it compatible with GitHub's dependency tracking and security features. [Dependency Snapshot](https://docs.github.com/en/rest/dependency-graph/dependency-submission?apiVersion=2022-11-28)
 
 With these output formats, Diggity provides flexibility to cater to your specific needs, whether it's for sharing, integration, compliance reporting, or further analysis of your software components.
 
@@ -215,9 +209,18 @@ Diggity includes a powerful secret detection feature that scans for sensitive in
 ```
 
 ## Configuration
+Diggity provides a versatile configuration system that allows you to fine-tune the tool's behavior to suit your specific requirements. With the ability to customize settings, you can optimize Diggity to seamlessly integrate with your development workflow and meet your project's unique needs.
 
-Configuration search paths:
-- `<HOME>/.diggity.yaml`
+Key Configuration Options:
+- **Secret Detection Customization**: Tailor the secret detection process by defining custom regex patterns for secrets, enabling you to identify and protect sensitive information effectively.
+- **Parser and File Listing Control**: Fine-tune Diggity's package metadata parsing and file listing behavior to optimize performance and compatibility with your project's package manager and build tools.
+- **Registry Authentication**: Configure authentication settings to pull container images from private registries, ensuring seamless access to the images you need for analysis.
+- **Output Format Selection**: Choose the desired output format for your SBOMs, allowing you to integrate Diggity seamlessly with other tools and systems.
+- **Attestation and Provenance**: Leverage Diggity's integration with Cosign for SBOM attestations and include provenance metadata to enhance the trustworthiness of your software components.
+
+Customizing Diggity's configuration empowers you to maximize its capabilities and adapt it to the specific demands of your software projects, enhancing your overall development and security practices.
+
+The Diggity configuration file is typically located at `<HOME>/.diggity.yaml`. You can access and modify this file to customize various aspects of Diggity's behavior to align with your project's requirements.
 
 Configuration options (example values are the default):
 
