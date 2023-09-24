@@ -266,6 +266,7 @@ attestation:
   password: ""
 ```
 ## Private Registry Authentication
+Diggity enables you to pull container images from private registries securely, ensuring seamless access to the images you need for analysis. Depending on your registry provider, you can configure authentication settings to authenticate with private registries. Below, we provide guidance for common private registry providers:
 ### Local Docker Credentials
 When a container image runtime is not present in the local machine, Diggity can pull images from private registries using the provided credentials in your diggity config or as a flag. (--regisytryURI, --registryUsername, (--registryPassword or --registryToken))
 
