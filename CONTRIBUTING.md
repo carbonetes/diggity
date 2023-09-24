@@ -7,7 +7,7 @@ Please review our [Code of Conduct](https://github.com/carbonetes/diggity/blob/m
 ## How to Contribute
 
 ### Reporting Issues
-If you encounter a bug, have a feature request, or want to suggest an improvement, please open an issue on our GitHub Issue Tracker. When creating an issue, please provide as much detail as possible, including:
+If you encounter a bug, have a feature request, or want to suggest an improvement, please open an issue on our [GitHub Issue Tracker](https://github.com/carbonetes/diggity/issues). When creating an issue, please provide as much detail as possible, including:
 
 - A clear and concise description of the issue or enhancement request.
 - Steps to reproduce the issue (if applicable).
@@ -31,7 +31,7 @@ git checkout -b feature-or-fix-name
 ```bash
 git commit -m "Add your descriptive message here"
 ```
-**Note**: Please refer to this format [Karma 6.4](http://karma-runner.github.io/6.4/dev/git-commit-msg.html) for your commit messages.
+**Note**: Please refer to this format [Karma 6.4](http://karma-runner.github.io/6.4/dev/git-commit-msg.html) for your commit messages.<br />
 6. Push your branch to your fork on GitHub:<br />
 ```bash
 git push origin feature-or-fix-name
