@@ -105,34 +105,42 @@ diggity /path/to/your/directory -o sbom.json
 
 Diggity will scan the directory's files and identify software components, libraries, and dependencies.
 ## Supported Ecosystems 
+Diggity offers compatibility with a wide range of package managers, build tools, and ecosystems, allowing you to analyze software components, dependencies, and libraries within your project. Supported package managers and build tools include:
+### Package Managers, Build Tools, and Plugins
+These are the supported package managers and build tools for generating Software Bill of Materials (SBOMs) using BOM Diggity. Use the corresponding command or configuration for each ecosystem to create SBOMs for your software projects.
 
-### Package Managers and Build Tools
-- APK (/apk/db/installed)
-- DPKG (/dpkg/status)
-- RPM (Packages, Packages.db, rpmdb.sqlite)
-- Pacman (/packman/local/*)
-- Conan (conan.lock, conanfile.txt)
-- Pub Package Manager (pubspec.yaml, pubspec.lock)
-- NPM (package.json, package-lock.json)
-- Yarn (yarn.json)
-- PNPM (pnpm-lock.yaml)
-- NuGet (*.deps.json)
-- Go Modules (go.mod, /gobin/*)
-- Cabal (stack.yaml, stack.yaml.lock, cabal.project.freeze)
-- Hex (rebar.lock, mix.lock)
-- Maven (pom.xml, pom.properties, MANIFEST.MF)
-- Graddle (buildscript-gradle.lockfile, .build.gradle)
-- Composer (composer.lock)
-- Pip (wheel, *.egg-info, requirements.txt, METADATA)
-- Poetry (poetry.lock)
-- RubyGems (*.gemspec, Gemfile.lock)
-- Cargo (cargo.lock)
-- Cocoapods (Podfile.lock)
-- Swift Package Manager (Package.resolved, .package.resolved)
-- Nix (/nix/store/*)
+| **Name**                        | **Description**                                           |
+| ---------------------------------------------------- | --------------------------------------------------------- |
+| **APK (Alpine Package Keeper)**                      | Package manager for Alpine Linux using `/apk/db/installed` |
+| **DPKG (Debian Package Manager)**                    | Package manager for Debian-based distributions using `/dpkg/status`           |
+| **RPM (Red Hat Package Manager)**                    | Package manager for Red Hat-based distributions using `Packages`, `Packages.db`, `rpmdb.sqlite` |
+| **Pacman (Arch Linux Package Manager)**              | Package manager for Arch Linux using `/packman/local/*`       |
+| **Conan (C/C++ Package Manager)**                    | Package manager for C and C++ projects using `conan.lock`, `conanfile.txt` |
+| **Pub Package Manager (Dart)**                       | Package manager for Dart using `pubspec.yaml`, `pubspec.lock` |
+| **NPM (Node Package Manager)**                       | Package manager for Node.js using `package.json`, `package-lock.json` |
+| **Yarn (JavaScript Dependency Manager)**              | Dependency manager for JavaScript using `yarn.json`           |
+| **PNPM (Alternative Package Manager for Node.js)** | Fast and space-efficient package manager using `pnpm-lock.yaml` |
+| **NuGet (.Net)**                               | Package manager for .NET using `.deps.json`                   |
+| **Go Modules (Go)**                                 | Dependency management for Go using `go.mod`, `/gobin/*`   |
+| **Cabal (Haskell Package Manager)**                  | Package manager for Haskell using `stack.yaml`, `stack.yaml.lock`, `cabal.project.freeze` |
+| **Hex (Erlang Package Manager)**                     | Package manager for the Erlang ecosystem using `rebar.lock`, `mix.lock` |
+| **Maven (Java Build Automation Tool)**                | Build automation tool for Java projects using `pom.xml`, `pom.properties`, `MANIFEST.MF` |
+| **Gradle (Java, Groovy, Kotlin Build Tool)**         | Build tool for Java, Groovy, and Kotlin using `buildscript-gradle.lockfile`, `.build.gradle` |
+| **Composer (PHP Dependency Manager)**                | Dependency manager for PHP using `composer.lock` |
+| **Pip (Python Package Installer)**                   | Package installer for Python using `wheel`, `*.egg-info`, `requirements.txt`, `METADATA` |
+| **Poetry (Python Packaging and Dependency Management)** | Python packaging and dependency management tool using `poetry.lock` |
+| **RubyGems (Ruby Package Manager)**                  | Package manager for Ruby using `*.gemspec`, `Gemfile.lock` |
+| **Cargo (Rust Package Manager)**                     | Package manager for Rust using `cargo.lock`               |
+| **Cocoapods (Swift/Objective-C Dependency Manager)**  | Dependency manager for Swift and Objective-C using `Podfile.lock` |
+| **Swift Package Manager (Swift)**                    | Package manager for Swift projects using `Package.resolved`, `.package.resolved` |
+| **Nix (Package Manager and Build Tool)**             | Versatile package manager and build tool using `/nix/store/*` |
+| **Jenkins Plugins (CI/CD)**                                 | Enhance Jenkins functionality with plugins for CI/CD automation and integrations with various tools and services. Supported file extensions: `*.jpi`, `*.hpi`. |
+
+Diggity's support for these manifest files ensures accurate SBOM generation and comprehensive component analysis for a wide range of ecosystems and technologies.
 
 ### Languages
-- Java
+Diggity extends its support to various programming languages, allowing it to scan packages and components in projects written in these languages. Supported languages include:
+- Java/Scala/Kotlin
 - Python
 - PHP
 - Javascript
@@ -146,9 +154,6 @@ Diggity will scan the directory's files and identify software components, librar
 - C#/F#/Visual Basic
 - Haskell
 - Erlang
-
-### Plugins
-- Jenkins Plugins (*.jpi, *.hpi)
 
 ## Available Commands and their flags with description:
 Diggity offers a range of commands and flags to customize its behavior and cater to different use cases. Below, you'll find a summary of available commands along with their respective flags and brief descriptions:
