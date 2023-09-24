@@ -10,9 +10,13 @@
 [![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/carbonetes/diggity.svg)](https://github.com/carbonetes/diggity)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/carbonetes/diggity/blob/main/LICENSE)
 
-BOM Diggity is an innovative open-source tool developed to streamline the critical process of generating comprehensive Software Bill of Materials (SBOMs) for software projects of all sizes. In an era where software supply chain security and transparency have taken center stage, having an accurate and up-to-date SBOM is essential for developers, organizations, and the entire software ecosystem.
+BOM Diggity is an innovative open-source tool developed to streamline the critical process of generating comprehensive Software Bill of Materials (SBOMs) for software projects of all sizes. Enhance supply chain security, streamline compliance, and foster transparency. With Diggity, you can analyze container images, inspect Tar files and directories, and generate SPDX and CycloneDX-compliant SBOMs.
 
-## Integration with Jacked
+<p align="center">
+  <img src="material/diggity.gif" alt="animated" />
+</p>
+
+### Integration with Jacked
 Diggity seamlessly integrates with our complementary open-source project, [Jacked](https://github.com/carbonetes/jacked). Jacked specializes in open-source vulnerability analysis, providing robust security insights for your software components. Diggity and Jacked offer a comprehensive solution for not only generating SBOMs but also assessing and mitigating security risks in your software supply chain.
 
 ### The Significance of a Software Bill of Materials (SBOM)
@@ -31,92 +35,38 @@ Diggity empowers developers, DevOps teams, and organizations with a range of fea
 - **Seamless Integration**: Integrate Diggity into your CI/CD pipelines effortlessly. Continuously update SBOMs as your project evolves, ensuring that your SBOMs remain accurate and up-to-date.
 - **Detailed Reporting**: Stay informed with detailed reports. Diggity provides insights into identified components, vulnerabilities, and licensing information, enabling proactive risk management and decision-making.
 
-## Supported Ecosystems 
-
-### Package Managers and Build Tools
-- APK (/apk/db/installed)
-- DPKG (/dpkg/status)
-- RPM (Packages, Packages.db, rpmdb.sqlite)
-- Pacman (/packman/local/*)
-- Conan (conan.lock, conanfile.txt)
-- Pub Package Manager (pubspec.yaml, pubspec.lock)
-- NPM (package.json, package-lock.json)
-- Yarn (yarn.json)
-- PNPM (pnpm-lock.yaml)
-- NuGet (*.deps.json)
-- Go Modules (go.mod, /gobin/*)
-- Cabal (stack.yaml, stack.yaml.lock, cabal.project.freeze)
-- Hex (rebar.lock, mix.lock)
-- Maven (pom.xml, pom.properties, MANIFEST.MF)
-- Graddle (buildscript-gradle.lockfile, .build.gradle)
-- Composer (composer.lock)
-- Pip (wheel, *.egg-info, requirements.txt, METADATA)
-- Poetry (poetry.lock)
-- RubyGems (*.gemspec, Gemfile.lock)
-- Cargo (cargo.lock)
-- Cocoapods (Podfile.lock)
-- Swift Package Manager (Package.resolved, .package.resolved)
-- Nix (/nix/store/*)
-
-### Languages
-- Java
-- Python
-- PHP
-- Javascript
-- Rust
-- Swift
-- Objective-C
-- Ruby
-- C/C++
-- Go
-- Dart
-- C#/F#/Visual Basic
-- Haskell
-- Erlang
-
-### Plugins
-- Jenkins Plugins (*.jpi, *.hpi)
-
 ## Installation
-
-### Distributions
-- Mac
-  - darwin_amd64.tar.gz
-  - darwin_arm64.tar.gz
-- Linux
-  - deb
-    - linux_amd64.deb
-    - linux_arm64.deb
-    - linux_ppc64le.deb
-  - rpm
-    - linux_amd64.rpm
-    - linux_arm64.rpm
-    - linux_ppc64le.rpm
-  - archive
-    - linux_amd64.tar.gz
-    - linux_arm64.tar.gz
-    - linux_ppc64le.tar.gz
-- Windows
-  - windows_amd64.zip
-### Recommended
+### Using Curl (Linux/macOS)
+Run the following command to download and install Diggity using Curl:
 ```bash
-curl -sSfL https://raw.githubusercontent.com/carbonetes/diggity/main/install.sh | sh -s -- -d /usr/local/bin
+bash -c "$(curl -sSL curl -sSfL https://raw.githubusercontent.com/carbonetes/diggity/main/install.sh | sh -s -- -d /usr/local/bin)"
 ```
-you can specify a release version and destination directory for the installation:
-
-```
-curl -sSfL https://raw.githubusercontent.com/carbonetes/diggity/main/install.sh | sh -s -- -d <DESTINATION_DIR> -v <RELEASE_VERSION>
-```
-### Homebrew
-```sh
+**Note**: Use root access with `sudo sh -s -- -d /usr/local/bin` if you encounter a Permission Denied issue, as the `/usr/local/bin` directory requires the necessary permissions to write to the target directory.
+### Using Homebrew (Linux/macOS)
+First, tap to the diggity repository by running the following command:
+```bash
 brew tap carbonetes/diggity
+```
+Then, install Diggity using Homebrew:
+```bash
 brew install diggity
 ```
-
-### Scoop
+To check if Diggity is installed properly, try running the following command:
+```bash
+diggity --version
+```
+### Using Scoop (Windows)
+First, add the diggity-bucket by running:
 ```sh
 scoop bucket add diggity https://github.com/carbonetes/diggity-bucket
+```
+Then, install Diggity using Scoop:
+```sh
 scoop install diggity
+```
+Verify that Diggity is installed correctly by running:
+```sh
+diggity --version
 ```
 
 ## Getting Started
@@ -164,6 +114,51 @@ diggity /path/to/your/directory -o sbom.json
 <br />
 
 Diggity will scan the directory's files and identify software components, libraries, and dependencies.
+## Supported Ecosystems 
+
+### Package Managers and Build Tools
+- APK (/apk/db/installed)
+- DPKG (/dpkg/status)
+- RPM (Packages, Packages.db, rpmdb.sqlite)
+- Pacman (/packman/local/*)
+- Conan (conan.lock, conanfile.txt)
+- Pub Package Manager (pubspec.yaml, pubspec.lock)
+- NPM (package.json, package-lock.json)
+- Yarn (yarn.json)
+- PNPM (pnpm-lock.yaml)
+- NuGet (*.deps.json)
+- Go Modules (go.mod, /gobin/*)
+- Cabal (stack.yaml, stack.yaml.lock, cabal.project.freeze)
+- Hex (rebar.lock, mix.lock)
+- Maven (pom.xml, pom.properties, MANIFEST.MF)
+- Graddle (buildscript-gradle.lockfile, .build.gradle)
+- Composer (composer.lock)
+- Pip (wheel, *.egg-info, requirements.txt, METADATA)
+- Poetry (poetry.lock)
+- RubyGems (*.gemspec, Gemfile.lock)
+- Cargo (cargo.lock)
+- Cocoapods (Podfile.lock)
+- Swift Package Manager (Package.resolved, .package.resolved)
+- Nix (/nix/store/*)
+
+### Languages
+- Java
+- Python
+- PHP
+- Javascript
+- Rust
+- Swift
+- Objective-C
+- Ruby
+- C/C++
+- Go
+- Dart
+- C#/F#/Visual Basic
+- Haskell
+- Erlang
+
+### Plugins
+- Jenkins Plugins (*.jpi, *.hpi)
 
 ## Secret detection
   - User-defined patterns
