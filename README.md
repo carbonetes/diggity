@@ -407,4 +407,13 @@ Have questions, ideas, or need assistance? Don't hesitate to reach out to us at 
 Diggity is committed to simplifying SBOM generation, enhancing software security, and fostering transparency across the software development landscape. Join us in this mission!
 
 ## License
-Diggity is released under the permissive [Apache 2.0](https://choosealicense.com/licenses/apache-2.0/), promoting openness and collaboration.
+
+Diggity is released under the permissive [Apache 2.0 License](https://choosealicense.com/licenses/apache-2.0/), promoting a culture of openness and collaborative development. This license grants you the freedom to use, modify, and share Diggity in accordance with its terms.
+
+<footer>
+<h4>
+  <p align="center">
+    BOM Diggity is developed and maintained by <a href="https://carbonetes.com/">Carbonetes</a>. 
+  </p>
+</h4>
+</footer>
