@@ -9,17 +9,17 @@ const (
 	// Table Output Type (Default)
 	Table = "table"
 	// CycloneDXXML Output Type
-	CycloneDXXML = "cyclonedx-xml"
+	CycloneDXXML = "cdx-xml"
 	// CycloneDXJSON Output Type
-	CycloneDXJSON = "cyclonedx-json"
+	CycloneDXJSON = "cdx-json"
 	// SPDXJSON Output Type
 	SPDXJSON = "spdx-json"
 	// SPDXTagValue Output Type
-	SPDXTagValue = "spdx-tag-value"
+	SPDXTagValue = "spdx-tag"
 	// SPDXYML Output Type
 	SPDXYML = "spdx-yml"
 	// GithubJSON Output Type
-	GithubJSON = "github-json"
+	GithubJSON = "snapshot-json"
 )
 
 var (
