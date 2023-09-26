@@ -4,8 +4,8 @@ Welcome to the development community of Diggity! These guidelines are designed t
 ## Prerequisites
 Before you begin, ensure that you have the following prerequisites installed on your system:
 
-- Go (version 1.9 or higher)
-- Git
+- **Go (version 1.9 or higher)**: Diggity is written in Go, so you'll need to have [Go installed](https://golang.org/doc/install) on your system.
+- **Git**: We use Git for version control. Familiarize yourself with Git if you aren't already.
 - Your Preferred Text Editor or IDE
 
 ## Build and Run
@@ -16,11 +16,11 @@ cd diggity
 ```
 - Install any project-specific dependencies (if applicable).
 ```bash
-go mod tidy
+go mod download
 ```
 - Build the binary.
 ```bash
-go build
+go build -o diggity
 ```
 - Run the binary.
 ```bash
@@ -28,11 +28,8 @@ go build
 ```
 This will start the application and make it accessible locally.
 
-## Version Control
-- We use Git for version control. Familiarize yourself with Git if you aren't already.
-
-## Coding Standards
-- Follow the coding style and conventions for the project language (e.g., Go) as outlined in our project's specific style guide.
+## Code Style
+Please adhere to the project's coding standards and style guidelines to maintain consistency throughout the codebase. We recommend following [Go's official coding style and conventions](https://google.github.io/styleguide/go/).
 
 ## Branching Strategy
 - Create feature branches for your work and make pull requests (PRs) to the main branch.
@@ -55,6 +52,7 @@ This will start the application and make it accessible locally.
 ```bash
 go test ./...
 ```
+**Note**: Make sure all tests pass before submitting a pull request.
 - Add tests for bug fixes or new features, and update existing tests as needed.
 
 ## Documentation
@@ -75,3 +73,5 @@ If you have questions, need assistance, or want to discuss potential contributio
 
 ## Conclusion
 By following these Development Guidelines, you'll contribute to the success of Diggity and help maintain a collaborative and efficient development process. Thank you for your dedication to our project!
+
+Happy coding!
