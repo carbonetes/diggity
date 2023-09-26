@@ -77,12 +77,13 @@ Start by pulling the container image for which you want to generate an SBOM. You
 ```bash
 docker pull your-image:tag
 ```
+**Note**: Diggity will automatically pull the image from the registry if it is not found in your local. But for large images, you need to do `docker pull` first before analyzing.
+
 Diggity can now analyze your container image to identify its software components and generate an SBOM. Run the following command to perform the analysis:
-```
-diggity your-image:tag -o sbom.json
+```bash
+diggity your-image:tag
 ```
 - `your-image:tag`: Replace this with the name and tag of the container image you pulled.
-- `-o sbom.json`: This option specifies the output file for the generated SBOM. You can choose any file name and format you prefer.
 <br />
 
 Diggity will inspect the container image's filesystem and metadata to identify installed packages, libraries, and other dependencies.
@@ -90,7 +91,7 @@ Diggity will inspect the container image's filesystem and metadata to identify i
 ## Scanning Tarball and Directory
 Use the following command to analyze the contents of the Tar file:
 ```bash
-diggity /path/to/your/file.tar -o sbom.json
+diggity /path/to/your/file.tar
 ```
 - `/path/to/your/file.tar`: Replace this with the actual path to your Tar file.
 <br />
@@ -98,7 +99,7 @@ Diggity will inspect the contents of the Tar file and identify software componen
 
 And, to analyze the contents of the directory:
 ```bash
-diggity /path/to/your/directory -o sbom.json
+diggity /path/to/your/directory
 ```
 - `/path/to/your/directory`: Replace this with the actual path to your directory.
 <br />
