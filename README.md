@@ -1,25 +1,25 @@
 
 <p align="center">
-<img src="material/diggity-black.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
+<img src="material/diggity-black.png" alt="Diggity" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
 </p>
 
-# BOM Diggity
+<div align="center">
+
 [![Github All Releases](https://img.shields.io/github/downloads/carbonetes/diggity/total.svg)]()
 [![Go Report Card](https://goreportcard.com/badge/github.com/carbonetes/diggity)](https://goreportcard.com/report/github.com/carbonetes/diggity)
 [![GitHub release](https://img.shields.io/github/release/carbonetes/diggity.svg)](https://github.com/carbonetes/diggity/releases/latest)
 [![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/carbonetes/diggity.svg)](https://github.com/carbonetes/diggity)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/carbonetes/diggity/blob/main/LICENSE)
 
-BOM Diggity is an innovative open-source tool developed to streamline the critical process of generating comprehensive Software Bill of Materials (SBOMs) for software projects of all sizes. Enhance supply chain security, streamline compliance, and foster transparency. With Diggity, you can analyze container images, inspect Tar files and directories, and generate SPDX and CycloneDX-compliant SBOMs.
+BOM Diggity is an innovative open-source tool developed to streamline the critical process of generating comprehensive Software Bill of Materials (SBOMs) for software projects across a range of [supported ecosystems](#supported-ecosystems). With Diggity, you can analyze [Container Images](#getting-started) and [File Systems](#scanning-tarball-and-directory), and generate SPDX and CycloneDX-compliant SBOMs.
 
-<p align="center">
   <img src="material/diggity.gif" alt="animated" />
-</p>
+</div>
 
-### Integration with Jacked
+## Integration with Jacked
 Diggity seamlessly integrates with our complementary open-source project, [Jacked](https://github.com/carbonetes/jacked). Jacked specializes in open-source vulnerability analysis, providing robust security insights for your software components. Diggity and Jacked offer a comprehensive solution for not only generating SBOMs but also assessing and mitigating security risks in your software supply chain.
 
-### The Significance of a Software Bill of Materials (SBOM)
+## The Significance of a Software Bill of Materials (SBOM)
 A Software Bill of Materials (SBOM) serves as a holistic inventory, cataloging every component, dependency, and third-party library that makes up a software application. This transparency-rich resource offers numerous benefits:
 
 - **Security Assurance**: Identifying and addressing vulnerabilities within your software stack is made more accessible with a well-maintained SBOM.
@@ -27,7 +27,7 @@ A Software Bill of Materials (SBOM) serves as a holistic inventory, cataloging e
 - **Enhanced Trust** Disclose your software's building blocks to users and stakeholders, fostering trust and transparency.
 - **Operational Efficiency**: Streamline maintenance, updates, and collaboration within your development teams.
 
-### Key Features That Empower You
+## Key Features
 Diggity empowers developers, DevOps teams, and organizations with a range of features designed to make SBOM generation and management a seamless part of your software development process:
 - **Automated Scanning**: Diggity automatically scans your project's source code and dependencies, intelligently piecing together an SBOM. This automation significantly reduces the manual effort required for creating and maintaining SBOMs.
 - **Multiple SBOM Formats**: Flexibility is key. Diggity supports various industry-standard SBOM formats, including CycloneDX and SPDX, ensuring compatibility with your existing toolchain and compliance requirements.
@@ -161,7 +161,7 @@ Diggity offers a range of commands and flags to customize its behavior and cater
 
 These commands and flags provide fine-grained control over how you use Diggity, allowing you to configure settings, generate SBOM attestations, choose output formats, and tailor the tool to your specific requirements.
 
-```sh
+```bash
 diggity config [flag]
 ```
 |     Flag      |               Description                |
@@ -175,7 +175,7 @@ diggity config [flag]
 
 Diggity provides a variety of output formats to suit your preferences and integration needs. To generate a Software Bill of Materials (SBOM) in your preferred output format, use the following command structure:
 
-```sh
+```bash
 diggity <target> -o <output-format>
 ```
 **Choose the format that best suits your needs from the following options:**
@@ -289,13 +289,11 @@ registry:
 To pull images from AWS Elastic Container Registry (ECR), provide your account credentials in your diggity config. 
 The URI follows the `<aws_account_id>.dkr.ecr.<region>.amazonaws.com` format, and the username would be  `AWS`. 
 For the password, run the following command via AWS CLI to obtain your authentication token:
-
-```
+```bash
 aws ecr get-login-password
 ```
-
 Output:
-```
+```bash
 <password>
 ```
 Note that the authentication token is valid for 12 hours. 
