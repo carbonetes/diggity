@@ -11,7 +11,7 @@
 [![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/carbonetes/diggity.svg)](https://github.com/carbonetes/diggity)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/carbonetes/diggity/blob/main/LICENSE)
 
-BOM Diggity is an open-source tool developed to streamline the critical process of generating comprehensive Software Bill of Materials (SBOMs) for [Container Images](#getting-started) and [File Systems](#scanning-tarball-and-directory) across various [supported ecosystems](#supported-ecosystems). 
+BOM Diggity is an open-source tool developed to streamline the critical process of generating a comprehensive Software Bill of Materials (SBOM) for [Container Images](#getting-started) and [File Systems](#scanning-tarball-and-directory) across various [supported ecosystems](#supported-ecosystems). 
 
   <img src="material/diggity.gif" alt="animated" />
 </div>
@@ -86,7 +86,7 @@ diggity your-image:tag
 - `your-image:tag`: Replace this with the name and tag of the container image you pulled.
 <br />
 
-Diggity will inspect the container image's filesystem and metadata to identify installed packages, libraries, and other dependencies.
+Diggity will inspect the container image's file system and metadata to identify installed packages, libraries, and other dependencies.
 
 ## Scanning Tarball and Directory
 Use the following command to analyze the contents of the Tar file:
@@ -218,7 +218,7 @@ Diggity includes a powerful secret detection feature that scans for sensitive in
 Diggity provides a versatile configuration system that allows you to fine-tune the tool's behavior to suit your specific requirements. With the ability to customize settings, you can optimize Diggity to seamlessly integrate with your development workflow and meet your project's unique needs.
 
 Key Configuration Options:
-- **Secret Detection Customization**: Tailor the secret detection process by defining custom regex patterns for secrets, enabling you to identify and protect sensitive information effectively.
+- **Secret Detection Customization**: Tailor the secret detection process by defining custom regex patterns for secrets, enabling you to effectively identify and protect sensitive information.
 - **Parser and File Listing Control**: Fine-tune Diggity's package metadata parsing and file listing behavior to optimize performance and compatibility with your project's package manager and build tools.
 - **Registry Authentication**: Configure authentication settings to pull container images from private registries, ensuring seamless access to the images you need for analysis.
 - **Output Format Selection**: Choose the desired output format for your SBOMs, allowing you to integrate Diggity seamlessly with other tools and systems.
@@ -250,7 +250,7 @@ disable-file-listing: false
 disable-pull-timeout: false
 # disable all output except SBOM result
 quiet: false
-# save the sbom result to the output file instead of writing to standard output
+# save the sbom result to the output file instead of writing to the standard output
 output-file: ""
 # supported output types: [json table cyclonedx-xml cyclonedx-json spdx-json spdx-tag-value spdx-yml github-json] (default [table])
 output: []
@@ -287,7 +287,7 @@ registry:
 
 ### AWS ECR Credentials
 To pull images from AWS Elastic Container Registry (ECR), provide your account credentials in your diggity config. 
-The URI follows the `<aws_account_id>.dkr.ecr.<region>.amazonaws.com` format, and the username would be  `AWS`. 
+The URI follows the `<aws_account_id>.dkr.ecr.<region>.amazonaws.com` format and the username would be  `AWS`. 
 For the password, run the following command via AWS CLI to obtain your authentication token:
 ```bash
 aws ecr get-login-password
@@ -309,8 +309,8 @@ registry:
 ```
 ### Google Container Registry Credentials
 To pull images from Google Container Registry, provide your account credentials in your diggity config. 
-The URI follows the `gcr.io, us.gcr.io, eu.gcr.io, or asia.gcr.io` format depending on your service account, and the username would be  `oauth2accesstoken`. 
-For the password, run the following command via Google CLI tool to obtain your authentication token:
+The URI follows the `gcr.io, us.gcr.io, eu.gcr.io, or asia.gcr.io`, format depending on your service account, and the username would be  `oauth2accesstoken`. 
+For the password, run the following command via the Google CLI tool to obtain your authentication token:
 ```
 gcloud auth print-access-token
 ```
