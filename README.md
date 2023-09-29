@@ -1,6 +1,6 @@
 
 <p align="center">
-<img src="material/diggity-black.png" alt="Diggity" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
+<img src="material/diggity-black.png" alt="BOM Diggity" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
 </p>
 
 <div align="center">
@@ -11,7 +11,7 @@
 [![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/carbonetes/diggity.svg)](https://github.com/carbonetes/diggity)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/carbonetes/diggity/blob/main/LICENSE)
 
-BOM Diggity is an innovative open-source tool developed to streamline the critical process of generating comprehensive Software Bill of Materials (SBOMs) for software projects across a range of [supported ecosystems](#supported-ecosystems). With Diggity, you can analyze [Container Images](#getting-started) and [File Systems](#scanning-tarball-and-directory), and generate SPDX and CycloneDX-compliant SBOMs.
+BOM Diggity is an open-source tool developed to streamline the critical process of generating comprehensive Software Bill of Materials (SBOMs) for [Container Images](#getting-started) and [File Systems](#scanning-tarball-and-directory) across various [supported ecosystems](#supported-ecosystems). 
 
   <img src="material/diggity.gif" alt="animated" />
 </div>
