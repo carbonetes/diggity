@@ -13,7 +13,7 @@ var (
 		Use:   "diggity",
 		Args:  cobra.MaximumNArgs(1),
 		Short: "BOM diggity SBOM Analyzer",
-		Long:  `BOM Diggity's primary purpose is to ensure the security and integrity of software programs. It incorporates secret analysis allowing the user to secure crucial information before deploying any parts of the application to the public.`,
+		Long:  `BOM Diggity is an open-source tool developed to streamline the critical process of generating comprehensive Software Bill of Materials (SBOMs) for Container Images and File Systems across various supported ecosystems.`,
 		PreRun: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 && !flagHasArg() {
 				_ = cmd.Help()
