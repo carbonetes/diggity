@@ -15,13 +15,13 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/python"
 
 	"github.com/google/uuid"
-	spdxcommon "github.com/spdx/tools-golang/spdx/common"
-	spdx22 "github.com/spdx/tools-golang/spdx/v2_2"
+	spdxcommon "github.com/spdx/tools-golang/spdx/v2/common"
+	spdx23 "github.com/spdx/tools-golang/spdx/v2/v2_3"
 )
 
 const (
-	// Version : current implemented version (2.2)
-	Version = "SPDX-2.2"
+	// Version : current implemented version (2.3)
+	Version = "SPDX-2.3"
 	// DataLicense : 6.2 Data license field Table 3 https://spdx.github.io/spdx-spec/v2.2.2/document-creation-information/
 	DataLicense = "CC0-1.0"
 	// Creator : Carbonetes
@@ -66,10 +66,10 @@ var (
 )
 
 // ExternalRefs helper
-func ExternalRefs(p *model.Package) (refs []*spdx22.PackageExternalReference) {
+func ExternalRefs(p *model.Package) (refs []*spdx23.PackageExternalReference) {
 	// Init CPEs
 	for _, cpe := range p.CPEs {
-		var cpeRef spdx22.PackageExternalReference
+		var cpeRef spdx23.PackageExternalReference
 		cpeRef.Category = security
 		cpeRef.Locator = cpe
 		cpeRef.RefType = cpeType
@@ -77,7 +77,7 @@ func ExternalRefs(p *model.Package) (refs []*spdx22.PackageExternalReference) {
 	}
 
 	// Init PURL
-	var purlRef spdx22.PackageExternalReference
+	var purlRef spdx23.PackageExternalReference
 	purlRef.Category = packageManager
 	purlRef.Locator = string(p.PURL)
 	purlRef.RefType = purlType

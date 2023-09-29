@@ -12,7 +12,7 @@ require (
 	github.com/knqyf263/go-rpmdb v0.0.0-20221030135625-4082a22221ce
 	github.com/schollz/progressbar/v3 v3.13.0
 	github.com/sirupsen/logrus v1.9.0
-	github.com/spdx/tools-golang v0.4.0
+	github.com/spdx/tools-golang v0.5.3
 	github.com/spf13/cobra v1.6.1
 	github.com/stretchr/testify v1.8.4
 	github.com/t-tomalak/logrus-easy-formatter v0.0.0-20190827215021-c074f06c5816
@@ -28,6 +28,7 @@ require (
 
 require (
 	github.com/Microsoft/go-winio v0.6.0 // indirect
+	github.com/anchore/go-struct-converter v0.0.0-20221118182256-c68fdcfa2092 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/docker/go-connections v0.4.0 // indirect

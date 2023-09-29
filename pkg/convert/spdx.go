@@ -9,16 +9,16 @@ import (
 
 	spdxutils "github.com/carbonetes/diggity/pkg/convert/spdx_utils"
 	"github.com/carbonetes/diggity/pkg/model"
-	spdxcommon "github.com/spdx/tools-golang/spdx/common"
-	spdx22 "github.com/spdx/tools-golang/spdx/v2_2"
+	spdxcommon "github.com/spdx/tools-golang/spdx/v2/common"
+	spdx23 "github.com/spdx/tools-golang/spdx/v2/v2_3"
 )
 
-func ToSPDX(target string, pkgs *[]model.Package) *spdx22.Document {
-	return &spdx22.Document{
+func ToSPDX(target string, pkgs *[]model.Package) *spdx23.Document {
+	return &spdx23.Document{
 		SPDXIdentifier: spdxutils.Ref + spdxutils.Doc,
 		DocumentName:   target,
-		SPDXVersion:    spdxutils.Version,
-		CreationInfo: &spdx22.CreationInfo{
+		SPDXVersion:    spdx23.Version,
+		CreationInfo: &spdx23.CreationInfo{
 			Created:            time.Now().UTC().String(),
 			Creators:           spdxutils.CreateInfo,
 			LicenseListVersion: spdxutils.LicenseListVersion,
@@ -29,9 +29,9 @@ func ToSPDX(target string, pkgs *[]model.Package) *spdx22.Document {
 	}
 }
 
-func spdxJSONPackages(packages *[]model.Package) (spdxJSONPkgs []*spdx22.Package) {
+func spdxJSONPackages(packages *[]model.Package) (spdxJSONPkgs []*spdx23.Package) {
 	for _, p := range *packages {
-		spdxPkg := &spdx22.Package{
+		spdxPkg := &spdx23.Package{
 			PackageSPDXIdentifier:     spdxcommon.ElementID(spdxutils.Ref + p.ID),
 			PackageName:               p.Name,
 			PackageDescription:        p.Description,
