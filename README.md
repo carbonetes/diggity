@@ -106,9 +106,8 @@ diggity /path/to/your/directory
 
 Diggity will scan the directory's files and identify software components, libraries, and dependencies.
 ## Supported Ecosystems 
-Diggity offers compatibility with a wide range of package managers, build tools, and ecosystems, allowing you to analyze software components, dependencies, and libraries within your project. Supported package managers and build tools include:
 ### Package Managers, Build Tools, and Plugins
-These are the supported package managers and build tools for generating Software Bill of Materials (SBOMs) using BOM Diggity. Use the corresponding command or configuration for each ecosystem to create SBOMs for your software projects.
+These are the supported package managers, build tools, and plugins for generating Software Bill of Materials (SBOMs) using BOM Diggity. Use the corresponding command or configuration for each ecosystem to create SBOMs for your software projects.
 
 | **Name**                        | **Description**                                           |
 | ---------------------------------------------------- | --------------------------------------------------------- |
