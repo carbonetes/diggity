@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/carbonetes/diggity/internal/logger"
-	"github.com/carbonetes/diggity/internal/output/json.go"
+	"github.com/carbonetes/diggity/internal/output/json"
 	"github.com/carbonetes/diggity/internal/output/save"
 	versionPackage "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/model"
