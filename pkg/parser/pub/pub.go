@@ -1,4 +1,4 @@
-package dart
+package pub
 
 import (
 	"path/filepath"
@@ -8,12 +8,13 @@ import (
 )
 
 const (
-	Type      string = "dart"
-	parserErr string = "dart-parser: "
+	Type      string = "pub"
+	parserErr string = "pub-parser: "
+	Language string = "dart"
 )
 
-// FindDartPackagesFromContent - find dart packages from content
-func FindDartPackagesFromContent(req *bom.ParserRequirements) {
+// FindPubPackagesFromContent - find dart packages from content
+func FindPubPackagesFromContent(req *bom.ParserRequirements) {
 	if !util.ParserEnabled(Type, req.Arguments.EnabledParsers) {
 		req.WG.Done()
 		return

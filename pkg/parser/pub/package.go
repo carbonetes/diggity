@@ -1,4 +1,4 @@
-package dart
+package pub
 
 import (
 	"github.com/carbonetes/diggity/pkg/model"
@@ -14,6 +14,9 @@ func newPackage(dartMetadata interface{}) *model.Package {
 	case Metadata:
 		pkg.Name = md["name"].(string)
 		pkg.Type = Type
+		pkg.PackageOrigin = model.ApplicationPackage
+		pkg.Parser = Type
+		pkg.Language = Language
 		pkg.Path = md["name"].(string)
 		//check if version exist, if not set default of 0.0.0
 		if val, ok := md["version"].(string); ok {

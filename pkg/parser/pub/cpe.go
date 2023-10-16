@@ -1,4 +1,4 @@
-package dart
+package pub
 
 import (
 	"strings"

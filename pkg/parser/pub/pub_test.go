@@ -1,4 +1,4 @@
-package dart_test
+package pub_test
 
 import (
 	"errors"
@@ -9,7 +9,7 @@ import (
 
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
-	"github.com/carbonetes/diggity/pkg/parser/dart"
+	"github.com/carbonetes/diggity/pkg/parser/pub"
 )
 
 var (
@@ -28,7 +28,7 @@ func TestDart(t *testing.T) {
 		t.Fatal(err)
 	}
 	req.WG.Add(1)
-	dart.FindDartPackagesFromContent(req)
+	pub.FindPubPackagesFromContent(req)
 	req.WG.Wait()
 	if len(*req.Errors) > 0 {
 		for _, err := range *req.Errors {
