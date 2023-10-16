@@ -1,4 +1,4 @@
-package debian
+package dpkg
 
 import (
 	"strings"

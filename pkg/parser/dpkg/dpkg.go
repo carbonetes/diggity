@@ -1,4 +1,4 @@
-package debian
+package dpkg
 
 import (
 	"path/filepath"
@@ -10,7 +10,8 @@ import (
 
 const (
 	Type      string = "deb"
-	parserErr string = "debian-parser: "
+	parserErr string = "dpkg-parser: "
+	Distro    string = "debian"
 )
 
 var (
@@ -19,7 +20,7 @@ var (
 )
 
 // FindDebianPackagesFromContent Find DPKG packages in the file content
-func FindDebianPackagesFromContent(req *bom.ParserRequirements) {
+func FindDpkgPackagesFromContent(req *bom.ParserRequirements) {
 	if !util.ParserEnabled(Type, req.Arguments.EnabledParsers) {
 		req.WG.Done()
 		return

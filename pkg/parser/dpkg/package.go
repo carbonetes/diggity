@@ -1,4 +1,4 @@
-package debian
+package dpkg
 
 import (
 	"path/filepath"
@@ -19,6 +19,9 @@ func newPackage(metadata Metadata) *model.Package {
 	}
 	pkg.ID = uuid.NewString()
 	pkg.Type = Type
+	pkg.PackageOrigin = model.OSPackage
+	pkg.Distro = Distro
+	pkg.Parser = Type
 	pkg.Name = metadata["package"].(string)
 	pkg.Version = metadata["version"].(string)
 	if val, ok := metadata["description"].(string); ok {
