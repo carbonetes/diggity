@@ -9,7 +9,7 @@ import (
 	versionPackage "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
-	"github.com/carbonetes/diggity/pkg/parser/alpine"
+	"github.com/carbonetes/diggity/pkg/parser/apk"
 	"github.com/carbonetes/diggity/pkg/parser/debian"
 	"github.com/carbonetes/diggity/pkg/parser/gem"
 	"github.com/carbonetes/diggity/pkg/parser/python"
@@ -181,7 +181,7 @@ func DownloadLocation(p *model.Package) string {
 	var url string
 
 	switch m := p.Metadata.(type) {
-	case alpine.Metadata:
+	case apk.Metadata:
 		if val, ok := m["PackageURL"]; ok {
 			url = val.(string)
 		}
@@ -233,7 +233,7 @@ func Originator(p *model.Package) (string, string) {
 		}
 
 	// Cases with metadata declared within the parser
-	case alpine.Metadata:
+	case apk.Metadata:
 		if val, ok := m["Maintainer"]; ok {
 			originator = val.(string)
 		}

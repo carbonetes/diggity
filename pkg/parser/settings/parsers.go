@@ -2,8 +2,8 @@ package settings
 
 import (
 	"github.com/carbonetes/diggity/internal/secret"
-	"github.com/carbonetes/diggity/pkg/parser/alpine"
-	"github.com/carbonetes/diggity/pkg/parser/alpm"
+	"github.com/carbonetes/diggity/pkg/parser/apk"
+	"github.com/carbonetes/diggity/pkg/parser/pacman"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 	"github.com/carbonetes/diggity/pkg/parser/cargo"
 	"github.com/carbonetes/diggity/pkg/parser/composer"
@@ -35,7 +35,7 @@ type parsers []func(*bom.ParserRequirements)
 var (
 	// FindFunctions is a collection of the find content functions of all parsers.
 	All = parsers{
-		alpine.FindAlpinePackagesFromContent,
+		apk.FindApkPackagesFromContent,
 		debian.FindDebianPackagesFromContent,
 		maven.FindJavaPackagesFromContent,
 		npm.FindNpmPackagesFromContent,
@@ -57,7 +57,7 @@ var (
 		distro.ParseDistro,
 		docker.ParseDockerProperties,
 		secret.Search,
-		alpm.FindAlpmPackagesFromContent,
+		pacman.FindPacmanPackagesFromContent,
 		pnpm.FindPnpmPackagesFromContent,
 		gradle.FindGradlePackagesFromContent,
 		nix.FindNixPackagesFromContent,

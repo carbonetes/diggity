@@ -8,7 +8,7 @@ import (
 
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
-	"github.com/carbonetes/diggity/pkg/parser/alpine"
+	"github.com/carbonetes/diggity/pkg/parser/apk"
 	"github.com/carbonetes/diggity/pkg/parser/debian"
 	"github.com/carbonetes/diggity/pkg/parser/gem"
 	"github.com/carbonetes/diggity/pkg/parser/java/maven"
@@ -118,7 +118,7 @@ var (
 			"cpe:2.3:a:scanelf:scanelf:1.3.4-r0:*:*:*:*:*:*:*",
 		},
 		PURL: model.PURL("pkg:alpine/scanelf@1.3.4-r0?arch=x86_64\u0026upstream=pax-utils\u0026distro="),
-		Metadata: alpine.Metadata{
+		Metadata: apk.Metadata{
 			"Architecture":         "x86_64",
 			"BuildTimestamp":       "1651005390",
 			"GitCommitHashApk":     "d7ae612a3cc5f827289d915783b4cbf8c7207947",
