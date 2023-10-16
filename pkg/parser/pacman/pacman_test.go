@@ -1,4 +1,4 @@
-package alpm_test
+package pacman_test
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/alpm"
+	"github.com/carbonetes/diggity/pkg/parser/pacman"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
@@ -28,7 +28,7 @@ func TestAlpm(t *testing.T) {
 		t.Fatal(err)
 	}
 	req.WG.Add(1)
-	alpm.FindAlpmPackagesFromContent(req)
+	pacman.FindPacmanPackagesFromContent(req)
 	req.WG.Wait()
 	if len(*req.Errors) > 0 {
 		for _, err := range *req.Errors {

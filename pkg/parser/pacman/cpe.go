@@ -1,11 +1,11 @@
-package alpm
+package pacman
 
 import (
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/pkg/model"
 )
 
-func generateAlpmCpes(pkg *model.Package) {
+func generatePacmanCpes(pkg *model.Package) {
 	if len(pkg.Name) == 0 {
 		return
 	}

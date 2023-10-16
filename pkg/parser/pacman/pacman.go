@@ -1,4 +1,4 @@
-package alpm
+package pacman
 
 import (
 	"path/filepath"
@@ -8,15 +8,15 @@ import (
 )
 
 const (
-	Type      string = "alpm"
-	parserErr string = "alpm-parser: "
+	Type      string = "pacman"
+	parserErr string = "pacman-parser: "
 )
 
 var InstalledPackagesPath = filepath.Join("var", "lib", "pacman", "local")
 
 type Metadata map[string]interface{}
 
-func FindAlpmPackagesFromContent(req *bom.ParserRequirements) {
+func FindPacmanPackagesFromContent(req *bom.ParserRequirements) {
 	if !util.ParserEnabled(Type, req.Arguments.EnabledParsers) {
 		req.WG.Done()
 		return

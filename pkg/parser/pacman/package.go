@@ -1,4 +1,4 @@
-package alpm
+package pacman
 
 import (
 	"github.com/carbonetes/diggity/pkg/model"

@@ -1,4 +1,4 @@
-package alpm
+package pacman
 
 import (
 	"errors"
@@ -66,6 +66,6 @@ func parseInstalledPackage(location *model.Location, req *bom.ParserRequirements
 		pkg.Licenses = append(pkg.Licenses, metadata["Licenses"].([]string)...)
 	}
 
-	generateAlpmCpes(pkg)
+	generatePacmanCpes(pkg)
 	*req.SBOM.Packages = append(*req.SBOM.Packages, *pkg)
 }
