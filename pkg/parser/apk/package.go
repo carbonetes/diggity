@@ -1,4 +1,4 @@
-package alpine
+package apk
 
 import (
 	"strings"
@@ -40,6 +40,9 @@ func newPackage(content string, listFiles bool) *model.Package {
 	pkg.Name = metadata["Name"].(string)
 	pkg.Version = metadata["Version"].(string)
 	pkg.Type = Type
+	pkg.Distro = Distro
+	pkg.Parser = Type
+	pkg.PackageOrigin = model.OSPackage
 	pkg.Description = metadata["Description"].(string)
 	pkg.Metadata = metadata
 	setPURL(&pkg)

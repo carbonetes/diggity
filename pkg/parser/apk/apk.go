@@ -1,4 +1,4 @@
-package alpine
+package apk
 
 import (
 	"path/filepath"
@@ -11,13 +11,14 @@ import (
 const (
 	Type      string = "apk"
 	parserErr string = "alpine-parser: "
+	Distro string = "alpine"
 )
 
 // Used filepath for path variables
 var InstalledPackagesPath = filepath.Join("lib", "apk", "db", "installed")
 
 // FindAlpinePackagesFromContent check for alpine-os files in the file contents
-func FindAlpinePackagesFromContent(req *bom.ParserRequirements) {
+func FindApkPackagesFromContent(req *bom.ParserRequirements) {
 	if !util.ParserEnabled(Type, req.Arguments.EnabledParsers) {
 		req.WG.Done()
 		return

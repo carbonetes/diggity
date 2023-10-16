@@ -1,4 +1,4 @@
-package alpine_test
+package apk_test
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/alpine"
+	"github.com/carbonetes/diggity/pkg/parser/apk"
 	"github.com/carbonetes/diggity/pkg/parser/bom"
 )
 
@@ -28,7 +28,7 @@ func TestAlpine(t *testing.T) {
 		t.Fatal(err)
 	}
 	req.WG.Add(1)
-	alpine.FindAlpinePackagesFromContent(req)
+	apk.FindApkPackagesFromContent(req)
 	req.WG.Wait()
 	if len(*req.Errors) > 0 {
 		for _, err := range *req.Errors {

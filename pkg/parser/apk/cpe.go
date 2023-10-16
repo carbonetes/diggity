@@ -1,4 +1,4 @@
-package alpine
+package apk
 
 import (
 	"github.com/carbonetes/diggity/internal/cpe"
