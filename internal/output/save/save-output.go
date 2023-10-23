@@ -27,11 +27,11 @@ func ResultToFile(result string, outputType *string, filename *string) {
 func addFileExtension(filename string, outputType string) string {
 	removeExistingFileExtension(&filename)
 	switch outputType{
-	case "json" , "cyclonedx-json", "spdx-json" :
+	case "json" , "cdx-json", "spdx-json" :
 		return filename + ".json"
-	case "cyclonedx-xml" , "spdx-xml" :
+	case "cdx-xml" , "spdx-xml" :
 		return filename + ".xml"
-	case "spdx-tag-value" :
+	case "spdx-tag" :
 		return filename + ".spdx"
 	default :
 		return filename + ".txt"

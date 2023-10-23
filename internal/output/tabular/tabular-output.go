@@ -3,9 +3,9 @@ package tabular
 import (
 	"strconv"
 
+	"github.com/alexeyco/simpletable"
 	"github.com/carbonetes/diggity/internal/output/save"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/alexeyco/simpletable"
 )
 
 // PrintTable Packages in Table format
@@ -43,7 +43,7 @@ func PrintTable(args *model.Arguments, outputType *string, pkgs *[]model.Package
 		{Align: simpletable.AlignCenter, Text: totalPackages},
 	}}
 
-	table.SetStyle(simpletable.StyleDefault)
+	table.SetStyle(simpletable.StyleCompactLite)
 
 	if len(*args.OutputFile) > 0 {
 		save.ResultToFile(table.String(), outputType, args.OutputFile)

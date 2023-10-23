@@ -9,8 +9,8 @@ package spdx
 // 	"github.com/carbonetes/diggity/pkg/model/metadata"
 // 	"github.com/carbonetes/diggity/pkg/parser/alpine"
 // 	"github.com/carbonetes/diggity/pkg/parser/gem"
-// 	spdxcommon "github.com/spdx/tools-golang/spdx/common"
-// 	spdx22 "github.com/spdx/tools-golang/spdx/v2_2"
+// 	spdxcommon "github.com/spdx/tools-golang/spdx/v2/common"
+// 	spdx23 "github.com/spdx/tools-golang/spdx/v2_2"
 // )
 
 // var (
@@ -174,14 +174,14 @@ package spdx
 
 // func TestSpdxJSONPackages(t *testing.T) {
 // 	packages := []*model.Package{&spdxPackage1, &spdxPackage2, &spdxPackage3, &spdxPackage4}
-// 	expected := []spdx22.Package{
+// 	expected := []spdx23.Package{
 // 		{
 // 			PackageSPDXIdentifier:   "SPDXRef-9583e9ec-df1d-484a-b560-8e1415ea92c2",
 // 			PackageName:             "gitlab.com/yawning/obfs4.git",
 // 			PackageDescription:      "",
 // 			PackageDownloadLocation: "NOASSERTION",
 // 			PackageLicenseConcluded: "NONE",
-// 			PackageExternalReferences: []*spdx22.PackageExternalReference{
+// 			PackageExternalReferences: []*spdx23.PackageExternalReference{
 // 				{
 // 					Category: "SECURITY",
 // 					Locator:  "cpe:2.3:a:yawning:obfs4.git:v0.0.0-20220204003609-77af0cba934d:*:*:*:*:*:*:*",
@@ -212,7 +212,7 @@ package spdx
 // 			PackageDescription:      "Data compression library with very fast (de)compression",
 // 			PackageDownloadLocation: "NOASSERTION",
 // 			PackageLicenseConcluded: "NOASSERTION",
-// 			PackageExternalReferences: []*spdx22.PackageExternalReference{
+// 			PackageExternalReferences: []*spdx23.PackageExternalReference{
 // 				{
 // 					Category: "SECURITY",
 // 					Locator:  "cpe:2.3:a:centos:lzo:2.08-14.el8:*:*:*:*:*:*:*",
@@ -246,7 +246,7 @@ package spdx
 // 			PackageDescription:      "Scan ELF binaries for stuff",
 // 			PackageDownloadLocation: "https://wiki.gentoo.org/wiki/Hardened/PaX_Utilities",
 // 			PackageLicenseConcluded: "GPL-2.0-only",
-// 			PackageExternalReferences: []*spdx22.PackageExternalReference{
+// 			PackageExternalReferences: []*spdx23.PackageExternalReference{
 // 				{
 // 					Category: "SECURITY",
 // 					Locator:  "cpe:2.3:a:scanelf:scanelf:1.3.4-r0:*:*:*:*:*:*:*",
@@ -275,7 +275,7 @@ package spdx
 // 			PackageDescription:      "scanf is an implementation of the C function scanf(3).",
 // 			PackageDownloadLocation: "NOASSERTION",
 // 			PackageLicenseConcluded: "NOASSERTION",
-// 			PackageExternalReferences: []*spdx22.PackageExternalReference{
+// 			PackageExternalReferences: []*spdx23.PackageExternalReference{
 // 				{
 // 					Category: "SECURITY",
 // 					Locator:  "cpe:2.3:a:scanf:scanf:1.0.0:*:*:*:*:*:*:*",

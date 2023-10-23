@@ -12,7 +12,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/parser/os/dpkg"
 	"github.com/carbonetes/diggity/pkg/parser/language/gem"
 	"github.com/carbonetes/diggity/pkg/parser/language/java/maven"
-	spdx22 "github.com/spdx/tools-golang/spdx/v2_2"
+	spdx23 "github.com/spdx/tools-golang/spdx/v2/v2_3"
 )
 
 type (
@@ -26,7 +26,7 @@ type (
 	}
 	ExternalRefsResult struct {
 		pkg      *model.Package
-		expected []spdx22.PackageExternalReference
+		expected []spdx23.PackageExternalReference
 	}
 )
 
@@ -334,7 +334,7 @@ var (
 
 func TestExternalRefs(t *testing.T) {
 	tests := []ExternalRefsResult{
-		{&package1, []spdx22.PackageExternalReference{
+		{&package1, []spdx23.PackageExternalReference{
 			{
 				Category: security,
 				Locator:  "cpe:2.3:a:centos:lzo:2.08-14.el8:*:*:*:*:*:*:*",
@@ -351,7 +351,7 @@ func TestExternalRefs(t *testing.T) {
 				RefType:  purlType,
 			},
 		}},
-		{&package2, []spdx22.PackageExternalReference{
+		{&package2, []spdx23.PackageExternalReference{
 			{
 				Category: security,
 				Locator:  "cpe:2.3:a:yawning:obfs4.git:v0.0.0-20220204003609-77af0cba934d:*:*:*:*:*:*:*",
@@ -368,7 +368,7 @@ func TestExternalRefs(t *testing.T) {
 				RefType:  purlType,
 			},
 		}},
-		{&package3, []spdx22.PackageExternalReference{
+		{&package3, []spdx23.PackageExternalReference{
 			{
 				Category: security,
 				Locator:  "cpe:2.3:a:scanelf:scanelf:1.3.4-r0:*:*:*:*:*:*:*",
@@ -380,14 +380,14 @@ func TestExternalRefs(t *testing.T) {
 				RefType:  purlType,
 			},
 		}},
-		{&package4, []spdx22.PackageExternalReference{
+		{&package4, []spdx23.PackageExternalReference{
 			{
 				Category: packageManager,
 				Locator:  "pkg:deb/libgpg-error0@1.38-2arch=s390x",
 				RefType:  purlType,
 			},
 		}},
-		{&package5, []spdx22.PackageExternalReference{
+		{&package5, []spdx23.PackageExternalReference{
 			{
 				Category: security,
 				Locator:  "cpe:2.3:a:jnr-unixsocket:jnr-unixsocket:0.18:*:*:*:*:*:*:*",
@@ -444,7 +444,7 @@ func TestExternalRefs(t *testing.T) {
 				RefType:  purlType,
 			},
 		}},
-		{&package6, []spdx22.PackageExternalReference{
+		{&package6, []spdx23.PackageExternalReference{
 			{
 				Category: security,
 				Locator:  "cpe:2.3:a:scanf:scanf:1.0.0:*:*:*:*:*:*:*",
@@ -456,7 +456,7 @@ func TestExternalRefs(t *testing.T) {
 				RefType:  purlType,
 			},
 		}},
-		{&package7, []spdx22.PackageExternalReference{
+		{&package7, []spdx23.PackageExternalReference{
 			{
 				Category: security,
 				Locator:  "cpe:2.3:a:buffer-shims:buffer-shims:1.0.0:*:*:*:*:*:*:*",
