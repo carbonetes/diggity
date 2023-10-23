@@ -6,30 +6,30 @@ import (
 
 	"github.com/carbonetes/diggity/internal/slsa"
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
-	"github.com/carbonetes/diggity/pkg/parser/settings"
+	"github.com/carbonetes/diggity/pkg/parser/common"
+	diggity "github.com/carbonetes/diggity/pkg/parser"
 	"github.com/carbonetes/diggity/pkg/parser/util"
 )
 
 // Diggity scans the Docker images, Tar Files, and Codebases(directories) specified in the given model.Arguments struct and returns a sbom(model.Result) struct.
 func Scan(arguments *model.Arguments) (*model.SBOM, *[]error) {
-	requirements, err := bom.InitParsers(arguments)
+	params, err := common.NewParams(arguments)
 	if err != nil {
 		log.Fatal(err)
 	}
-	parsers := settings.All
-	requirements.WG.Add(len(parsers))
+	parsers := diggity.Parsers
+	params.WG.Add(len(parsers))
 	for _, parser := range parsers {
-		parser(requirements)
+		parser(params)
 	}
 
-	requirements.WG.Wait()
+	params.WG.Wait()
 
-	defer util.CleanUp(*requirements.DockerTemp)
+	defer util.CleanUp(*params.DockerTemp)
 
 	if *arguments.Provenance != "" {
-		requirements.SBOM.SLSA = slsa.Provenance(requirements)
+		params.SBOM.SLSA = slsa.Provenance(params)
 	}
 
-	return requirements.SBOM, requirements.Errors
+	return params.SBOM, params.Errors
 }

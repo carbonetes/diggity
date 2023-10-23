@@ -4,13 +4,13 @@ import (
 	"errors"
 
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/common"
 )
 
 const parserErr = "docker-parser: "
 
 // ParseDockerProperties appends docker json files to parser.Result
-func ParseDockerProperties(req *bom.ParserRequirements) {
+func ParseDockerProperties(req *common.ParserParams) {
 	var imageInfo model.ImageInfo
 	tarDirectory, err := getTarDir(*req.Dir, *req.Arguments.Dir)
 	if err != nil {

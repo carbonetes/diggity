@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/carbonetes/diggity/internal/logger"
-	"github.com/carbonetes/diggity/internal/output/json.go"
+	"github.com/carbonetes/diggity/internal/output/json"
 	"github.com/carbonetes/diggity/internal/output/save"
 	"github.com/carbonetes/diggity/pkg/convert"
 	spdxutils "github.com/carbonetes/diggity/pkg/convert/spdx_utils"

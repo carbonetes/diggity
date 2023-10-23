@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/common"
 	"github.com/carbonetes/diggity/pkg/parser/distro"
 )
 
@@ -19,7 +19,7 @@ var (
 
 func TestAlpineDistro(t *testing.T) {
 	args.Dir = &alpine
-	req, err := bom.InitParsers(args)
+	req, err := common.NewParams(args)
 	if err != nil {
 		t.Error(errors.New("Alpine distro release reference not found"))
 		t.FailNow()
@@ -53,7 +53,7 @@ func TestAlpineDistro(t *testing.T) {
 
 func TestDebianDistro(t *testing.T) {
 	args.Dir = &debian
-	req, err := bom.InitParsers(args)
+	req, err := common.NewParams(args)
 	if err != nil {
 		t.Error(errors.New("Debian distro release reference not found"))
 		t.FailNow()
@@ -87,7 +87,7 @@ func TestDebianDistro(t *testing.T) {
 
 func TestRpmDistro(t *testing.T) {
 	args.Dir = &rpm
-	req, err := bom.InitParsers(args)
+	req, err := common.NewParams(args)
 	if err != nil {
 		t.Error(errors.New("Rpm distro release reference not found"))
 		t.FailNow()

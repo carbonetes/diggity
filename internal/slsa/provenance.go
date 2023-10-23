@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/common"
 )
 
 const (
@@ -17,7 +17,7 @@ const (
 var ProvenanceMetadata map[string]interface{}
 
 // Provenance adds provenance metadata to SBOM result
-func Provenance(req *bom.ParserRequirements) *model.SLSA {
+func Provenance(req *common.ParserParams) *model.SLSA {
 	provenance, err := parseProvenanceMetadata(*req.Arguments.Provenance)
 	if err != nil {
 		err = errors.New("provenance: " + err.Error())

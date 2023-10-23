@@ -8,10 +8,10 @@ import (
 
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
-	"github.com/carbonetes/diggity/pkg/parser/alpine"
-	"github.com/carbonetes/diggity/pkg/parser/debian"
-	"github.com/carbonetes/diggity/pkg/parser/gem"
-	"github.com/carbonetes/diggity/pkg/parser/java/maven"
+	"github.com/carbonetes/diggity/pkg/parser/os/apk"
+	"github.com/carbonetes/diggity/pkg/parser/os/dpkg"
+	"github.com/carbonetes/diggity/pkg/parser/language/gem"
+	"github.com/carbonetes/diggity/pkg/parser/language/java/maven"
 	spdx23 "github.com/spdx/tools-golang/spdx/v2/v2_3"
 )
 
@@ -118,7 +118,7 @@ var (
 			"cpe:2.3:a:scanelf:scanelf:1.3.4-r0:*:*:*:*:*:*:*",
 		},
 		PURL: model.PURL("pkg:alpine/scanelf@1.3.4-r0?arch=x86_64\u0026upstream=pax-utils\u0026distro="),
-		Metadata: alpine.Metadata{
+		Metadata: apk.Metadata{
 			"Architecture":         "x86_64",
 			"BuildTimestamp":       "1651005390",
 			"GitCommitHashApk":     "d7ae612a3cc5f827289d915783b4cbf8c7207947",
@@ -161,7 +161,7 @@ var (
 			"GPL-3+",
 		},
 		PURL: model.PURL("pkg:deb/libgpg-error0@1.38-2arch=s390x"),
-		Metadata: debian.Metadata{
+		Metadata: dpkg.Metadata{
 			"Architecture":   "s390x",
 			"Breaks":         "libxml2 (\u003c\u003c 2.7.6.dfsg-2), texlive-binaries (\u003c\u003c 2009-12)",
 			"Conflicts":      "zlib1 (\u003c= 1:1.0.4-7)",
