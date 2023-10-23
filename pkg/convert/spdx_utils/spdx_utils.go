@@ -9,10 +9,10 @@ import (
 	versionPackage "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/model"
 	"github.com/carbonetes/diggity/pkg/model/metadata"
-	"github.com/carbonetes/diggity/pkg/parser/apk"
-	"github.com/carbonetes/diggity/pkg/parser/debian"
-	"github.com/carbonetes/diggity/pkg/parser/gem"
-	"github.com/carbonetes/diggity/pkg/parser/python"
+	"github.com/carbonetes/diggity/pkg/parser/os/apk"
+	"github.com/carbonetes/diggity/pkg/parser/os/dpkg"
+	"github.com/carbonetes/diggity/pkg/parser/language/gem"
+	"github.com/carbonetes/diggity/pkg/parser/language/python"
 
 	"github.com/google/uuid"
 	spdxcommon "github.com/spdx/tools-golang/spdx/common"
@@ -241,7 +241,7 @@ func Originator(p *model.Package) (string, string) {
 		if val, ok := m["Author"]; ok {
 			originator = val.(string)
 		}
-	case debian.Metadata:
+	case dpkg.Metadata:
 		if val, ok := m["Maintainer"]; ok {
 			originator = val.(string)
 		}

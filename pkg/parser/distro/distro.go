@@ -6,12 +6,12 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/common"
 )
 
 const parserErr = "distro-parser: "
 
-func ParseDistro(req *bom.ParserRequirements) {
+func ParseDistro(req *common.ParserParams) {
 
 	var relatedOsFiles []string
 	var err error

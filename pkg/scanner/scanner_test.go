@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/common"
 	"github.com/carbonetes/diggity/pkg/scanner"
 	"github.com/stretchr/testify/assert"
 )
@@ -21,7 +21,7 @@ func TestScan(t *testing.T) {
 		arguments := model.NewArguments()
 		arguments.Image = &testImage
 		arguments.Quiet = &enable
-		req, err := bom.InitParsers(arguments)
+		req, err := common.NewParams(arguments)
 		assert.Empty(t, err)
 		sbom, errs := scanner.Scan(req.Arguments)
 		if len(*errs) > 0 {
@@ -41,7 +41,7 @@ func TestScan(t *testing.T) {
 		arguments := model.NewArguments()
 		arguments.Dir = &testDirectory
 		arguments.Quiet = &enable
-		req, err := bom.InitParsers(arguments)
+		req, err := common.NewParams(arguments)
 		assert.Nil(t, err)
 		sbom, errs := scanner.Scan(req.Arguments)
 		assert.Empty(t, errs)

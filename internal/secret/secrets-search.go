@@ -10,14 +10,14 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/common"
 	parserUtil "github.com/carbonetes/diggity/pkg/parser/util"
 
 	"golang.org/x/tools/godoc/util"
 )
 
 // Search search secrets in all file contents that does not exceed the max-file-size argument
-func Search(req *bom.ParserRequirements) {
+func Search(req *common.ParserParams) {
 	if *req.Arguments.DisableSecretSearch {
 		req.WG.Done()
 		return

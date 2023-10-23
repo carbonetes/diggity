@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/carbonetes/diggity/pkg/model"
-	"github.com/carbonetes/diggity/pkg/parser/bom"
+	"github.com/carbonetes/diggity/pkg/parser/common"
 	"github.com/carbonetes/diggity/pkg/parser/docker"
 )
 
@@ -18,7 +18,7 @@ var (
 
 func TestDocker(t *testing.T) {
 	args.Dir = &target
-	req, err := bom.InitParsers(args)
+	req, err := common.NewParams(args)
 	if err != nil {
 		t.Fatal(err)
 		t.FailNow()
