@@ -9,17 +9,17 @@ import (
 func ReadTarball(path string) (v1.Image, error) {
 	found, err := helper.IsFileExists(path)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 
 	if !found {
-		log.Fatal("Path does not exist")
+		log.Error("Path does not exist")
 	}
 
 	image, err := tarball.ImageFromPath(path, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
-	
+
 	return image, nil
 }

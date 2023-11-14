@@ -3,14 +3,17 @@ package types
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+
 	"time"
 
 	"github.com/carbonetes/diggity/internal/helper"
+	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/docker/distribution/version"
 )
 
 const SchemaVersion = "1.0"
+
+var log = logger.GetLogger()
 
 type Metadata struct {
 	Author    string    `json:"author"`
@@ -49,7 +52,7 @@ func (c *Component) AddDependency(dependency Component) {
 func (c Component) ToJSON() string {
 	data, err := json.MarshalIndent(c, "", " ")
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	return string(data)
 }
@@ -57,7 +60,7 @@ func (c Component) ToJSON() string {
 func (s SBOM) ToJSON() string {
 	data, err := json.MarshalIndent(s, "", " ")
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	return string(data)
 }

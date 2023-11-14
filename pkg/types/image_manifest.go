@@ -5,7 +5,7 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/types"
 )
 
-type ImageManifest struct {
+type ImageInfo struct {
 	Digest     v1.Hash         `json:"digest,omitempty"`
 	MediaType  types.MediaType `json:"mediatype,omitempty"`
 	Size       int64           `json:"size,omitempty"`

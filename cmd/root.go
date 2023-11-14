@@ -6,6 +6,7 @@ import (
 	"github.com/carbonetes/diggity/internal/curator"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/presenter/status"
 	"github.com/carbonetes/diggity/internal/scanner"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
@@ -36,27 +37,27 @@ var (
 
 			err := params.GetScanType()
 			if err != nil {
-				log.Fatal(err.Error())
+				log.Error(err.Error())
 			}
 
 			outputFormat, err := cmd.Flags().GetString("output")
 			if err != nil {
-				log.Fatal(err.Error())
+				log.Error(err.Error())
 			}
 
 			valid := types.IsValidOutputFormat(outputFormat)
 			if !valid {
-				log.Fatal("Invalid output format parameter")
+				log.Error("Invalid output format parameter")
 			}
 
 			params.OutputFormat = types.OutputFormat(outputFormat)
 			params.AllowFileListing, err = cmd.Flags().GetBool("allow-file-listing")
 			if err != nil {
-				log.Fatal(err.Error())
+				log.Error(err.Error())
 			}
 			params.AllowPullTimeout, err = cmd.Flags().GetBool("allow-pull-timeout")
 			if err != nil {
-				log.Fatal(err.Error())
+				log.Error(err.Error())
 			}
 			stream.SetSecretParameters(params.Secrets)
 			stream.SetParameters(params)
@@ -68,4 +69,5 @@ var (
 func init() {
 	curator.Init()
 	scanner.Init()
+	status.Init()
 }

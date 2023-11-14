@@ -10,16 +10,16 @@ var log = logger.GetLogger()
 func IndexImageFilesystem(data interface{}) interface{} {
 	imageName, ok := data.(string)
 	if !ok {
-		log.Fatal("IndexImageFilesystem received unknown type")
+		log.Error("IndexImageFilesystem received unknown type")
 	}
 	image, err := GetImage(imageName)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	stream.SetImageInstance(image)
 	err = ReadFiles(image)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	return data
 }
@@ -27,16 +27,16 @@ func IndexImageFilesystem(data interface{}) interface{} {
 func IndexTarballFilesystem(data interface{}) interface{} {
 	tarballPath, ok := data.(string)
 	if !ok {
-		log.Fatal("IndexTarballFilesystem received unknown type")
+		log.Error("IndexTarballFilesystem received unknown type")
 	}
 	image, err := ReadTarball(tarballPath)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	stream.SetImageInstance(image)
 	err = ReadFiles(image)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	return data
 }

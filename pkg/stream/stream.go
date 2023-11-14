@@ -1,12 +1,14 @@
 package stream
 
 import (
+	"github.com/carbonetes/diggity/internal/logger"
 	"gitlab.com/jhumel/grove"
 )
 
 var (
 	hub   *grove.Grove
 	store *grove.Store
+	log   = logger.GetLogger()
 )
 
 func init() {
@@ -21,6 +23,10 @@ func Emit(event string, data interface{}) {
 
 func Attach(event string, handler grove.Handler) {
 	hub.Attach(event, handler)
+}
+
+func Watch(key string, handler grove.Handler) {
+	store.Watch(key, handler)
 }
 
 func GetHub() *grove.Grove {

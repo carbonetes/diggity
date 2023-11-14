@@ -87,14 +87,11 @@ func DefaultParameters() Parameters {
 		Input:            "",
 		OutputFormat:     JSON,
 		Quiet:            false,
-		Scanners:          nil,
+		Scanners:         nil,
 		AllowFileListing: false,
 		AllowPullTimeout: true,
 		Secrets: SecretParameters{
-			AllowSearch:       false,
 			MaxFileSize:       10485760,
-			ContentRegex:      "API_KEY|SECRET_KEY|DOCKER_AUTH",
-			Extensions:        DefaultSecretExtensions,
 			ExcludedFilenames: nil,
 		},
 		Registry: RegistryParameters{

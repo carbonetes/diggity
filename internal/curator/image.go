@@ -73,6 +73,7 @@ func processLayerContents(contents io.ReadCloser, layerHash string) error {
 			return err
 		}
 		if header.Typeflag == tar.TypeReg {
+			stream.Emit(stream.FilesystemCheckEvent, header.Name)
 			category, matched := scanner.CheckRelatedFiles(header.Name)
 			if matched {
 				err = processFile(header.Name, layerHash, reader, category)

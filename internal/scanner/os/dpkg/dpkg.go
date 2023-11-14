@@ -1,13 +1,13 @@
 package dpkg
 
 import (
-	"log"
-
+	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 var (
+	log  = logger.GetLogger()
 	Type = "dpkg"
 )
 
@@ -15,12 +15,12 @@ func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 
 	if !ok {
-		log.Fatal("Dpkg received unknown file type")
+		log.Error("Dpkg received unknown file type")
 	}
 
 	attributes, err := readManifest(manifest)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 
 	for _, attribute := range attributes {
