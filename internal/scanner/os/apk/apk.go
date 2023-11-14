@@ -10,7 +10,7 @@ import (
 const Distro = "alpine"
 
 var (
-	Type    = "apk"
+	Type = "apk"
 )
 
 func Scan(data interface{}) interface{} {

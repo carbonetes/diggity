@@ -1,8 +1,6 @@
 package stream
 
 import (
-	"fmt"
-
 	"gitlab.com/jhumel/grove"
 )
 
@@ -11,8 +9,7 @@ var (
 	store *grove.Store
 )
 
-func Start() {
-	fmt.Println("Initializing stream...")
+func init() {
 	hub = grove.New()
 	store = grove.NewStore(hub)
 	SetDefaultValues()
