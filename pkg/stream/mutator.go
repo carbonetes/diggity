@@ -11,6 +11,9 @@ func SetDefaultValues() {
 	store.Set(ComponentsStoreKey, []types.Component{})
 	store.Set(SecretsStoreKey, []types.Secret{})
 	store.Set(SBOMStoreKey, types.NewSBOM())
+	store.Set(DistroStoreKey, types.Distro{})
+	store.Set(ParametersStoreKey, types.Parameters{})
+	store.Set(SecretParametersStoreKey, types.SecretParameters{})
 }
 
 func AddComponent(component types.Component) {
