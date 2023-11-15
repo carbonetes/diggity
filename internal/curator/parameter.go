@@ -7,6 +7,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
+// ParametersStoreWatcher watches for changes in the parameters store and emits events based on the scan type.
 func ParametersStoreWatcher(data interface{}) interface{} {
 	parameters, ok := data.(types.Parameters)
 	if !ok {

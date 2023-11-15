@@ -16,6 +16,9 @@ import (
 	"github.com/google/uuid"
 )
 
+// GetImage retrieves a Docker image given its name or digest.
+// It first checks if the image exists locally, and if not, it pulls it from the remote registry.
+// Returns the image object and an error if any.
 func GetImage(input string) (v1.Image, error) {
 	ref, err := name.ParseReference(input)
 	if err != nil {
@@ -33,6 +36,8 @@ func GetImage(input string) (v1.Image, error) {
 	return image, nil
 }
 
+// ReadFiles reads the layers of a given v1.Image and processes its contents.
+// It returns an error if there's any issue encountered while reading the layers or processing its contents.
 func ReadFiles(image v1.Image) error {
 	layers, err := image.Layers()
 	if err != nil {
@@ -59,6 +64,10 @@ func ReadFiles(image v1.Image) error {
 	return nil
 }
 
+// processLayerContents reads the contents of a tar file and processes each file header.
+// It skips files that exceed the maximum file size and only processes regular files.
+// The processed files are hashed using the layerHash and stored for later use.
+// Returns an error if there was an issue reading or processing the tar file.
 func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize int64) error {
 	defer contents.Close()
 	reader := tar.NewReader(contents)
@@ -84,6 +93,8 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 	return nil
 }
 
+// processTarHeader processes a tar header and its contents, checking if the file size is within the limit and if it is a regular file.
+// If the file is a related file, it processes the file and returns an error if encountered.
 func processTarHeader(header *tar.Header, reader io.Reader, layerHash string, maxFileSize int64) error {
 	if header.Size > maxFileSize {
 		return nil
@@ -102,6 +113,11 @@ func processTarHeader(header *tar.Header, reader io.Reader, layerHash string, ma
 	return nil
 }
 
+// processFile reads the contents of a file from a reader, creates a temporary file, 
+// writes the contents of the reader to the temporary file, reads the content of the 
+// temporary file and emits a manifest file to a stream.
+// The manifest file contains the name of the file, the hash of the layer and the content of the file.
+// It returns an error if any of the operations fail.
 func processFile(name string, layerHash string, reader io.Reader, category string) error {
 	f, err := os.Create(os.TempDir() + string(os.PathSeparator) + "diggity-tmp-" + uuid.NewString())
 	if err != nil {
@@ -129,6 +145,8 @@ func processFile(name string, layerHash string, reader io.Reader, category strin
 	return nil
 }
 
+// CheckIfImageExistsInLocal checks if the given image reference exists locally.
+// It returns a boolean indicating whether the image exists, the image object if it exists, and an error if any.
 func CheckIfImageExistsInLocal(ref name.Reference) (bool, v1.Image, error) {
 	img, err := daemon.Image(ref)
 	if err != nil {

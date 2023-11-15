@@ -7,29 +7,33 @@ import (
 
 var log = logger.GetLogger()
 
-func IndexImageFilesystem(data interface{}) interface{} {
+// ImageScanHandler scans the given image for files and reads them.
+// It takes in a string parameter as the image name and returns the same parameter.
+func ImageScanHandler(data interface{}) interface{} {
 	imageName, ok := data.(string)
 	if !ok {
-		log.Error("IndexImageFilesystem received unknown type")
+		log.Fatal("IndexImageFilesystem received unknown type")
 	}
 	image, err := GetImage(imageName)
 	if err != nil {
-		log.Error(err)
+		log.Fatal(err)
 	}
 	stream.SetImageInstance(image)
 	err = ReadFiles(image)
 	if err != nil {
-		log.Error(err)
+		log.Fatal(err)
 	}
 	return data
 }
 
-func IndexTarballFilesystem(data interface{}) interface{} {
+// TarballScanHandler scans a tarball file and reads its contents as an image instance.
+// It then sets the image instance to the stream and reads the files in the image.
+func TarballScanHandler(data interface{}) interface{} {
 	tarballPath, ok := data.(string)
 	if !ok {
-		log.Error("IndexTarballFilesystem received unknown type")
+		log.Error("TarballStoreWatcher received unknown type")
 	}
-	image, err := ReadTarball(tarballPath)
+	image, err := ReadTarballAsImage(tarballPath)
 	if err != nil {
 		log.Error(err)
 	}
