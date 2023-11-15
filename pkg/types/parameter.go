@@ -37,18 +37,9 @@ type Parameters struct {
 	Quiet            bool
 	Scanners         []string
 	AllowFileListing bool
-	AllowPullTimeout bool
-	Secrets          SecretParameters
+	MaxFileSize      int64
 	Registry         RegistryParameters
 	Provenance       string
-}
-
-type SecretParameters struct {
-	AllowSearch       bool
-	MaxFileSize       int64
-	ContentRegex      string
-	Extensions        []string
-	ExcludedFilenames []string
 }
 
 type RegistryParameters struct {
@@ -89,11 +80,7 @@ func DefaultParameters() Parameters {
 		Quiet:            false,
 		Scanners:         nil,
 		AllowFileListing: false,
-		AllowPullTimeout: true,
-		Secrets: SecretParameters{
-			MaxFileSize:       10485760,
-			ExcludedFilenames: nil,
-		},
+		MaxFileSize:      10485760,
 		Registry: RegistryParameters{
 			URI:      "",
 			Username: "",

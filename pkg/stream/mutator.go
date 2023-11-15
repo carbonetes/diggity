@@ -11,7 +11,6 @@ func SetDefaultValues() {
 	store.Set(SBOMStoreKey, types.NewSBOM())
 	store.Set(DistroStoreKey, types.Distro{})
 	store.Set(ParametersStoreKey, types.Parameters{})
-	store.Set(SecretParametersStoreKey, types.SecretParameters{})
 }
 
 func AddComponent(component types.Component) {
@@ -56,11 +55,10 @@ func SetParameters(params types.Parameters) {
 	store.Set(ParametersStoreKey, params)
 }
 
-func SetSecretParameters(secretParam types.SecretParameters) {
-	store.Set(SecretParametersStoreKey, secretParam)
-
-}
-
 func SetImageInstance(image v1.Image) {
 	store.Set(ImageInstanceStoreKey, image)
+}
+
+func SetScanElapsed(duration float64) {
+	store.Set(ScanElapsedStoreKey, duration)
 }

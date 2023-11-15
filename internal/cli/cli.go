@@ -15,6 +15,5 @@ func init() {
 }
 
 func Start(params types.Parameters) {
-	stream.SetSecretParameters(params.Secrets)
 	stream.SetParameters(params)
 }

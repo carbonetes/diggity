@@ -94,7 +94,7 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 	fileName := ellipsis(file[0], 10)
 	fileName = "[" + fileName + ":" + strconv.Itoa(entry.Caller.Line) + "]"
 	time := timeColor(fmt.Sprintf("[%s]", entry.Time.Format("01-02-2006 3:04PM")))
-	caller := callerColor(fmt.Sprintf("%-15s", fileName))
+	caller := callerColor(fmt.Sprintf("%-8s", fileName))
 	b.WriteString(fmt.Sprintf("%s %s %s : %s\n",
 		time,
 		caller,

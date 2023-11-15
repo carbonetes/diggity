@@ -8,8 +8,3 @@ type Secret struct {
 	Line    int    `json:"line"`
 }
 
-// SecretResults the final result that will be displayed
-type SecretResult struct {
-	Parameters SecretParameters `json:"parameters"`
-	Secrets    []Secret         `json:"secrets"`
-}

@@ -38,7 +38,7 @@ func ReadFiles(image v1.Image) error {
 	if err != nil {
 		return err
 	}
-
+	maxFileSize := stream.GetParameters().MaxFileSize
 	for _, layer := range layers {
 		contents, err := layer.Uncompressed()
 		if err != nil {
@@ -50,7 +50,7 @@ func ReadFiles(image v1.Image) error {
 			return err
 		}
 
-		err = processLayerContents(contents, layerHash.String())
+		err = processLayerContents(contents, layerHash.String(), maxFileSize)
 		if err != nil {
 			return err
 		}
@@ -59,11 +59,9 @@ func ReadFiles(image v1.Image) error {
 	return nil
 }
 
-func processLayerContents(contents io.ReadCloser, layerHash string) error {
+func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize int64) error {
 	defer contents.Close()
-
 	reader := tar.NewReader(contents)
-
 	for {
 		header, err := reader.Next()
 		if err == io.EOF {
@@ -72,14 +70,31 @@ func processLayerContents(contents io.ReadCloser, layerHash string) error {
 		if err != nil {
 			return err
 		}
+		if header.Size > maxFileSize {
+			continue
+		}
 		if header.Typeflag == tar.TypeReg {
-			stream.Emit(stream.FilesystemCheckEvent, header.Name)
-			category, matched := scanner.CheckRelatedFiles(header.Name)
-			if matched {
-				err = processFile(header.Name, layerHash, reader, category)
-				if err != nil {
-					return err
-				}
+			err = processTarHeader(header, reader, layerHash, maxFileSize)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func processTarHeader(header *tar.Header, reader io.Reader, layerHash string, maxFileSize int64) error {
+	if header.Size > maxFileSize {
+		return nil
+	}
+	if header.Typeflag == tar.TypeReg {
+		stream.Emit(stream.FilesystemCheckEvent, header.Name)
+		category, matched := scanner.CheckRelatedFiles(header.Name)
+		if matched {
+			err := processFile(header.Name, layerHash, reader, category)
+			if err != nil {
+				return err
 			}
 		}
 	}
@@ -92,7 +107,6 @@ func processFile(name string, layerHash string, reader io.Reader, category strin
 	if err != nil {
 		return err
 	}
-	defer f.Close()
 
 	_, err = io.Copy(f, reader)
 	if err != nil {
@@ -108,7 +122,8 @@ func processFile(name string, layerHash string, reader io.Reader, category strin
 	if err != nil {
 		return err
 	}
-
+	f.Close()
+	os.Remove(f.Name())
 	stream.Emit(category, manifest)
 
 	return nil

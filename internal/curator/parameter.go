@@ -1,6 +1,8 @@
 package curator
 
 import (
+	"time"
+
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
@@ -10,7 +12,7 @@ func ParametersStoreWatcher(data interface{}) interface{} {
 	if !ok {
 		log.Print("ParametersStoreWatcher received unknown type")
 	}
-
+	stream.Set(stream.ScanStartStoreKey, time.Now())
 	switch parameters.ScanType {
 	case 1: // Image Scan Type
 		stream.Emit(stream.ImageScanEvent, parameters.Input)
@@ -19,7 +21,7 @@ func ParametersStoreWatcher(data interface{}) interface{} {
 	default:
 		log.Error("Unknown scan type")
 	}
-	// result := stream.AggrerateSoftwareManifest()
-	stream.Emit(stream.ScanCompleteEvent, true)
+
+	stream.SetScanElapsed(time.Since(stream.GetScanStart()).Seconds())
 	return data
 }

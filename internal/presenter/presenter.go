@@ -11,16 +11,16 @@ import (
 var log = logger.GetLogger()
 
 func DisplayResults(data interface{}) interface{} {
-	_, ok := data.(bool)
+	duration, ok := data.(float64)
 	if !ok {
-		log.Error("ScanComplete received unknown type")
+		log.Error("DisplayResults received unknown type")
 	}
 
 	format := stream.GetParameters().OutputFormat
 
 	switch format {
 	case types.Table:
-		table.Show(table.Create())
+		table.Show(table.Create(), duration)
 	case types.JSON:
 		json.DisplayResults(stream.AggrerateSoftwareManifest())
 	default:

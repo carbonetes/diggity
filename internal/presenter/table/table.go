@@ -18,7 +18,8 @@ var (
 )
 
 type model struct {
-	table table.Model
+	table    table.Model
+	duration float64
 }
 
 func (m model) Init() tea.Cmd { return nil }
@@ -37,7 +38,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	return baseStyle.Render(m.table.View()) + "\n" + helpStyle.Render("Press esc to quit... 🐱🐓")
+	return baseStyle.Render(m.table.View()) + fmt.Sprintf("\nDuration: %.3f sec", m.duration) + "\n" + helpStyle.Render("Press esc to quit... 🐱🐓")
 }
 
 func Create() table.Model {
@@ -78,8 +79,8 @@ func Create() table.Model {
 	return t
 }
 
-func Show(t table.Model) {
-	m := model{t}
+func Show(t table.Model, duration float64) {
+	m := model{table: t, duration: duration}
 	if _, err := tea.NewProgram(m).Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)

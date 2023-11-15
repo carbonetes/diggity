@@ -1,6 +1,8 @@
 package stream
 
 import (
+	"time"
+
 	"github.com/carbonetes/diggity/pkg/types"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 )
@@ -122,22 +124,6 @@ func GetParameters() types.Parameters {
 	return parameters
 }
 
-func GetSecretParameters() types.SecretParameters {
-	data, exist := store.Get(SecretParametersStoreKey)
-
-	if !exist {
-		log.Error("SecretParameters not found")
-	}
-
-	parameters, ok := data.(types.SecretParameters)
-
-	if !ok {
-		log.Error("Invalid data type found in parameters store")
-	}
-
-	return parameters
-}
-
 func GetImageInstance() v1.Image {
 	data, exist := store.Get(ImageInstanceStoreKey)
 
@@ -152,4 +138,20 @@ func GetImageInstance() v1.Image {
 	}
 
 	return image
+}
+
+func GetScanStart() time.Time {
+	data, exist := store.Get(ScanStartStoreKey)
+
+	if !exist {
+		log.Error("ScanStart not found")
+	}
+
+	scanStart, ok := data.(time.Time)
+
+	if !ok {
+		log.Error("Invalid data type found in scan start store")
+	}
+
+	return scanStart
 }

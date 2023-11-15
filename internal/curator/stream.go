@@ -11,7 +11,6 @@ func Init() {
 	stream.Attach(stream.ImageScanEvent, IndexImageFilesystem)
 	stream.Attach(stream.TarballScanEvent, IndexTarballFilesystem)
 	stream.Attach(stream.FilesystemCheckEvent, status.ScanFile)
-	stream.Attach(stream.ScanCompleteEvent, status.ScanCompleteStatus)
-	stream.Attach(stream.ScanCompleteEvent, presenter.DisplayResults)
-
+	stream.Watch(stream.ScanElapsedStoreKey, status.ScanCompleteStatus)
+	stream.Watch(stream.ScanElapsedStoreKey, presenter.DisplayResults)
 }

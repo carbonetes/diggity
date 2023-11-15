@@ -13,5 +13,5 @@ const (
 	ComponentScanEvent string = "scan.component."
 	DistroScanEvent    string = "scan.distro"
 	SecretScanEvent    string = "scan.secret"
-	ScanCompleteEvent  string = "scan.complete"
+
 )

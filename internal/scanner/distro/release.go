@@ -6,7 +6,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
-func parseRelease(manifest types.ManifestFile) (*types.Distro, error) {
+func parseRelease(manifest types.ManifestFile) (types.Distro, error) {
 
 	// Parse the os-release content
 	lines := strings.Split(string(manifest.Content), "\n")
@@ -41,5 +41,5 @@ func parseRelease(manifest types.ManifestFile) (*types.Distro, error) {
 			distro.PrivacyPolicyURL = value
 		}
 	}
-	return &distro, nil
+	return distro, nil
 }

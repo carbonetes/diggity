@@ -29,10 +29,10 @@ func Watch(key string, handler grove.Handler) {
 	store.Watch(key, handler)
 }
 
-func GetHub() *grove.Grove {
-	return hub
+func Set(key string, value interface{}) {
+	store.Set(key, value)
 }
 
-func GetStore() *grove.Store {
-	return store
+func Get(key string) (interface{}, bool) {
+	return store.Get(key)
 }

@@ -17,16 +17,16 @@ func init() {
 	if !CheckFileIfExists(logFile) {
 		err := os.MkdirAll(filepath.Dir(logFile), 0700)
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 	}
 
 	file, err := os.OpenFile(logFile, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	log.SetOutput(io.MultiWriter(file, os.Stdout))
+	log.SetOutput(io.MultiWriter(file, os.Stderr))
 
 	log.SetLevel(logrus.DebugLevel)
 	log.SetReportCaller(true)
