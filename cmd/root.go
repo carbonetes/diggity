@@ -3,12 +3,9 @@ package cmd
 import (
 	"os"
 
-	"github.com/carbonetes/diggity/internal/curator"
+	"github.com/carbonetes/diggity/internal/cli"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/logger"
-	"github.com/carbonetes/diggity/internal/presenter/status"
-	"github.com/carbonetes/diggity/internal/scanner"
-	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/spf13/cobra"
 )
@@ -59,15 +56,7 @@ var (
 			if err != nil {
 				log.Error(err.Error())
 			}
-			stream.SetSecretParameters(params.Secrets)
-			stream.SetParameters(params)
-
+			cli.Start(params)
 		},
 	}
 )
-
-func init() {
-	curator.Init()
-	scanner.Init()
-	status.Init()
-}
