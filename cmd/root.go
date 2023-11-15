@@ -35,24 +35,23 @@ var (
 			err := params.GetScanType()
 			if err != nil {
 				log.Error(err.Error())
+				os.Exit(0)
 			}
 
 			outputFormat, err := cmd.Flags().GetString("output")
 			if err != nil {
 				log.Error(err.Error())
+				os.Exit(0)
 			}
 
 			valid := types.IsValidOutputFormat(outputFormat)
 			if !valid {
 				log.Error("Invalid output format parameter")
+				os.Exit(0)
 			}
 
 			params.OutputFormat = types.OutputFormat(outputFormat)
 			params.AllowFileListing, err = cmd.Flags().GetBool("allow-file-listing")
-			if err != nil {
-				log.Error(err.Error())
-			}
-			params.AllowPullTimeout, err = cmd.Flags().GetBool("allow-pull-timeout")
 			if err != nil {
 				log.Error(err.Error())
 			}

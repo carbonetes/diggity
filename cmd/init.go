@@ -13,5 +13,4 @@ func init() {
 	root.Flags().BoolP("quiet", "q", false, "Disable all output except scan result")
 	root.Flags().StringArray("parsers", []string{}, "Allow only selected parsers to run")
 	root.Flags().Bool("allow-file-listing", false, "Allow parsers to list files related to the packages")
-	root.Flags().Bool("allow-pull-timeout", true, "Allow image pulling to timeout due to long duration of pulling process")
 }
