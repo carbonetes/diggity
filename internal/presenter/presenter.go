@@ -2,6 +2,7 @@ package presenter
 
 import (
 	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/presenter/json"
 	"github.com/carbonetes/diggity/internal/presenter/table"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
@@ -20,6 +21,8 @@ func DisplayResults(data interface{}) interface{} {
 	switch format {
 	case types.Table:
 		table.Show(table.Create())
+	case types.JSON:
+		json.DisplayResults(stream.AggrerateSoftwareManifest())
 	default:
 		log.Error("Unknown output format")
 	}
