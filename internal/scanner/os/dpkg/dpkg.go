@@ -28,12 +28,10 @@ func Scan(data interface{}) interface{} {
 		if metadata == nil {
 			continue
 		}
-
 		component := newComponent(*metadata)
 		if len(component.Name) == 0 || len(component.Version) == 0 {
 			continue
 		}
-
 		stream.AddComponent(component)
 	}
 

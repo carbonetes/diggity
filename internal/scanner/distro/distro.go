@@ -30,7 +30,6 @@ func Scan(data interface{}) interface{} {
 
 func CheckRelatedFile(file string) (string, bool) {
 	if slices.Contains(Manifests, file) {
-
 		return Type, true
 	}
 	return "", false

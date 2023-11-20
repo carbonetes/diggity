@@ -27,7 +27,6 @@ func Scan(data interface{}) interface{} {
 }
 
 func CheckRelatedFiles(file string) (string, bool) {
-	log.Println("Checking RPM manifest file: ", filepath.Base(file))
 	if slices.Contains(ManifestFiles, filepath.Base(file)) {
 		log.Println("Found RPM manifest file: ", file)
 		return Type, true

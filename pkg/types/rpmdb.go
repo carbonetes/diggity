@@ -10,13 +10,11 @@ type RpmDB struct {
 	PackageInfos []rpmdb.PackageInfo
 }
 
-func (r *RpmDB) GetRpmPackageInfos() error {
-	db, err := rpmdb.Open(r.Path)
+func (r *RpmDB) ReadDBFile(file string) error {
+	db, err := rpmdb.Open(file)
 	if err != nil {
 		return err
 	}
-
-	defer db.Close()
 
 	packageInfos, err := db.ListPackages()
 	if err != nil {
@@ -32,6 +30,11 @@ func (r *RpmDB) GetRpmPackageInfos() error {
 			continue
 		}
 		r.PackageInfos = append(r.PackageInfos, *packageInfo)
+	}
+
+	err = db.Close()
+	if err != nil {
+		return err
 	}
 
 	return nil
