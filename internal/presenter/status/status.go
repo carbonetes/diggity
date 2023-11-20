@@ -2,23 +2,25 @@ package status
 
 import (
 	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/pkg/stream"
 )
 
 var log = logger.GetLogger()
 
-func ScanFile(data interface{}) interface{} {
+func FileListWatcher(data interface{}) interface{} {
 	file, ok := data.(string)
 	if !ok {
-		log.Error("ScanFile received unknown type")
+		log.Error("FileCheckWatcher received unknown type")
 	}
 	p.Send(resultMsg{file: file, done: false})
+	stream.AddFile(file)
 	return data
 }
 
-func ScanCompleteStatus(data interface{}) interface{} {
-	_, ok := data.(bool)
+func ScanElapsedStoreWatcher(data interface{}) interface{} {
+	_, ok := data.(float64)
 	if !ok {
-		log.Error("ScanComplete received unknown type")
+		log.Error("ScanElapsedStoreWatcher received unknown type")
 	}
 	p.Send(resultMsg{done: true})
 	return data

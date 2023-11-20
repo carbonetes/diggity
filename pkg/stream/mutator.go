@@ -1,16 +1,19 @@
 package stream
 
 import (
+	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/pkg/types"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 )
 
 func SetDefaultValues() {
+	store.Set(FileListStoreKey, []string{})
 	store.Set(ComponentsStoreKey, []types.Component{})
 	store.Set(SecretsStoreKey, []types.Secret{})
 	store.Set(SBOMStoreKey, types.NewSBOM())
 	store.Set(DistroStoreKey, types.Distro{})
 	store.Set(ParametersStoreKey, types.Parameters{})
+	store.Set(CycloneDXComponentsStoreKey, []cyclonedx.Component{})
 }
 
 func AddComponent(component types.Component) {
@@ -47,12 +50,54 @@ func AddSecret(secret types.Secret) {
 	store.Set(SecretsStoreKey, secrets)
 }
 
+func AddCdxComponent(component cyclonedx.Component) {
+	data, exist := store.Get(CycloneDXComponentsStoreKey)
+
+	components, ok := data.([]cyclonedx.Component)
+
+	if !ok {
+		log.Error("Received invalid component slice from store")
+	}
+
+	if !exist {
+		store.Set(CycloneDXComponentsStoreKey, []cyclonedx.Component{component})
+	}
+
+	components = append(components, component)
+	store.Set(CycloneDXComponentsStoreKey, components)
+}
+
+func AddFile(file string) {
+	data, exist := store.Get(FileListStoreKey)
+
+	files, ok := data.([]string)
+
+	if !ok {
+		log.Error("Received invalid file slice from store")
+	}
+
+	if !exist {
+		store.Set(FileListStoreKey, []string{file})
+	}
+
+	files = append(files, file)
+	store.Set(FileListStoreKey, files)
+}
+
 func SetDistro(distro types.Distro) {
 	store.Set(DistroStoreKey, distro)
 }
 
 func SetParameters(params types.Parameters) {
 	store.Set(ParametersStoreKey, params)
+	store.Set(ParameterScanTypeStoreKey, params.ScanType)
+	store.Set(ParameterInputStoreKey, params.Input)
+	store.Set(ParameterOutputFormatStoreKey, params.OutputFormat)
+	store.Set(ParameterQuietStoreKey, params.Quiet)
+	store.Set(ParameterMaxFileSizeStoreKey, params.MaxFileSize)
+	store.Set(ParameterScannersStoreKey, params.Scanners)
+	store.Set(ParameterAllowFileListingStoreKey, params.AllowFileListing)
+	store.Set(ParameterRegistryStoreKey, params.Registry)
 }
 
 func SetImageInstance(image v1.Image) {
