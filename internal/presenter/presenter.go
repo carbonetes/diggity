@@ -1,6 +1,7 @@
 package presenter
 
 import (
+	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/internal/presenter/json"
 	"github.com/carbonetes/diggity/internal/presenter/table"
@@ -16,13 +17,24 @@ func DisplayResults(data interface{}) interface{} {
 		log.Error("DisplayResults received unknown type")
 	}
 
-	format := stream.GetParameters().OutputFormat
+	params := stream.GetParameters()
+	result := stream.AggrerateSoftwareManifest()
+
+	format, saveToFile := params.OutputFormat, params.SaveToFile
+
+	if len(saveToFile) > 0 {
+		err := helper.SaveToFile(result, saveToFile, format.String())
+		if err != nil {
+			log.Error("Failed to save results to file :", err.Error())
+		}
+		return data
+	}
 
 	switch format {
 	case types.Table:
 		table.Show(table.Create(), duration)
 	case types.JSON:
-		json.DisplayResults(stream.AggrerateSoftwareManifest())
+		json.DisplayResults(result)
 	default:
 		log.Error("Unknown output format")
 	}

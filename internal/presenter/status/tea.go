@@ -4,6 +4,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -35,12 +36,11 @@ type model struct {
 }
 
 func newModel() model {
-	const numLastResults = 5
 	s := spinner.New()
 	s.Style = spinnerStyle
 	return model{
 		spinner: s,
-		results: make([]resultMsg, numLastResults),
+		results: make([]resultMsg, 5),
 	}
 }
 
@@ -80,7 +80,7 @@ func (m model) View() string {
 	if m.quitting {
 		return ""
 	} else {
-		s += m.spinner.View() + " Scan in progress..."
+		s += m.spinner.View() + " Diggity is searching the files..."
 	}
 
 	s += "\n\n"
@@ -105,7 +105,12 @@ var (
 	p = tea.NewProgram(m)
 )
 
-func Init() {
+func init() {
+	stream.Watch(stream.ScanElapsedStoreKey, ScanElapsedStoreWatcher)
+	stream.Attach(stream.FileListEvent, FileListWatcher)
+}
+
+func Run() {
 	go func() {
 		if _, err := p.Run(); err != nil {
 			log.Fatalf("Failed to start program: %v", err)
