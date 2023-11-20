@@ -2,7 +2,6 @@ package types
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/helper"
@@ -26,14 +25,11 @@ const (
 	SnapshotJSON  OutputFormat = "snapshot-json"
 )
 
-// DefaultSecretExtensions contains a list of common file extensions containing secrets.
-// Additional Reference: https://blog.gitguardian.com/top-10-file-extensions/
-var DefaultSecretExtensions = []string{"env", "h", "so", "sec", "pem", "properties", "xml", "yml", "yaml", "json", "py", "js", "ts", "PHP"}
-
 type Parameters struct {
 	ScanType         ScanType
 	Input            string
 	OutputFormat     OutputFormat
+	SaveToFile       string
 	Quiet            bool
 	Scanners         []string
 	AllowFileListing bool
@@ -43,14 +39,18 @@ type Parameters struct {
 }
 
 type RegistryParameters struct {
-	URI      string
-	Username string
-	Password string
-	Token    string
+	URI      string `json:"uri" yaml:"uri"`
+	Username string `json:"username" yaml:"username"`
+	Password string `json:"password" yaml:"password"`
+	Token    string `json:"token" yaml:"token"`
 }
 
 func (o OutputFormat) String() string {
 	return string(o)
+}
+
+func GetAllOutputFormat() string {
+	return strings.Join([]string{JSON.String(), Table.String(), CycloneDXJSON.String(), CycloneDXXML.String(), SPDXJSON.String(), SPDXXML.String(), SPDXTag.String(), SnapshotJSON.String()}, ", ")
 }
 
 func (p *Parameters) GetScanType() error {
@@ -58,7 +58,7 @@ func (p *Parameters) GetScanType() error {
 		p.ScanType = Image
 	} else if strings.Contains(p.Input, ".tar") {
 		p.ScanType = Tarball
-	} else if strings.Contains(p.Input, string(os.PathSeparator)) {
+	} else if helper.IsDir(p.Input) {
 		exists, err := helper.IsDirExists(p.Input)
 		if err != nil {
 			return err
@@ -80,7 +80,7 @@ func DefaultParameters() Parameters {
 		Quiet:            false,
 		Scanners:         nil,
 		AllowFileListing: false,
-		MaxFileSize:      10485760,
+		MaxFileSize:      52428800,
 		Registry: RegistryParameters{
 			URI:      "",
 			Username: "",

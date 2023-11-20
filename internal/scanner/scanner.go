@@ -16,6 +16,7 @@ var All = []string{
 	dpkg.Type,
 	distro.Type,
 	secret.Type,
+	rpm.Type,
 }
 
 var FileCheckers = []FileChecker{
@@ -29,16 +30,16 @@ var FileCheckers = []FileChecker{
 func init() {
 	stream.Attach(apk.Type, apk.Scan)
 	stream.Attach(dpkg.Type, dpkg.Scan)
+	stream.Attach(rpm.Type, rpm.Scan)
 	stream.Attach(distro.Type, distro.Scan)
 	stream.Attach(secret.Type, secret.Scan)
-	stream.Attach(rpm.Type, rpm.Scan)
 }
 
 func CheckRelatedFiles(file string) (string, bool) {
 	for _, checker := range FileCheckers {
-		_type, matched := checker(file)
+		category, matched := checker(file)
 		if matched {
-			return _type, true
+			return category, true
 		}
 	}
 	return "", false

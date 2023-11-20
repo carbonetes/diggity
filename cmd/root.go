@@ -3,9 +3,10 @@ package cmd
 import (
 	"os"
 
-	"github.com/carbonetes/diggity/internal/cli"
+	"github.com/carbonetes/diggity/internal/curator"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/spf13/cobra"
 )
@@ -20,13 +21,13 @@ var (
 		Long:  `BOM Diggity is an open-source tool developed to streamline the critical process of generating a comprehensive Software Bill of Materials (SBOM) for Container Images and File Systems across various supported ecosystems.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			tarball, _ := cmd.Flags().GetString("tar")
-			directory, _ := cmd.Flags().GetString("directory")
+			filesystem, _ := cmd.Flags().GetString("directory")
 			if len(args) > 0 {
 				params.Input = helper.FormatImage(args[0])
 			} else if len(tarball) > 0 {
 				params.Input = tarball
-			} else if len(directory) > 0 {
-				params.Input = directory
+			} else if len(filesystem) > 0 {
+				params.Input = filesystem
 			} else {
 				_ = cmd.Help()
 				os.Exit(0)
@@ -34,28 +35,42 @@ var (
 
 			err := params.GetScanType()
 			if err != nil {
-				log.Error(err.Error())
-				os.Exit(0)
+				log.Fatal(err.Error())
 			}
 
 			outputFormat, err := cmd.Flags().GetString("output")
 			if err != nil {
-				log.Error(err.Error())
-				os.Exit(0)
+				log.Fatal(err.Error())
+			}
+
+			file, err := cmd.Flags().GetString("file")
+			if err != nil {
+				log.Fatal(err.Error())
+			}
+
+			scanners, err := cmd.Flags().GetStringArray("scanners")
+			if err != nil {
+				log.Fatal(err.Error())
+			}
+
+			if len(file) > 0 {
+				params.SaveToFile = file
 			}
 
 			valid := types.IsValidOutputFormat(outputFormat)
 			if !valid {
-				log.Error("Invalid output format parameter")
-				os.Exit(0)
+				log.Fatal("Invalid output format parameter")
 			}
 
+			params.SaveToFile = file
+			params.Scanners = helper.SplitAndAppendStrings(scanners)
 			params.OutputFormat = types.OutputFormat(outputFormat)
 			params.AllowFileListing, err = cmd.Flags().GetBool("allow-file-listing")
 			if err != nil {
-				log.Error(err.Error())
+				log.Fatal(err.Error())
 			}
-			cli.Start(params)
+			curator.Init()
+			stream.SetParameters(params)
 		},
 	}
 )

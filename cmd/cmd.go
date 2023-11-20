@@ -1,8 +1,6 @@
 package cmd
 
-import (
-	"os"
-)
+import "os"
 
 func Execute() {
 	err := root.Execute()

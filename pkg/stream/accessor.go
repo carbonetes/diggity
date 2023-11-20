@@ -8,12 +8,16 @@ import (
 )
 
 func GetComponents() []types.Component {
-	data, _ := store.Get(ComponentsStoreKey)
+	data, exist := store.Get(ComponentsStoreKey)
+
+	if !exist {
+		log.Error("Components not found")
+	}
 
 	components, ok := data.([]types.Component)
 
 	if !ok {
-		return nil
+		log.Error("Invalid data type found in components store")
 	}
 
 	return components
@@ -154,4 +158,148 @@ func GetScanStart() time.Time {
 	}
 
 	return scanStart
+}
+
+func GetParameterScanType() string {
+	data, exist := store.Get(ParameterScanTypeStoreKey)
+
+	if !exist {
+		log.Error("ParameterScanType not found")
+	}
+
+	scanType, ok := data.(string)
+
+	if !ok {
+		log.Error("Invalid data type found in parameter scan type store")
+	}
+
+	return scanType
+}
+
+func GetParameterInput() string {
+	data, exist := store.Get(ParameterInputStoreKey)
+
+	if !exist {
+		log.Error("ParameterInput not found")
+	}
+
+	input, ok := data.(string)
+
+	if !ok {
+		log.Error("Invalid data type found in parameter input store")
+	}
+
+	return input
+}
+
+func GetParameterOutputFormat() string {
+	data, exist := store.Get(ParameterOutputFormatStoreKey)
+
+	if !exist {
+		log.Error("ParameterOutputFormat not found")
+	}
+
+	outputFormat, ok := data.(string)
+
+	if !ok {
+		log.Error("Invalid data type found in parameter output format store")
+	}
+
+	return outputFormat
+}
+
+func GetParameterQuiet() bool {
+	data, exist := store.Get(ParameterQuietStoreKey)
+
+	if !exist {
+		log.Error("ParameterQuiet not found")
+	}
+
+	quiet, ok := data.(bool)
+
+	if !ok {
+		log.Error("Invalid data type found in parameter quiet store")
+	}
+
+	return quiet
+}
+
+func GetParameterMaxFileSize() int64 {
+	data, exist := store.Get(ParameterMaxFileSizeStoreKey)
+
+	if !exist {
+		log.Error("ParameterMaxFileSize not found")
+	}
+
+	maxFileSize, ok := data.(int64)
+
+	if !ok {
+		log.Error("Invalid data type found in parameter max file size store")
+	}
+
+	return maxFileSize
+}
+
+func GetParameterScanners() []string {
+	data, exist := store.Get(ParameterScannersStoreKey)
+
+	if !exist {
+		log.Error("ParameterScanners not found")
+	}
+
+	scanners, ok := data.([]string)
+
+	if !ok {
+		log.Error("Invalid data type found in parameter scanners store")
+	}
+
+	return scanners
+}
+
+func GetParameterAllowFileListing() bool {
+	data, exist := store.Get(ParameterAllowFileListingStoreKey)
+
+	if !exist {
+		log.Error("ParameterAllowFileListing not found")
+	}
+
+	allowFileListing, ok := data.(bool)
+
+	if !ok {
+		log.Error("Invalid data type found in parameter allow file listing store")
+	}
+
+	return allowFileListing
+}
+
+func GetParameterRegistry() string {
+	data, exist := store.Get(ParameterRegistryStoreKey)
+
+	if !exist {
+		log.Error("ParameterRegistry not found")
+	}
+
+	registry, ok := data.(string)
+
+	if !ok {
+		log.Error("Invalid data type found in parameter registry store")
+	}
+
+	return registry
+}
+
+func GetFiles() []string {
+	data, exist := store.Get(FileListStoreKey)
+
+	if !exist {
+		log.Error("FileList not found")
+	}
+
+	files, ok := data.([]string)
+
+	if !ok {
+		log.Error("Invalid data type found in file list store")
+	}
+
+	return files
 }

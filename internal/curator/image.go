@@ -8,7 +8,6 @@ import (
 
 	"github.com/carbonetes/diggity/internal/scanner"
 	"github.com/carbonetes/diggity/pkg/stream"
-	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/google/go-containerregistry/pkg/name"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 	"github.com/google/go-containerregistry/pkg/v1/daemon"
@@ -79,11 +78,12 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 		if err != nil {
 			return err
 		}
-		if header.Size > maxFileSize {
-			continue
-		}
+		stream.Emit(stream.FileListEvent, header.Name)
 		if header.Typeflag == tar.TypeReg {
-			err = processTarHeader(header, reader, layerHash, maxFileSize)
+			if header.Size > maxFileSize {
+				return nil
+			}
+			err = processTarHeader(header, reader, layerHash)
 			if err != nil {
 				return err
 			}
@@ -95,30 +95,24 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 
 // processTarHeader processes a tar header and its contents, checking if the file size is within the limit and if it is a regular file.
 // If the file is a related file, it processes the file and returns an error if encountered.
-func processTarHeader(header *tar.Header, reader io.Reader, layerHash string, maxFileSize int64) error {
-	if header.Size > maxFileSize {
-		return nil
-	}
-	if header.Typeflag == tar.TypeReg {
-		stream.Emit(stream.FilesystemCheckEvent, header.Name)
-		category, matched := scanner.CheckRelatedFiles(header.Name)
-		if matched {
-			err := processFile(header.Name, layerHash, reader, category)
-			if err != nil {
-				return err
-			}
+func processTarHeader(header *tar.Header, reader io.Reader, layerHash string) error {
+	category, matched := scanner.CheckRelatedFiles(header.Name)
+	if matched {
+		err := processFile(header.Name, reader, category)
+		if err != nil {
+			return err
 		}
 	}
 
 	return nil
 }
 
-// processFile reads the contents of a file from a reader, creates a temporary file, 
-// writes the contents of the reader to the temporary file, reads the content of the 
+// processFile reads the contents of a file from a reader, creates a temporary file,
+// writes the contents of the reader to the temporary file, reads the content of the
 // temporary file and emits a manifest file to a stream.
 // The manifest file contains the name of the file, the hash of the layer and the content of the file.
 // It returns an error if any of the operations fail.
-func processFile(name string, layerHash string, reader io.Reader, category string) error {
+func processFile(name string, reader io.Reader, category string) error {
 	f, err := os.Create(os.TempDir() + string(os.PathSeparator) + "diggity-tmp-" + uuid.NewString())
 	if err != nil {
 		return err
@@ -129,18 +123,20 @@ func processFile(name string, layerHash string, reader io.Reader, category strin
 		return err
 	}
 
-	manifest := types.ManifestFile{
-		Path:  name,
-		Layer: layerHash,
+	if category == "rpm" {
+		err = handleRpmFile(f.Name(), category)
+		if err != nil {
+			return err
+		}
+	} else {
+		err = handleManifestFile(name, category, f)
+		if err != nil {
+			return err
+		}
 	}
 
-	err = manifest.ReadContent(f)
-	if err != nil {
-		return err
-	}
 	f.Close()
 	os.Remove(f.Name())
-	stream.Emit(category, manifest)
 
 	return nil
 }

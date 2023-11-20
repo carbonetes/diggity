@@ -34,3 +34,17 @@ func GenerateURN(nid string) string {
 	// Construct the URN with the provided namespace identifier
 	return fmt.Sprintf("urn:%s:%s", nid, uuid.String())
 }
+
+func SplitString(str string) []string {
+	return regexp.
+		MustCompile(`\s*[\s,;]+\s*`).
+		Split(str, -1)
+}
+
+func SplitAndAppendStrings(target []string) []string {
+	var result []string
+	for _, str := range target {
+		result = append(result, SplitString(str)...)
+	}
+	return result
+}

@@ -5,12 +5,26 @@ import (
 )
 
 func AggrerateSoftwareManifest() types.SoftwareManifest {
+	params := GetParameters()
+	var sbom interface{}
+	var files []string
+	switch params.OutputFormat {
+	case types.CycloneDXJSON, types.CycloneDXXML:
+	case types.SPDXJSON, types.SPDXTag, types.SPDXXML:
+	default:
+		sbom = AggregateSBOM()
+	}
+	if params.AllowFileListing {
+		files = GetFiles()
+	}
+
 	return types.SoftwareManifest{
-		SBOM:       AggregateSBOM(),
+		SBOM:       sbom,
 		ImageInfo:  GetImageInfo(),
 		Distro:     GetDistro(),
 		Secrets:    AggregateSecrets(),
-		Parameters: GetParameters(),
+		Files:      files,
+		Parameters: params,
 	}
 }
 
