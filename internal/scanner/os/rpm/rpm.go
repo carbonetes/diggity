@@ -19,7 +19,7 @@ func Scan(data interface{}) interface{} {
 	rpmdb, ok := data.(types.RpmDB)
 
 	if !ok {
-		log.Error("RPM Handler received unknown type")
+		log.Fatal("RPM Handler received unknown type")
 	}
 	readRpmDb(rpmdb)
 

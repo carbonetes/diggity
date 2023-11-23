@@ -1,6 +1,7 @@
 package curator
 
 import (
+	"io/fs"
 	"os"
 	"path/filepath"
 
@@ -10,13 +11,13 @@ import (
 )
 
 func FilesystemScanHandler(data interface{}) interface{} {
-	fs, ok := data.(string)
+	input, ok := data.(string)
 	if !ok {
-		log.Error("Filesystem Handler received unknown type")
+		log.Fatal("Filesystem Handler received unknown type")
 		return data
 	}
 
-	err := filepath.Walk(fs, handleFile)
+	err := filepath.WalkDir(input, handler)
 	if err != nil {
 		log.Error(err)
 	}
@@ -24,11 +25,14 @@ func FilesystemScanHandler(data interface{}) interface{} {
 	return data
 }
 
-func handleFile(path string, info os.FileInfo, err error) error {
-	if info.IsDir() && (info.Name() == ".git" || info.Name() == ".vscode") {
-		return filepath.SkipDir
+func handler(path string, di fs.DirEntry, err error) error {
+	if err != nil {
+		log.Fatal(err)
 	}
-	stream.Emit(stream.FilesystemScanEvent, path)
+	// if di.IsDir() && (di.Name() == ".git" || di.Name() == ".vscode") {
+	// 	return nil
+	// }
+	// stream.Emit(stream.FilesystemScanEvent, path)
 	category, matched := scanner.CheckRelatedFiles(path)
 	if matched {
 		if category == "rpm" {
@@ -36,18 +40,17 @@ func handleFile(path string, info os.FileInfo, err error) error {
 		} else {
 			file, err := os.Open(path)
 			if err != nil {
-				return err
+				log.Fatal(err)
 			}
 			err = handleManifestFile(path, category, file)
 			if err != nil {
-				return err
+				log.Fatal(err)
 			}
 		}
 		if err != nil {
-			return err
+			log.Fatal(err)
 		}
 	}
-
 	return nil
 }
 

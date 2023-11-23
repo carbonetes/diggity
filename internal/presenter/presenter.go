@@ -14,7 +14,7 @@ var log = logger.GetLogger()
 func DisplayResults(data interface{}) interface{} {
 	duration, ok := data.(float64)
 	if !ok {
-		log.Error("DisplayResults received unknown type")
+		log.Fatal("DisplayResults received unknown type")
 	}
 
 	params := stream.GetParameters()
@@ -25,7 +25,7 @@ func DisplayResults(data interface{}) interface{} {
 	if len(saveToFile) > 0 {
 		err := helper.SaveToFile(result, saveToFile, format.String())
 		if err != nil {
-			log.Error("Failed to save results to file :", err.Error())
+			log.Fatal("Failed to save results to file :", err.Error())
 		}
 		return data
 	}
@@ -36,7 +36,7 @@ func DisplayResults(data interface{}) interface{} {
 	case types.JSON:
 		json.DisplayResults(result)
 	default:
-		log.Error("Unknown output format")
+		log.Fatal("Unknown output format")
 	}
 
 	return data

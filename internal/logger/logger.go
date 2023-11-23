@@ -17,13 +17,13 @@ func init() {
 	if !CheckFileIfExists(logFile) {
 		err := os.MkdirAll(filepath.Dir(logFile), 0700)
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
 		}
 	}
 
 	file, err := os.OpenFile(logFile, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 
 	log.SetOutput(io.MultiWriter(file, os.Stderr))

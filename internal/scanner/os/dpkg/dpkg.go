@@ -15,7 +15,7 @@ func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 
 	if !ok {
-		log.Error("Dpkg received unknown file type")
+		log.Fatal("Dpkg received unknown file type")
 	}
 
 	attributes, err := readManifest(manifest)

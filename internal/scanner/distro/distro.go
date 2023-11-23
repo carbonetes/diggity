@@ -17,11 +17,11 @@ var (
 func Scan(data interface{}) interface{} {
 	data, ok := data.(types.ManifestFile)
 	if !ok {
-		log.Error("Distro handler received unknown type")
+		log.Fatal("Distro handler received unknown type")
 	}
 	distro, err := parseRelease(data.(types.ManifestFile))
 	if err != nil {
-		log.Error(err.Error())
+		log.Fatal(err.Error())
 	}
 
 	stream.SetDistro(distro)

@@ -13,7 +13,7 @@ var log = logger.GetLogger()
 func DisplayResults(result types.SoftwareManifest) {
 	json, err := helper.ToJSON(result)
 	if err != nil {
-		log.Error("Error converting to JSON")
+		log.Fatal("Error converting to JSON")
 	}
 	fmt.Println(string(json))
 }

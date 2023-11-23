@@ -10,7 +10,7 @@ var log = logger.GetLogger()
 func FileListWatcher(data interface{}) interface{} {
 	file, ok := data.(string)
 	if !ok {
-		log.Error("FileCheckWatcher received unknown type")
+		log.Fatal("FileCheckWatcher received unknown type")
 	}
 	p.Send(resultMsg{file: file, done: false})
 	stream.AddFile(file)
@@ -20,7 +20,7 @@ func FileListWatcher(data interface{}) interface{} {
 func ScanElapsedStoreWatcher(data interface{}) interface{} {
 	_, ok := data.(float64)
 	if !ok {
-		log.Error("ScanElapsedStoreWatcher received unknown type")
+		log.Fatal("ScanElapsedStoreWatcher received unknown type")
 	}
 	p.Send(resultMsg{done: true})
 	return data

@@ -22,7 +22,7 @@ func AddComponent(component types.Component) {
 	components, ok := data.([]types.Component)
 
 	if !ok {
-		log.Error("Received invalid component slice from store")
+		log.Fatal("Received invalid component slice from store")
 	}
 
 	if !exist {
@@ -39,7 +39,7 @@ func AddSecret(secret types.Secret) {
 	secrets, ok := data.([]types.Secret)
 
 	if !ok {
-		log.Error("Received invalid secret slice from store")
+		log.Fatal("Received invalid secret slice from store")
 	}
 
 	if !exist {
@@ -56,7 +56,7 @@ func AddCdxComponent(component cyclonedx.Component) {
 	components, ok := data.([]cyclonedx.Component)
 
 	if !ok {
-		log.Error("Received invalid component slice from store")
+		log.Fatal("Received invalid component slice from store")
 	}
 
 	if !exist {
@@ -73,7 +73,7 @@ func AddFile(file string) {
 	files, ok := data.([]string)
 
 	if !ok {
-		log.Error("Received invalid file slice from store")
+		log.Fatal("Received invalid file slice from store")
 	}
 
 	if !exist {

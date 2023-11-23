@@ -16,12 +16,12 @@ func ImageScanHandler(data interface{}) interface{} {
 	}
 	image, err := GetImage(imageName)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	stream.SetImageInstance(image)
 	err = ReadFiles(image)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	return data
 }
@@ -31,7 +31,7 @@ func ImageScanHandler(data interface{}) interface{} {
 func TarballScanHandler(data interface{}) interface{} {
 	tarballPath, ok := data.(string)
 	if !ok {
-		log.Error("TarballStoreWatcher received unknown type")
+		log.Fatal("TarballStoreWatcher received unknown type")
 	}
 	image, err := ReadTarballAsImage(tarballPath)
 	if err != nil {

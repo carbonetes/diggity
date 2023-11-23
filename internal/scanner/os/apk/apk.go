@@ -9,7 +9,7 @@ import (
 const Distro = "alpine"
 
 var (
-	log = logger.GetLogger()
+	log  = logger.GetLogger()
 	Type = "apk"
 )
 
@@ -17,7 +17,7 @@ func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 
 	if !ok {
-		log.Error("Apk Handler received unknown type")
+		log.Fatal("Apk Handler received unknown type")
 		return nil
 	}
 

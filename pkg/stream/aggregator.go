@@ -34,7 +34,7 @@ func AggregateSBOM() types.SBOM {
 	sbom, ok := data.(types.SBOM)
 
 	if !ok {
-		log.Error("AggregateSBOM received unknown data type")
+		log.Fatal("AggregateSBOM received unknown data type")
 	}
 
 	sbom.Components = append(sbom.Components, GetComponents()...)
@@ -49,7 +49,7 @@ func AggregateSecrets() []types.Secret {
 	secrets, ok := data.([]types.Secret)
 
 	if !ok {
-		log.Error("AggregateSecrets received unknown data type")
+		log.Fatal("AggregateSecrets received unknown data type")
 	}
 
 	return secrets

@@ -10,7 +10,7 @@ import (
 func ReadTarballAsImage(path string) (v1.Image, error) {
 	found, err := helper.IsFileExists(path)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 
 	if !found {
@@ -19,7 +19,7 @@ func ReadTarballAsImage(path string) (v1.Image, error) {
 
 	image, err := tarball.ImageFromPath(path, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 
 	return image, nil

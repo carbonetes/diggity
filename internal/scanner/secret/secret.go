@@ -58,7 +58,7 @@ func init() {
 func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
-		log.Error("Secret received unknown file type")
+		log.Fatal("Secret received unknown file type")
 	}
 
 	lines := strings.Split(string(manifest.Content), "\n")
