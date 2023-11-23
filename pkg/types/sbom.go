@@ -42,13 +42,6 @@ func NewSBOM() SBOM {
 	}
 }
 
-func (c *Component) AddDependency(dependency Component) {
-	c.Dependencies = append(c.Dependencies, Dependency{
-		ParentID: c.ID,
-		ChildID:  dependency.ID,
-	})
-}
-
 func (c Component) ToJSON() string {
 	data, err := json.MarshalIndent(c, "", " ")
 	if err != nil {

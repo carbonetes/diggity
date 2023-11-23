@@ -14,8 +14,3 @@ type Component struct {
 	Vulnerabilities []interface{} `json:"vulnerabilities,omitempty"`
 }
 
-type Dependency struct {
-	ParentID string `json:"parent_id,omitempty"`
-	ChildID  string `json:"child_id,omitempty"`
-}
-
