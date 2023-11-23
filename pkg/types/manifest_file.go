@@ -1,6 +1,7 @@
 package types
 
 import (
+	"archive/zip"
 	"fmt"
 	"io"
 	"os"
@@ -22,6 +23,10 @@ func (m *ManifestFile) ReadContent(file *os.File) error {
 	stat, err := file.Stat()
 	if err != nil {
 		return err
+	}
+
+	if stat.IsDir() {
+		return nil
 	}
 
 	m.Size = stat.Size()
@@ -48,6 +53,28 @@ func (m *ManifestFile) ReadContent(file *os.File) error {
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func (m *ManifestFile) ReadArchiveFileContent(file *zip.File) error {
+	f, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	content, err := io.ReadAll(f)
+	if err != nil {
+		return err
+	}
+
+	if len(content) == 0 {
+		// return fmt.Errorf("Content is empty")
+		return nil
+	}
+
+	m.Content = content
 
 	return nil
 }

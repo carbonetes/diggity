@@ -2,8 +2,11 @@ package curator
 
 import (
 	"archive/tar"
+	"bytes"
 	"io"
 	"os"
+	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/scanner"
@@ -77,6 +80,18 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 		}
 		if err != nil {
 			return err
+		}
+
+		if slices.Contains(archiveTypes, filepath.Ext(header.Name)) {
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				log.Error(err)
+			}
+			err = processNestedArchive(bytes.NewReader(b), header.Size)
+			if err != nil {
+				log.Error(err)
+			}
+			continue
 		}
 		stream.Emit(stream.FileListEvent, header.Name)
 		if header.Typeflag == tar.TypeReg {
