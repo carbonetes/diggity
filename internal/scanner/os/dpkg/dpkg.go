@@ -1,38 +1,58 @@
 package dpkg
 
 import (
+	"slices"
+
+	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
+const Type string = "deb"
+
 var (
-	log  = logger.GetLogger()
-	Type = "dpkg"
+	Manifests = []string{"var/lib/dpkg/status"}
+	log       = logger.GetLogger()
 )
+
+func CheckRelatedFile(file string) (string, bool) {
+	if slices.Contains(Manifests, file) {
+		return Type, true
+	}
+	return "", false
+}
 
 func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 
 	if !ok {
-		log.Fatal("Dpkg received unknown file type")
+		log.Error("Dpkg received unknown file type")
+		return nil
 	}
 
-	attributes, err := readManifest(manifest)
-	if err != nil {
-		log.Error(err)
-	}
+	contents := string(manifest.Content)
+	packages := helper.SplitContentsByEmptyLine(contents)
 
-	for _, attribute := range attributes {
-		metadata := parseMetadata(attribute)
-		if metadata == nil {
+	for _, info := range packages {
+		metadata := parseMetadata(info)
+		if metadata["package"] == nil || metadata["version"] == nil {
 			continue
 		}
-		component := newComponent(*metadata)
-		if len(component.Name) == 0 || len(component.Version) == 0 {
-			continue
+
+		var desc string
+		if val, ok := metadata["description"].(string); ok {
+			desc = val
 		}
+
+		component := types.NewComponent(metadata["package"].(string), metadata["version"].(string), Type, manifest.Path, desc, metadata)
 		stream.AddComponent(component)
+
+		if metadata["source"] != nil {
+			origin := types.NewComponent(metadata["source"].(string), metadata["version"].(string), Type, manifest.Path, desc, nil)
+			origin.Licenses = component.Licenses
+			stream.AddComponent(origin)
+		}
 	}
 
 	return data

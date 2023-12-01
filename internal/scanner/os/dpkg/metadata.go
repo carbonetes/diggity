@@ -1,11 +1,11 @@
 package dpkg
 
-import "strings"
+import (
+	"strings"
+)
 
-type Metadata map[string]interface{}
-
-func parseMetadata(pkg string) *Metadata {
-	metadata := make(Metadata)
+func parseMetadata(pkg string) map[string]interface{} {
+	metadata := make(map[string]interface{})
 	attributes := strings.Split(pkg, "\n")
 	var descriptions []string
 	var conffiles []string
@@ -43,5 +43,5 @@ func parseMetadata(pkg string) *Metadata {
 		metadata["conffiles"] = conffiles
 	}
 
-	return &metadata
+	return metadata
 }
