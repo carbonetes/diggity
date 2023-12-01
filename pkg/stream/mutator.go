@@ -28,9 +28,14 @@ func AddComponent(component types.Component) {
 	if !exist {
 		store.Set(ComponentsStoreKey, []types.Component{component})
 	}
-
+	for _, c := range components {
+		if c.Name == component.Name && c.Version == component.Version && c.Type == component.Type {
+			return
+		}
+	}
 	components = append(components, component)
 	store.Set(ComponentsStoreKey, components)
+
 }
 
 func AddSecret(secret types.Secret) {

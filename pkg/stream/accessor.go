@@ -303,3 +303,14 @@ func GetFiles() []string {
 
 	return files
 }
+
+func CheckIfComponentExists(component types.Component) bool {
+	components := GetComponents()
+
+	for _, c := range components {
+		if c.Name == component.Name && c.Version == component.Version && c.Type == component.Type {
+			return true
+		}
+	}
+	return false
+}
