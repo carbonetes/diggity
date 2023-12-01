@@ -19,7 +19,7 @@ func DisplayResults(data interface{}) interface{} {
 
 	params := stream.GetParameters()
 	result := stream.AggrerateSoftwareManifest()
-
+	result.Duration = duration
 	format, saveToFile := params.OutputFormat, params.SaveToFile
 
 	if len(saveToFile) > 0 {

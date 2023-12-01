@@ -38,7 +38,7 @@ func AggregateSBOM() types.SBOM {
 	}
 
 	sbom.Components = append(sbom.Components, GetComponents()...)
-
+	sbom.Total = len(sbom.Components)
 	store.Set(SBOMStoreKey, sbom)
 	return sbom
 }

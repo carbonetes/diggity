@@ -44,16 +44,6 @@ func (m *ManifestFile) ReadContent(file *os.File) error {
 
 	m.Content = content
 
-	err = file.Close()
-	if err != nil {
-		return err
-	}
-
-	err = os.Remove(file.Name())
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 

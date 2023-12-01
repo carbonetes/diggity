@@ -26,6 +26,7 @@ type SBOM struct {
 	Version    string `json:"version"`
 	Serial     string `json:"serial"`
 	Metadata   `json:"metadata"`
+	Total      int         `json:"total"`
 	Components []Component `json:"components"`
 }
 
