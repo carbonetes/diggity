@@ -8,7 +8,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
-const Type = "rpm"
+const Type string = "rpm"
 
 var (
 	ManifestFiles = []string{"Packages", "Packages.db", "rpmdb.sqlite"}
@@ -28,7 +28,6 @@ func Scan(data interface{}) interface{} {
 
 func CheckRelatedFiles(file string) (string, bool) {
 	if slices.Contains(ManifestFiles, filepath.Base(file)) {
-		log.Println("Found RPM manifest file: ", file)
 		return Type, true
 	}
 	return "", false

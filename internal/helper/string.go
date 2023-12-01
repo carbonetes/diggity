@@ -5,7 +5,15 @@ import (
 	"regexp"
 
 	"github.com/google/uuid"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
+
+var caser = cases.Title(language.English)
+
+func ToTitle(str string) string {
+	return caser.String(str)
+}
 
 // StringSliceContains checks if a string slice contains specified string
 func StringSliceContains(s []string, e string) bool {
