@@ -12,12 +12,12 @@ import (
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
-var archiveTypes = []string{".jar", ".war", ".ear", ".zip", ".jpi", ".hpi"}
+var archiveTypes = []string{".jar", ".war", ".ear", ".jpi", ".hpi"}
 
 func processNestedArchive(reader io.ReaderAt, size int64) error {
 	r, err := zip.NewReader(reader, size)
 	if err != nil {
-		log.Error(err)
+		return err
 	}
 
 	for _, f := range r.File {

@@ -1,7 +1,6 @@
 package curator
 
 import (
-	"io/fs"
 	"os"
 	"path/filepath"
 
@@ -16,42 +15,47 @@ func FilesystemScanHandler(data interface{}) interface{} {
 		log.Fatal("Filesystem Handler received unknown type")
 		return data
 	}
+	var paths []string
+	// recursive
+	err := filepath.Walk(input,
+		func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
 
-	err := filepath.WalkDir(input, handler)
-	if err != nil {
-		log.Error(err)
-	}
+			if info.IsDir() && (info.Name() == ".git" || info.Name() == ".vscode") {
+				return filepath.SkipDir
+			}
 
-	return data
-}
-
-func handler(path string, di fs.DirEntry, err error) error {
+			paths = append(paths, filepath.ToSlash(path))
+			return nil
+		})
 	if err != nil {
 		log.Fatal(err)
 	}
-	// if di.IsDir() && (di.Name() == ".git" || di.Name() == ".vscode") {
-	// 	return nil
-	// }
-	// stream.Emit(stream.FilesystemScanEvent, path)
-	category, matched := scanner.CheckRelatedFiles(path)
-	if matched {
-		if category == "rpm" {
-			err = handleRpmFile(path, category)
-		} else {
-			file, err := os.Open(path)
-			if err != nil {
-				log.Fatal(err)
+	for _, path := range paths {
+		stream.Emit(stream.FileListEvent, path)
+		category, matched := scanner.CheckRelatedFiles(path)
+		if matched {
+			switch category {
+			case "rpm":
+				err := handleRpmFile(path, category)
+				if err != nil {
+					log.Fatal(err)
+				}
+			default:
+				file, err := os.Open(path)
+				if err != nil {
+					log.Fatal(err)
+				}
+				err = handleManifestFile(path, category, file, false)
+				if err != nil {
+					log.Fatal(err)
+				}
 			}
-			err = handleManifestFile(path, category, file)
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-		if err != nil {
-			log.Fatal(err)
 		}
 	}
-	return nil
+	return data
 }
 
 func handleRpmFile(path, category string) error {
@@ -66,7 +70,7 @@ func handleRpmFile(path, category string) error {
 	return nil
 }
 
-func handleManifestFile(path, category string, file *os.File) error {
+func handleManifestFile(path, category string, file *os.File, cleanup bool) error {
 	manifest := types.ManifestFile{
 		Path: path,
 	}

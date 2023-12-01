@@ -27,13 +27,13 @@ func GetImage(input string) (v1.Image, error) {
 		return nil, err
 	}
 	var image v1.Image
-	exists, image, err := CheckIfImageExistsInLocal(ref)
-	if !exists || err != nil {
-		image, err = remote.Image(ref)
-		if err != nil {
-			return nil, err
-		}
+	// exists, image, err := CheckIfImageExistsInLocal(ref)
+	// if !exists || err != nil {
+	image, err = remote.Image(ref)
+	if err != nil {
+		return nil, err
 	}
+	// }
 
 	return image, nil
 }
@@ -113,6 +113,10 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 func processTarHeader(header *tar.Header, reader io.Reader, layerHash string) error {
 	category, matched := scanner.CheckRelatedFiles(header.Name)
 	if matched {
+		if category == "portage" {
+			stream.Emit(category, header.Name)
+			return nil
+		}
 		err := processFile(header.Name, reader, category)
 		if err != nil {
 			return err
@@ -144,7 +148,7 @@ func processFile(name string, reader io.Reader, category string) error {
 			return err
 		}
 	} else {
-		err = handleManifestFile(name, category, f)
+		err = handleManifestFile(name, category, f, true)
 		if err != nil {
 			return err
 		}
