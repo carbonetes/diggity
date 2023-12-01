@@ -1,37 +1,60 @@
 package apk
 
 import (
+	"strings"
+
 	"github.com/carbonetes/diggity/internal/logger"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
-const Distro = "alpine"
+const Type string = "apk"
 
 var (
-	log  = logger.GetLogger()
-	Type = "apk"
+	RelatedPath = "lib/apk/db/installed"
+	log         = logger.GetLogger()
 )
+
+func CheckRelatedFile(file string) (string, bool) {
+	if strings.Contains(file, RelatedPath) {
+
+		return Type, true
+	}
+	return "", false
+}
 
 func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
-
 	if !ok {
-		log.Fatal("Apk Handler received unknown type")
+		log.Error("Apk Handler received unknown type")
 		return nil
 	}
 
-	attributes, err := readManifest(manifest)
-	if err != nil {
-		log.Error(err)
-	}
+	packages := strings.Split(string(manifest.Content), "\n\n")
 
-	for _, attribute := range attributes {
-		component := newComponent(attribute)
-		if len(component.ID) == 0 {
+	for _, info := range packages {
+		info = strings.TrimSpace(info)
+		attributes := strings.Split(info, "\n")
+
+		metadata := parseMetadata(attributes)
+		if metadata["Name"] == nil || metadata["Version"] == nil {
 			continue
 		}
+
+		component := types.NewComponent(metadata["Name"].(string), metadata["Version"].(string), Type, manifest.Path, metadata["Description"].(string), metadata)
+		for _, license := range strings.Split(metadata["License"].(string), " ") {
+			if !strings.Contains(strings.ToLower(license), "and") {
+				component.Licenses = append(component.Licenses, license)
+			}
+		}
+
 		stream.AddComponent(component)
+
+		if metadata["Origin"] != nil {
+			origin := types.NewComponent(metadata["Origin"].(string), metadata["Version"].(string), Type, manifest.Path, metadata["Description"].(string), nil)
+			origin.Licenses = component.Licenses
+			stream.AddComponent(origin)
+		}
 	}
 	return data
 }
