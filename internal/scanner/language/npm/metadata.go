@@ -3,6 +3,7 @@ package npm
 import (
 	"encoding/json"
 
+	"github.com/carbonetes/diggity/internal/log"
 	"gopkg.in/yaml.v3"
 )
 
@@ -91,13 +92,11 @@ func readYarnLockfile(content []byte) YarnLockfile {
 	var lockfile YarnLockfile
 	err := yaml.Unmarshal(content, &lockfile)
 	if err != nil {
-		log.Error("Failed to unmarshal yarn.lock")
+		log.Errorf("Failed to unmarshal yarn.lock file: %s", err.Error())
 	}
 
 	return lockfile
 }
-
-
 
 func readPnpmLockfile(content []byte) PnpmLockfile {
 	var metadata PnpmLockfile

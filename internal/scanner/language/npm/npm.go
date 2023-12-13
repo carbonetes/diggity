@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
@@ -16,7 +16,6 @@ const Type string = "npm"
 
 var (
 	Manifests        = []string{"package.json", "package-lock.json", ".package.json", ".package-lock.json", "yarn.lock", "pnpm-lock.yaml"}
-	log              = logger.GetLogger()
 	packageNameRegex = regexp.MustCompile(`^/?([^(]*)(?:\(.*\))*$`)
 )
 

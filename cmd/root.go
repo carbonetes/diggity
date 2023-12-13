@@ -5,7 +5,7 @@ import (
 
 	"github.com/carbonetes/diggity/internal/curator"
 	"github.com/carbonetes/diggity/internal/helper"
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/spf13/cobra"
@@ -13,7 +13,6 @@ import (
 
 var (
 	params = types.DefaultParameters()
-	log    = logger.GetLogger()
 	root   = &cobra.Command{
 		Use:   "diggity",
 		Args:  cobra.MaximumNArgs(1),
@@ -35,22 +34,22 @@ var (
 
 			err := params.GetScanType()
 			if err != nil {
-				log.Fatal(err.Error())
+				log.Error(err.Error())
 			}
 
 			outputFormat, err := cmd.Flags().GetString("output")
 			if err != nil {
-				log.Fatal(err.Error())
+				log.Error(err.Error())
 			}
 
 			file, err := cmd.Flags().GetString("file")
 			if err != nil {
-				log.Fatal(err.Error())
+				log.Error(err.Error())
 			}
 
 			scanners, err := cmd.Flags().GetStringArray("scanners")
 			if err != nil {
-				log.Fatal(err.Error())
+				log.Error(err.Error())
 			}
 
 			if len(file) > 0 {
@@ -59,7 +58,7 @@ var (
 
 			valid := types.IsValidOutputFormat(outputFormat)
 			if !valid {
-				log.Fatal("Invalid output format parameter")
+				log.Error("Invalid output format parameter")
 			}
 
 			params.SaveToFile = file
@@ -67,7 +66,7 @@ var (
 			params.OutputFormat = types.OutputFormat(outputFormat)
 			params.AllowFileListing, err = cmd.Flags().GetBool("allow-file-listing")
 			if err != nil {
-				log.Fatal(err.Error())
+				log.Error(err.Error())
 			}
 			curator.Init()
 			stream.SetParameters(params)

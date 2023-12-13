@@ -7,13 +7,11 @@ import (
 	"time"
 
 	"github.com/carbonetes/diggity/internal/helper"
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/docker/distribution/version"
 )
 
 const SchemaVersion = "1.0"
-
-var log = logger.GetLogger()
 
 type Metadata struct {
 	Author    string    `json:"author"`

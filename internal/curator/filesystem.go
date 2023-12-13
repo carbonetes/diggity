@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/internal/scanner"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
@@ -12,7 +13,7 @@ import (
 func FilesystemScanHandler(data interface{}) interface{} {
 	input, ok := data.(string)
 	if !ok {
-		log.Fatal("Filesystem Handler received unknown type")
+		log.Error("Filesystem Handler received unknown type")
 		return data
 	}
 	var paths []string
@@ -31,7 +32,7 @@ func FilesystemScanHandler(data interface{}) interface{} {
 			return nil
 		})
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	for _, path := range paths {
 		stream.Emit(stream.FileListEvent, path)
@@ -41,7 +42,7 @@ func FilesystemScanHandler(data interface{}) interface{} {
 			case "rpm":
 				err := handleRpmFile(path, category)
 				if err != nil {
-					log.Fatal(err)
+					log.Error(err)
 				}
 			default:
 				if !readFlag {
@@ -52,11 +53,11 @@ func FilesystemScanHandler(data interface{}) interface{} {
 				}
 				file, err := os.Open(path)
 				if err != nil {
-					log.Fatal(err)
+					log.Error(err)
 				}
 				err = handleManifestFile(path, category, file, false)
 				if err != nil {
-					log.Fatal(err)
+					log.Error(err)
 				}
 			}
 		}

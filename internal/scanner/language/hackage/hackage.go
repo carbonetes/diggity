@@ -5,17 +5,14 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 const Type string = "hackage"
 
-var (
-	Manifests = []string{"cabal.project.freeze", "stack.yaml", "stack.yaml.lock"}
-	log       = logger.GetLogger()
-)
+var Manifests = []string{"cabal.project.freeze", "stack.yaml", "stack.yaml.lock"}
 
 func CheckRelatedFile(file string) (string, bool, bool) {
 	if slices.Contains(Manifests, filepath.Base(file)) {
@@ -27,7 +24,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
-		log.Fatal("Hackage Handler received unknown type")
+		log.Error("Hackage Handler received unknown type")
 	}
 
 	if strings.Contains(manifest.Path, "stack.yaml") {

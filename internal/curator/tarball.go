@@ -2,6 +2,7 @@ package curator
 
 import (
 	"github.com/carbonetes/diggity/internal/helper"
+	"github.com/carbonetes/diggity/internal/log"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 	"github.com/google/go-containerregistry/pkg/v1/tarball"
 )
@@ -14,7 +15,7 @@ func ReadTarballAsImage(path string) (v1.Image, error) {
 	}
 
 	if !found {
-		log.Fatal("Path does not exist")
+		log.Error("Path does not exist")
 	}
 
 	image, err := tarball.ImageFromPath(path, nil)

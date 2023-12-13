@@ -1,6 +1,10 @@
 package swift
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/carbonetes/diggity/internal/log"
+)
 
 type Metadata struct {
 	Object  Object `json:"object,omitempty"`

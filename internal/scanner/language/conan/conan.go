@@ -5,17 +5,14 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 const Type string = "conan"
 
-var (
-	Manifests = []string{"conanfile.txt", "conan.lock"}
-	log       = logger.GetLogger()
-)
+var Manifests = []string{"conanfile.txt", "conan.lock"}
 
 func CheckRelatedFile(file string) (string, bool, bool) {
 	if slices.Contains(Manifests, filepath.Base(file)) {

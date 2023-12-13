@@ -4,22 +4,19 @@ import (
 	"path/filepath"
 	"slices"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 const Type string = "rpm"
 
-var (
-	ManifestFiles = []string{"Packages", "Packages.db", "rpmdb.sqlite"}
-	log           = logger.GetLogger()
-)
+var ManifestFiles = []string{"Packages", "Packages.db", "rpmdb.sqlite"}
 
 func Scan(data interface{}) interface{} {
 	rpmdb, ok := data.(types.RpmDB)
 
 	if !ok {
-		log.Fatal("RPM Handler received unknown type")
+		log.Error("RPM Handler received unknown type")
 	}
 	readRpmDb(rpmdb)
 

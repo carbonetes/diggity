@@ -3,6 +3,8 @@ package maven
 import (
 	"encoding/xml"
 	"io"
+
+	"github.com/carbonetes/diggity/internal/log"
 )
 
 type POM struct {

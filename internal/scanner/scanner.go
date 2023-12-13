@@ -20,6 +20,7 @@ import (
 	"github.com/carbonetes/diggity/internal/scanner/language/swift"
 	"github.com/carbonetes/diggity/internal/scanner/os/apk"
 	"github.com/carbonetes/diggity/internal/scanner/os/dpkg"
+	"github.com/carbonetes/diggity/internal/scanner/os/nix"
 	"github.com/carbonetes/diggity/internal/scanner/os/rpm"
 	"github.com/carbonetes/diggity/internal/scanner/secret"
 	"github.com/carbonetes/diggity/pkg/stream"
@@ -41,6 +42,7 @@ var All = []string{
 	hackage.Type,
 	hex.Type,
 	maven.Type,
+	nix.Type,
 	npm.Type,
 	nuget.Type,
 	pub.Type,
@@ -65,6 +67,7 @@ var FileCheckers = []FileChecker{
 	hackage.CheckRelatedFile,
 	hex.CheckRelatedFile,
 	maven.CheckRelatedFile,
+	nix.CheckRelatedFile,
 	npm.CheckRelatedFile,
 	nuget.CheckRelatedFile,
 	pub.CheckRelatedFile,
@@ -89,6 +92,7 @@ func init() {
 	stream.Attach(hackage.Type, hackage.Scan)
 	stream.Attach(hex.Type, hex.Scan)
 	stream.Attach(maven.Type, maven.Scan)
+	stream.Attach(nix.Type, nix.Scan)
 	stream.Attach(npm.Type, npm.Scan)
 	stream.Attach(nuget.Type, nuget.Scan)
 	stream.Attach(pub.Type, pub.Scan)

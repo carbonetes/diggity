@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"slices"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"golang.org/x/mod/modfile"
@@ -12,10 +12,7 @@ import (
 
 const Type string = "golang"
 
-var (
-	Manifests = []string{"go.mod"}
-	log       = logger.GetLogger()
-)
+var Manifests = []string{"go.mod"}
 
 func CheckRelatedFile(file string) (string, bool, bool) {
 	if slices.Contains(Manifests, filepath.Base(file)) {
@@ -27,7 +24,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
-		log.Fatal("Go Modules Handler received unknown type")
+		log.Error("Go Modules Handler received unknown type")
 	}
 
 	modFile := readManifestFile(manifest.Content, manifest.Path)

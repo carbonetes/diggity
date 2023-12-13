@@ -4,6 +4,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
@@ -22,6 +23,11 @@ type resultMsg struct {
 	done bool
 }
 
+type errorMsg struct {
+	err  error
+	quit bool
+}
+
 func (r resultMsg) String() string {
 	if r.file == "" {
 		return dotStyle.Render(strings.Repeat(".", 30))
@@ -32,6 +38,7 @@ func (r resultMsg) String() string {
 type model struct {
 	spinner  spinner.Model
 	results  []resultMsg
+	errorM   errorMsg
 	quitting bool
 }
 
@@ -69,6 +76,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		var cmd tea.Cmd
 		m.spinner, cmd = m.spinner.Update(msg)
 		return m, cmd
+	case errorMsg:
+		m.errorM = msg
+		return m, nil
 	default:
 		return m, nil
 	}
@@ -76,6 +86,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	var s string
+
+	if m.errorM.err != nil {
+		s += appStyle.Render(m.errorM.err.Error())
+		if m.errorM.quit {
+			s += "\n"
+		}
+		return s
+	}
 
 	if m.quitting {
 		return ""
@@ -113,7 +131,7 @@ func init() {
 func Run() {
 	go func() {
 		if _, err := p.Run(); err != nil {
-			log.Fatalf("Failed to start program: %v", err)
+			log.Errorf("Failed to start program: %v", err)
 		}
 	}()
 }

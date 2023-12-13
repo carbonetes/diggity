@@ -5,17 +5,14 @@ import (
 	"slices"
 
 	"github.com/carbonetes/diggity/internal/helper"
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 const Type string = "archlinux"
 
-var (
-	Manifests = []string{"var/lib/pacman/local"}
-	log       = logger.GetLogger()
-)
+var Manifests = []string{"var/lib/pacman/local"}
 
 func CheckRelatedFile(file string) (string, bool, bool) {
 	if slices.Contains(Manifests, file) && filepath.Base(file) == "desc" {

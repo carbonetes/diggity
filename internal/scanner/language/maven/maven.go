@@ -4,17 +4,14 @@ import (
 	"path/filepath"
 	"slices"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 const Type string = "java"
 
-var (
-	Manifests = []string{"pom.xml", "pom.properties"}
-	log       = logger.GetLogger()
-)
+var Manifests = []string{"pom.xml", "pom.properties"}
 
 func CheckRelatedFile(file string) (string, bool, bool) {
 	if slices.Contains(Manifests, filepath.Base(file)) {
@@ -26,7 +23,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
-		log.Fatal("Java Archive received unknown file type")
+		log.Error("Java Archive received unknown file type")
 		return nil
 	}
 

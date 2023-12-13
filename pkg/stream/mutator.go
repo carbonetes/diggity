@@ -2,6 +2,7 @@ package stream
 
 import (
 	"github.com/CycloneDX/cyclonedx-go"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/types"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 )
@@ -22,7 +23,7 @@ func AddComponent(component types.Component) {
 	components, ok := data.([]types.Component)
 
 	if !ok {
-		log.Fatal("Received invalid component slice from store")
+		log.Error("Received invalid component slice from store")
 	}
 
 	if !exist {
@@ -44,7 +45,7 @@ func AddSecret(secret types.Secret) {
 	secrets, ok := data.([]types.Secret)
 
 	if !ok {
-		log.Fatal("Received invalid secret slice from store")
+		log.Error("Received invalid secret slice from store")
 	}
 
 	if !exist {
@@ -61,7 +62,7 @@ func AddCdxComponent(component cyclonedx.Component) {
 	components, ok := data.([]cyclonedx.Component)
 
 	if !ok {
-		log.Fatal("Received invalid component slice from store")
+		log.Error("Received invalid component slice from store")
 	}
 
 	if !exist {
@@ -78,7 +79,7 @@ func AddFile(file string) {
 	files, ok := data.([]string)
 
 	if !ok {
-		log.Fatal("Received invalid file slice from store")
+		log.Error("Received invalid file slice from store")
 	}
 
 	if !exist {

@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
+	"github.com/carbonetes/diggity/internal/log"
 )
 
 type PoetryLock struct {

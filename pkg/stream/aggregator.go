@@ -1,6 +1,7 @@
 package stream
 
 import (
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -34,7 +35,7 @@ func AggregateSBOM() types.SBOM {
 	sbom, ok := data.(types.SBOM)
 
 	if !ok {
-		log.Fatal("AggregateSBOM received unknown data type")
+		log.Error("AggregateSBOM received unknown data type")
 	}
 
 	sbom.Components = append(sbom.Components, GetComponents()...)
@@ -49,7 +50,7 @@ func AggregateSecrets() []types.Secret {
 	secrets, ok := data.([]types.Secret)
 
 	if !ok {
-		log.Fatal("AggregateSecrets received unknown data type")
+		log.Error("AggregateSecrets received unknown data type")
 	}
 
 	return secrets

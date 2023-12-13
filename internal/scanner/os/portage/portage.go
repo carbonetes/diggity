@@ -5,17 +5,14 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 const Type string = "gentoo"
 
-var (
-	RelatedPath = "var/db/pkg/"
-	log         = logger.GetLogger()
-)
+var RelatedPath = "var/db/pkg/"
 
 func CheckRelatedFile(file string) (string, bool, bool) {
 	if strings.Contains(RelatedPath, file) {
@@ -28,7 +25,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
-		log.Fatal("Portage Handler received unknown type")
+		log.Error("Portage Handler received unknown type")
 	}
 
 	if len(manifest.Path) == 0 {

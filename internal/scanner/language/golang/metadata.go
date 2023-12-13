@@ -1,6 +1,9 @@
 package golang
 
-import "golang.org/x/mod/modfile"
+import (
+	"github.com/carbonetes/diggity/internal/log"
+	"golang.org/x/mod/modfile"
+)
 
 // GoBinMetadata go binary metadata
 type GoBinMetadata struct {

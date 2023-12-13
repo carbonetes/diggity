@@ -1,18 +1,16 @@
 package curator
 
 import (
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 )
-
-var log = logger.GetLogger()
 
 // ImageScanHandler scans the given image for files and reads them.
 // It takes in a string parameter as the image name and returns the same parameter.
 func ImageScanHandler(data interface{}) interface{} {
 	imageName, ok := data.(string)
 	if !ok {
-		log.Fatal("IndexImageFilesystem received unknown type")
+		log.Error("IndexImageFilesystem received unknown type")
 	}
 	image, err := GetImage(imageName)
 	if err != nil {
@@ -31,7 +29,7 @@ func ImageScanHandler(data interface{}) interface{} {
 func TarballScanHandler(data interface{}) interface{} {
 	tarballPath, ok := data.(string)
 	if !ok {
-		log.Fatal("TarballStoreWatcher received unknown type")
+		log.Error("TarballStoreWatcher received unknown type")
 	}
 	image, err := ReadTarballAsImage(tarballPath)
 	if err != nil {

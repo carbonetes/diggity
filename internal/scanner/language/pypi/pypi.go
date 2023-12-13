@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"slices"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
@@ -14,7 +14,6 @@ const Type string = "pypi"
 var (
 	Manifests  = []string{"METADATA", "requirements.txt", "poetry.lock"}
 	Extensions = []string{".egg-info"}
-	log        = logger.GetLogger()
 )
 
 func CheckRelatedFile(file string) (string, bool, bool) {

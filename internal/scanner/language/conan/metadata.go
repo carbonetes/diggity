@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/helper"
+	"github.com/carbonetes/diggity/internal/log"
 )
 
 // ConanMetadata conan metadata

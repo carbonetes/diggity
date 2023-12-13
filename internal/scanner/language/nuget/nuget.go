@@ -5,17 +5,14 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 const Type string = "nuget"
 
-var (
-	Manifests = []string{".deps.json"}
-	log       = logger.GetLogger()
-)
+var Manifests = []string{".deps.json"}
 
 func CheckRelatedFile(file string) (string, bool, bool) {
 	if slices.Contains(Manifests, filepath.Base(file)) {

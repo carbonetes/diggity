@@ -1,8 +1,11 @@
 package cocoapods
 
-import "gopkg.in/yaml.v3"
+import (
+	"github.com/carbonetes/diggity/internal/log"
+	"gopkg.in/yaml.v3"
+)
 
-//Swift and Objective-C Podfile Lock Metadata
+// Swift and Objective-C Podfile Lock Metadata
 type FileLockMetadata struct {
 	Pods          []interface{}     `yaml:"PODS"`
 	Dependencies  []string          `yaml:"DEPENDENCIES"`

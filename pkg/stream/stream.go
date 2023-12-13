@@ -1,14 +1,12 @@
 package stream
 
 import (
-	"github.com/carbonetes/diggity/internal/logger"
 	"gitlab.com/jhumel/grove"
 )
 
 var (
 	hub   *grove.Grove
 	store *grove.Store
-	log   = logger.GetLogger()
 )
 
 func init() {

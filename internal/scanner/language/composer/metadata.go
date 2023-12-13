@@ -1,6 +1,10 @@
 package composer
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/carbonetes/diggity/internal/log"
+)
 
 // ComposerMetadata - composer file metadata
 type ComposerMetadata struct {

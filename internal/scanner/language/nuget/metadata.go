@@ -1,6 +1,10 @@
 package nuget
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/carbonetes/diggity/internal/log"
+)
 
 // DotnetDeps - .NET Dependencies
 type DotnetDeps struct {

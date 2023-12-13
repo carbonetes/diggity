@@ -6,18 +6,14 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 const Type string = "gem"
 
-
-var (
-	Manifests = []string{"Gemfile.lock"}
-	log       = logger.GetLogger()
-)
+var Manifests = []string{"Gemfile.lock"}
 
 func CheckRelatedFile(file string) (string, bool, bool) {
 	if slices.Contains(Manifests, filepath.Base(file)) || (strings.Contains(file, ".gemspec") && strings.Contains(file, "specifications")) {
@@ -29,7 +25,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
-		log.Fatal("Rubygem Handler received unknown type")
+		log.Error("Rubygem Handler received unknown type")
 	}
 
 	if strings.Contains(manifest.Path, "Gemfile.lock") {

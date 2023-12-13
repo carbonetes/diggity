@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
@@ -14,7 +14,6 @@ const Type string = "cran"
 var (
 	RelatedPath = "usr/lib/R/"
 	RelatedFile = "DESCRIPTION"
-	log         = logger.GetLogger()
 )
 
 func CheckRelatedFiles(file string) (string, bool, bool) {

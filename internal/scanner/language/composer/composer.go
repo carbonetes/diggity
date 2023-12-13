@@ -4,17 +4,15 @@ import (
 	"path/filepath"
 	"slices"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 const Type string = "composer"
 
-var (
-	Manifests = []string{"composer.lock"}
-	log       = logger.GetLogger()
-)
+var Manifests = []string{"composer.lock"}
+
 
 func CheckRelatedFile(file string) (string, bool, bool) {
 	if slices.Contains(Manifests, filepath.Base(file)) {
@@ -26,7 +24,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
-		log.Fatal("Composer Handler received unknown type")
+		log.Error("Composer Handler received unknown type")
 	}
 
 	metadata := readManifestFile(manifest.Content)

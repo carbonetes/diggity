@@ -3,6 +3,7 @@ package hackage
 import (
 	"strings"
 
+	"github.com/carbonetes/diggity/internal/log"
 	"gopkg.in/yaml.v3"
 )
 

@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
@@ -14,7 +14,6 @@ const Type string = "rust-crate"
 
 var (
 	Manifests = []string{"Cargo.lock"}
-	log       = logger.GetLogger()
 )
 
 func CheckRelatedFile(file string) (string, bool, bool) {
@@ -27,7 +26,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
-		log.Fatal("Cargo Handler received unknown type")
+		log.Error("Cargo Handler received unknown type")
 	}
 
 	packages := readManifestFile(manifest.Content)

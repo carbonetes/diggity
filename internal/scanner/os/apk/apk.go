@@ -3,17 +3,14 @@ package apk
 import (
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 const Type string = "apk"
 
-var (
-	RelatedPath = "lib/apk/db/installed"
-	log         = logger.GetLogger()
-)
+var RelatedPath = "lib/apk/db/installed"
 
 func CheckRelatedFile(file string) (string, bool, bool) {
 	if strings.Contains(file, RelatedPath) {

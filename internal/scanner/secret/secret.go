@@ -5,14 +5,12 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/carbonetes/diggity/internal/logger"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 const Type = "secret"
-
-var log = logger.GetLogger()
 
 var SecretsPatterns = map[string]string{
 	"aws-access-token":           `\b(?:A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}\b`,
@@ -42,8 +40,10 @@ type MatchPattern struct {
 	Pattern *regexp.Regexp
 }
 
-var MatchPatterns []MatchPattern
-var ExcludedPattern *regexp.Regexp
+var (
+	MatchPatterns []MatchPattern
+	ExcludedPattern *regexp.Regexp
+)
 
 func init() {
 	for name, pattern := range SecretsPatterns {
@@ -58,7 +58,7 @@ func init() {
 func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
-		log.Fatal("Secret received unknown file type")
+		log.Error("Secret received unknown file type")
 	}
 
 	lines := strings.Split(string(manifest.Content), "\n")

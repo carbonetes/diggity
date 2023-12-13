@@ -1,6 +1,9 @@
 package pub
 
-import "gopkg.in/yaml.v3"
+import (
+	"github.com/carbonetes/diggity/internal/log"
+	"gopkg.in/yaml.v3"
+)
 
 type Lockfile struct {
 	Packages map[string]Package `yaml:"packages"`
