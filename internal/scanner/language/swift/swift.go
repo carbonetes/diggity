@@ -11,17 +11,16 @@ import (
 
 const Type string = "swift"
 
-
 var (
 	Manifests = []string{"Package.resolved", ".package.resolved"}
 	log       = logger.GetLogger()
 )
 
-func CheckRelatedFile(file string) (string, bool) {
+func CheckRelatedFile(file string) (string, bool, bool) {
 	if slices.Contains(Manifests, filepath.Base(file)) {
-		return Type, true
+		return Type, true, true
 	}
-	return "", false
+	return "", false, false
 }
 
 func Scan(data interface{}) interface{} {

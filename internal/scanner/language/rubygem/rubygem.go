@@ -19,11 +19,11 @@ var (
 	log       = logger.GetLogger()
 )
 
-func CheckRelatedFile(file string) (string, bool) {
+func CheckRelatedFile(file string) (string, bool, bool) {
 	if slices.Contains(Manifests, filepath.Base(file)) || (strings.Contains(file, ".gemspec") && strings.Contains(file, "specifications")) {
-		return Type, true
+		return Type, true, true
 	}
-	return "", false
+	return "", false, false
 }
 
 func Scan(data interface{}) interface{} {

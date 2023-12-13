@@ -17,11 +17,11 @@ var (
 	log         = logger.GetLogger()
 )
 
-func CheckRelatedFiles(file string) (string, bool) {
+func CheckRelatedFiles(file string) (string, bool, bool) {
 	if strings.Contains(file, RelatedPath) && RelatedFile == filepath.Base(file) {
-		return Type, true
+		return Type, true, true
 	}
-	return "", false
+	return "", false, false
 }
 
 func Scan(data interface{}) interface{} {
@@ -33,12 +33,6 @@ func Scan(data interface{}) interface{} {
 	}
 
 	metadata := readManifestFile(manifest.Content)
-	// if metadata["Package"] == nil || metadata["Version"] == nil {
-	// 	return nil
-	// }
-
-	// component := types.NewComponent(metadata["Package"].(string), metadata["Version"].(string), Type, manifest.Path, metadata["Description"].(string), metadata)
-	// stream.AddComponent(component)
 
 	if metadata.Package == "" || metadata.Version == "" {
 		return nil

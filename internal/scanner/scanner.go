@@ -25,7 +25,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/stream"
 )
 
-type FileChecker func(file string) (string, bool)
+type FileChecker func(file string) (string, bool, bool)
 
 var All = []string{
 	apk.Type,
@@ -99,12 +99,12 @@ func init() {
 	stream.Attach(swift.Type, swift.Scan)
 }
 
-func CheckRelatedFiles(file string) (string, bool) {
+func CheckRelatedFiles(file string) (string, bool, bool) {
 	for _, checker := range FileCheckers {
-		category, matched := checker(file)
+		category, matched, readFlag := checker(file)
 		if matched {
-			return category, true
+			return category, matched, readFlag
 		}
 	}
-	return "", false
+	return "", false, false
 }

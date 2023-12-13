@@ -35,7 +35,7 @@ func FilesystemScanHandler(data interface{}) interface{} {
 	}
 	for _, path := range paths {
 		stream.Emit(stream.FileListEvent, path)
-		category, matched := scanner.CheckRelatedFiles(path)
+		category, matched, readFlag := scanner.CheckRelatedFiles(path)
 		if matched {
 			switch category {
 			case "rpm":
@@ -44,6 +44,12 @@ func FilesystemScanHandler(data interface{}) interface{} {
 					log.Fatal(err)
 				}
 			default:
+				if !readFlag {
+					stream.Emit(category, types.ManifestFile{
+						Path: path,
+					})
+					continue
+				}
 				file, err := os.Open(path)
 				if err != nil {
 					log.Fatal(err)

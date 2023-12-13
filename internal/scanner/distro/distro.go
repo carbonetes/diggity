@@ -28,9 +28,9 @@ func Scan(data interface{}) interface{} {
 	return data
 }
 
-func CheckRelatedFile(file string) (string, bool) {
+func CheckRelatedFile(file string) (string, bool, bool) {
 	if slices.Contains(Manifests, file) {
-		return Type, true
+		return Type, true, true
 	}
-	return "", false
+	return "", false, false
 }

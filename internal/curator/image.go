@@ -11,6 +11,7 @@ import (
 
 	"github.com/carbonetes/diggity/internal/scanner"
 	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/google/go-containerregistry/pkg/name"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 	"github.com/google/go-containerregistry/pkg/v1/daemon"
@@ -111,10 +112,12 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 // processTarHeader processes a tar header and its contents, checking if the file size is within the limit and if it is a regular file.
 // If the file is a related file, it processes the file and returns an error if encountered.
 func processTarHeader(header *tar.Header, reader io.Reader, layerHash string) error {
-	category, matched := scanner.CheckRelatedFiles(header.Name)
+	category, matched, readFlag := scanner.CheckRelatedFiles(header.Name)
 	if matched {
-		if category == "portage" {
-			stream.Emit(category, header.Name)
+		if !readFlag {
+			stream.Emit(category, types.ManifestFile{
+				Path: header.Name,
+			})
 			return nil
 		}
 		err := processFile(header.Name, reader, category)

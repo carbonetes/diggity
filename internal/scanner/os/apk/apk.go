@@ -15,12 +15,12 @@ var (
 	log         = logger.GetLogger()
 )
 
-func CheckRelatedFile(file string) (string, bool) {
+func CheckRelatedFile(file string) (string, bool, bool) {
 	if strings.Contains(file, RelatedPath) {
 
-		return Type, true
+		return Type, true, true
 	}
-	return "", false
+	return "", false, false
 }
 
 func Scan(data interface{}) interface{} {

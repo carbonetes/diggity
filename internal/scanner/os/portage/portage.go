@@ -17,31 +17,31 @@ var (
 	log         = logger.GetLogger()
 )
 
-func CheckRelatedFile(file string) (string, bool) {
+func CheckRelatedFile(file string) (string, bool, bool) {
 	if strings.Contains(RelatedPath, file) {
-		return Type, true
+		return Type, true, false
 	}
-	return "", false
+	return "", false, false
 }
 
 // TODO: Subject for thorough review and testing
 func Scan(data interface{}) interface{} {
-	path, ok := data.(string)
+	manifest, ok := data.(types.ManifestFile)
 	if !ok {
 		log.Fatal("Portage Handler received unknown type")
 	}
 
-	if len(path) == 0 {
+	if len(manifest.Path) == 0 {
 		return nil
 	}
 
-	target := filepath.Dir(path)
+	target := filepath.Dir(manifest.Path)
 	name, version := parseNameVersion(target)
 	if len(name) == 0 || len(version) == 0 {
 		return nil
 	}
 
-	component := types.NewComponent(name, version, Type, path, "", nil)
+	component := types.NewComponent(name, version, Type, manifest.Path, "", nil)
 	stream.AddComponent(component)
 
 	return data

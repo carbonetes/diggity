@@ -84,10 +84,10 @@ func Scan(data interface{}) interface{} {
 	return data
 }
 
-func CheckRelatedFile(file string) (string, bool) {
+func CheckRelatedFile(file string) (string, bool, bool) {
 	if match := ExcludedPattern.FindString(file); match != "" {
-		return "", false
+		return "", false, false
 	}
 
-	return Type, true
+	return Type, true, true
 }

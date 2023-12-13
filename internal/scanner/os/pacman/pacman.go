@@ -17,11 +17,11 @@ var (
 	log       = logger.GetLogger()
 )
 
-func CheckRelatedFile(file string) (string, bool) {
+func CheckRelatedFile(file string) (string, bool, bool) {
 	if slices.Contains(Manifests, file) && filepath.Base(file) == "desc" {
-		return Type, true
+		return Type, true, true
 	}
-	return "", false
+	return "", false, true
 }
 
 func Scan(data interface{}) interface{} {

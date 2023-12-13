@@ -45,9 +45,9 @@ func processNestedArchive(reader io.ReaderAt, size int64) error {
 			}
 			continue
 		}
-		category, matched := scanner.CheckRelatedFiles(f.Name)
+		category, matched, readFlag := scanner.CheckRelatedFiles(f.Name)
 		if matched {
-			err = handleArchiveFile(f.Name, category, f)
+			err = handleArchiveFile(f.Name, category, f, readFlag)
 			if err != nil {
 				log.Error(err)
 			}
@@ -57,14 +57,15 @@ func processNestedArchive(reader io.ReaderAt, size int64) error {
 	return nil
 }
 
-func handleArchiveFile(path, categoty string, file *zip.File) error {
+func handleArchiveFile(path, categoty string, file *zip.File, readFlag bool) error {
 	manifest := types.ManifestFile{
 		Path: path,
 	}
-
-	err := manifest.ReadArchiveFileContent(file)
-	if err != nil {
-		return err
+	if readFlag {
+		err := manifest.ReadArchiveFileContent(file)
+		if err != nil {
+			return err
+		}
 	}
 
 	stream.Emit(categoty, manifest)
