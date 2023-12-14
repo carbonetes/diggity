@@ -6,6 +6,7 @@ import (
 	"github.com/carbonetes/diggity/internal/curator"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
+	"github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/spf13/cobra"
@@ -19,6 +20,12 @@ var (
 		Short: "BOM Diggity Scanner",
 		Long:  `BOM Diggity is an open-source tool developed to streamline the critical process of generating a comprehensive Software Bill of Materials (SBOM) for Container Images and File Systems across various supported ecosystems.`,
 		Run: func(cmd *cobra.Command, args []string) {
+			versionArg, _ := cmd.Flags().GetBool("version")
+			if versionArg {
+				log.Print(version.FromBuild().Version)
+				os.Exit(0)
+			}
+
 			tarball, _ := cmd.Flags().GetString("tar")
 			filesystem, _ := cmd.Flags().GetString("directory")
 			if len(args) > 0 {
@@ -32,7 +39,12 @@ var (
 				os.Exit(0)
 			}
 
-			err := params.GetScanType()
+			quiet, err := cmd.Flags().GetBool("quiet")
+			if err != nil {
+				log.Error(err.Error())
+			}
+
+			err = params.GetScanType()
 			if err != nil {
 				log.Error(err.Error())
 			}
@@ -61,6 +73,7 @@ var (
 				log.Error("Invalid output format parameter")
 			}
 
+			params.Quiet = quiet
 			params.SaveToFile = file
 			params.Scanners = helper.SplitAndAppendStrings(scanners)
 			params.OutputFormat = types.OutputFormat(outputFormat)
