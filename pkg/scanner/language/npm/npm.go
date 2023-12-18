@@ -62,8 +62,11 @@ func Scan(data interface{}) interface{} {
 			stream.AddComponent(component)
 		}
 	} else if strings.Contains(manifest.Path, "yarn.lock") {
-		metadata := readYarnLockfile(manifest.Content)
-		for name, info := range metadata.Dependencies {
+		packages, err := ParseYarnLock(manifest.Content)
+		if err != nil {
+			log.Errorf("Error parsing yarn.lock: %s", err)
+		}
+		for name, info := range packages {
 			if name == "" {
 				continue
 			}
