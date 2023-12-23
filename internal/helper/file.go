@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/carbonetes/diggity/internal/log"
 )
 
 // IsDirExists checks if a directory exists and is valid.
@@ -40,20 +42,11 @@ func IsFileExists(path string) (bool, error) {
 	return !info.IsDir(), nil
 }
 
-func SaveToFile(data interface{}, path, extension string) error {
-	path = AddFileExtension(path, extension)
-	// err := os.MkdirAll(filepath.Dir(path), 0700)
-	// if err != nil {
-	// 	return err
-	// }
-	// out, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
-	// if err != nil {
-	// 	return err
-	// }
-	// defer out.Close()
-
-	switch extension {
-	case "json":
+func SaveToFile(data interface{}, path, format string) error {
+	path = AddFileExtension(path, format)
+	log.Debug("Saving results to file: " + format)
+	switch format {
+	case "json", "cdx-json":
 		jsonData, err := ToJSON(data)
 		if err != nil {
 			return err
@@ -72,10 +65,19 @@ func SaveToFile(data interface{}, path, extension string) error {
 		if err != nil {
 			return err
 		}
+	case "xml", "spdx-xml":
+		xmlData, err := ToXML(data)
+		if err != nil {
+			return err
+		}
+		err = os.WriteFile(path, xmlData, 0644)
+		if err != nil {
+			return err
+		}
 	default:
-		return fmt.Errorf("invalid file extension: %s", extension)
+		return fmt.Errorf("invalid format: %s", format)
 	}
-
+	log.Debugf("Results saved to file: %s", path)
 	return nil
 }
 
@@ -92,4 +94,13 @@ func AddFileExtension(filename, outputType string) string {
 	default:
 		return filename + ".txt"
 	}
+}
+
+func WriteFile(data []byte, path string) error {
+	err := os.WriteFile(path, data, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
