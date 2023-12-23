@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
@@ -59,6 +60,10 @@ func Scan(data interface{}) interface{} {
 				continue
 			}
 			component := types.NewComponent(name, dependency.Version, Type, manifest.Path, "", dependency)
+			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+			if len(cpes) > 0 {
+				component.CPEs = append(component.CPEs, cpes...)
+			}
 			stream.AddComponent(component)
 		}
 	} else if strings.Contains(manifest.Path, "yarn.lock") {
@@ -72,6 +77,10 @@ func Scan(data interface{}) interface{} {
 			}
 			component := types.NewComponent(name, info.Version, Type, manifest.Path, "", info)
 			component.PURL = "pkg:npm/" + name + "@" + info.Version
+			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+			if len(cpes) > 0 {
+				component.CPEs = append(component.CPEs, cpes...)
+			}
 			stream.AddComponent(component)
 		}
 	} else if strings.Contains(manifest.Path, "pnpm-lock.yaml") {
@@ -97,6 +106,10 @@ func Scan(data interface{}) interface{} {
 			}
 			component := types.NewComponent(name, version, Type, manifest.Path, "", info)
 			component.PURL = "pkg:npm/" + name + "@" + version
+			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+			if len(cpes) > 0 {
+				component.CPEs = append(component.CPEs, cpes...)
+			}
 			stream.AddComponent(component)
 		}
 
@@ -119,6 +132,10 @@ func Scan(data interface{}) interface{} {
 			version := props[len(props)-1]
 
 			component := types.NewComponent(name, version, Type, manifest.Path, "", pkg)
+			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+			if len(cpes) > 0 {
+				component.CPEs = append(component.CPEs, cpes...)
+			}
 			stream.AddComponent(component)
 		}
 	}

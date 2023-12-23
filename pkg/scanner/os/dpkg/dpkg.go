@@ -3,6 +3,7 @@ package dpkg
 import (
 	"slices"
 
+	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
@@ -43,11 +44,19 @@ func Scan(data interface{}) interface{} {
 		}
 
 		component := types.NewComponent(metadata["package"].(string), metadata["version"].(string), Type, manifest.Path, desc, metadata)
+		cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+		if len(cpes) > 0 {
+			component.CPEs = append(component.CPEs, cpes...)
+		}
 		stream.AddComponent(component)
 
 		if metadata["source"] != nil {
 			origin := types.NewComponent(metadata["source"].(string), metadata["version"].(string), Type, manifest.Path, desc, nil)
 			origin.Licenses = component.Licenses
+			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+			if len(cpes) > 0 {
+				origin.CPEs = append(component.CPEs, cpes...)
+			}
 			stream.AddComponent(origin)
 		}
 	}

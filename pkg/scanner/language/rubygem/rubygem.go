@@ -6,6 +6,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
@@ -34,6 +35,10 @@ func Scan(data interface{}) interface{} {
 			name, version := attribute[0], attribute[1]
 			metadata := map[string]string{"name": name, "version": version}
 			component := types.NewComponent(name, version, Type, manifest.Path, "", metadata)
+			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+			if len(cpes) > 0 {
+				component.CPEs = append(component.CPEs, cpes...)
+			}
 			stream.AddComponent(component)
 		}
 	} else if strings.Contains(manifest.Path, ".gemspec") && strings.Contains(manifest.Path, "specifications") {
@@ -50,6 +55,10 @@ func Scan(data interface{}) interface{} {
 		if val, ok := metadata["licenses"].(string); ok {
 			license := regexp.MustCompile(`[^\w^,^ ]`).ReplaceAllString(val, "")
 			component.Licenses = append(licenses, license)
+		}
+		cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+		if len(cpes) > 0 {
+			component.CPEs = append(component.CPEs, cpes...)
 		}
 		stream.AddComponent(component)
 	}

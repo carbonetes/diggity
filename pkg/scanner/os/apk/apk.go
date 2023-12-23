@@ -3,6 +3,7 @@ package apk
 import (
 	"strings"
 
+	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
@@ -44,12 +45,19 @@ func Scan(data interface{}) interface{} {
 				component.Licenses = append(component.Licenses, license)
 			}
 		}
-
+		cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+		if len(cpes) > 0 {
+			component.CPEs = append(component.CPEs, cpes...)
+		}
 		stream.AddComponent(component)
 
 		if metadata["Origin"] != nil {
 			origin := types.NewComponent(metadata["Origin"].(string), metadata["Version"].(string), Type, manifest.Path, metadata["Description"].(string), nil)
 			origin.Licenses = component.Licenses
+			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+			if len(cpes) > 0 {
+				origin.CPEs = append(component.CPEs, cpes...)
+			}
 			stream.AddComponent(origin)
 		}
 	}

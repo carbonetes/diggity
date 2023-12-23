@@ -5,6 +5,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
@@ -50,7 +51,10 @@ func Scan(data interface{}) interface{} {
 		}
 
 		component := types.NewComponent(metadata.Name, metadata.Version, Type, manifest.Path, "", metadata)
-
+		cpes := cpe.NewCPE23(metadata.Vendor, component.Name, component.Version, Type)
+		if len(cpes) > 0 {
+			component.CPEs = append(component.CPEs, cpes...)
+		}
 		stream.AddComponent(component)
 	}
 	return data

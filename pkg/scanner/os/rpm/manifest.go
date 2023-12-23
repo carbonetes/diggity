@@ -1,6 +1,7 @@
 package rpm
 
 import (
+	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
@@ -19,6 +20,10 @@ func readRpmDb(rpmdb types.RpmDB) {
 		component := newComponent(pkgInfo)
 		if component.Name == "" || component.Version == "" {
 			continue
+		}
+		cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+		if len(cpes) > 0 {
+			component.CPEs = append(component.CPEs, cpes...)
 		}
 		stream.AddComponent(component)
 	}

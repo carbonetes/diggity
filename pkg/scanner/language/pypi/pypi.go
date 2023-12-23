@@ -4,6 +4,7 @@ import (
 	"path/filepath"
 	"slices"
 
+	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
@@ -39,6 +40,10 @@ func Scan(data interface{}) interface{} {
 		if val, ok := metadata["License"].(string); ok {
 			component.Licenses = append(component.Licenses, val)
 		}
+		cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+		if len(cpes) > 0 {
+			component.CPEs = append(component.CPEs, cpes...)
+		}
 		stream.AddComponent(component)
 	} else if filepath.Base(manifest.Path) == "requirements.txt" {
 		attributes := readRequirementsFile(manifest.Content)
@@ -46,6 +51,10 @@ func Scan(data interface{}) interface{} {
 			name, version := attribute[0], attribute[1]
 			metadata := map[string]string{"name": name, "version": version}
 			component := types.NewComponent(name, version, Type, manifest.Path, "", metadata)
+			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+			if len(cpes) > 0 {
+				component.CPEs = append(component.CPEs, cpes...)
+			}
 			stream.AddComponent(component)
 		}
 	} else if filepath.Base(manifest.Path) == "poetry.lock" {
@@ -53,6 +62,10 @@ func Scan(data interface{}) interface{} {
 		for _, packageInfo := range metadata.Packages {
 			name, version := packageInfo.Name, packageInfo.Version
 			component := types.NewComponent(name, version, Type, manifest.Path, "", packageInfo)
+			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+			if len(cpes) > 0 {
+				component.CPEs = append(component.CPEs, cpes...)
+			}
 			stream.AddComponent(component)
 		}
 	}

@@ -11,6 +11,7 @@ type Component struct {
 	Description     string        `json:"description,omitempty"`
 	Origin          string        `json:"origin,omitempty"`
 	Licenses        []string      `json:"licenses,omitempty"`
+	CPEs            []string      `json:"cpes,omitempty"`
 	Metadata        interface{}   `json:"metadata,omitempty"`
 	Vulnerabilities []interface{} `json:"vulnerabilities,omitempty"`
 }

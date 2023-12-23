@@ -33,12 +33,12 @@ const (
 
 func ToCDX(sbom *types.SBOM) *cyclonedx.BOM {
 	bom := &cyclonedx.BOM{
-		XMLName:     xml.Name{Local: cycloneDX},
-		XMLNS:       XMLN,
-		BOMFormat: cycloneDX,
-		Version: version,
+		XMLName:      xml.Name{Local: cycloneDX},
+		XMLNS:        XMLN,
+		BOMFormat:    cycloneDX,
+		Version:      version,
 		SerialNumber: sbom.Serial,
-		SpecVersion: cyclonedx.SpecVersion1_5,
+		SpecVersion:  cyclonedx.SpecVersion1_5,
 		Metadata: &cyclonedx.Metadata{
 			Tools: &[]cyclonedx.Tool{},
 		},
@@ -76,6 +76,7 @@ func ToCDXComponent(component *types.Component) *cyclonedx.Component {
 		Name:       component.Name,
 		Version:    component.Version,
 		PackageURL: component.PURL,
+		Properties: &[]cyclonedx.Property{},
 	}
 
 	if len(licenses) > 0 {
