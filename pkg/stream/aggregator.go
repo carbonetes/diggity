@@ -2,6 +2,7 @@ package stream
 
 import (
 	"github.com/carbonetes/diggity/internal/log"
+	convert "github.com/carbonetes/diggity/pkg/converter/cdx"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -11,6 +12,10 @@ func AggrerateSoftwareManifest() types.SoftwareManifest {
 	var files []string
 	switch params.OutputFormat {
 	case types.CycloneDXJSON, types.CycloneDXXML:
+		bom := AggregateSBOM()
+		cdx := convert.ToCDX(&bom)
+		sbom = cdx
+
 	case types.SPDXJSON, types.SPDXTag, types.SPDXXML:
 	default:
 		sbom = AggregateSBOM()
