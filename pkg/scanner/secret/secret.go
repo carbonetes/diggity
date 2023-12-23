@@ -74,7 +74,7 @@ func Scan(data interface{}) interface{} {
 			secret := types.Secret{
 				Match:       matcher.Name,
 				Description: matcher.Description,
-				// Content:     match,
+				Content:     match,
 				File: manifest.Path,
 			}
 			stream.AddSecret(secret)
