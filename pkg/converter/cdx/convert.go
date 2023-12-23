@@ -92,5 +92,26 @@ func ToCDXComponent(component *types.Component) *cyclonedx.Component {
 		}
 	}
 
+	if component.Origin != "" {
+		*c.Properties = append(*c.Properties, cyclonedx.Property{
+			Name:  locationPrefix ,
+			Value: component.Origin,
+		})
+	}
+
+	if component.Description != "" {
+		*c.Properties = append(*c.Properties, cyclonedx.Property{
+			Name:  diggityPrefix + colonPrefix + packagePrefix + colonPrefix + "description",
+			Value: component.Description,
+		})
+	}
+
+	if component.Type != "" {
+		*c.Properties = append(*c.Properties, cyclonedx.Property{
+			Name:  diggityPrefix + colonPrefix + packagePrefix + colonPrefix + "type",
+			Value: component.Type,
+		})
+	}
+
 	return c
 }
