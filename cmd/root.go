@@ -3,10 +3,10 @@ package cmd
 import (
 	"os"
 
-	"github.com/carbonetes/diggity/internal/curator"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/internal/version"
+	"github.com/carbonetes/diggity/pkg/curator"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/spf13/cobra"
