@@ -1,6 +1,6 @@
 package types
 
-const ConfigVersion string = "1.1"
+const ConfigVersion string = "1.0"
 
 type Config struct {
 	Version      string             `json:"version" yaml:"version"`
