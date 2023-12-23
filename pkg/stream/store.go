@@ -2,6 +2,7 @@ package stream
 
 const (
 	ParametersStoreKey    string = "parameters"
+	ConfigStoreKey        string = "config"
 	ImageInstanceStoreKey string = "image-instance"
 	FileListStoreKey      string = "file-list"
 

@@ -1,32 +1,89 @@
 package config
 
 import (
-	"github.com/carbonetes/diggity/internal/scanner"
+	"os"
+
+	"github.com/carbonetes/diggity/internal/helper"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/types"
+	"gopkg.in/yaml.v3"
 )
 
-type Config struct {
-	OutputFormat     string                   `json:"output_format" yaml:"output_format"`
-	Quiet            bool                     `json:"quiet" yaml:"quiet"`
-	Scanners         []string                 `json:"scanners" yaml:"scanners"`
-	AllowFileListing bool                     `json:"allow_file_listing" yaml:"allow_file_listing"`
-	AllowScanSecret  bool                     `json:"allow_scan_secret" yaml:"allow_scan_secret"`
-	MaxFileSize      int64                    `json:"max_file_size" yaml:"max_file_size"`
-	Registry         types.RegistryParameters `json:"registry" yaml:"registry"`
+func Load() *types.Config {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return nil
+	}
+	path := home + string(os.PathSeparator) + ".diggity.yaml"
+	exist, err := helper.IsFileExists(path)
+	if err != nil {
+		return nil
+	}
+
+	if !exist {
+		MakeDefaultConfigFile(path)
+	}
+
+	var config types.Config
+	ReadConfigFile(&config, path)
+	if config.Version != types.ConfigVersion {
+		ReplaceConfigFile(New(), path)
+	}
+
+	return &config
 }
 
-func New() Config {
-	return Config{
-		OutputFormat:     types.Table.String(),
-		Quiet:            false,
-		Scanners:         scanner.All,
-		AllowFileListing: false,
-		MaxFileSize:      10485760,
+func New() types.Config {
+	return types.Config{
+		Version:      types.ConfigVersion,
+		MaxFileSize:  10485760,
+		SecretConfig: LoadDefaultConfig(),
 		Registry: types.RegistryParameters{
 			URI:      "",
 			Username: "",
 			Password: "",
 			Token:    "",
 		},
+	}
+}
+
+func MakeDefaultConfigFile(path string) {
+	os.Setenv("CONFIG_PATH", path)
+
+	defaultConfig := New()
+	err := helper.WriteYAML(defaultConfig, path)
+	if err != nil {
+		log.Error(err)
+	}
+}
+
+func ReadConfigFile(config *types.Config, path string) {
+	configFile, err := os.ReadFile(path)
+	if err != nil {
+		log.Error(err)
+	}
+
+	err = yaml.Unmarshal(configFile, config)
+	if err != nil {
+		log.Error(err)
+	}
+}
+
+func ReplaceConfigFile(config types.Config, path string) {
+	exist, err := helper.IsFileExists(path)
+	if err != nil {
+		log.Error(err)
+	}
+
+	if exist {
+		err = os.Remove(path)
+		if err != nil {
+			log.Error(err)
+		}
+	}
+
+	err = helper.WriteYAML(config, path)
+	if err != nil {
+		log.Error(err)
 	}
 }

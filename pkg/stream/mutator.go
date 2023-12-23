@@ -1,6 +1,8 @@
 package stream
 
 import (
+	"time"
+
 	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/types"
@@ -95,7 +97,6 @@ func SetDistro(distro types.Distro) {
 }
 
 func SetParameters(params types.Parameters) {
-	store.Set(ParametersStoreKey, params)
 	store.Set(ParameterScanTypeStoreKey, params.ScanType)
 	store.Set(ParameterInputStoreKey, params.Input)
 	store.Set(ParameterOutputFormatStoreKey, params.OutputFormat)
@@ -104,6 +105,8 @@ func SetParameters(params types.Parameters) {
 	store.Set(ParameterScannersStoreKey, params.Scanners)
 	store.Set(ParameterAllowFileListingStoreKey, params.AllowFileListing)
 	store.Set(ParameterRegistryStoreKey, params.Registry)
+	store.Set(ScanStartStoreKey, time.Now())
+	store.Set(ParametersStoreKey, params)
 }
 
 func SetImageInstance(image v1.Image) {
