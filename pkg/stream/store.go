@@ -13,7 +13,7 @@ const (
 	ParameterMaxFileSizeStoreKey      string = "parameter.max-file-size"
 	ParameterScannersStoreKey         string = "parameter.scanners"
 	ParameterAllowFileListingStoreKey string = "parameter.allow-file-listing"
-	ParameterRegistryStoreKey         string = "parameter.registry"
+	// ParameterRegistryStoreKey         string = "parameter.registry"
 
 	SBOMStoreKey             string = "software-manifest.sbom"
 	ComponentsStoreKey       string = "software-manifest.sbom.components"

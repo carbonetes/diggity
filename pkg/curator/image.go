@@ -13,6 +13,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/scanner"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
+	"github.com/google/go-containerregistry/pkg/authn"
 	"github.com/google/go-containerregistry/pkg/name"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 	"github.com/google/go-containerregistry/pkg/v1/daemon"
@@ -23,19 +24,32 @@ import (
 // GetImage retrieves a Docker image given its name or digest.
 // It first checks if the image exists locally, and if not, it pulls it from the remote registry.
 // Returns the image object and an error if any.
-func GetImage(input string) (v1.Image, error) {
+func GetImage(input string, auth *authn.AuthConfig) (v1.Image, error) {
 	ref, err := name.ParseReference(input)
 	if err != nil {
 		return nil, err
 	}
 	var image v1.Image
-	// exists, image, err := CheckIfImageExistsInLocal(ref)
-	// if !exists || err != nil {
-	image, err = remote.Image(ref)
-	if err != nil {
-		return nil, err
+	log.Print(auth)
+	exists, image, _ := CheckIfImageExistsInLocal(ref)
+	if exists {
+		return image, nil
 	}
-	// }
+
+	if auth != nil {
+		// Load image remotely with authn.AuthConfig 
+		// Check out information about authn in https://github.com/google/go-containerregistry/tree/main/pkg/authn
+		image, err = remote.Image(ref, remote.WithAuth(authn.FromConfig(*auth)))
+		if err != nil {
+			log.Fatalf("Failed to load image: %s", err)
+		}
+	} else {
+		// Remotely load image from public registry
+		image, err = remote.Image(ref)
+		if err != nil {
+			log.Fatalf("Failed to load image anonymously: %s", err)
+		}
+	}
 
 	return image, nil
 }

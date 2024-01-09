@@ -15,9 +15,12 @@ func ParametersStoreWatcher(data interface{}) interface{} {
 	if !ok {
 		log.Print("ParametersStoreWatcher received unknown type")
 	}
-	log.Debug("ParametersStoreWatcher received parameters:", parameters)
+
 	if !parameters.Quiet {
 		status.Run()
+		if parameters.OutputFormat == types.Table {
+			parameters.OutputFormat = types.JSON
+		}
 	}
 	stream.Set(stream.ScanStartStoreKey, time.Now())
 	switch parameters.ScanType {

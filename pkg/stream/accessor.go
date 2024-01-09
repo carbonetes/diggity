@@ -5,6 +5,7 @@ import (
 
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/types"
+	"github.com/google/go-containerregistry/pkg/authn"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 )
 
@@ -273,20 +274,20 @@ func GetParameterAllowFileListing() bool {
 	return allowFileListing
 }
 
-func GetParameterRegistry() string {
-	data, exist := store.Get(ParameterRegistryStoreKey)
+func GetAuthConfig() *authn.AuthConfig {
+	data, exist := store.Get(ConfigStoreKey)
 
 	if !exist {
-		log.Error("ParameterRegistry not found")
+		log.Error("Config not found")
 	}
 
-	registry, ok := data.(string)
-
+	config, ok := data.(types.Config)
 	if !ok {
-		log.Error("Invalid data type found in parameter registry store")
+		log.Error("Invalid data type found in config store")
 	}
 
-	return registry
+	return &config.AuthConfig
+
 }
 
 func GetFiles() []string {

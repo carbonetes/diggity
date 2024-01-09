@@ -46,7 +46,7 @@ func SaveToFile(data interface{}, path, format string) error {
 	path = AddFileExtension(path, format)
 	log.Debug("Saving results to file: " + format)
 	switch format {
-	case "json", "cdx-json":
+	case "json", "cdx-json", "spdx-json":
 		jsonData, err := ToJSON(data)
 		if err != nil {
 			return err
@@ -87,7 +87,7 @@ func AddFileExtension(filename, outputType string) string {
 		filename = filename[:lastDotIndex]
 	}
 	switch outputType {
-	case "json", "cdx-json":
+	case "json", "cdx-json", "spdx-json":
 		return filename + ".json"
 	case "xml", "cdx-xml":
 		return filename + ".xml"

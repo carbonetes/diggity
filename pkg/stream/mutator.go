@@ -104,7 +104,6 @@ func SetParameters(params types.Parameters) {
 	store.Set(ParameterMaxFileSizeStoreKey, params.MaxFileSize)
 	store.Set(ParameterScannersStoreKey, params.Scanners)
 	store.Set(ParameterAllowFileListingStoreKey, params.AllowFileListing)
-	store.Set(ParameterRegistryStoreKey, params.Registry)
 	store.Set(ScanStartStoreKey, time.Now())
 	store.Set(ParametersStoreKey, params)
 }
@@ -115,4 +114,8 @@ func SetImageInstance(image v1.Image) {
 
 func SetScanElapsed(duration float64) {
 	store.Set(ScanElapsedStoreKey, duration)
+}
+
+func SetConfig(config types.Config) {
+	store.Set(ConfigStoreKey, config)
 }
