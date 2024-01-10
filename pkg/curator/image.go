@@ -24,22 +24,24 @@ import (
 // GetImage retrieves a Docker image given its name or digest.
 // It first checks if the image exists locally, and if not, it pulls it from the remote registry.
 // Returns the image object and an error if any.
-func GetImage(input string, auth *authn.AuthConfig) (v1.Image, error) {
+func GetImage(input string, config *types.RegistryConfig) (v1.Image, error) {
 	ref, err := name.ParseReference(input)
 	if err != nil {
 		return nil, err
 	}
 	var image v1.Image
-	log.Print(auth)
 	exists, image, _ := CheckIfImageExistsInLocal(ref)
 	if exists {
 		return image, nil
 	}
 
-	if auth != nil {
-		// Load image remotely with authn.AuthConfig 
+	if config != nil {
+		// Load image remotely with authn.AuthConfig
 		// Check out information about authn in https://github.com/google/go-containerregistry/tree/main/pkg/authn
-		image, err = remote.Image(ref, remote.WithAuth(authn.FromConfig(*auth)))
+		image, err = remote.Image(ref, remote.WithAuth(&authn.Basic{
+			Username: config.Username,
+			Password: config.Password,
+		}))
 		if err != nil {
 			log.Fatalf("Failed to load image: %s", err)
 		}
@@ -61,7 +63,7 @@ func ReadFiles(image v1.Image) error {
 	if err != nil {
 		return err
 	}
-	maxFileSize := stream.GetParameters().MaxFileSize
+	maxFileSize := stream.GetConfig().MaxFileSize
 	for _, layer := range layers {
 		contents, err := layer.Uncompressed()
 		if err != nil {

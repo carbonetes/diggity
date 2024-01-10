@@ -1,15 +1,17 @@
 package types
 
-import "github.com/google/go-containerregistry/pkg/authn"
-
-const ConfigVersion string = "1.0"
+const ConfigVersion string = "1.1"
 
 type Config struct {
-	Version     string `json:"version" yaml:"version"`
-	MaxFileSize int64  `json:"max_file_size" yaml:"max_file_size"`
-	// Registry     RegistryParameters `json:"registry" yaml:"registry"`
-	AuthConfig   authn.AuthConfig `json:"registry" yaml:"registry"`
-	SecretConfig SecretConfig     `json:"secret_config" yaml:"secret_config"`
+	Version      string         `json:"version" yaml:"version"`
+	MaxFileSize  int64          `json:"max_file_size" yaml:"max_file_size"`
+	Registry     RegistryConfig `json:"registry" yaml:"registry"`
+	SecretConfig SecretConfig   `json:"secret_config" yaml:"secret_config"`
+}
+
+type RegistryConfig struct {
+	Username string `json:"username" yaml:"username"`
+	Password string `json:"password" yaml:"password"`
 }
 
 type SecretConfig struct {

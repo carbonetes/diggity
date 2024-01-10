@@ -101,7 +101,6 @@ func SetParameters(params types.Parameters) {
 	store.Set(ParameterInputStoreKey, params.Input)
 	store.Set(ParameterOutputFormatStoreKey, params.OutputFormat)
 	store.Set(ParameterQuietStoreKey, params.Quiet)
-	store.Set(ParameterMaxFileSizeStoreKey, params.MaxFileSize)
 	store.Set(ParameterScannersStoreKey, params.Scanners)
 	store.Set(ParameterAllowFileListingStoreKey, params.AllowFileListing)
 	store.Set(ScanStartStoreKey, time.Now())

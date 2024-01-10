@@ -33,16 +33,7 @@ type Parameters struct {
 	Quiet            bool
 	Scanners         []string
 	AllowFileListing bool
-	MaxFileSize      int64
-	// Registry         RegistryParameters `json:"-" yaml:"-"` // ignore this field when marshalling
-	Provenance string
-}
-
-type RegistryParameters struct {
-	// URI      string `json:"uri" yaml:"uri"`
-	Username string `json:"username" yaml:"username"`
-	Password string `json:"password" yaml:"password"`
-	// Token    string `json:"token" yaml:"token"`
+	Provenance       string
 }
 
 func (o OutputFormat) String() string {
@@ -80,14 +71,7 @@ func DefaultParameters() Parameters {
 		Quiet:            false,
 		Scanners:         nil,
 		AllowFileListing: false,
-		MaxFileSize:      52428800,
-		// Registry: RegistryParameters{
-		// 	// URI:      "",
-		// 	Username: "",
-		// 	Password: "",
-		// 	// Token:    "",
-		// },
-		// Provenance: "",
+		Provenance:       "",
 	}
 }
 

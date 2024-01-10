@@ -5,7 +5,6 @@ import (
 
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/types"
-	"github.com/google/go-containerregistry/pkg/authn"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 )
 
@@ -274,7 +273,7 @@ func GetParameterAllowFileListing() bool {
 	return allowFileListing
 }
 
-func GetAuthConfig() *authn.AuthConfig {
+func GetConfig() types.Config {
 	data, exist := store.Get(ConfigStoreKey)
 
 	if !exist {
@@ -286,7 +285,27 @@ func GetAuthConfig() *authn.AuthConfig {
 		log.Error("Invalid data type found in config store")
 	}
 
-	return &config.AuthConfig
+	return config
+}
+
+func GetRegistryConfig() *types.RegistryConfig {
+	data, exist := store.Get(ConfigStoreKey)
+
+	if !exist {
+		log.Error("Config not found")
+	}
+
+	config, ok := data.(types.Config)
+	if !ok {
+		log.Error("Invalid data type found in config store")
+	}
+
+	registry := config.Registry
+	if len(registry.Username) != 0 && len(registry.Password) != 0 {
+		return &registry
+	}
+
+	return nil
 
 }
 

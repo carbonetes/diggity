@@ -7,7 +7,6 @@ import (
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
-	"github.com/google/go-containerregistry/pkg/authn"
 	"github.com/mitchellh/mapstructure"
 	"gopkg.in/yaml.v3"
 )
@@ -47,19 +46,10 @@ func New() types.Config {
 		Version:      types.ConfigVersion,
 		MaxFileSize:  10485760, // Set to 0 to disable limiter
 		SecretConfig: LoadDefaultConfig(),
-		AuthConfig: authn.AuthConfig{
-			Username:      "",
-			Password:      "",
-			Auth:          "",
-			IdentityToken: "",
-			RegistryToken: "",
+		Registry: types.RegistryConfig{
+			Username: "",
+			Password: "",
 		},
-		// Registry: types.RegistryParameters{
-		// 	// URI:      "",
-		// 	Username: "",
-		// 	Password: "",
-		// 	// Token:    "",
-		// },
 	}
 }
 

@@ -12,7 +12,7 @@ func ImageScanHandler(data interface{}) interface{} {
 	if !ok {
 		log.Error("IndexImageFilesystem received unknown type")
 	}
-	image, err := GetImage(imageName, stream.GetAuthConfig())
+	image, err := GetImage(imageName, stream.GetRegistryConfig())
 	if err != nil {
 		log.Error(err)
 	}
