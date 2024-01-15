@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  GO_CURRENT_VERSION: "1.19.x"
-  GO_STABLE_VERSION: true
-
 jobs:
   Lint-Check:
     name: Lint Checks
@@ -31,8 +27,8 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.19
-          check-latest: true
+          go-version: 1.21
+          check-latest: false
           cache: true
         
       - name: Run Unit Test Scripts 
