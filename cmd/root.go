@@ -7,7 +7,7 @@ import (
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/internal/version"
-	"github.com/carbonetes/diggity/pkg/curator"
+	"github.com/carbonetes/diggity/pkg/reader"
 	"github.com/carbonetes/diggity/pkg/scanner"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
@@ -83,7 +83,7 @@ var (
 			if err != nil {
 				log.Error(err.Error())
 			}
-			curator.Init()
+			reader.Init()
 			stream.SetParameters(params)
 		},
 	}

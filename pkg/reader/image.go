@@ -1,4 +1,4 @@
-package curator
+package reader
 
 import (
 	"archive/tar"
@@ -29,6 +29,7 @@ func GetImage(input string, config *types.RegistryConfig) (v1.Image, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	var image v1.Image
 	exists, image, _ := CheckIfImageExistsInLocal(ref)
 	if exists {
@@ -111,7 +112,9 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 			}
 			continue
 		}
-		stream.Emit(stream.FileListEvent, header.Name)
+		if !stream.GetParameterQuiet() {
+			stream.Emit(stream.FileListEvent, header.Name)
+		}
 		if header.Typeflag == tar.TypeReg {
 			if header.Size > maxFileSize {
 				return nil
@@ -122,7 +125,6 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 			}
 		}
 	}
-
 	return nil
 }
 

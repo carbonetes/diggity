@@ -1,9 +1,10 @@
-package curator
+package reader
 
 import (
 	"time"
 
 	"github.com/carbonetes/diggity/internal/log"
+	"github.com/carbonetes/diggity/internal/presenter"
 	"github.com/carbonetes/diggity/internal/presenter/status"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
@@ -18,6 +19,7 @@ func ParametersStoreWatcher(data interface{}) interface{} {
 
 	if !parameters.Quiet {
 		status.Run()
+	} else {
 		if parameters.OutputFormat == types.Table {
 			parameters.OutputFormat = types.JSON
 		}
@@ -33,7 +35,8 @@ func ParametersStoreWatcher(data interface{}) interface{} {
 	default:
 		log.Error("Unknown scan type")
 	}
-
-	stream.SetScanElapsed(time.Since(stream.GetScanStart()).Seconds())
-	return data
+	elapsed := time.Since(stream.GetScanStart()).Seconds()
+	stream.SetScanElapsed(elapsed)
+	presenter.DisplayResults(parameters, elapsed)
+	return nil
 }
