@@ -15,20 +15,6 @@ func FileListWatcher(data interface{}) interface{} {
 	return data
 }
 
-func ScanElapsedStoreWatcher(data interface{}) interface{} {
-	_, ok := data.(float64)
-	if !ok {
-		log.Error("ScanElapsedStoreWatcher received unknown type")
-	}
+func Done() {
 	p.Send(resultMsg{done: true})
-	return data
-}
-
-func ErrorStoreWatcher(data interface{}) interface{} {
-	err, ok := data.(error)
-	if !ok {
-		log.Error("ErrorStoreWatcher received unknown type")
-	}
-	p.Send(errorMsg{err: err, quit: false})
-	return data
 }
