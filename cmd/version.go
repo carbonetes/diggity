@@ -5,48 +5,50 @@ import (
 	"fmt"
 	"os"
 
-	versionPackage "github.com/carbonetes/diggity/internal/version"
-	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/carbonetes/diggity/internal/version"
 	"github.com/spf13/cobra"
 )
 
 var (
-	version = &cobra.Command{
+	versionInput string
+	versionCmd   = &cobra.Command{
 		Use:   "version",
-		Short: "Display Build Version Info Diggity",
-		Long:  "Display Build Version Info Diggity",
+		Short: "Show version information",
 		Args:  cobra.MaximumNArgs(0),
-		RunE: func(_ *cobra.Command, _ []string) error {
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if len(versionInput) == 0 {
+				versionInput = "text"
+			}
 
-			versionInfo := versionPackage.FromBuild()
-			switch versionOutputFormat {
+			info := version.FromBuild()
+			switch versionInput {
 			case "text":
 				// Version
-				fmt.Println("Application:         ", versionInfo.AppName)
-				fmt.Println("Version:             ", versionInfo.Version)
-				fmt.Println("Build Date:          ", versionInfo.BuildDate)
+				fmt.Println("Application:         ", info.AppName)
+				fmt.Println("Version:             ", info.Version)
+				fmt.Println("Build Date:          ", info.BuildDate)
 				// Git
-				fmt.Println("Git Commit:          ", versionInfo.GitCommit)
-				fmt.Println("Git Description:     ", versionInfo.GitDesc)
+				fmt.Println("Git Commit:          ", info.GitCommit)
+				fmt.Println("Git Description:     ", info.GitDesc)
 				// Golang
-				fmt.Println("Go Version:          ", versionInfo.GoVersion)
-				fmt.Println("Compiler:            ", versionInfo.Compiler)
-				fmt.Println("Platform:            ", versionInfo.Platform)
+				fmt.Println("Go Version:          ", info.GoVersion)
+				fmt.Println("Compiler:            ", info.Compiler)
+				fmt.Println("Platform:            ", info.Platform)
 			case "json":
 
 				jsonFormat := json.NewEncoder(os.Stdout)
 				jsonFormat.SetEscapeHTML(false)
 				jsonFormat.SetIndent("", " ")
 				err := jsonFormat.Encode(&struct {
-					model.Version
+					version.Version
 				}{
-					Version: versionInfo,
+					Version: info,
 				})
 				if err != nil {
 					return fmt.Errorf("show version information error: %+v", err)
 				}
 			default:
-				return fmt.Errorf("unrecognize output format: %s", versionOutputFormat)
+				return fmt.Errorf("unrecognize output format: %s", versionInput)
 			}
 			return nil
 		},

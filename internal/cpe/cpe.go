@@ -1,34 +1,73 @@
 package cpe
 
 import (
+	"fmt"
+	"regexp"
 	"strings"
 
-	"github.com/carbonetes/diggity/pkg/model"
+	"github.com/facebookincubator/nvdtools/wfn"
 )
 
+type (
+	// CPE = wfn.Attributes
+	CPE   = wfn.Attributes
+	field = string
+)
+
+const (
+	// Source: https://csrc.nist.gov/schema/cpe/2.3/cpe-naming_2.3.xsd
+	cpeRegexString = `cpe:2\.3:[aho\*\-](:(((\?*|\*?)([a-zA-Z0-9\-\._]|(\\[\\\*\?!"#$$%&'\(\)\+,\/:;<=>@\[\]\^\x60\{\|}~]))+(\?*|\*?))|[\*\-]|[\+])){5}(:(([a-zA-Z]{2,3}(-([a-zA-Z]{2}|[0-9]{3}))?)|[\*\-]))(:(((\?*|\*?)([a-zA-Z0-9\-\._]|(\\[\\\*\?!"#$$%&'\(\)\+,\/:;<=>@\[\]\^\x60\{\|}~]))+(\?*|\*?))|[\*\-])){4}`
+	wildcard       = "*"
+)
+
+var regExp = regexp.MustCompile(cpeRegexString)
+
+// RemoveDuplicateCPES removes duplicate CPEs
+func RemoveDuplicateCPES(cpes []string) []string {
+	processed := make(map[string]bool)
+	var list []string
+	for _, cpe := range cpes {
+		if _, value := processed[cpe]; !value {
+			processed[cpe] = true
+			if err := validateCPE(cpe); err == nil {
+				list = append(list, cpe)
+			}
+		}
+	}
+	return list
+}
+
+func validateCPE(cpe string) error {
+	if !regExp.MatchString(cpe) {
+		return fmt.Errorf("failed to create CPE, invalid CPE string")
+	}
+	return nil
+}
+
 // NewCPE23 Generates and Validates CPE String based on CPE Version 2.3
-func NewCPE23(pkg *model.Package, vendor string, product string, version string) *model.Package {
+func NewCPE23(vendor, product, version, category string) []string {
+	var cpes []string
 	baseCPE := toCPE(vendor, product, version)
-	if pkg.Type == "java" && strings.Contains(baseCPE.Vendor, ";") {
+	if category == "java" && strings.Contains(baseCPE.Vendor, ";") {
 		for _, _vendor := range strings.Split(baseCPE.Vendor, ";") {
 			baseCPE.Vendor = _vendor
-			pkg.CPEs = append(pkg.CPEs, expandCPEsBySeparators(*baseCPE)...)
+			cpes = append(cpes, expandCPEsBySeparators(*baseCPE)...)
 		}
 	} else {
-		pkg.CPEs = append(pkg.CPEs, cpeToString(*baseCPE))
-		pkg.CPEs = append(pkg.CPEs, expandCPEsBySeparators(*baseCPE)...)
+		cpes = append(cpes, cpeToString(*baseCPE))
+		cpes = append(cpes, expandCPEsBySeparators(*baseCPE)...)
 	}
 
 	baseCPE.Vendor = baseCPE.Product
-	pkg.CPEs = append(pkg.CPEs, cpeToString(*baseCPE))
-	pkg.CPEs = RemoveDuplicateCPES(pkg.CPEs)
+	cpes = append(cpes, cpeToString(*baseCPE))
+	cpes = RemoveDuplicateCPES(cpes)
 
 	// Retain base CPE
-	if len(pkg.CPEs) == 0 {
-		pkg.CPEs = append(pkg.CPEs, cpeToString(*baseCPE))
+	if len(cpes) == 0 {
+		cpes = append(cpes, cpeToString(*baseCPE))
 	}
 
-	return pkg
+	return cpes
 }
 
 func cpeJoin(matchers ...string) string {
@@ -141,9 +180,9 @@ func expandCPEsBySeparators(baseCPE CPE) []string {
 	return cpes
 }
 
-func expand(baseCPE CPE, _field field, separator rune, replace rune) []string {
+func expand(baseCPE CPE, f field, separator rune, replace rune) []string {
 	expandedFields := make([]string, 0)
-	switch _field {
+	switch f {
 	case "Vendor":
 		{
 			vendorBytes := []byte(baseCPE.Vendor)

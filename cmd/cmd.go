@@ -1,12 +1,9 @@
 package cmd
 
-import (
-	"os"
-)
+import "os"
 
-// Execute Diggity
 func Execute() {
-	err := diggity.Execute()
+	err := root.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
