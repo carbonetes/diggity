@@ -16,6 +16,7 @@ func SetDefaultValues() {
 	store.Set(SBOMStoreKey, types.NewSBOM())
 	store.Set(DistroStoreKey, types.Distro{})
 	store.Set(ParametersStoreKey, types.Parameters{})
+	store.Set(ConfigStoreKey, types.Config{})
 	store.Set(CycloneDXComponentsStoreKey, []cyclonedx.Component{})
 }
 

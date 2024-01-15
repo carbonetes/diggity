@@ -7,5 +7,6 @@ type SoftwareManifest struct {
 	Secrets    []Secret    `json:"secrets"`
 	Files      []string    `json:"files"`
 	Parameters Parameters  `json:"parameters"`
+	SLSA       SLSA        `json:"slsa"`
 	Duration   float64     `json:"duration"`
 }
