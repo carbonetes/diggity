@@ -9,13 +9,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
-func DisplayResults(data interface{}) interface{} {
-	duration, ok := data.(float64)
-	if !ok {
-		log.Error("DisplayResults received unknown type")
-	}
-
-	params := stream.GetParameters()
+func DisplayResults(params types.Parameters, duration float64) {
 	result := stream.AggrerateSoftwareManifest()
 	result.Duration = duration
 	format, saveToFile := params.OutputFormat, params.SaveToFile
@@ -36,8 +30,5 @@ func DisplayResults(data interface{}) interface{} {
 		if err != nil {
 			log.Errorf("Failed to save results to file : %s", err.Error())
 		}
-		return data
 	}
-
-	return data
 }
