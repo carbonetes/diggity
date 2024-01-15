@@ -1,12 +1,13 @@
 package types
 
-const ConfigVersion string = "1.1"
+const ConfigVersion string = "1.0"
 
 type Config struct {
-	Version      string         `json:"version" yaml:"version"`
-	MaxFileSize  int64          `json:"max_file_size" yaml:"max_file_size"`
-	Registry     RegistryConfig `json:"registry" yaml:"registry"`
-	SecretConfig SecretConfig   `json:"secret_config" yaml:"secret_config"`
+	Version      string            `json:"version" yaml:"version"`
+	MaxFileSize  int64             `json:"max_file_size" yaml:"max_file_size"`
+	Registry     RegistryConfig    `json:"registry" yaml:"registry"`
+	Attestation  AttestationConfig `json:"attestation" yaml:"attestation"`
+	SecretConfig SecretConfig      `json:"secret_config" yaml:"secret_config"`
 }
 
 type RegistryConfig struct {
