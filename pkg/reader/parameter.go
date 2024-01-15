@@ -18,7 +18,6 @@ func ParametersStoreWatcher(data interface{}) interface{} {
 	}
 
 	if !parameters.Quiet {
-		status.Init()
 		status.Run()
 	} else {
 		if parameters.OutputFormat == types.Table {
