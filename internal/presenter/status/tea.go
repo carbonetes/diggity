@@ -123,7 +123,7 @@ var (
 	p = tea.NewProgram(m)
 )
 
-func init() {
+func Init() {
 	stream.Watch(stream.ScanElapsedStoreKey, ScanElapsedStoreWatcher)
 	stream.Attach(stream.FileListEvent, FileListWatcher)
 }
