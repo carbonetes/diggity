@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	"github.com/carbonetes/diggity/internal/log"
 )
 
 // IsDirExists checks if a directory exists and is valid.
@@ -44,7 +42,6 @@ func IsFileExists(path string) (bool, error) {
 
 func SaveToFile(data interface{}, path, format string) error {
 	path = AddFileExtension(path, format)
-	log.Debug("Saving results to file: " + format)
 	switch format {
 	case "json", "cdx-json", "spdx-json":
 		jsonData, err := ToJSON(data)
@@ -77,7 +74,7 @@ func SaveToFile(data interface{}, path, format string) error {
 	default:
 		return fmt.Errorf("invalid format: %s", format)
 	}
-	log.Debugf("Results saved to file: %s", path)
+
 	return nil
 }
 
