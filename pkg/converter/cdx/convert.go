@@ -3,8 +3,10 @@ package convert
 import (
 	"encoding/xml"
 	"fmt"
+	"time"
 
 	"github.com/CycloneDX/cyclonedx-go"
+	diggity "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -39,19 +41,9 @@ func ToCDX(sbom *types.SBOM) *cyclonedx.BOM {
 		Version:      version,
 		SerialNumber: sbom.Serial,
 		SpecVersion:  cyclonedx.SpecVersion1_5,
-		Metadata: &cyclonedx.Metadata{
-			Tools: &[]cyclonedx.Tool{},
-		},
-		Components: &[]cyclonedx.Component{},
+		Metadata:     getCDXMetadata(vendor, name, diggity.FromBuild().Version),
+		Components:   &[]cyclonedx.Component{},
 	}
-
-	bom.Metadata.Timestamp = sbom.Timestamp.String()
-	*bom.Metadata.Tools = append(*bom.Metadata.Tools, cyclonedx.Tool{
-		Vendor:  vendor,
-		Name:    name,
-		Version: sbom.Version,
-	})
-
 	for _, component := range sbom.Components {
 		*bom.Components = append(*bom.Components, *ToCDXComponent(&component))
 	}
@@ -77,6 +69,7 @@ func ToCDXComponent(component *types.Component) *cyclonedx.Component {
 		Version:    component.Version,
 		PackageURL: component.PURL,
 		Properties: &[]cyclonedx.Property{},
+		Licenses:   &cyclonedx.Licenses{},
 	}
 
 	if len(licenses) > 0 {
@@ -94,7 +87,7 @@ func ToCDXComponent(component *types.Component) *cyclonedx.Component {
 
 	if component.Origin != "" {
 		*c.Properties = append(*c.Properties, cyclonedx.Property{
-			Name:  locationPrefix ,
+			Name:  locationPrefix,
 			Value: component.Origin,
 		})
 	}
@@ -114,4 +107,20 @@ func ToCDXComponent(component *types.Component) *cyclonedx.Component {
 	}
 
 	return c
+}
+
+func getCDXMetadata(author, name, version string) *cyclonedx.Metadata {
+	return &cyclonedx.Metadata{
+		Timestamp: time.Now().Format(time.RFC3339),
+		Tools: &cyclonedx.ToolsChoice{
+			Components: &[]cyclonedx.Component{
+				{
+					Type:    cyclonedx.ComponentTypeApplication,
+					Author:  author,
+					Name:    name,
+					Version: version,
+				},
+			},
+		},
+	}
 }
