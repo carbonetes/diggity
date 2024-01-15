@@ -3,10 +3,12 @@ package cmd
 import (
 	"os"
 
+	"github.com/carbonetes/diggity/internal/config"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/curator"
+	"github.com/carbonetes/diggity/pkg/scanner"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/spf13/cobra"
@@ -86,3 +88,38 @@ var (
 		},
 	}
 )
+
+func init() {
+	config.Load()
+	// Version sub command for indicating the version of diggity
+	root.AddCommand(versionCmd)
+
+	// Attest sub command for sbom attestation mechanism
+	root.AddCommand(attestCmd)
+
+	// Tarball flag to scan a tarball
+	root.Flags().StringP("tar", "t", "", "Read a tarball from a path on disk for archives created from docker save (e.g. 'diggity path/to/image.tar)'")
+
+	root.Flags().Bool("attest", false, "Add attestation to scan result")
+
+	// Directory flag to scan a directory
+	root.Flags().StringP("directory", "d", "", "Read directly from a path on disk (any directory) (e.g. 'diggity -fs path/to/directory)'")
+
+	// Output flag to specify the output format
+	root.Flags().StringP("output", "o", types.Table.String(), "Supported output types are: "+types.GetAllOutputFormat())
+
+	// File flag to save the scan result to a file
+	root.Flags().StringP("file", "f", "", "Save scan result to a file")
+
+	// Quiet flag to allows the user to suppress all output except for errors
+	root.Flags().BoolP("quiet", "q", false, "Suppress all output except for errors")
+
+	// Scanners flag to specify the selected scanners to run
+	root.Flags().StringArray("scanners", scanner.All, "Allow only selected scanners to run (e.g. --scanners apk,dpkg)")
+
+	// File listing flag enables the user to list down all files related to the packages found
+	root.Flags().Bool("allow-file-listing", false, "Allow parsers to list files related to the packages")
+
+	// Version flag to print the version of diggity
+	root.Flags().BoolP("version", "v", false, "Print the version of diggity")
+}

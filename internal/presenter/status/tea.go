@@ -42,7 +42,7 @@ type model struct {
 	quitting bool
 }
 
-func newModel() model {
+func New() model {
 	s := spinner.New()
 	s.Style = spinnerStyle
 	return model{
@@ -119,7 +119,7 @@ func (m model) View() string {
 }
 
 var (
-	m = newModel()
+	m = New()
 	p = tea.NewProgram(m)
 )
 

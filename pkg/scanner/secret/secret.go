@@ -4,7 +4,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/carbonetes/diggity/internal/config"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
@@ -23,35 +22,28 @@ var (
 	secretConfig types.SecretConfig
 	rules        []MatchPattern
 	whitelist    []*regexp.Regexp
-	c            *types.Config
+	c            types.Config
 )
 
-func init() {
-	c = config.Load()
-	if c == nil {
-		return
-	}
-
-	secretConfig = c.SecretConfig
-	for _, rule := range secretConfig.Rules {
-		rules = append(rules, MatchPattern{
-			Name:        rule.ID,
-			Description: rule.Description,
-			Pattern:     regexp.MustCompile(rule.Pattern),
-			Keywords:    rule.Keywords,
-		})
-	}
-
-	if len(secretConfig.Whitelist.Patterns) > 0 {
-		for _, pattern := range secretConfig.Whitelist.Patterns {
-			whitelist = append(whitelist, regexp.MustCompile(pattern))
-		}
-	}
-}
-
 func Scan(data interface{}) interface{} {
-	if c == nil {
-		return nil
+	if len(rules) == 0 {
+		c = stream.GetConfig()
+		secretConfig = c.SecretConfig
+		for _, rule := range secretConfig.Rules {
+			rules = append(rules, MatchPattern{
+				Name:        rule.ID,
+				Description: rule.Description,
+				Pattern:     regexp.MustCompile(rule.Pattern),
+				Keywords:    rule.Keywords,
+			})
+		}
+
+		if len(secretConfig.Whitelist.Patterns) > 0 {
+			for _, pattern := range secretConfig.Whitelist.Patterns {
+				whitelist = append(whitelist, regexp.MustCompile(pattern))
+			}
+		}
+
 	}
 
 	manifest, ok := data.(types.ManifestFile)
@@ -75,7 +67,7 @@ func Scan(data interface{}) interface{} {
 				Match:       matcher.Name,
 				Description: matcher.Description,
 				Content:     match,
-				File: manifest.Path,
+				File:        manifest.Path,
 			}
 			stream.AddSecret(secret)
 		}
