@@ -14,10 +14,10 @@ func SetDefaultValues() {
 	store.Set(ComponentsStoreKey, []types.Component{})
 	store.Set(SecretsStoreKey, []types.Secret{})
 	store.Set(SBOMStoreKey, types.NewSBOM())
-	store.Set(DistroStoreKey, types.Distro{})
 	store.Set(ParametersStoreKey, types.Parameters{})
 	store.Set(ConfigStoreKey, types.Config{})
 	store.Set(CycloneDXComponentsStoreKey, []cyclonedx.Component{})
+	store.Set(OSReleasesStoreKey ,[]types.OSRelease{})
 }
 
 func AddComponent(component types.Component) {
@@ -93,10 +93,6 @@ func AddFile(file string) {
 	store.Set(FileListStoreKey, files)
 }
 
-func SetDistro(distro types.Distro) {
-	store.Set(DistroStoreKey, distro)
-}
-
 func SetParameters(params types.Parameters) {
 	store.Set(ParameterScanTypeStoreKey, params.ScanType)
 	store.Set(ParameterInputStoreKey, params.Input)
@@ -118,4 +114,21 @@ func SetScanElapsed(duration float64) {
 
 func SetConfig(config types.Config) {
 	store.Set(ConfigStoreKey, config)
+}
+
+func AddOSRelease(release types.OSRelease) {
+	data, exist := store.Get(OSReleasesStoreKey)
+
+	releases, ok := data.([]types.OSRelease)
+
+	if !ok {
+		log.Error("Received invalid OS release slice from store")
+	}
+
+	if !exist {
+		store.Set(OSReleasesStoreKey, []types.OSRelease{release})
+	}
+
+	releases = append(releases, release)
+	store.Set(OSReleasesStoreKey, releases)
 }

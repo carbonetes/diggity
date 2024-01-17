@@ -26,14 +26,14 @@ const (
 )
 
 type Parameters struct {
-	ScanType         ScanType
-	Input            string
-	OutputFormat     OutputFormat
-	SaveToFile       string
-	Quiet            bool
-	Scanners         []string
-	AllowFileListing bool
-	Provenance       string
+	ScanType         ScanType     `json:"-"`
+	Input            string       `json:"input"`
+	OutputFormat     OutputFormat `json:"output-format"`
+	SaveToFile       string       `json:"save-to-file"`
+	Quiet            bool         `json:"quiet"`
+	Scanners         []string     `json:"scanners"`
+	AllowFileListing bool         `json:"allow-file-listing"`
+	Provenance       string       `json:"provenance"`
 }
 
 func (o OutputFormat) String() string {

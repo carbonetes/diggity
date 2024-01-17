@@ -20,6 +20,7 @@ const (
 	ImageInfoStoreKey        string = "software-manifest.image-manifest"
 	SecretParametersStoreKey string = "software-manifest.secret.parameters"
 	SecretsStoreKey          string = "software-manifest.secrets"
+	OSReleasesStoreKey       string = "software-manifest.os-releases"
 
 	ScanStartStoreKey   string = "scan.start"
 	ScanElapsedStoreKey string = "scan.elapsed"

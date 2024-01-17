@@ -1,4 +1,4 @@
-package distro
+package linux
 
 import (
 	"slices"
@@ -9,8 +9,9 @@ import (
 )
 
 var (
-	Type      = "distro"
-	Manifests = []string{"etc/os-release"}
+	Type = "osrelease"
+	// Add more os release files here if needed
+	Manifests = []string{"etc/os-release", "usr/lib/os-release", "etc/lsb-release", "etc/centos-release", "etc/redhat-release", "etc/debian_version", "etc/alpine-release", "etc/SuSE-release", "etc/gentoo-release", "etc/arch-release", "etc/oracle-release"}
 )
 
 func Scan(data interface{}) interface{} {
@@ -18,12 +19,8 @@ func Scan(data interface{}) interface{} {
 	if !ok {
 		log.Error("Distro handler received unknown type")
 	}
-	distro, err := parseRelease(data.(types.ManifestFile))
-	if err != nil {
-		log.Error(err.Error())
-	}
 
-	stream.SetDistro(distro)
+	stream.AddOSRelease(parse(data.(types.ManifestFile)))
 	return data
 }
 
