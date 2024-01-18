@@ -1,6 +1,7 @@
 package reader
 
 import (
+	"debug/elf"
 	"os"
 	"path/filepath"
 
@@ -88,4 +89,23 @@ func handleManifestFile(path, category string, file *os.File, cleanup bool) erro
 	stream.Emit(category, manifest)
 
 	return nil
+}
+
+func handleGeneric(path, category, name string) {
+	f, err := elf.Open(path)
+	if err != nil {
+		return
+	}
+	defer f.Close()
+
+	generic := types.Generic{
+		Path: path,
+		Name: name,
+		File: f,
+	}
+	generic.ReadROData()
+	if len(generic.ROData) == 0 {
+		return
+	}
+	stream.Emit(category, generic)
 }

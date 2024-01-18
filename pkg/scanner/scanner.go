@@ -20,6 +20,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/scanner/linux"
 	"github.com/carbonetes/diggity/pkg/scanner/os/apk"
 	"github.com/carbonetes/diggity/pkg/scanner/os/dpkg"
+	"github.com/carbonetes/diggity/pkg/scanner/os/generic"
 	"github.com/carbonetes/diggity/pkg/scanner/os/nix"
 	"github.com/carbonetes/diggity/pkg/scanner/os/rpm"
 	"github.com/carbonetes/diggity/pkg/scanner/secret"
@@ -37,6 +38,7 @@ var All = []string{
 	conan.Type,
 	linux.Type,
 	dpkg.Type,
+	generic.Type,
 	golang.Type,
 	gradle.Type,
 	hackage.Type,
@@ -62,6 +64,7 @@ var FileCheckers = []FileChecker{
 	conan.CheckRelatedFile,
 	linux.CheckRelatedFile,
 	dpkg.CheckRelatedFile,
+	generic.CheckRelatedFile,
 	golang.CheckRelatedFile,
 	gradle.CheckRelatedFile,
 	hackage.CheckRelatedFile,
@@ -87,6 +90,7 @@ func init() {
 	stream.Attach(conan.Type, conan.Scan)
 	stream.Attach(linux.Type, linux.Scan)
 	stream.Attach(dpkg.Type, dpkg.Scan)
+	stream.Attach(generic.Type, generic.Scan)
 	stream.Attach(golang.Type, golang.Scan)
 	stream.Attach(gradle.Type, gradle.Scan)
 	stream.Attach(hackage.Type, hackage.Scan)

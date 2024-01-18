@@ -169,6 +169,8 @@ func processFile(name string, reader io.Reader, category string) error {
 		if err != nil {
 			return err
 		}
+	} else if category == "generic" {
+		handleGeneric(f.Name(), category, name)
 	} else {
 		err = handleManifestFile(name, category, f, true)
 		if err != nil {
