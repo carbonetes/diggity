@@ -13,7 +13,7 @@ import (
 const Type string = "pypi"
 
 var (
-	Manifests  = []string{"METADATA", "requirements.txt", "poetry.lock"}
+	Manifests  = []string{"METADATA", "requirements.txt", "poetry.lock", "PKG-INFO"}
 	Extensions = []string{".egg-info"}
 )
 
@@ -68,6 +68,21 @@ func Scan(data interface{}) interface{} {
 			}
 			stream.AddComponent(component)
 		}
+	} else if filepath.Base(manifest.Path) == "PKG-INFO" {
+		metadata := readManifestFile(manifest.Content)
+		name, version := metadata["Name"].(string), metadata["Version"].(string)
+		component := types.NewComponent(name, version, Type, manifest.Path, "", metadata)
+		if val, ok := metadata["Summary"].(string); ok {
+			component.Description = val
+		}
+		if val, ok := metadata["License"].(string); ok {
+			component.Licenses = append(component.Licenses, val)
+		}
+		cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+		if len(cpes) > 0 {
+			component.CPEs = append(component.CPEs, cpes...)
+		}
+		stream.AddComponent(component)
 	}
 
 	return data
