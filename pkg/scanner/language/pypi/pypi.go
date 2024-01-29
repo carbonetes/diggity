@@ -13,7 +13,7 @@ import (
 const Type string = "pypi"
 
 var (
-	Manifests  = []string{"METADATA", "requirements.txt", "poetry.lock"}
+	Manifests  = []string{"METADATA", "requirements.txt", "poetry.lock", "PKG-INFO"}
 	Extensions = []string{".egg-info"}
 )
 
@@ -30,7 +30,7 @@ func Scan(data interface{}) interface{} {
 		log.Error("Python Handler received unknown type")
 	}
 
-	if filepath.Ext(manifest.Path) == ".egg-info" || filepath.Base(manifest.Path) == "METADATA" {
+	if filepath.Ext(manifest.Path) == ".egg-info" || filepath.Base(manifest.Path) == "METADATA" || filepath.Base(manifest.Path) == "PKG-INFO" {
 		metadata := readManifestFile(manifest.Content)
 		name, version := metadata["Name"].(string), metadata["Version"].(string)
 		component := types.NewComponent(name, version, Type, manifest.Path, "", metadata)
