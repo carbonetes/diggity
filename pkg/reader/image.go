@@ -11,6 +11,7 @@ import (
 
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/scanner"
+	"github.com/carbonetes/diggity/pkg/scanner/binary/golang"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/google/go-containerregistry/pkg/authn"
@@ -101,24 +102,44 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 			return err
 		}
 
-		if slices.Contains(archiveTypes, filepath.Ext(header.Name)) {
-			b, err := io.ReadAll(reader)
-			if err != nil {
-				log.Error(err)
-			}
-			err = processNestedArchive(bytes.NewReader(b), header.Size)
-			if err != nil {
-				log.Error(err)
-			}
-			continue
-		}
 		if !stream.GetParameterQuiet() {
 			stream.Emit(stream.FileListEvent, header.Name)
 		}
+
+		if slices.Contains(archiveTypes, filepath.Ext(header.Name)) {
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return err
+			}
+			err = processNestedArchive(bytes.NewReader(b), header.Size)
+			if err != nil {
+				return err
+			}
+			continue
+		}
+
 		if header.Typeflag == tar.TypeReg {
 			if header.Size > maxFileSize {
-				return nil
+				continue
 			}
+
+			if strings.Contains(header.Name, "usr/bin") || strings.Contains(header.Name, "usr/local/bin") {
+				b, err := io.ReadAll(reader)
+				if err != nil {
+					return err
+				}
+
+				build, isGolangBin := golang.Parse(bytes.NewReader(b))
+				if isGolangBin {
+					stream.Emit("golang", types.GoBinary{
+						File:      header.Name,
+						BuildInfo: build,
+					})
+					continue
+				}
+				continue
+			}
+
 			err = processTarHeader(header, reader, layerHash)
 			if err != nil {
 				return err
