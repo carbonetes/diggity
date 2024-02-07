@@ -97,22 +97,6 @@ func getLayers(image v1.Image) []types.Layer {
 	return ls
 }
 
-func GetDistro() types.Distro {
-	data, exist := store.Get(DistroStoreKey)
-
-	if !exist {
-		log.Error("Distro not found")
-	}
-
-	distro, ok := data.(types.Distro)
-
-	if !ok {
-		log.Error("Invalid data type found in distro store")
-	}
-
-	return distro
-}
-
 func GetParameters() types.Parameters {
 	data, exist := store.Get(ParametersStoreKey)
 
@@ -334,4 +318,20 @@ func CheckIfComponentExists(component types.Component) bool {
 		}
 	}
 	return false
+}
+
+func GetOSReleases() []types.OSRelease {
+	data, exist := store.Get(OSReleasesStoreKey)
+
+	if !exist {
+		log.Error("OSReleases not found")
+	}
+
+	osReleases, ok := data.([]types.OSRelease)
+
+	if !ok {
+		log.Error("Invalid data type found in os releases store")
+	}
+
+	return osReleases
 }

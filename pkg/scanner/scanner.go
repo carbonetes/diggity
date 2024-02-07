@@ -1,7 +1,6 @@
 package scanner
 
 import (
-	"github.com/carbonetes/diggity/pkg/scanner/distro"
 	"github.com/carbonetes/diggity/pkg/scanner/language/cargo"
 	"github.com/carbonetes/diggity/pkg/scanner/language/cocoapods"
 	"github.com/carbonetes/diggity/pkg/scanner/language/composer"
@@ -18,6 +17,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/scanner/language/pypi"
 	"github.com/carbonetes/diggity/pkg/scanner/language/rubygem"
 	"github.com/carbonetes/diggity/pkg/scanner/language/swift"
+	"github.com/carbonetes/diggity/pkg/scanner/linux"
 	"github.com/carbonetes/diggity/pkg/scanner/os/apk"
 	"github.com/carbonetes/diggity/pkg/scanner/os/dpkg"
 	"github.com/carbonetes/diggity/pkg/scanner/os/nix"
@@ -35,7 +35,7 @@ var All = []string{
 	cocoapods.Type,
 	composer.Type,
 	conan.Type,
-	distro.Type,
+	linux.Type,
 	dpkg.Type,
 	golang.Type,
 	gradle.Type,
@@ -60,7 +60,7 @@ var FileCheckers = []FileChecker{
 	cocoapods.CheckRelatedFile,
 	composer.CheckRelatedFile,
 	conan.CheckRelatedFile,
-	distro.CheckRelatedFile,
+	linux.CheckRelatedFile,
 	dpkg.CheckRelatedFile,
 	golang.CheckRelatedFile,
 	gradle.CheckRelatedFile,
@@ -85,7 +85,7 @@ func init() {
 	stream.Attach(cocoapods.Type, cocoapods.Scan)
 	stream.Attach(composer.Type, composer.Scan)
 	stream.Attach(conan.Type, conan.Scan)
-	stream.Attach(distro.Type, distro.Scan)
+	stream.Attach(linux.Type, linux.Scan)
 	stream.Attach(dpkg.Type, dpkg.Scan)
 	stream.Attach(golang.Type, golang.Scan)
 	stream.Attach(gradle.Type, gradle.Scan)

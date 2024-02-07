@@ -39,9 +39,10 @@ func AggrerateSoftwareManifest() types.SoftwareManifest {
 	}
 
 	return types.SoftwareManifest{
-		SBOM:       sbom,
-		ImageInfo:  GetImageInfo(),
-		Distro:     GetDistro(),
+		SBOM:      sbom,
+		ImageInfo: GetImageInfo(),
+		// Distro:     GetDistro(),
+		OS:         GetOSReleases(),
 		Secrets:    AggregateSecrets(),
 		Files:      files,
 		Parameters: params,
