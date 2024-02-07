@@ -37,7 +37,7 @@ func Scan(data interface{}) interface{} {
 			// locate version
 			v := parseVersion(s.Value)
 			if v != "" {
-				component := types.NewComponent(goBinary.File, v, Type, goBinary.File, "", s)
+				component := types.NewComponent(goBinary.File, v, Type, goBinary.Path, "", s)
 				cpes := GenerateCpes(component.Version, SplitPath(component.Name))
 				if len(cpes) > 0 {
 					component.CPEs = append(component.CPEs, cpes...)

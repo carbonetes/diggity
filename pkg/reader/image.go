@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
+	"sync"
 
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/scanner"
@@ -66,23 +67,29 @@ func ReadFiles(image v1.Image) error {
 		return err
 	}
 	maxFileSize := stream.GetConfig().MaxFileSize
+	var wg sync.WaitGroup
+	wg.Add(len(layers))
 	for _, layer := range layers {
-		contents, err := layer.Uncompressed()
-		if err != nil {
-			return err
-		}
+		go func(layer v1.Layer) {
+			defer wg.Done()
+			contents, err := layer.Uncompressed()
+			if err != nil {
+				log.Errorf("Failed to uncompress layer: %s", err)
+			}
 
-		layerHash, err := layer.Digest()
-		if err != nil {
-			return err
-		}
+			layerHash, err := layer.Digest()
+			if err != nil {
+				log.Errorf("Failed to get layer hash: %s", err)
+			}
 
-		err = processLayerContents(contents, layerHash.String(), maxFileSize)
-		if err != nil {
-			return err
-		}
+			err = processLayerContents(contents, layerHash.String(), maxFileSize)
+			if err != nil {
+				log.Errorf("Failed to process layer contents: %s", err)
+			}
+		}(layer)
+
 	}
-
+	wg.Wait()
 	return nil
 }
 
@@ -132,7 +139,8 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 				build, isGolangBin := golang.Parse(bytes.NewReader(b))
 				if isGolangBin {
 					stream.Emit("golang", types.GoBinary{
-						File:      header.Name,
+						File:      filepath.Base(header.Name),
+						Path:      header.Name,
 						BuildInfo: build,
 					})
 					continue
