@@ -2,6 +2,7 @@ package golang
 
 import (
 	"path/filepath"
+	"regexp"
 	"slices"
 	"strings"
 
@@ -26,7 +27,39 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
-		log.Error("Go Modules Handler received unknown type")
+		goBinary, ok := data.(types.GoBinary)
+		if !ok {
+			log.Error("Go Modules Handler received unknown type")
+		}
+		buildInfo := goBinary.BuildInfo
+
+		for _, s := range buildInfo.Settings {
+			// locate version
+			v := parseVersion(s.Value)
+			if v != "" {
+				component := types.NewComponent(goBinary.File, v, Type, goBinary.File, "", s)
+				cpes := GenerateCpes(component.Version, SplitPath(component.Name))
+				if len(cpes) > 0 {
+					component.CPEs = append(component.CPEs, cpes...)
+				}
+				stream.AddComponent(component)
+				break
+			}
+		}
+
+		for _, dep := range buildInfo.Deps {
+			if dep.Path == "" || dep.Version == "" {
+				continue
+			}
+			component := types.NewComponent(dep.Path, dep.Version, Type, goBinary.File, "", dep)
+			cpes := GenerateCpes(component.Version, SplitPath(component.Name))
+			if len(cpes) > 0 {
+				component.CPEs = append(component.CPEs, cpes...)
+			}
+			stream.AddComponent(component)
+		}
+
+		return nil
 	}
 
 	modFile := readManifestFile(manifest.Content, manifest.Path)
@@ -95,4 +128,10 @@ func FormatVersion(version string) string {
 		version = strings.Replace(version, ")", "", -1)
 	}
 	return version
+}
+
+var pattern = regexp.MustCompile(`\d+\.\d+\.\d+`)
+
+func parseVersion(s string) string {
+	return pattern.FindString(s)
 }
