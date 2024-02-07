@@ -10,7 +10,10 @@ import (
 
 const Type string = "rpm"
 
-var ManifestFiles = []string{"Packages", "Packages.db", "rpmdb.sqlite"}
+var (
+	ManifestFiles = []string{"Packages", "Packages.db", "rpmdb.sqlite"}
+	RelatedPaths  = []string{"var\\lib\\rpm", "usr\\lib\\rpm", "etc\\rpm"}
+)
 
 func Scan(data interface{}) interface{} {
 	rpmdb, ok := data.(types.RpmDB)
@@ -24,8 +27,11 @@ func Scan(data interface{}) interface{} {
 }
 
 func CheckRelatedFiles(file string) (string, bool, bool) {
-	if slices.Contains(ManifestFiles, filepath.Base(file)) {
-		return Type, true, true
+	if slices.Contains(RelatedPaths, filepath.Dir(file)) {
+		if slices.Contains(ManifestFiles, filepath.Base(file)) {
+			return Type, true, true
+		}
+
 	}
 	return "", false, false
 }

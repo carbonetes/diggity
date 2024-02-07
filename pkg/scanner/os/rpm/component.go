@@ -9,17 +9,54 @@ import (
 	rpmdb "github.com/knqyf263/go-rpmdb/pkg"
 )
 
+type Metadata struct {
+	Epoch           *int   `json:"epoch,omitempty"`
+	Name            string `json:"name,omitempty"`
+	Version         string `json:"version,omitempty"`
+	Release         string `json:"release,omitempty"`
+	Arch            string `json:"arch,omitempty"`
+	SourceRpm       string `json:"sourceRpm,omitempty"`
+	Size            int    `json:"size,omitempty"`
+	License         string `json:"license,omitempty"`
+	Vendor          string `json:"vendor,omitempty"`
+	Modularitylabel string `json:"modularitylabel,omitempty"`
+	Summary         string `json:"summary,omitempty"`
+	PGP             string `json:"pgp,omitempty"`
+	SigMD5          string `json:"sigMD5,omitempty"`
+	DigestAlgorithm int    `json:"digestAlgorithm,omitempty"`
+	InstallTime     int    `json:"installTime,omitempty"`
+}
+
 // Produce a component from a package info
-func newComponent(info rpmdb.PackageInfo) types.Component{
+func newComponent(info rpmdb.PackageInfo) types.Component {
+
+	metadata := Metadata{
+		Epoch:           info.Epoch,
+		Name:            info.Name,
+		Version:         info.Version,
+		Release:         info.Release,
+		Arch:            info.Arch,
+		SourceRpm:       info.SourceRpm,
+		Size:            info.Size,
+		License:         info.License,
+		Vendor:          info.Vendor,
+		Modularitylabel: info.Modularitylabel,
+		Summary:         info.Summary,
+		PGP:             info.PGP,
+		SigMD5:          info.SigMD5,
+		DigestAlgorithm: int(info.DigestAlgorithm),
+		InstallTime:     info.InstallTime,
+	}
+
 	return types.Component{
-		ID:      uuid.NewString(),
-		Name:    info.Name,
-		Type:    Type,
-		Version: fmt.Sprintf("%+v-%+v", info.Version, info.Release),
+		ID:          uuid.NewString(),
+		Name:        info.Name,
+		Type:        Type,
+		Version:     fmt.Sprintf("%+v-%+v", info.Version, info.Release),
 		Description: info.Summary,
-		Licenses: formatLicenses(info.License),
-		PURL: fmt.Sprintf("pkg:%s/%s@%s?arch=%s", Type, info.Name, info.Version, info.Arch),
-		Metadata: info,
+		Licenses:    formatLicenses(info.License),
+		PURL:        fmt.Sprintf("pkg:%s/%s@%s?arch=%s", Type, info.Name, info.Version, info.Arch),
+		Metadata:    metadata,
 	}
 }
 

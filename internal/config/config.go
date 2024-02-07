@@ -44,7 +44,7 @@ func Load() *types.Config {
 func New() types.Config {
 	return types.Config{
 		Version:      types.ConfigVersion,
-		MaxFileSize:  10485760, // Set to 0 to disable limiter
+		MaxFileSize:  52428800, // 50MB
 		SecretConfig: LoadDefaultConfig(),
 		Registry: types.RegistryConfig{
 			Username: "",
