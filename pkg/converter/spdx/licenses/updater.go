@@ -100,7 +100,7 @@ func updateLicenseList(licenseList []spdxLicense) map[string]string {
 
 // Init spdx license go file template
 func initFileTemplate() *template.Template {
-	return template.Must(template.New("").Parse(`package spdxutils
+	return template.Must(template.New("").Parse(`package licenses
 	
 	// Source URL : https://spdx.org/licenses/licenses.json
 	// Helpers for validating SPDX licenses.
@@ -108,10 +108,10 @@ func initFileTemplate() *template.Template {
 	// Last Updated: {{ .LastUpdate }}
 
 	// LicenseListVersion is the current implemented version for SPDX.
-	const LicenseListVersion = "{{ .Version }}"
+	const ListVersion = "{{ .Version }}"
 
 	// LicenseList contains the referece licenses from the source URL.
-	var LicenseList = map[string]string{
+	var List = map[string]string{
 	{{- range $key, $value := .Licenses }}
 		"{{ $key }}": "{{ $value }}",
 	{{- end }}
