@@ -70,12 +70,8 @@ archives:
     name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
     format: tar.gz
     files:
-      - src: license*
-      - src: LICENSE*
-      - src: readme*
-      - src: README*
-      - src: changelog*
-      - src: CHANGELOG*
+      - src: LICENSE
+      - src: README.md
 
   - id: zip-archives
     builds:
@@ -83,12 +79,8 @@ archives:
     name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
     format: zip
     files:
-      - src: license*
-      - src: LICENSE*
-      - src: readme*
-      - src: README*
-      - src: changelog*
-      - src: CHANGELOG*
+      - src: LICENSE
+      - src: README.md
 
 nfpms:
   - file_name_template: '{{ .PackageName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}{{ with .Mips }}_{{ . }}{{ end }}{{ if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}'
@@ -106,7 +98,7 @@ nfpms:
 brews:
   - 
     skip_upload: false   # set to true to avoid uploading while under testing
-    tap:
+    repository:
       owner: carbonetes
       name: homebrew-diggity
       branch: main
@@ -118,9 +110,10 @@ brews:
     description: "BOM Diggity’s primary purpose is to ensure the security and integrity of software programs. It incorporates secret analysis allowing the user to secure crucial information before deploying any parts of the application to the public."
     license: "Apache License 2.0"
 
-scoop:
+scoops:
+ -
   skip_upload: false
-  bucket:
+  repository:
     owner: carbonetes
     name: diggity-bucket
     branch: main
