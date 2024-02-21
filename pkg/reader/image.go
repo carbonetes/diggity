@@ -116,13 +116,9 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 		if slices.Contains(archiveTypes, filepath.Ext(header.Name)) {
 			b, err := io.ReadAll(reader)
 			if err != nil {
-				return err
+				log.Error(err)
 			}
-			err = processNestedArchive(bytes.NewReader(b), header.Size)
-			if err != nil {
-				return err
-			}
-			continue
+			processArchive(bytes.NewReader(b), header.Size)
 		}
 
 		if header.Typeflag == tar.TypeReg {
@@ -133,7 +129,7 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 			if strings.Contains(header.Name, "usr/bin") || strings.Contains(header.Name, "usr/local/bin") {
 				b, err := io.ReadAll(reader)
 				if err != nil {
-					return err
+					log.Error(err)
 				}
 
 				build, isGolangBin := golang.Parse(bytes.NewReader(b))
@@ -150,10 +146,11 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 
 			err = processTarHeader(header, reader, layerHash)
 			if err != nil {
-				return err
+				log.Error(err)
 			}
 		}
 	}
+
 	return nil
 }
 
