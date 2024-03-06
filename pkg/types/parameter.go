@@ -26,14 +26,13 @@ const (
 )
 
 type Parameters struct {
-	ScanType         ScanType     `json:"-"`
-	Input            string       `json:"input"`
-	OutputFormat     OutputFormat `json:"output-format"`
-	SaveToFile       string       `json:"save-to-file"`
-	Quiet            bool         `json:"quiet"`
-	Scanners         []string     `json:"scanners"`
-	AllowFileListing bool         `json:"allow-file-listing"`
-	Provenance       string       `json:"provenance"`
+	ScanType     ScanType     `json:"-"`
+	Input        string       `json:"input"`
+	OutputFormat OutputFormat `json:"output-format"`
+	SaveToFile   string       `json:"save-to-file"`
+	Quiet        bool         `json:"quiet"`
+	Scanners     []string     `json:"scanners"`
+	Provenance  string `json:"provenance"`
 }
 
 func (o OutputFormat) String() string {
@@ -58,20 +57,18 @@ func (p *Parameters) GetScanType() error {
 			p.ScanType = Filesystem
 		}
 	} else {
-		return fmt.Errorf("Invalid input value %v", p.Input)
+		return fmt.Errorf("invalid input value %v", p.Input)
 	}
 	return nil
 }
 
 func DefaultParameters() Parameters {
 	return Parameters{
-		ScanType:         0,
-		Input:            "",
-		OutputFormat:     Table,
-		Quiet:            false,
-		Scanners:         nil,
-		AllowFileListing: false,
-		Provenance:       "",
+		ScanType:     0,
+		Input:        "",
+		OutputFormat: Table,
+		Scanners:     nil,
+		Provenance:   "",
 	}
 }
 
