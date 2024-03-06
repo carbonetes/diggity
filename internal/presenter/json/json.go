@@ -3,12 +3,12 @@ package json
 import (
 	"fmt"
 
+	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/types"
 )
 
-func DisplayResults(result types.SoftwareManifest) {
+func DisplayResults(result *cyclonedx.BOM) {
 	json, err := helper.ToJSON(result)
 	if err != nil {
 		log.Error("Error converting to JSON")
