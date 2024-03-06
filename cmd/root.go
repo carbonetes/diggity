@@ -3,20 +3,17 @@ package cmd
 import (
 	"os"
 
-	"github.com/carbonetes/diggity/internal/config"
+	"github.com/carbonetes/diggity/internal/cli"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/internal/version"
-	"github.com/carbonetes/diggity/pkg/reader"
 	"github.com/carbonetes/diggity/pkg/scanner"
-	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/spf13/cobra"
 )
 
 var (
-	params = types.DefaultParameters()
-	root   = &cobra.Command{
+	root = &cobra.Command{
 		Use:   "diggity",
 		Args:  cobra.MaximumNArgs(1),
 		Short: "BOM Diggity Scanner",
@@ -30,6 +27,8 @@ var (
 
 			tarball, _ := cmd.Flags().GetString("tar")
 			filesystem, _ := cmd.Flags().GetString("directory")
+
+			params := types.DefaultParameters()
 			if len(args) > 0 {
 				params.Input = helper.FormatImage(args[0])
 			} else if len(tarball) > 0 {
@@ -79,18 +78,16 @@ var (
 			params.SaveToFile = file
 			params.Scanners = helper.SplitAndAppendStrings(scanners)
 			params.OutputFormat = types.OutputFormat(outputFormat)
-			params.AllowFileListing, err = cmd.Flags().GetBool("allow-file-listing")
 			if err != nil {
 				log.Error(err.Error())
 			}
-			reader.Init()
-			stream.SetParameters(params)
+
+			cli.Start(params)
 		},
 	}
 )
 
 func init() {
-	config.Load()
 	// Version sub command for indicating the version of diggity
 	root.AddCommand(versionCmd)
 
@@ -116,9 +113,6 @@ func init() {
 
 	// Scanners flag to specify the selected scanners to run
 	root.Flags().StringArray("scanners", scanner.All, "Allow only selected scanners to run (e.g. --scanners apk,dpkg)")
-
-	// File listing flag enables the user to list down all files related to the packages found
-	root.Flags().Bool("allow-file-listing", false, "Allow parsers to list files related to the packages")
 
 	// Version flag to print the version of diggity
 	root.Flags().BoolP("version", "v", false, "Print the version of diggity")
