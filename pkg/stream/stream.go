@@ -12,7 +12,6 @@ var (
 func init() {
 	hub = grove.New()
 	store = grove.NewStore(hub)
-	SetDefaultValues()
 }
 
 func Emit(event string, data interface{}) {
