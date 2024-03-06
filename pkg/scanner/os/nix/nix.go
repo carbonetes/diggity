@@ -1,13 +1,13 @@
 package nix
 
 import (
-	"fmt"
 	"path/filepath"
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/cdx"
+	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -67,13 +67,19 @@ func Scan(data interface{}) interface{} {
 		return nil
 	}
 
-	component := types.NewComponent(metadata.Name, metadata.Version, Type, manifest.Path, "", metadata)
-	component.PURL = fmt.Sprintf("pkg:nix/%s@%s", metadata.Name, metadata.Version)
-	cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+	c := component.New(metadata.Name, metadata.Version, Type)
+
+	cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 	if len(cpes) > 0 {
-		component.CPEs = append(component.CPEs, cpes...)
+		for _, cpe := range cpes {
+			component.AddCPE(c, cpe)
+		}
 	}
-	stream.AddComponent(component)
+
+	component.AddOrigin(c, manifest.Path)
+	component.AddType(c, Type)
+
+	cdx.AddComponent(c)
 
 	return data
 }

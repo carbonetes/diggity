@@ -7,7 +7,8 @@ import (
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/cdx"
+	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -31,74 +32,69 @@ func Scan(data interface{}) interface{} {
 	if strings.Contains(manifest.Path, "stack.yaml") {
 		stackConfig := readStackConfigFile(manifest.Content)
 		for _, dep := range stackConfig.ExtraDeps {
-			name, version, pkgHash, size, rev := parseExtraDep(dep)
+			name, version, _, _, _ := parseExtraDep(dep)
 			if name == "" || version == "" {
 				continue
 			}
 
-			metadata := HackageMetadata{
-				Name:     name,
-				Version:  version,
-				PkgHash:  pkgHash,
-				Size:     size,
-				Revision: rev,
+			c := component.New(name, version, Type)
+
+			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+			if len(cpes) > 0 {
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
 			}
 
-			component := types.NewComponent(name, version, Type, manifest.Path, "", metadata)
-			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
-			if len(cpes) > 0 {
-				component.CPEs = append(component.CPEs, cpes...)
-			}
-			stream.AddComponent(component)
+			component.AddOrigin(c, manifest.Path)
+			component.AddType(c, Type)
+
+			cdx.AddComponent(c)
 		}
 	} else if strings.Contains(manifest.Path, "stack.yaml.lock") {
 		lockFile := readStackLockConfigFile(manifest.Content)
-		snapshop := lockFile.Snapshots[0].(map[string]interface{})["completed"]
-		url := snapshop.(map[string]interface{})["url"].(string)
 
 		for _, pkg := range lockFile.Packages {
-			name, version, pkgHash, size, rev := parseExtraDep(pkg.Original.Hackage)
+			name, version, _, _, _ := parseExtraDep(pkg.Original.Hackage)
 			if name == "" || version == "" {
 				continue
 			}
 
-			metadata := HackageMetadata{
-				Name:        name,
-				Version:     version,
-				PkgHash:     pkgHash,
-				Size:        size,
-				Revision:    rev,
-				SnapshotURL: url,
+			c := component.New(name, version, Type)
+
+			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+			if len(cpes) > 0 {
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
 			}
 
-			component := types.NewComponent(name, version, Type, manifest.Path, "", metadata)
-			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
-			if len(cpes) > 0 {
-				component.CPEs = append(component.CPEs, cpes...)
-			}
-			stream.AddComponent(component)
+			component.AddOrigin(c, manifest.Path)
+			component.AddType(c, Type)
+
+			cdx.AddComponent(c)
 		}
 	} else if strings.Contains(manifest.Path, "cabal.project.freeze") {
 		packages := readManifestFile(manifest.Content)
 		for _, pkg := range packages {
-			name, version, pkgHash, size, rev := parseExtraDep(pkg)
+			name, version, _, _, _ := parseExtraDep(pkg)
 			if name == "" || version == "" {
 				continue
 			}
-			metadata := HackageMetadata{
-				Name:     name,
-				Version:  version,
-				PkgHash:  pkgHash,
-				Size:     size,
-				Revision: rev,
+
+			c := component.New(name, version, Type)
+
+			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+			if len(cpes) > 0 {
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
 			}
 
-			component := types.NewComponent(name, version, Type, manifest.Path, "", metadata)
-			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
-			if len(cpes) > 0 {
-				component.CPEs = append(component.CPEs, cpes...)
-			}
-			stream.AddComponent(component)
+			component.AddOrigin(c, manifest.Path)
+			component.AddType(c, Type)
+
+			cdx.AddComponent(c)
 		}
 	}
 

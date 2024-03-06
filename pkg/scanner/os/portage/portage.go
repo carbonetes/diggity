@@ -5,8 +5,10 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/cdx"
+	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -38,8 +40,19 @@ func Scan(data interface{}) interface{} {
 		return nil
 	}
 
-	component := types.NewComponent(name, version, Type, manifest.Path, "", nil)
-	stream.AddComponent(component)
+	c := component.New(name, version, Type)
+
+	cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+	if len(cpes) > 0 {
+		for _, cpe := range cpes {
+			component.AddCPE(c, cpe)
+		}
+	}
+
+	component.AddOrigin(c, manifest.Path)
+	component.AddType(c, Type)
+
+	cdx.AddComponent(c)
 
 	return data
 }

@@ -8,7 +8,8 @@ import (
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/cdx"
+	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/types"
 	"golang.org/x/mod/modfile"
 )
@@ -37,12 +38,19 @@ func Scan(data interface{}) interface{} {
 			// locate version
 			v := parseVersion(s.Value)
 			if v != "" {
-				component := types.NewComponent(goBinary.File, v, Type, goBinary.Path, "", s)
-				cpes := GenerateCpes(component.Version, SplitPath(component.Name))
+				c := component.New(goBinary.File, v, Type)
+
+				cpes := GenerateCpes(c.Version, SplitPath(c.Name))
 				if len(cpes) > 0 {
-					component.CPEs = append(component.CPEs, cpes...)
+					for _, cpe := range cpes {
+						component.AddCPE(c, cpe)
+					}
 				}
-				stream.AddComponent(component)
+
+				component.AddOrigin(c, goBinary.Path)
+				component.AddType(c, Type)
+
+				cdx.AddComponent(c)
 				break
 			}
 		}
@@ -51,12 +59,20 @@ func Scan(data interface{}) interface{} {
 			if dep.Path == "" || dep.Version == "" {
 				continue
 			}
-			component := types.NewComponent(dep.Path, dep.Version, Type, goBinary.File, "", dep)
-			cpes := GenerateCpes(component.Version, SplitPath(component.Name))
+
+			c := component.New(dep.Path, dep.Version, Type)
+
+			cpes := GenerateCpes(c.Version, SplitPath(c.Name))
 			if len(cpes) > 0 {
-				component.CPEs = append(component.CPEs, cpes...)
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
 			}
-			stream.AddComponent(component)
+
+			component.AddOrigin(c, goBinary.Path)
+			component.AddType(c, Type)
+
+			cdx.AddComponent(c)
 		}
 
 		return nil
@@ -70,12 +86,20 @@ func Scan(data interface{}) interface{} {
 		if checkIfExcluded(modFile.Exclude, pkg.Mod.Path) {
 			continue
 		}
-		component := types.NewComponent(pkg.Mod.Path, pkg.Mod.Version, Type, manifest.Path, "", pkg)
-		cpes := GenerateCpes(component.Version, SplitPath(component.Name))
+
+		c := component.New(pkg.Mod.Path, pkg.Mod.Version, Type)
+
+		cpes := GenerateCpes(c.Version, SplitPath(c.Name))
 		if len(cpes) > 0 {
-			component.CPEs = append(component.CPEs, cpes...)
+			for _, cpe := range cpes {
+				component.AddCPE(c, cpe)
+			}
 		}
-		stream.AddComponent(component)
+
+		component.AddOrigin(c, manifest.Path)
+		component.AddType(c, Type)
+
+		cdx.AddComponent(c)
 	}
 
 	for _, pkg := range modFile.Replace {
@@ -85,12 +109,20 @@ func Scan(data interface{}) interface{} {
 		if checkIfExcluded(modFile.Exclude, pkg.New.Path) {
 			continue
 		}
-		component := types.NewComponent(pkg.New.Path, pkg.New.Version, Type, manifest.Path, "", pkg)
-		cpes := GenerateCpes(component.Version, SplitPath(component.Name))
+
+		c := component.New(pkg.New.Path, pkg.New.Version, Type)
+
+		cpes := GenerateCpes(c.Version, SplitPath(c.Name))
 		if len(cpes) > 0 {
-			component.CPEs = append(component.CPEs, cpes...)
+			for _, cpe := range cpes {
+				component.AddCPE(c, cpe)
+			}
 		}
-		stream.AddComponent(component)
+
+		component.AddOrigin(c, manifest.Path)
+		component.AddType(c, Type)
+
+		cdx.AddComponent(c)
 	}
 
 	return data

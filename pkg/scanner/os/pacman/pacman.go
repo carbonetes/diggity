@@ -7,7 +7,8 @@ import (
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/cdx"
+	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -38,18 +39,28 @@ func Scan(data interface{}) interface{} {
 	}
 
 	name, version, desc := metadata["name"].(string), metadata["version"].(string), metadata["description"].(string)
-	component := types.NewComponent(name, version, Type, manifest.Path, desc, metadata)
+
+	c := component.New(name, version, Type)
+
+	cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+	if len(cpes) > 0 {
+		for _, cpe := range cpes {
+			component.AddCPE(c, cpe)
+		}
+	}
+
+	component.AddOrigin(c, manifest.Path)
+	component.AddType(c, Type)
+	component.AddDescription(c, desc)
 
 	arch, ok := metadata["arch"].(string)
 	if !ok {
 		arch = ""
 	}
-	component.PURL = component.PURL + "?arch=" + arch
-	cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
-	if len(cpes) > 0 {
-		component.CPEs = append(component.CPEs, cpes...)
-	}
-	stream.AddComponent(component)
+
+	c.PackageURL = c.PackageURL + "?arch=" + arch
+
+	cdx.AddComponent(c)
 
 	return data
 }

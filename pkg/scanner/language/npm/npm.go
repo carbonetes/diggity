@@ -9,7 +9,8 @@ import (
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/cdx"
+	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -39,17 +40,30 @@ func Scan(data interface{}) interface{} {
 			return nil
 		}
 
-		component := types.NewComponent(metadata.Name, metadata.Version, Type, manifest.Path, metadata.Description, metadata)
+		c := component.New(metadata.Name, metadata.Version, Type)
+
+		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+		if len(cpes) > 0 {
+			for _, cpe := range cpes {
+				component.AddCPE(c, cpe)
+			}
+		}
+
+		component.AddOrigin(c, manifest.Path)
+		component.AddType(c, Type)
+
 		switch metadata.License.(type) {
 		case string:
-			component.Licenses = append(component.Licenses, metadata.License.(string))
+			component.AddLicense(c, metadata.License.(string))
 		case map[string]interface{}:
 			license := metadata.License.(map[string]interface{})
 			if _, ok := license["type"]; ok {
-				component.Licenses = append(component.Licenses, license["type"].(string))
+				component.AddLicense(c, license["type"].(string))
 			}
 		}
-		stream.AddComponent(component)
+
+		cdx.AddComponent(c)
+
 	} else if strings.Contains(manifest.Path, "package-lock.json") {
 		metadata := readPackageLockfile(manifest.Content)
 		if len(metadata.Dependencies) == 0 {
@@ -59,12 +73,20 @@ func Scan(data interface{}) interface{} {
 			if name == "" || dependency.Version == "" {
 				continue
 			}
-			component := types.NewComponent(name, dependency.Version, Type, manifest.Path, "", dependency)
-			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+
+			c := component.New(name, dependency.Version, Type)
+
+			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 			if len(cpes) > 0 {
-				component.CPEs = append(component.CPEs, cpes...)
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
 			}
-			stream.AddComponent(component)
+
+			component.AddOrigin(c, manifest.Path)
+			component.AddType(c, Type)
+
+			cdx.AddComponent(c)
 		}
 	} else if strings.Contains(manifest.Path, "yarn.lock") {
 		packages, err := ParseYarnLock(manifest.Content)
@@ -75,13 +97,20 @@ func Scan(data interface{}) interface{} {
 			if name == "" {
 				continue
 			}
-			component := types.NewComponent(name, info.Version, Type, manifest.Path, "", info)
-			component.PURL = "pkg:npm/" + name + "@" + info.Version
-			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+
+			c := component.New(name, info.Version, Type)
+
+			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 			if len(cpes) > 0 {
-				component.CPEs = append(component.CPEs, cpes...)
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
 			}
-			stream.AddComponent(component)
+
+			component.AddOrigin(c, manifest.Path)
+			component.AddType(c, Type)
+
+			cdx.AddComponent(c)
 		}
 	} else if strings.Contains(manifest.Path, "pnpm-lock.yaml") {
 		metadata := readPnpmLockfile(manifest.Content)
@@ -104,13 +133,20 @@ func Scan(data interface{}) interface{} {
 			if len(version) == 0 {
 				continue
 			}
-			component := types.NewComponent(name, version, Type, manifest.Path, "", info)
-			component.PURL = "pkg:npm/" + name + "@" + version
-			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+
+			c := component.New(name, version, Type)
+
+			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 			if len(cpes) > 0 {
-				component.CPEs = append(component.CPEs, cpes...)
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
 			}
-			stream.AddComponent(component)
+
+			component.AddOrigin(c, manifest.Path)
+			component.AddType(c, Type)
+
+			cdx.AddComponent(c)
 		}
 
 		separator := "/"
@@ -123,7 +159,7 @@ func Scan(data interface{}) interface{} {
 			separator = "@"
 		}
 
-		for id, pkg := range metadata.Packages {
+		for id := range metadata.Packages {
 			id = packageNameRegex.ReplaceAllString(id, "$1")
 			id = strings.TrimPrefix(id, "/")
 			props := strings.Split(id, separator)
@@ -131,12 +167,19 @@ func Scan(data interface{}) interface{} {
 			name := strings.Join(props[:len(props)-1], separator)
 			version := props[len(props)-1]
 
-			component := types.NewComponent(name, version, Type, manifest.Path, "", pkg)
-			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+			c := component.New(name, version, Type)
+
+			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 			if len(cpes) > 0 {
-				component.CPEs = append(component.CPEs, cpes...)
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
 			}
-			stream.AddComponent(component)
+
+			component.AddOrigin(c, manifest.Path)
+			component.AddType(c, Type)
+
+			cdx.AddComponent(c)
 		}
 	}
 

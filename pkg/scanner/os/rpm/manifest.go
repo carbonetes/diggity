@@ -1,30 +1,38 @@
 package rpm
 
 import (
-	"github.com/carbonetes/diggity/internal/cpe"
-	"github.com/carbonetes/diggity/pkg/stream"
-	"github.com/carbonetes/diggity/pkg/types"
+	"strings"
 )
 
-// Read RPM package information from rpm db
-func readRpmDb(rpmdb types.RpmDB) {
-	if rpmdb.PackageInfos == nil {
-		return
+// Format licenses
+func formatLicenses(licensesGroup string) []string {
+	if len(licensesGroup) > 0 && licensesGroup != " " {
+		licenses := []string{}
+		subgroups := strings.Split(licensesGroup, " and ")
+
+		for _, group := range subgroups {
+			group = strings.TrimSuffix(strings.TrimPrefix(group, "("), ")")
+			licenses = append(licenses, strings.Split(group, " or ")...)
+		}
+
+		return deduplicateLicenses(licenses)
 	}
 
-	if len(rpmdb.PackageInfos) == 0 {
-		return
+	return []string{licensesGroup}
+}
+
+// Deduplicate licenses
+func deduplicateLicenses(licenses []string) []string {
+	uniqueLicenses := make(map[string]struct{})
+
+	for _, license := range licenses {
+		uniqueLicenses[license] = struct{}{}
 	}
 
-	for _, pkgInfo := range rpmdb.PackageInfos {
-		component := newComponent(pkgInfo)
-		if component.Name == "" || component.Version == "" {
-			continue
-		}
-		cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
-		if len(cpes) > 0 {
-			component.CPEs = append(component.CPEs, cpes...)
-		}
-		stream.AddComponent(component)
+	deduplicated := make([]string, 0, len(uniqueLicenses))
+	for license := range uniqueLicenses {
+		deduplicated = append(deduplicated, license)
 	}
+
+	return deduplicated
 }

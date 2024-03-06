@@ -6,7 +6,8 @@ import (
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/cdx"
+	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -33,40 +34,66 @@ func Scan(data interface{}) interface{} {
 	if filepath.Ext(manifest.Path) == ".egg-info" || filepath.Base(manifest.Path) == "METADATA" || filepath.Base(manifest.Path) == "PKG-INFO" {
 		metadata := readManifestFile(manifest.Content)
 		name, version := metadata["Name"].(string), metadata["Version"].(string)
-		component := types.NewComponent(name, version, Type, manifest.Path, "", metadata)
-		if val, ok := metadata["Summary"].(string); ok {
-			component.Description = val
-		}
-		if val, ok := metadata["License"].(string); ok {
-			component.Licenses = append(component.Licenses, val)
-		}
-		cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+
+		c := component.New(name, version, Type)
+
+		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 		if len(cpes) > 0 {
-			component.CPEs = append(component.CPEs, cpes...)
+			for _, cpe := range cpes {
+				component.AddCPE(c, cpe)
+			}
 		}
-		stream.AddComponent(component)
+
+		component.AddOrigin(c, manifest.Path)
+		component.AddType(c, Type)
+
+		if val, ok := metadata["Summary"].(string); ok {
+			component.AddDescription(c, val)
+		}
+
+		if val, ok := metadata["License"].(string); ok {
+			component.AddLicense(c, val)
+		}
+
+		cdx.AddComponent(c)
+
 	} else if filepath.Base(manifest.Path) == "requirements.txt" {
 		attributes := readRequirementsFile(manifest.Content)
 		for _, attribute := range attributes {
 			name, version := attribute[0], attribute[1]
-			metadata := map[string]string{"name": name, "version": version}
-			component := types.NewComponent(name, version, Type, manifest.Path, "", metadata)
-			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+
+			c := component.New(name, version, Type)
+
+			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 			if len(cpes) > 0 {
-				component.CPEs = append(component.CPEs, cpes...)
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
 			}
-			stream.AddComponent(component)
+
+			component.AddOrigin(c, manifest.Path)
+			component.AddType(c, Type)
+
+			cdx.AddComponent(c)
 		}
 	} else if filepath.Base(manifest.Path) == "poetry.lock" {
 		metadata := readPoetryLockFile(manifest.Content)
 		for _, packageInfo := range metadata.Packages {
 			name, version := packageInfo.Name, packageInfo.Version
-			component := types.NewComponent(name, version, Type, manifest.Path, "", packageInfo)
-			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+
+			c := component.New(name, version, Type)
+
+			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 			if len(cpes) > 0 {
-				component.CPEs = append(component.CPEs, cpes...)
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
 			}
-			stream.AddComponent(component)
+
+			component.AddOrigin(c, manifest.Path)
+			component.AddType(c, Type)
+
+			cdx.AddComponent(c)
 		}
 	}
 
