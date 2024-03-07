@@ -29,3 +29,5 @@ Thumbs.db
 # Go workspace file
 go.work
 dist/
+
+*.vscode/

@@ -4,12 +4,12 @@ import (
 	"slices"
 
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 var (
-	Type = "osrelease"
+	Releases []types.OSRelease
+	Type     = "osrelease"
 	// Add more os release files here if needed
 	Manifests = []string{"etc/os-release", "usr/lib/os-release", "etc/lsb-release", "etc/centos-release", "etc/redhat-release", "etc/debian_version", "etc/alpine-release", "etc/SuSE-release", "etc/gentoo-release", "etc/arch-release", "etc/oracle-release"}
 )
@@ -20,7 +20,8 @@ func Scan(data interface{}) interface{} {
 		log.Error("Distro handler received unknown type")
 	}
 
-	stream.AddOSRelease(parse(data.(types.ManifestFile)))
+	Releases = append(Releases, parse(data.(types.ManifestFile)))
+
 	return data
 }
 

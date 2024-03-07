@@ -8,7 +8,8 @@ import (
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/cdx"
+	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -33,13 +34,20 @@ func Scan(data interface{}) interface{} {
 		attributes := readManifestFile(manifest.Content)
 		for _, attribute := range attributes {
 			name, version := attribute[0], attribute[1]
-			metadata := map[string]string{"name": name, "version": version}
-			component := types.NewComponent(name, version, Type, manifest.Path, "", metadata)
-			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+
+			c := component.New(name, version, Type)
+
+			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 			if len(cpes) > 0 {
-				component.CPEs = append(component.CPEs, cpes...)
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
 			}
-			stream.AddComponent(component)
+
+			component.AddOrigin(c, manifest.Path)
+			component.AddType(c, Type)
+
+			cdx.AddComponent(c)
 		}
 	} else if strings.Contains(manifest.Path, ".gemspec") && strings.Contains(manifest.Path, "specifications") {
 		metadata := readGemspecFile(manifest.Content)
@@ -47,20 +55,29 @@ func Scan(data interface{}) interface{} {
 			delete(metadata, "metadata")
 		}
 		name, version := metadata["name"].(string), metadata["version"].(string)
-		component := types.NewComponent(name, version, Type, manifest.Path, "", metadata)
-		if val, ok := metadata["description"].(string); ok {
-			component.Description = val
+
+		c := component.New(name, version, Type)
+
+		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+		if len(cpes) > 0 {
+			for _, cpe := range cpes {
+				component.AddCPE(c, cpe)
+			}
 		}
-		var licenses []string
+
+		component.AddOrigin(c, manifest.Path)
+		component.AddType(c, Type)
+
 		if val, ok := metadata["licenses"].(string); ok {
 			license := regexp.MustCompile(`[^\w^,^ ]`).ReplaceAllString(val, "")
-			component.Licenses = append(licenses, license)
+			component.AddLicense(c, license)
 		}
-		cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
-		if len(cpes) > 0 {
-			component.CPEs = append(component.CPEs, cpes...)
+
+		if val, ok := metadata["description"].(string); ok {
+			component.AddDescription(c, val)
 		}
-		stream.AddComponent(component)
+
+		cdx.AddComponent(c)
 	}
 
 	return data

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -52,11 +52,20 @@ func Create() table.Model {
 	}
 
 	var rows []table.Row
-	components := stream.GetComponents()
-	for _, component := range components {
+	// components := stream.GetComponents()
+	components := cdx.BOM.Components
+	for _, component := range *components {
+
+		var componentType string
+		for _, property := range *component.Properties {
+			if property.Name == "diggity:package:type" {
+				componentType = property.Value
+			}
+		}
+
 		rows = append(rows, table.Row{
 			component.Name,
-			component.Type,
+			componentType,
 			component.Version,
 		})
 	}

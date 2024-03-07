@@ -7,7 +7,8 @@ import (
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/cdx"
+	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -35,9 +36,25 @@ func Scan(data interface{}) interface{} {
 			continue
 		}
 
-		component := types.NewComponent(pkg.Name, pkg.Version, Type, manifest.Path, pkg.Description, pkg)
-		component.Licenses = pkg.License
-		stream.AddComponent(component)
+		c := component.New(pkg.Name, pkg.Version, Type)
+
+		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+		if len(cpes) > 0 {
+			for _, cpe := range cpes {
+				component.AddCPE(c, cpe)
+			}
+		}
+
+		component.AddOrigin(c, manifest.Path)
+		component.AddType(c, Type)
+
+		if len(pkg.License) > 0 {
+			for _, license := range pkg.License {
+				component.AddLicense(c, license)
+			}
+		}
+
+		cdx.AddComponent(c)
 	}
 
 	for _, pkg := range metadata.PackagesDev {
@@ -45,19 +62,27 @@ func Scan(data interface{}) interface{} {
 			continue
 		}
 
-		component := types.NewComponent(pkg.Name, pkg.Version, Type, manifest.Path, pkg.Description, pkg)
-		component.Licenses = pkg.License
-		props := strings.Split(component.Name, "/")
+		c := component.New(pkg.Name, pkg.Version, Type)
 
-		if len(props) == 0 {
-			props = []string{component.Name, component.Name}
-		}
+		props := strings.Split(pkg.Name, "/")
 		vendor, product := props[0], props[1]
-		cpes := cpe.NewCPE23(vendor, product, component.Version, Type)
+		cpes := cpe.NewCPE23(vendor, product, pkg.Version, Type)
 		if len(cpes) > 0 {
-			component.CPEs = append(component.CPEs, cpes...)
+			for _, cpe := range cpes {
+				component.AddCPE(c, cpe)
+			}
 		}
-		stream.AddComponent(component)
+
+		component.AddOrigin(c, manifest.Path)
+		component.AddType(c, Type)
+
+		if len(pkg.License) > 0 {
+			for _, license := range pkg.License {
+				component.AddLicense(c, license)
+			}
+		}
+
+		cdx.AddComponent(c)
 	}
 
 	return data

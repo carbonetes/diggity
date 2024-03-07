@@ -5,21 +5,22 @@ import (
 
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/mitchellh/mapstructure"
 	"gopkg.in/yaml.v3"
 )
 
-func Load() *types.Config {
+var Config types.Config
+
+func init() {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return nil
+		log.Error(err)
 	}
 	path := home + string(os.PathSeparator) + ".diggity.yaml"
 	exist, err := helper.IsFileExists(path)
 	if err != nil {
-		return nil
+		log.Error(err)
 	}
 
 	if !exist {
@@ -37,8 +38,7 @@ func Load() *types.Config {
 		newConfig.Version = types.ConfigVersion
 		ReplaceConfigFile(newConfig, path)
 	}
-	stream.SetConfig(config)
-	return &config
+	Config = config
 }
 
 func New() types.Config {

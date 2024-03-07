@@ -6,13 +6,13 @@ import (
 	"github.com/carbonetes/diggity/internal/presenter/json"
 	"github.com/carbonetes/diggity/internal/presenter/status"
 	"github.com/carbonetes/diggity/internal/presenter/table"
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 func DisplayResults(params types.Parameters, duration float64) {
-	result := stream.AggrerateSoftwareManifest()
-	result.Duration = duration
+	result := cdx.BOM
+
 	format, saveToFile := params.OutputFormat, params.SaveToFile
 	if !params.Quiet {
 		status.Done()

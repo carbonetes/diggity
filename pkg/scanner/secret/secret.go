@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/config"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -19,15 +19,15 @@ type MatchPattern struct {
 }
 
 var (
+	Secrets      []types.Secret
 	secretConfig types.SecretConfig
 	rules        []MatchPattern
 	whitelist    []*regexp.Regexp
-	c            types.Config
 )
 
 func Scan(data interface{}) interface{} {
 	if len(rules) == 0 {
-		c = stream.GetConfig()
+		c := config.Config
 		secretConfig = c.SecretConfig
 		for _, rule := range secretConfig.Rules {
 			rules = append(rules, MatchPattern{
@@ -69,7 +69,7 @@ func Scan(data interface{}) interface{} {
 				Content:     match,
 				File:        manifest.Path,
 			}
-			stream.AddSecret(secret)
+			Secrets = append(Secrets, secret)
 		}
 	}
 	return data

@@ -5,20 +5,16 @@ import (
 	"path/filepath"
 
 	"github.com/carbonetes/diggity/internal/log"
+	"github.com/carbonetes/diggity/internal/presenter/status"
 	"github.com/carbonetes/diggity/pkg/scanner"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
-func FilesystemScanHandler(data interface{}) interface{} {
-	input, ok := data.(string)
-	if !ok {
-		log.Error("Filesystem Handler received unknown type")
-		return data
-	}
+func FilesystemScanHandler(target string) {
 	var paths []string
 	// recursive
-	err := filepath.Walk(input,
+	err := filepath.Walk(target,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
@@ -35,7 +31,7 @@ func FilesystemScanHandler(data interface{}) interface{} {
 		log.Error(err)
 	}
 	for _, path := range paths {
-		stream.Emit(stream.FileListEvent, path)
+		status.AddFile(path)
 		category, matched, readFlag := scanner.CheckRelatedFiles(path)
 		if matched {
 			switch category {
@@ -62,7 +58,6 @@ func FilesystemScanHandler(data interface{}) interface{} {
 			}
 		}
 	}
-	return data
 }
 
 func handleRpmFile(path, category string) error {

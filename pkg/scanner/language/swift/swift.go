@@ -6,7 +6,8 @@ import (
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/cdx"
+	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -33,22 +34,38 @@ func Scan(data interface{}) interface{} {
 	case 1:
 		for _, pin := range metadata.Object.Pins {
 			name, version := pin.Name, pin.State.Version
-			component := types.NewComponent(name, version, Type, manifest.Path, "", pin)
-			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+
+			c := component.New(name, version, Type)
+
+			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 			if len(cpes) > 0 {
-				component.CPEs = append(component.CPEs, cpes...)
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
 			}
-			stream.AddComponent(component)
+
+			component.AddOrigin(c, manifest.Path)
+			component.AddType(c, Type)
+
+			cdx.AddComponent(c)
 		}
 	case 2:
 		for _, pin := range metadata.Pins {
 			name, version := pin.Identity, pin.State.Version
-			component := types.NewComponent(name, version, Type, manifest.Path, "", pin)
-			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
+
+			c := component.New(name, version, Type)
+
+			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 			if len(cpes) > 0 {
-				component.CPEs = append(component.CPEs, cpes...)
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
 			}
-			stream.AddComponent(component)
+
+			component.AddOrigin(c, manifest.Path)
+			component.AddType(c, Type)
+
+			cdx.AddComponent(c)
 		}
 	}
 

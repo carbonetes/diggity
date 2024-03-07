@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -16,6 +15,7 @@ var (
 	helpStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("241")).Margin(1, 0)
 	dotStyle     = helpStyle.Copy().UnsetMargins()
 	appStyle     = lipgloss.NewStyle().Margin(1, 2, 0, 2)
+	exited       = true
 )
 
 type resultMsg struct {
@@ -123,14 +123,25 @@ var (
 	p = tea.NewProgram(m)
 )
 
-func init() {
-	stream.Attach(stream.FileListEvent, FileListWatcher)
-}
-
 func Run() {
+	exited = false
 	go func() {
 		if _, err := p.Run(); err != nil {
 			log.Errorf("Failed to start program: %v", err)
 		}
 	}()
+}
+
+func Done() {
+	if exited {
+		return
+	}
+	p.Send(resultMsg{done: true})
+}
+
+func AddFile(file string) {
+	if exited {
+		return
+	}
+	p.Send(resultMsg{file: file, done: false})
 }

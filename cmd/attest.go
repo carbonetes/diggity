@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/carbonetes/diggity/pkg/attest"
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/config"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/spf13/cobra"
 )
@@ -27,7 +27,7 @@ var (
 			if len(opts.Predicate) == 0 {
 				log.Fatal("No predicate has been given.")
 			}
-			config := stream.GetConfig()
+			config := config.Config
 			if len(opts.Key) == 0 {
 				if len(config.Attestation.Key) == 0 {
 					log.Fatal("No key detected.")

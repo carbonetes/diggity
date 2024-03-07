@@ -11,6 +11,8 @@ import (
 	"sync"
 
 	"github.com/carbonetes/diggity/internal/log"
+	"github.com/carbonetes/diggity/internal/presenter/status"
+	"github.com/carbonetes/diggity/pkg/config"
 	"github.com/carbonetes/diggity/pkg/scanner"
 	"github.com/carbonetes/diggity/pkg/scanner/binary/golang"
 	"github.com/carbonetes/diggity/pkg/stream"
@@ -39,7 +41,7 @@ func GetImage(input string, config *types.RegistryConfig) (v1.Image, error) {
 	}
 
 	if config != nil {
-		// Load image remotely with authn.AuthConfig
+		// Load image remotely with authn.Basic
 		// Check out information about authn in https://github.com/google/go-containerregistry/tree/main/pkg/authn
 		image, err = remote.Image(ref, remote.WithAuth(&authn.Basic{
 			Username: config.Username,
@@ -66,7 +68,11 @@ func ReadFiles(image v1.Image) error {
 	if err != nil {
 		return err
 	}
-	maxFileSize := stream.GetConfig().MaxFileSize
+
+	// Get the maximum file size from the configuration file
+	// If maxFileSize is not set, use the default value of 50MB
+	maxFileSize := config.Config.MaxFileSize
+
 	var wg sync.WaitGroup
 	wg.Add(len(layers))
 	for _, layer := range layers {
@@ -109,10 +115,9 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 			return err
 		}
 
-		if !stream.GetParameterQuiet() {
-			stream.Emit(stream.FileListEvent, header.Name)
-		}
+		status.AddFile(header.Name)
 
+		// Check if the file is an archive file (e.g. *.jar, *.war, *.ear, *.jpi, *.hpi)
 		if slices.Contains(archiveTypes, filepath.Ext(header.Name)) {
 			b, err := io.ReadAll(reader)
 			if err != nil {
@@ -126,12 +131,15 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 				continue
 			}
 
+			// Check if the file is a binary file
 			if strings.Contains(header.Name, "usr/bin") || strings.Contains(header.Name, "usr/local/bin") {
 				b, err := io.ReadAll(reader)
 				if err != nil {
 					log.Error(err)
 				}
 
+				// Check if the file is a Go binary file
+				// If it is, parse the binary file and emit a GoBinary object to the stream
 				build, isGolangBin := golang.Parse(bytes.NewReader(b))
 				if isGolangBin {
 					stream.Emit("golang", types.GoBinary{

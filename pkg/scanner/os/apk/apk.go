@@ -5,7 +5,8 @@ import (
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
+	"github.com/carbonetes/diggity/pkg/cdx"
+	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -39,26 +40,53 @@ func Scan(data interface{}) interface{} {
 			continue
 		}
 
-		component := types.NewComponent(metadata["Name"].(string), metadata["Version"].(string), Type, manifest.Path, metadata["Description"].(string), metadata)
-		for _, license := range strings.Split(metadata["License"].(string), " ") {
-			if !strings.Contains(strings.ToLower(license), "and") {
-				component.Licenses = append(component.Licenses, license)
-			}
-		}
-		cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
-		if len(cpes) > 0 {
-			component.CPEs = append(component.CPEs, cpes...)
-		}
-		stream.AddComponent(component)
+		c := component.New(metadata["Name"].(string), metadata["Version"].(string), Type)
 
-		if metadata["Origin"] != nil {
-			origin := types.NewComponent(metadata["Origin"].(string), metadata["Version"].(string), Type, manifest.Path, metadata["Description"].(string), nil)
-			origin.Licenses = component.Licenses
-			cpes := cpe.NewCPE23(component.Name, component.Name, component.Version, Type)
-			if len(cpes) > 0 {
-				origin.CPEs = append(component.CPEs, cpes...)
+		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+		if len(cpes) > 0 {
+			for _, cpe := range cpes {
+				component.AddCPE(c, cpe)
 			}
-			stream.AddComponent(origin)
+		}
+
+		component.AddOrigin(c, manifest.Path)
+		component.AddType(c, Type)
+
+		for _, license := range strings.Split(metadata["License"].(string), " ") {
+			if strings.Contains(strings.ToLower(license), "and") {
+				licenses := strings.Split(license, "and")
+				for _, l := range licenses {
+					component.AddLicense(c, l)
+				}
+			} else {
+				component.AddLicense(c, license)
+			}
+		}
+
+		cdx.AddComponent(c)
+
+		// Add origin component
+		if metadata["Origin"] != nil {
+
+			name, version := metadata["Origin"].(string), metadata["Version"].(string)
+
+			if len(name) == 0 || len(version) == 0 {
+				continue
+			}
+
+			o := component.New(name, version, Type)
+
+			cpes := cpe.NewCPE23(o.Name, o.Name, o.Version, Type)
+			if len(cpes) > 0 {
+				for _, cpe := range cpes {
+					component.AddCPE(o, cpe)
+				}
+			}
+
+			component.AddOrigin(o, manifest.Path)
+			component.AddType(o, Type)
+
+			cdx.AddComponent(o)
 		}
 	}
 	return data
