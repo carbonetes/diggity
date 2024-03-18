@@ -2,6 +2,7 @@ package component
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/google/uuid"
@@ -26,8 +27,12 @@ func AddCPE(c *cyclonedx.Component, cpe string) {
 		c.Properties = &[]cyclonedx.Property{}
 	}
 
+	if len(cpe) == 0 {
+		return
+	}
+
 	*c.Properties = append(*c.Properties, cyclonedx.Property{
-		Name:  "cpe23",
+		Name:  "diggity:package:cpe23",
 		Value: cpe,
 	})
 }
@@ -39,8 +44,12 @@ func AddOrigin(c *cyclonedx.Component, origin string) {
 		c.Properties = &[]cyclonedx.Property{}
 	}
 
+	if len(origin) == 0 {
+		return
+	}
+
 	*c.Properties = append(*c.Properties, cyclonedx.Property{
-		Name:  "location",
+		Name:  "diggity:file:location",
 		Value: origin,
 	})
 
@@ -52,6 +61,14 @@ func AddDescription(c *cyclonedx.Component, description string) {
 	if c.Properties == nil {
 		c.Properties = &[]cyclonedx.Property{}
 	}
+
+	if len(description) == 0 {
+		return
+	}
+
+	// Remove newline characters
+	description = strings.ReplaceAll(description, "\n", "")
+	description = strings.TrimSpace(description)
 
 	*c.Properties = append(*c.Properties, cyclonedx.Property{
 		Name:  "diggity:package:description",
@@ -66,6 +83,10 @@ func AddType(c *cyclonedx.Component, componentType string) {
 		c.Properties = &[]cyclonedx.Property{}
 	}
 
+	if len(componentType) == 0 {
+		return
+	}
+
 	*c.Properties = append(*c.Properties, cyclonedx.Property{
 		Name:  "diggity:package:type",
 		Value: componentType,
@@ -74,10 +95,15 @@ func AddType(c *cyclonedx.Component, componentType string) {
 
 // AddLicense adds a license to the given cyclonedx.Component.
 // The license should be a SPDX license identifier.
+//
 //	https://spdx.org/licenses/
 func AddLicense(c *cyclonedx.Component, license string) {
 	if c.Licenses == nil {
 		c.Licenses = &cyclonedx.Licenses{}
+	}
+
+	if len(license) == 0 {
+		return
 	}
 
 	*c.Licenses = append(*c.Licenses, cyclonedx.LicenseChoice{
