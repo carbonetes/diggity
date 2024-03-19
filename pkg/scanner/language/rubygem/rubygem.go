@@ -54,6 +54,15 @@ func Scan(data interface{}) interface{} {
 		if _, ok := metadata["metadata"].(string); ok {
 			delete(metadata, "metadata")
 		}
+
+		if _, ok := metadata["version"].(string); !ok {
+			return nil
+		}
+
+		if _, ok := metadata["name"].(string); !ok {
+			return nil
+		}
+
 		name, version := metadata["name"].(string), metadata["version"].(string)
 
 		c := component.New(name, version, Type)
