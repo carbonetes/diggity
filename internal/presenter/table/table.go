@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
@@ -47,8 +48,8 @@ func (m model) View() string {
 func Create() table.Model {
 	columns := []table.Column{
 		{Title: "Component", Width: 30},
-		{Title: "Type", Width: 12},
-		{Title: "Version", Width: 16},
+		{Title: "Type", Width: 20},
+		{Title: "Version", Width: 24},
 	}
 
 	var rows []table.Row
@@ -61,6 +62,10 @@ func Create() table.Model {
 			if property.Name == "diggity:package:type" {
 				componentType = property.Value
 			}
+		}
+
+		if component.Type == cyclonedx.ComponentTypeOS {
+			componentType = "operating-system"
 		}
 
 		rows = append(rows, table.Row{
