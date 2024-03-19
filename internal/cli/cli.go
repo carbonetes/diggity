@@ -26,24 +26,33 @@ func Start(parameters types.Parameters) {
 		image, err := reader.GetImage(parameters.Input, &config.Config.Registry)
 		if err != nil {
 			log.Error(err)
+			return
 		}
 		err = reader.ReadFiles(image)
 		if err != nil {
 			log.Error(err)
+			return
 		}
 	case 2: // Tarball Scan Type
 		image, err := reader.ReadTarballAsImage(parameters.Input)
 		if err != nil {
 			log.Error(err)
+			return
 		}
 		err = reader.ReadFiles(image)
 		if err != nil {
 			log.Error(err)
+			return
 		}
 	case 3: // Filesystem Scan Type
-		reader.FilesystemScanHandler(parameters.Input)
+		err := reader.FilesystemScanHandler(parameters.Input)
+		if err != nil {
+			log.Error(err)
+			return
+		}
 	default:
 		log.Error("Unknown scan type")
+		return
 	}
 
 	presenter.DisplayResults(parameters, time.Since(start).Seconds())

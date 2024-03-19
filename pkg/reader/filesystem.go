@@ -11,7 +11,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
-func FilesystemScanHandler(target string) {
+func FilesystemScanHandler(target string) error {
 	var paths []string
 	// recursive
 	err := filepath.Walk(target,
@@ -28,7 +28,7 @@ func FilesystemScanHandler(target string) {
 			return nil
 		})
 	if err != nil {
-		log.Error(err)
+		return err
 	}
 	for _, path := range paths {
 		status.AddFile(path)
@@ -51,13 +51,14 @@ func FilesystemScanHandler(target string) {
 				if err != nil {
 					log.Error(err)
 				}
-				err = handleManifestFile(path, category, file, false)
+				err = handleManifestFile(path, category, file)
 				if err != nil {
 					log.Error(err)
 				}
 			}
 		}
 	}
+	return nil
 }
 
 func handleRpmFile(path, category string) error {
@@ -72,7 +73,7 @@ func handleRpmFile(path, category string) error {
 	return nil
 }
 
-func handleManifestFile(path, category string, file *os.File, cleanup bool) error {
+func handleManifestFile(path, category string, file *os.File) error {
 	manifest := types.ManifestFile{
 		Path: path,
 	}
