@@ -51,7 +51,7 @@ func FilesystemScanHandler(target string) error {
 				if err != nil {
 					log.Error(err)
 				}
-				err = handleManifestFile(path, category, file, false)
+				err = handleManifestFile(path, category, file)
 				if err != nil {
 					log.Error(err)
 				}
@@ -73,7 +73,7 @@ func handleRpmFile(path, category string) error {
 	return nil
 }
 
-func handleManifestFile(path, category string, file *os.File, cleanup bool) error {
+func handleManifestFile(path, category string, file *os.File) error {
 	manifest := types.ManifestFile{
 		Path: path,
 	}

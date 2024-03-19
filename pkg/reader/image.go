@@ -204,7 +204,7 @@ func processFile(name string, reader io.Reader, category string) error {
 			return err
 		}
 	} else {
-		err = handleManifestFile(name, category, f, true)
+		err = handleManifestFile(name, category, f)
 		if err != nil {
 			return err
 		}
