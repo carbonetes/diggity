@@ -11,7 +11,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
-func FilesystemScanHandler(target string) {
+func FilesystemScanHandler(target string) error {
 	var paths []string
 	// recursive
 	err := filepath.Walk(target,
@@ -28,7 +28,7 @@ func FilesystemScanHandler(target string) {
 			return nil
 		})
 	if err != nil {
-		log.Error(err)
+		return err
 	}
 	for _, path := range paths {
 		status.AddFile(path)
