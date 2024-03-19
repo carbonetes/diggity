@@ -58,6 +58,7 @@ func FilesystemScanHandler(target string) error {
 			}
 		}
 	}
+	return nil
 }
 
 func handleRpmFile(path, category string) error {

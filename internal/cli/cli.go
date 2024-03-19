@@ -45,7 +45,11 @@ func Start(parameters types.Parameters) {
 			return
 		}
 	case 3: // Filesystem Scan Type
-		reader.FilesystemScanHandler(parameters.Input)
+		err := reader.FilesystemScanHandler(parameters.Input)
+		if err != nil {
+			log.Error(err)
+			return
+		}
 	default:
 		log.Error("Unknown scan type")
 		return

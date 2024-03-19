@@ -34,6 +34,10 @@ var (
 			} else if len(tarball) > 0 {
 				params.Input = tarball
 			} else if len(filesystem) > 0 {
+				if found, _ := helper.IsDirExists(filesystem); !found {
+					log.Error("directory not found: " + filesystem)
+					return
+				}
 				params.Input = filesystem
 			} else {
 				_ = cmd.Help()
