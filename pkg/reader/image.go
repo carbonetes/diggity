@@ -83,12 +83,7 @@ func ReadFiles(image v1.Image) error {
 				log.Errorf("Failed to uncompress layer: %s", err)
 			}
 
-			layerHash, err := layer.Digest()
-			if err != nil {
-				log.Errorf("Failed to get layer hash: %s", err)
-			}
-
-			err = processLayerContents(contents, layerHash.String(), maxFileSize)
+			err = processLayerContents(contents, maxFileSize)
 			if err != nil {
 				log.Errorf("Failed to process layer contents: %s", err)
 			}
@@ -103,7 +98,7 @@ func ReadFiles(image v1.Image) error {
 // It skips files that exceed the maximum file size and only processes regular files.
 // The processed files are hashed using the layerHash and stored for later use.
 // Returns an error if there was an issue reading or processing the tar file.
-func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize int64) error {
+func processLayerContents(contents io.ReadCloser, maxFileSize int64) error {
 	defer contents.Close()
 	reader := tar.NewReader(contents)
 	for {
@@ -152,7 +147,7 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 				continue
 			}
 
-			err = processTarHeader(header, reader, layerHash)
+			err = processTarHeader(header, reader)
 			if err != nil {
 				log.Error(err)
 			}
@@ -164,7 +159,7 @@ func processLayerContents(contents io.ReadCloser, layerHash string, maxFileSize 
 
 // processTarHeader processes a tar header and its contents, checking if the file size is within the limit and if it is a regular file.
 // If the file is a related file, it processes the file and returns an error if encountered.
-func processTarHeader(header *tar.Header, reader io.Reader, layerHash string) error {
+func processTarHeader(header *tar.Header, reader io.Reader) error {
 	category, matched, readFlag := scanner.CheckRelatedFiles(header.Name)
 	if matched {
 		if !readFlag {
