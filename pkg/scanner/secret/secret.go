@@ -25,27 +25,25 @@ var (
 	whitelist    []*regexp.Regexp
 )
 
-func Scan(data interface{}) interface{} {
-	if len(rules) == 0 {
-		c := config.Config
-		secretConfig = c.SecretConfig
-		for _, rule := range secretConfig.Rules {
-			rules = append(rules, MatchPattern{
-				Name:        rule.ID,
-				Description: rule.Description,
-				Pattern:     regexp.MustCompile(rule.Pattern),
-				Keywords:    rule.Keywords,
-			})
-		}
-
-		if len(secretConfig.Whitelist.Patterns) > 0 {
-			for _, pattern := range secretConfig.Whitelist.Patterns {
-				whitelist = append(whitelist, regexp.MustCompile(pattern))
-			}
-		}
-
+func init() {
+	secretConfig = config.Config.SecretConfig
+	for _, rule := range secretConfig.Rules {
+		rules = append(rules, MatchPattern{
+			Name:        rule.ID,
+			Description: rule.Description,
+			Pattern:     regexp.MustCompile(rule.Pattern),
+			Keywords:    rule.Keywords,
+		})
 	}
 
+	if len(secretConfig.Whitelist.Patterns) > 0 {
+		for _, pattern := range secretConfig.Whitelist.Patterns {
+			whitelist = append(whitelist, regexp.MustCompile(pattern))
+		}
+	}
+}
+
+func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
 		log.Error("Secret received unknown file type")
@@ -72,6 +70,7 @@ func Scan(data interface{}) interface{} {
 			Secrets = append(Secrets, secret)
 		}
 	}
+
 	return data
 }
 
