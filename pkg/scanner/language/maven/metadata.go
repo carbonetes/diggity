@@ -1,10 +1,12 @@
 package maven
 
 import (
+	"bytes"
 	"encoding/xml"
 	"io"
 
 	"github.com/carbonetes/diggity/internal/log"
+	"golang.org/x/net/html/charset"
 )
 
 type POM struct {
@@ -322,15 +324,21 @@ type ActivationFile struct {
 }
 
 func readManifestFile(content []byte) *Metadata {
+	// Create a new XML decoder which can handle various charsets
+	decoder := xml.NewDecoder(bytes.NewReader(content))
+	decoder.CharsetReader = charset.NewReaderLabel
+
+	// Decode the XML into the Metadata struct
 	var metadata Metadata
-	err := xml.Unmarshal(content, &metadata)
+	err := decoder.Decode(&metadata)
 	if err != nil {
 		if err == io.EOF {
 			return nil
-		} else {
-			log.Error(err)
-			return nil
+		}
+		if err != nil {
+			log.Fatal(err)
 		}
 	}
+
 	return &metadata
 }
