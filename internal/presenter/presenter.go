@@ -11,6 +11,7 @@ import (
 )
 
 func DisplayResults(params types.Parameters, duration float64) {
+	cdx.SortComponents()
 	result := cdx.BOM
 
 	format, filename := params.OutputFormat, params.SaveToFile

@@ -3,6 +3,7 @@ package cdx
 import (
 	"encoding/xml"
 	"fmt"
+	"sort"
 	"sync"
 	"time"
 
@@ -73,4 +74,14 @@ func AddComponent(c *cyclonedx.Component) {
 
 	// If the component does not exist, add it to the BOM
 	*BOM.Components = append(*BOM.Components, *c)
+}
+
+func SortComponents() {
+	lock.Lock()
+	defer lock.Unlock()
+
+	// Sort components by name
+	sort.Slice(*BOM.Components, func(i, j int) bool {
+		return (*BOM.Components)[i].Name < (*BOM.Components)[j].Name
+	})
 }
