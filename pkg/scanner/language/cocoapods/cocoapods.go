@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
+	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
@@ -27,8 +28,15 @@ func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
 		log.Error("Cocoapods Handler received unknown type")
+		return nil
 	}
 
+	scan(manifest)
+
+	return data
+}
+
+func scan(manifest types.ManifestFile) {
 	metadata := readManifestFile(manifest.Content)
 	for _, pod := range metadata.Pods {
 		var pods string
@@ -46,7 +54,7 @@ func Scan(data interface{}) interface{} {
 		name, version := attributes[0], strings.TrimSuffix(strings.TrimPrefix(attributes[1], "("), ")")
 
 		c := component.New(name, version, Type)
-		
+
 		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 		if len(cpes) > 0 {
 			for _, cpe := range cpes {
@@ -54,11 +62,19 @@ func Scan(data interface{}) interface{} {
 			}
 		}
 
+		rawMetadata, err := helper.ToJSON(metadata)
+		if err != nil {
+			log.Error("Failed to convert metadata to JSON")
+		}
+
 		component.AddOrigin(c, manifest.Path)
 		component.AddType(c, Type)
+
+		if len(rawMetadata) > 0 {
+			component.AddRawMetadata(c, rawMetadata)
+		}
 
 		cdx.AddComponent(c)
 	}
 
-	return data
 }

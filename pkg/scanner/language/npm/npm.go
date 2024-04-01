@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
+	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
@@ -32,12 +33,19 @@ func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
 		log.Error("NPM Handler received unknown type")
+		return nil
 	}
 
+	scan(manifest)
+
+	return data
+}
+
+func scan(manifest types.ManifestFile) {
 	if strings.Contains(manifest.Path, "package.json") {
 		metadata := readManifestFile(manifest.Content)
 		if metadata.Name == "" || metadata.Version == "" {
-			return nil
+			return
 		}
 
 		c := component.New(metadata.Name, metadata.Version, Type)
@@ -62,12 +70,21 @@ func Scan(data interface{}) interface{} {
 			}
 		}
 
+		rawMetadata, err := helper.ToJSON(metadata)
+		if err != nil {
+			log.Errorf("Error converting metadata to JSON: %s", err)
+		}
+
+		if len(rawMetadata) > 0 {
+			component.AddRawMetadata(c, rawMetadata)
+		}
+
 		cdx.AddComponent(c)
 
 	} else if strings.Contains(manifest.Path, "package-lock.json") {
 		metadata := readPackageLockfile(manifest.Content)
 		if len(metadata.Dependencies) == 0 {
-			return nil
+			return
 		}
 		for name, dependency := range metadata.Dependencies {
 			if name == "" || dependency.Version == "" {
@@ -182,6 +199,4 @@ func Scan(data interface{}) interface{} {
 			cdx.AddComponent(c)
 		}
 	}
-
-	return data
 }

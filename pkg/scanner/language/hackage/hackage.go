@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
+	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
@@ -27,8 +28,15 @@ func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
 		log.Error("Hackage Handler received unknown type")
+		return nil
 	}
 
+	scan(manifest)
+
+	return data
+}
+
+func scan(manifest types.ManifestFile) {
 	if strings.Contains(manifest.Path, "stack.yaml") {
 		stackConfig := readStackConfigFile(manifest.Content)
 		for _, dep := range stackConfig.ExtraDeps {
@@ -46,8 +54,14 @@ func Scan(data interface{}) interface{} {
 				}
 			}
 
+			rawMetadata, err := helper.ToJSON(dep)
+			if err != nil {
+				log.Errorf("Error converting metadata to JSON: %s", err)
+			}
+
 			component.AddOrigin(c, manifest.Path)
 			component.AddType(c, Type)
+			component.AddRawMetadata(c, rawMetadata)
 
 			cdx.AddComponent(c)
 		}
@@ -69,8 +83,14 @@ func Scan(data interface{}) interface{} {
 				}
 			}
 
+			rawMetadata, err := helper.ToJSON(pkg)
+			if err != nil {
+				log.Errorf("Error converting metadata to JSON: %s", err)
+			}
+
 			component.AddOrigin(c, manifest.Path)
 			component.AddType(c, Type)
+			component.AddRawMetadata(c, rawMetadata)
 
 			cdx.AddComponent(c)
 		}
@@ -91,14 +111,18 @@ func Scan(data interface{}) interface{} {
 				}
 			}
 
+			rawMetadata, err := helper.ToJSON(pkg)
+			if err != nil {
+				log.Errorf("Error converting metadata to JSON: %s", err)
+			}
+
 			component.AddOrigin(c, manifest.Path)
 			component.AddType(c, Type)
+			component.AddRawMetadata(c, rawMetadata)
 
 			cdx.AddComponent(c)
 		}
 	}
-
-	return data
 }
 
 // Format Name and Version for parsing

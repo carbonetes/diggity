@@ -335,9 +335,7 @@ func readManifestFile(content []byte) *Metadata {
 		if err == io.EOF {
 			return nil
 		}
-		if err != nil {
-			log.Fatal(err)
-		}
+		log.Fatal(err)
 	}
 
 	return &metadata

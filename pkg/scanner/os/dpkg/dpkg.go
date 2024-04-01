@@ -24,12 +24,17 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 
 func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
-
 	if !ok {
 		log.Error("Dpkg received unknown file type")
 		return nil
 	}
 
+	scan(manifest)
+
+	return data
+}
+
+func scan(manifest types.ManifestFile) {
 	contents := string(manifest.Content)
 	packages := helper.SplitContentsByEmptyLine(contents)
 
@@ -60,6 +65,15 @@ func Scan(data interface{}) interface{} {
 			component.AddDescription(c, desc)
 		}
 
+		rawMetadata, err := helper.ToJSON(metadata)
+		if err != nil {
+			log.Errorf("Error converting metadata to JSON: %s", err)
+		}
+
+		if len(rawMetadata) > 0 {
+			component.AddRawMetadata(c, rawMetadata)
+		}
+
 		cdx.AddComponent(c)
 
 		if metadata["source"] != nil {
@@ -76,9 +90,16 @@ func Scan(data interface{}) interface{} {
 			component.AddOrigin(o, manifest.Path)
 			component.AddType(o, Type)
 
+			rawMetadata, err := helper.ToJSON(metadata)
+			if err != nil {
+				log.Errorf("Error converting metadata to JSON: %s", err)
+			}
+
+			if len(rawMetadata) > 0 {
+				component.AddRawMetadata(o, rawMetadata)
+			}
+
 			cdx.AddComponent(o)
 		}
 	}
-
-	return data
 }

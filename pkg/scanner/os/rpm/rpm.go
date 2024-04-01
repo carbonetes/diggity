@@ -6,6 +6,7 @@ import (
 	"slices"
 
 	"github.com/carbonetes/diggity/internal/cpe"
+	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
@@ -19,17 +20,33 @@ var (
 	RelatedPaths  = []string{"var\\lib\\rpm", "usr\\lib\\rpm", "etc\\rpm"}
 )
 
+func CheckRelatedFiles(file string) (string, bool, bool) {
+	if slices.Contains(RelatedPaths, filepath.Dir(file)) {
+		if slices.Contains(ManifestFiles, filepath.Base(file)) {
+			return Type, true, true
+		}
+
+	}
+	return "", false, false
+}
+
 func Scan(data interface{}) interface{} {
 	rpmdb, ok := data.(types.RpmDB)
-
 	if !ok {
 		log.Error("RPM Handler received unknown type")
+		return nil
 	}
 
 	if len(rpmdb.PackageInfos) == 0 {
 		return nil
 	}
 
+	scan(rpmdb)
+
+	return data
+}
+
+func scan(rpmdb types.RpmDB) {
 	for _, pkgInfo := range rpmdb.PackageInfos {
 
 		if pkgInfo.Name == "" || pkgInfo.Version == "" {
@@ -58,18 +75,15 @@ func Scan(data interface{}) interface{} {
 			}
 		}
 
-		cdx.AddComponent(c)
-	}
-
-	return data
-}
-
-func CheckRelatedFiles(file string) (string, bool, bool) {
-	if slices.Contains(RelatedPaths, filepath.Dir(file)) {
-		if slices.Contains(ManifestFiles, filepath.Base(file)) {
-			return Type, true, true
+		rawMetadata, err := helper.ToJSON(pkgInfo)
+		if err != nil {
+			log.Errorf("Error converting metadata to JSON: %s", err)
 		}
 
+		if len(rawMetadata) > 0 {
+			component.AddRawMetadata(c, rawMetadata)
+		}
+
+		cdx.AddComponent(c)
 	}
-	return "", false, false
 }
