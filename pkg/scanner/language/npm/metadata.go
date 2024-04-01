@@ -1,10 +1,9 @@
 package npm
 
 import (
-	"bufio"
 	"bytes"
 	"encoding/json"
-	"strings"
+	"io"
 
 	"github.com/carbonetes/diggity/internal/log"
 	"gopkg.in/yaml.v3"
@@ -62,9 +61,9 @@ type Dependency struct {
 }
 
 type YarnPackage struct {
-    Version      string
-    Resolution   string
-    Dependencies map[string]string
+	Version      string
+	Resolution   string
+	Dependencies map[string]string
 }
 
 type PnpmLockfile struct {
@@ -107,70 +106,25 @@ type Package struct {
 	Dependencies map[string]string
 }
 
-func ParseYarnLock(content []byte) (map[string]Package, error) {
+type YarnLockfile struct {
+	Version      string            `yaml:"version"`
+	Resolution   string            `yaml:"resolution"`
+	Dependencies map[string]string `yaml:"dependencies"`
+	Checksum     string            `yaml:"checksum"`
+	LanguageName string            `yaml:"languageName"`
+	LinkType     string            `yaml:"linkType"`
+}
+
+func parseYarnLock(content []byte) (map[string]YarnLockfile, error) {
+	packages := make(map[string]YarnLockfile)
 	r := bytes.NewReader(content)
-	scanner := bufio.NewScanner(r)
-	packages := make(map[string]Package)
-
-	var currentPackage string
-	for scanner.Scan() {
-		line := scanner.Text()
-
-		// Skip comments and empty lines
-		if strings.HasPrefix(line, "#") || strings.TrimSpace(line) == "" {
-			continue
-		}
-
-		// If the line ends with a colon, it's a package name
-		if strings.HasSuffix(line, ":") {
-			currentPackage = strings.TrimSuffix(line, ":")
-			packages[currentPackage] = Package{
-				Dependencies: make(map[string]string),
-			}
-			continue
-		}
-
-		// If we're inside a package definition
-		if currentPackage != "" {
-			parts := strings.SplitN(line, " ", 2)
-			key := strings.TrimSpace(parts[0])
-			value := ""
-			if len(parts) > 1 {
-				value = strings.TrimSpace(parts[1])
-			}
-
-			switch key {
-			case "version:":
-				packages[currentPackage] = Package{
-					Version:      strings.Trim(value, "\""),
-					Dependencies: packages[currentPackage].Dependencies,
-				}
-			case "resolution:":
-				packages[currentPackage] = Package{
-					Version:      packages[currentPackage].Version,
-					Resolution:   strings.Trim(value, "\""),
-					Dependencies: packages[currentPackage].Dependencies,
-				}
-			case "dependencies:":
-				// Handle dependencies in the next lines
-				for scanner.Scan() {
-					line := scanner.Text()
-					if strings.TrimSpace(line) == "" {
-						break
-					}
-					parts := strings.SplitN(line, " ", 2)
-					depName := strings.TrimSpace(parts[0])
-					depVersion := ""
-					if len(parts) > 1 {
-						depVersion = strings.TrimSpace(parts[1])
-					}
-					packages[currentPackage].Dependencies[depName] = depVersion
-				}
-			}
-		}
+	data, err := io.ReadAll(r)
+	if err != nil {
+		return nil, err
 	}
 
-	if err := scanner.Err(); err != nil {
+	err = yaml.Unmarshal(data, &packages)
+	if err != nil {
 		return nil, err
 	}
 

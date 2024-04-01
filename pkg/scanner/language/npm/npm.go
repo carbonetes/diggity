@@ -106,17 +106,65 @@ func scan(manifest types.ManifestFile) {
 			cdx.AddComponent(c)
 		}
 	} else if strings.Contains(manifest.Path, "yarn.lock") {
-		packages, err := ParseYarnLock(manifest.Content)
+		lockfile, err := parseYarnLock(manifest.Content)
 		if err != nil {
 			log.Errorf("Error parsing yarn.lock: %s", err)
 		}
-		for name, info := range packages {
-			if name == "" {
+		for id, pkg := range lockfile {
+			if strings.Contains(id, ",") {
+				pkgs := strings.Split(id, ",")
+				for _, p := range pkgs {
+					if p == pkg.Resolution {
+						continue
+					}
+
+					name, version := parseYarnPackageName(p), parseYarnVersion(p)
+					if len(name) == 0 || len(version) == 0 {
+						continue
+					}
+
+					metadata := pkg
+					metadata.Version = version
+
+					c := component.New(name, pkg.Version, Type)
+
+					cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+					if len(cpes) > 0 {
+						for _, cpe := range cpes {
+							component.AddCPE(c, cpe)
+						}
+					}
+
+					component.AddOrigin(c, manifest.Path)
+					component.AddType(c, Type)
+
+					rawMetadata, err := helper.ToJSON(metadata)
+					if err != nil {
+						log.Errorf("Error converting metadata to JSON: %s", err)
+					}
+
+					if len(rawMetadata) > 0 {
+						component.AddRawMetadata(c, rawMetadata)
+					}
+
+					cdx.AddComponent(c)
+				}
+			}
+
+			if pkg.Resolution == "" || pkg.Version == "" {
 				continue
 			}
 
-			c := component.New(name, info.Version, Type)
+			name := parseYarnPackageName(pkg.Resolution)
 
+			var version string
+			if pkg.Version == "" {
+				version = parseYarnVersion(pkg.Resolution)
+			} else {
+				version = pkg.Version
+			}
+
+			c := component.New(name, version, Type)
 			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 			if len(cpes) > 0 {
 				for _, cpe := range cpes {
@@ -126,6 +174,15 @@ func scan(manifest types.ManifestFile) {
 
 			component.AddOrigin(c, manifest.Path)
 			component.AddType(c, Type)
+
+			rawMetadata, err := helper.ToJSON(pkg)
+			if err != nil {
+				log.Errorf("Error converting metadata to JSON: %s", err)
+			}
+
+			if len(rawMetadata) > 0 {
+				component.AddRawMetadata(c, rawMetadata)
+			}
 
 			cdx.AddComponent(c)
 		}
@@ -199,4 +256,34 @@ func scan(manifest types.ManifestFile) {
 			cdx.AddComponent(c)
 		}
 	}
+}
+
+func parseYarnPackageName(name string) string {
+	if !strings.Contains(name, "@") {
+		return name
+	}
+
+	parts := strings.Split(name, "@")
+	if len(parts) == 2 {
+		return strings.TrimSpace(strings.Split(name, "@")[0])
+	}
+
+	if len(parts) == 3 {
+		return strings.TrimSpace(strings.Split(name, "@")[1])
+	}
+
+	return name
+}
+
+func parseYarnVersion(s string) string {
+	if !strings.Contains(s, ":") {
+		return s
+	}
+
+	parts := strings.Split(s, ":")
+	if len(parts) == 2 {
+		return strings.TrimSpace(parts[1])
+	}
+
+	return strings.TrimSpace(strings.ReplaceAll(parts[len(parts)-1], "^", ""))
 }
