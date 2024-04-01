@@ -155,7 +155,15 @@ func scan(manifest types.ManifestFile) {
 				continue
 			}
 
-			name, version := parseYarnPackageName(pkg.Resolution), parseYarnVersion(pkg.Resolution)
+			name := parseYarnPackageName(pkg.Resolution)
+
+			var version string
+			if pkg.Version == "" {
+				version = parseYarnVersion(pkg.Resolution)
+			} else {
+				version = pkg.Version
+			}
+
 			c := component.New(name, version, Type)
 			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 			if len(cpes) > 0 {
@@ -268,6 +276,10 @@ func parseYarnPackageName(name string) string {
 }
 
 func parseYarnVersion(s string) string {
+	if !strings.Contains(s, ":") {
+		return s
+	}
+
 	parts := strings.Split(s, ":")
 	if len(parts) == 2 {
 		return strings.TrimSpace(parts[1])
