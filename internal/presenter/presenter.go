@@ -13,10 +13,19 @@ import (
 func DisplayResults(params types.Parameters, duration float64) {
 	result := cdx.BOM
 
-	format, saveToFile := params.OutputFormat, params.SaveToFile
+	format, filename := params.OutputFormat, params.SaveToFile
 	if !params.Quiet {
 		status.Done()
 	}
+
+	if len(filename) > 0 {
+		err := helper.SaveToFile(result, filename, string(types.JSON))
+		if err != nil {
+			log.Errorf("Failed to save results to file : %s", err.Error())
+		}
+		return
+	}
+
 	switch format {
 	case types.Table:
 		table.Show(table.Create(), duration)
@@ -28,10 +37,4 @@ func DisplayResults(params types.Parameters, duration float64) {
 		log.Error("Unknown output format")
 	}
 
-	if len(saveToFile) > 0 {
-		err := helper.SaveToFile(result, saveToFile, format.String())
-		if err != nil {
-			log.Errorf("Failed to save results to file : %s", err.Error())
-		}
-	}
 }
