@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
+	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
@@ -31,53 +32,20 @@ func Scan(data interface{}) interface{} {
 		goBinary, ok := data.(types.GoBinary)
 		if !ok {
 			log.Error("Go Modules Handler received unknown type")
-		}
-		buildInfo := goBinary.BuildInfo
-
-		for _, s := range buildInfo.Settings {
-			// locate version
-			v := parseVersion(s.Value)
-			if v != "" {
-				c := component.New(goBinary.File, v, Type)
-
-				cpes := GenerateCpes(c.Version, SplitPath(c.Name))
-				if len(cpes) > 0 {
-					for _, cpe := range cpes {
-						component.AddCPE(c, cpe)
-					}
-				}
-
-				component.AddOrigin(c, goBinary.Path)
-				component.AddType(c, Type)
-
-				cdx.AddComponent(c)
-				break
-			}
+			return nil
 		}
 
-		for _, dep := range buildInfo.Deps {
-			if dep.Path == "" || dep.Version == "" {
-				continue
-			}
+		scanBinary(goBinary)
 
-			c := component.New(dep.Path, dep.Version, Type)
-
-			cpes := GenerateCpes(c.Version, SplitPath(c.Name))
-			if len(cpes) > 0 {
-				for _, cpe := range cpes {
-					component.AddCPE(c, cpe)
-				}
-			}
-
-			component.AddOrigin(c, goBinary.Path)
-			component.AddType(c, Type)
-
-			cdx.AddComponent(c)
-		}
-
-		return nil
+		return data
 	}
 
+	scan(manifest)
+
+	return data
+}
+
+func scan(manifest types.ManifestFile) {
 	modFile := readManifestFile(manifest.Content, manifest.Path)
 	for _, pkg := range modFile.Require {
 		if pkg.Mod.Path == "" || pkg.Mod.Version == "" {
@@ -96,8 +64,14 @@ func Scan(data interface{}) interface{} {
 			}
 		}
 
+		rawMetadata, err := helper.ToJSON(pkg)
+		if err != nil {
+			log.Errorf("Error converting metadata to JSON: %s", err)
+		}
+
 		component.AddOrigin(c, manifest.Path)
 		component.AddType(c, Type)
+		component.AddRawMetadata(c, rawMetadata)
 
 		cdx.AddComponent(c)
 	}
@@ -122,10 +96,80 @@ func Scan(data interface{}) interface{} {
 		component.AddOrigin(c, manifest.Path)
 		component.AddType(c, Type)
 
+		rawMetadata, err := helper.ToJSON(pkg)
+		if err != nil {
+			log.Errorf("Error converting metadata to JSON: %s", err)
+		}
+
+		if len(rawMetadata) > 0 {
+			component.AddRawMetadata(c, rawMetadata)
+		}
+
 		cdx.AddComponent(c)
 	}
+}
 
-	return data
+func scanBinary(goBinary types.GoBinary) {
+	buildInfo := goBinary.BuildInfo
+
+	for _, s := range buildInfo.Settings {
+		// locate version
+		v := parseVersion(s.Value)
+		if v != "" {
+			c := component.New(goBinary.File, v, Type)
+
+			cpes := GenerateCpes(c.Version, SplitPath(c.Name))
+			if len(cpes) > 0 {
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
+			}
+
+			component.AddOrigin(c, goBinary.Path)
+			component.AddType(c, Type)
+
+			rawMetadata, err := helper.ToJSON(s)
+			if err != nil {
+				log.Errorf("Error converting metadata to JSON: %s", err)
+			}
+
+			if len(rawMetadata) > 0 {
+				component.AddRawMetadata(c, rawMetadata)
+			}
+
+			cdx.AddComponent(c)
+			break
+		}
+	}
+
+	for _, dep := range buildInfo.Deps {
+		if dep.Path == "" || dep.Version == "" {
+			continue
+		}
+
+		c := component.New(dep.Path, dep.Version, Type)
+
+		cpes := GenerateCpes(c.Version, SplitPath(c.Name))
+		if len(cpes) > 0 {
+			for _, cpe := range cpes {
+				component.AddCPE(c, cpe)
+			}
+		}
+
+		component.AddOrigin(c, goBinary.Path)
+		component.AddType(c, Type)
+
+		rawMetadata, err := helper.ToJSON(dep)
+		if err != nil {
+			log.Errorf("Error converting metadata to JSON: %s", err)
+		}
+
+		if len(rawMetadata) > 0 {
+			component.AddRawMetadata(c, rawMetadata)
+		}
+
+		cdx.AddComponent(c)
+	}
 }
 
 func checkIfExcluded(excludeList []*modfile.Exclude, name string) bool {

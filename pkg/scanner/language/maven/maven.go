@@ -5,6 +5,7 @@ import (
 	"slices"
 
 	"github.com/carbonetes/diggity/internal/cpe"
+	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
@@ -29,13 +30,19 @@ func Scan(data interface{}) interface{} {
 		return nil
 	}
 
+	scan(manifest)
+
+	return data
+}
+
+func scan(manifest types.ManifestFile) {
 	metadata := readManifestFile(manifest.Content)
 	if metadata == nil {
-		return nil
+		return
 	}
 
 	if metadata.ArtifactID == "" || metadata.Version == "" {
-		return nil
+		return
 	}
 
 	c := component.New(metadata.ArtifactID, metadata.Version, Type)
@@ -54,7 +61,15 @@ func Scan(data interface{}) interface{} {
 	component.AddType(c, Type)
 	component.AddDescription(c, metadata.Description)
 
+	rawMetadata, err := helper.ToJSON(metadata)
+	if err != nil {
+		log.Errorf("Failed to convert metadata to JSON: %v", err)
+	}
+
+	if len(rawMetadata) > 0 {
+		component.AddRawMetadata(c, rawMetadata)
+	}
+
 	cdx.AddComponent(c)
 
-	return data
 }

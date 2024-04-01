@@ -5,6 +5,7 @@ import (
 	"slices"
 
 	"github.com/carbonetes/diggity/internal/cpe"
+	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
@@ -29,8 +30,15 @@ func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
 		log.Error("Python Handler received unknown type")
+		return nil
 	}
 
+	scan(manifest)
+
+	return data
+}
+
+func scan(manifest types.ManifestFile) {
 	if filepath.Ext(manifest.Path) == ".egg-info" || filepath.Base(manifest.Path) == "METADATA" || filepath.Base(manifest.Path) == "PKG-INFO" {
 		metadata := readManifestFile(manifest.Content)
 		name, version := metadata["Name"].(string), metadata["Version"].(string)
@@ -53,6 +61,15 @@ func Scan(data interface{}) interface{} {
 
 		if val, ok := metadata["License"].(string); ok {
 			component.AddLicense(c, val)
+		}
+
+		rawMetadata, err := helper.ToJSON(metadata)
+		if err != nil {
+			log.Errorf("Error converting metadata to JSON: %s", err)
+		}
+
+		if len(rawMetadata) > 0 {
+			component.AddRawMetadata(c, rawMetadata)
 		}
 
 		cdx.AddComponent(c)
@@ -93,9 +110,16 @@ func Scan(data interface{}) interface{} {
 			component.AddOrigin(c, manifest.Path)
 			component.AddType(c, Type)
 
+			rawMetadata, err := helper.ToJSON(packageInfo)
+			if err != nil {
+				log.Errorf("Error converting metadata to JSON: %s", err)
+			}
+
+			if len(rawMetadata) > 0 {
+				component.AddRawMetadata(c, rawMetadata)
+			}
+
 			cdx.AddComponent(c)
 		}
 	}
-
-	return data
 }

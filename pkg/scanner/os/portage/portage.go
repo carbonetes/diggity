@@ -28,16 +28,23 @@ func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
 		log.Error("Portage Handler received unknown type")
+		return nil
 	}
 
 	if len(manifest.Path) == 0 {
 		return nil
 	}
 
+	scan(manifest)
+
+	return data
+}
+
+func scan(manifest types.ManifestFile) {
 	target := filepath.Dir(manifest.Path)
 	name, version := parseNameVersion(target)
 	if len(name) == 0 || len(version) == 0 {
-		return nil
+		return
 	}
 
 	c := component.New(name, version, Type)
@@ -52,9 +59,9 @@ func Scan(data interface{}) interface{} {
 	component.AddOrigin(c, manifest.Path)
 	component.AddType(c, Type)
 
-	cdx.AddComponent(c)
+	// no metadata
 
-	return data
+	cdx.AddComponent(c)
 }
 
 func parseNameVersion(pkg string) (name string, version string) {

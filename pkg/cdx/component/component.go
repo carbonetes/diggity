@@ -2,20 +2,22 @@ package component
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/CycloneDX/cyclonedx-go"
+	"github.com/carbonetes/diggity/internal/helper"
+	"github.com/carbonetes/diggity/internal/log"
 	"github.com/google/uuid"
 )
 
 // New creates a new cyclonedx.Component with the given name, version, and category.
 func New(name, version, category string) *cyclonedx.Component {
+	purl := fmt.Sprintf("pkg:%s/%s@%s", category, name, version)
 	return &cyclonedx.Component{
 		Type:       cyclonedx.ComponentTypeLibrary,
 		BOMRef:     uuid.New().String(),
-		Name:       name,
-		Version:    version,
-		PackageURL: fmt.Sprintf("pkg:%s/%s@%s", category, name, version),
+		Name:       helper.CleanValue(name).(string),
+		Version:    helper.CleanValue(version).(string),
+		PackageURL: helper.CleanValue(purl).(string),
 		Properties: &[]cyclonedx.Property{},
 	}
 }
@@ -31,9 +33,11 @@ func AddCPE(c *cyclonedx.Component, cpe string) {
 		return
 	}
 
+	v := helper.CleanValue(cpe)
+
 	*c.Properties = append(*c.Properties, cyclonedx.Property{
 		Name:  "diggity:package:cpe23",
-		Value: cpe,
+		Value: v.(string),
 	})
 }
 
@@ -66,13 +70,11 @@ func AddDescription(c *cyclonedx.Component, description string) {
 		return
 	}
 
-	// Remove newline characters
-	description = strings.ReplaceAll(description, "\n", "")
-	description = strings.TrimSpace(description)
+	v := helper.CleanValue(description)
 
 	*c.Properties = append(*c.Properties, cyclonedx.Property{
 		Name:  "diggity:package:description",
-		Value: description,
+		Value: v.(string),
 	})
 }
 
@@ -93,6 +95,28 @@ func AddType(c *cyclonedx.Component, componentType string) {
 	})
 }
 
+// AddRawMetadata adds raw metadata to the given cyclonedx.Component.
+// The metadata should be in string value.
+func AddRawMetadata(c *cyclonedx.Component, metadata []byte) {
+	if c.Properties == nil {
+		c.Properties = &[]cyclonedx.Property{}
+	}
+
+	if len(metadata) == 0 {
+		return
+	}
+
+	v, err := helper.CleanJSON(string(metadata))
+	if err != nil {
+		log.Error(err)
+	}
+
+	*c.Properties = append(*c.Properties, cyclonedx.Property{
+		Name:  "diggity:package:metadata",
+		Value: v,
+	})
+}
+
 // AddLicense adds a license to the given cyclonedx.Component.
 // The license should be a SPDX license identifier.
 //
@@ -106,9 +130,11 @@ func AddLicense(c *cyclonedx.Component, license string) {
 		return
 	}
 
+	v := helper.CleanValue(license)
+
 	*c.Licenses = append(*c.Licenses, cyclonedx.LicenseChoice{
 		License: &cyclonedx.License{
-			ID: license,
+			ID: v.(string),
 		},
 	})
 }

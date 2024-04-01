@@ -30,12 +30,18 @@ func Scan(data interface{}) interface{} {
 		return nil
 	}
 
+	scan(manifest)
+
+	return data
+}
+
+func scan(manifest types.ManifestFile) {
 	contents := string(manifest.Content)
 	attributes := helper.SplitContentsByEmptyLine(contents)
 	metadata := parseMetadata(attributes)
 
 	if metadata["name"] == nil || metadata["name"] == "" {
-		return nil
+		return
 	}
 
 	name, version, desc := metadata["name"].(string), metadata["version"].(string), metadata["description"].(string)
@@ -60,7 +66,14 @@ func Scan(data interface{}) interface{} {
 
 	c.PackageURL = c.PackageURL + "?arch=" + arch
 
-	cdx.AddComponent(c)
+	rawMetadata, err := helper.ToJSON(metadata)
+	if err != nil {
+		log.Errorf("Error converting metadata to JSON: %s", err)
+	}
 
-	return data
+	if len(rawMetadata) > 0 {
+		component.AddRawMetadata(c, rawMetadata)
+	}
+
+	cdx.AddComponent(c)
 }

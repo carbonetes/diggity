@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
+	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
@@ -29,6 +30,12 @@ func Scan(data interface{}) interface{} {
 		return nil
 	}
 
+	scan(manifest)
+
+	return data
+}
+
+func scan(manifest types.ManifestFile) {
 	packages := strings.Split(string(manifest.Content), "\n\n")
 
 	for _, info := range packages {
@@ -63,6 +70,15 @@ func Scan(data interface{}) interface{} {
 			}
 		}
 
+		rawMetadata, err := helper.ToJSON(metadata)
+		if err != nil {
+			log.Errorf("Error converting metadata to JSON: %s", err)
+		}
+
+		if len(rawMetadata) > 0 {
+			component.AddRawMetadata(c, rawMetadata)
+		}
+
 		cdx.AddComponent(c)
 
 		// Add origin component
@@ -86,8 +102,16 @@ func Scan(data interface{}) interface{} {
 			component.AddOrigin(o, manifest.Path)
 			component.AddType(o, Type)
 
+			rawMetadata, err := helper.ToJSON(metadata)
+			if err != nil {
+				log.Errorf("Error converting metadata to JSON: %s", err)
+			}
+
+			if len(rawMetadata) > 0 {
+				component.AddRawMetadata(o, rawMetadata)
+			}
+
 			cdx.AddComponent(o)
 		}
 	}
-	return data
 }

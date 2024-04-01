@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
+	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
@@ -27,12 +28,19 @@ func Scan(data interface{}) interface{} {
 	manifest, ok := data.(types.ManifestFile)
 	if !ok {
 		log.Error("Hex Handler received unknown type")
+		return nil
 	}
 
+	scan(manifest)
+
+	return data
+}
+
+func scan(manifest types.ManifestFile) {
 	if strings.Contains(manifest.Path, "rebar.lock") {
 		packages := readRebarFile(manifest.Content)
 		if len(packages) == 0 {
-			return nil
+			return
 		}
 
 		for _, pkg := range packages {
@@ -51,6 +59,15 @@ func Scan(data interface{}) interface{} {
 
 			component.AddOrigin(c, manifest.Path)
 			component.AddType(c, Type)
+
+			rawMetadata, err := helper.ToJSON(pkg)
+			if err != nil {
+				log.Errorf("Error converting metadata to JSON: %s", err)
+			}
+
+			if len(rawMetadata) > 0 {
+				component.AddRawMetadata(c, rawMetadata)
+			}
 
 			cdx.AddComponent(c)
 		}
@@ -58,7 +75,7 @@ func Scan(data interface{}) interface{} {
 	} else if strings.Contains(manifest.Path, "mix.lock") {
 		packages := readMixFile(manifest.Content)
 		if len(packages) == 0 {
-			return nil
+			return
 		}
 
 		for _, pkg := range packages {
@@ -78,9 +95,16 @@ func Scan(data interface{}) interface{} {
 			component.AddOrigin(c, manifest.Path)
 			component.AddType(c, Type)
 
+			rawMetadata, err := helper.ToJSON(pkg)
+			if err != nil {
+				log.Errorf("Error converting metadata to JSON: %s", err)
+			}
+
+			if len(rawMetadata) > 0 {
+				component.AddRawMetadata(c, rawMetadata)
+			}
+
 			cdx.AddComponent(c)
 		}
 	}
-
-	return data
 }
