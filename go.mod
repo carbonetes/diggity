@@ -10,6 +10,7 @@ require (
 	github.com/charmbracelet/lipgloss v0.9.1
 	github.com/docker/distribution v2.8.3+incompatible
 	github.com/facebookincubator/nvdtools v0.1.5
+	github.com/golistic/urn v0.0.0-20230504070933-711e86b5b7cb
 	github.com/google/go-containerregistry v0.17.0
 	github.com/google/uuid v1.5.0
 	github.com/knqyf263/go-rpmdb v0.0.0-20231206071317-a8af76a6220f
@@ -38,6 +39,7 @@ require (
 	github.com/docker/docker-credential-helpers v0.7.0 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
+	github.com/geertjanvdk/xkit v0.9.0-beta.6 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/klauspost/compress v1.16.5 // indirect
