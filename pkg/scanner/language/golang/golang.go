@@ -27,25 +27,26 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 }
 
 func Scan(data interface{}) interface{} {
-	manifest, ok := data.(types.ManifestFile)
+	payload, ok := data.(types.Payload)
 	if !ok {
-		goBinary, ok := data.(types.GoBinary)
-		if !ok {
-			log.Error("Go Modules Handler received unknown type")
-			return nil
-		}
+		log.Error("Go Modules Handler received unknown type")
+		return nil
+	}
 
-		scanBinary(goBinary)
-
+	// Check if the body is for GoBinary Scanner
+	_, ok = payload.Body.(types.GoBinary)
+	if ok {
+		scanBinary(payload)
 		return data
 	}
 
-	scan(manifest)
+	scan(payload)
 
 	return data
 }
 
-func scan(manifest types.ManifestFile) {
+func scan(payload types.Payload) {
+	manifest := payload.Body.(types.ManifestFile)
 	modFile := readManifestFile(manifest.Content, manifest.Path)
 	for _, pkg := range modFile.Require {
 		if pkg.Mod.Path == "" || pkg.Mod.Version == "" {
@@ -73,7 +74,7 @@ func scan(manifest types.ManifestFile) {
 		component.AddType(c, Type)
 		component.AddRawMetadata(c, rawMetadata)
 
-		cdx.AddComponent(c)
+		cdx.AddComponent(c, payload.Address)
 	}
 
 	for _, pkg := range modFile.Replace {
@@ -105,11 +106,12 @@ func scan(manifest types.ManifestFile) {
 			component.AddRawMetadata(c, rawMetadata)
 		}
 
-		cdx.AddComponent(c)
+		cdx.AddComponent(c, payload.Address)
 	}
 }
 
-func scanBinary(goBinary types.GoBinary) {
+func scanBinary(payload types.Payload) {
+	goBinary := payload.Body.(types.GoBinary)
 	buildInfo := goBinary.BuildInfo
 
 	for _, s := range buildInfo.Settings {
@@ -137,7 +139,7 @@ func scanBinary(goBinary types.GoBinary) {
 				component.AddRawMetadata(c, rawMetadata)
 			}
 
-			cdx.AddComponent(c)
+			cdx.AddComponent(c, payload.Address)
 			break
 		}
 	}
@@ -168,7 +170,7 @@ func scanBinary(goBinary types.GoBinary) {
 			component.AddRawMetadata(c, rawMetadata)
 		}
 
-		cdx.AddComponent(c)
+		cdx.AddComponent(c, payload.Address)
 	}
 }
 

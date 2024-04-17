@@ -24,11 +24,19 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 }
 
 func Scan(data interface{}) interface{} {
-	manifest, ok := data.(types.ManifestFile)
+	payload, ok := data.(types.Payload)
 	if !ok {
 		log.Error("Swift Package Manager Handler received unknown type")
+		return nil
 	}
 
+	scan(payload)
+
+	return data
+}
+
+func scan(payload types.Payload) {
+	manifest := payload.Body.(types.ManifestFile)
 	metadata := readManifestFile(manifest.Content)
 
 	switch metadata.Version {
@@ -57,7 +65,7 @@ func Scan(data interface{}) interface{} {
 				component.AddRawMetadata(c, rawMetadata)
 			}
 
-			cdx.AddComponent(c)
+			cdx.AddComponent(c, payload.Address)
 		}
 	case 2:
 		for _, pin := range metadata.Pins {
@@ -84,9 +92,7 @@ func Scan(data interface{}) interface{} {
 				component.AddRawMetadata(c, rawMetadata)
 			}
 
-			cdx.AddComponent(c)
+			cdx.AddComponent(c, payload.Address)
 		}
 	}
-
-	return data
 }

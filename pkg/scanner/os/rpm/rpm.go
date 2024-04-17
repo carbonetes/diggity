@@ -31,22 +31,24 @@ func CheckRelatedFiles(file string) (string, bool, bool) {
 }
 
 func Scan(data interface{}) interface{} {
-	rpmdb, ok := data.(types.RpmDB)
+	payload, ok := data.(types.Payload)
 	if !ok {
 		log.Error("RPM Handler received unknown type")
 		return nil
 	}
 
-	if len(rpmdb.PackageInfos) == 0 {
-		return nil
-	}
-
-	scan(rpmdb)
+	scan(payload)
 
 	return data
 }
 
-func scan(rpmdb types.RpmDB) {
+func scan(payload types.Payload) {
+	rpmdb := payload.Body.(types.RpmDB)
+
+	if len(rpmdb.PackageInfos) == 0 {
+		return
+	}
+
 	for _, pkgInfo := range rpmdb.PackageInfos {
 
 		if pkgInfo.Name == "" || pkgInfo.Version == "" {
@@ -84,6 +86,6 @@ func scan(rpmdb types.RpmDB) {
 			component.AddRawMetadata(c, rawMetadata)
 		}
 
-		cdx.AddComponent(c)
+		cdx.AddComponent(c, payload.Address)
 	}
 }

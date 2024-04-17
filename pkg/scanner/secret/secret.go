@@ -6,6 +6,7 @@ import (
 
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/config"
+	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -19,7 +20,7 @@ type MatchPattern struct {
 }
 
 var (
-	Secrets      []types.Secret
+	// Secrets      []types.Secret
 	secretConfig types.SecretConfig
 	rules        []MatchPattern
 	whitelist    []*regexp.Regexp
@@ -43,15 +44,29 @@ func init() {
 	}
 }
 
+func New(addr types.Address) {
+	stream.Set(addr.ToString(), []types.Secret{})
+}
+
 func Scan(data interface{}) interface{} {
-	manifest, ok := data.(types.ManifestFile)
+	payload, ok := data.(types.Payload)
 	if !ok {
 		log.Error("Secret received unknown file type")
+		return nil
+	}
+
+	manifest, ok := payload.Body.(types.ManifestFile)
+	if !ok {
+		log.Error("Secret received unknown file type")
+		return nil
 	}
 
 	if manifest.Content == nil {
 		return nil
 	}
+
+	addr := payload.Address
+	addr.NID = "secret"
 
 	content := string(manifest.Content)
 	for _, matcher := range rules {
@@ -67,7 +82,7 @@ func Scan(data interface{}) interface{} {
 				Content:     match,
 				File:        manifest.Path,
 			}
-			Secrets = append(Secrets, secret)
+			AddSecret(addr, secret)
 		}
 	}
 
@@ -86,4 +101,11 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 	}
 
 	return Type, true, true
+}
+
+func AddSecret(addr types.Address, secret types.Secret) {
+	data, _ := stream.Get(addr.ToString())
+	secrets, _ := data.([]types.Secret)
+	secrets = append(secrets, secret)
+	stream.Set(addr.ToString(), secrets)
 }

@@ -24,18 +24,19 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 }
 
 func Scan(data interface{}) interface{} {
-	manifest, ok := data.(types.ManifestFile)
+	payload, ok := data.(types.Payload)
 	if !ok {
 		log.Error("Pacman Handler received unknown type")
 		return nil
 	}
 
-	scan(manifest)
+	scan(payload)
 
 	return data
 }
 
-func scan(manifest types.ManifestFile) {
+func scan(payload types.Payload) {
+	manifest := payload.Body.(types.ManifestFile)
 	contents := string(manifest.Content)
 	attributes := helper.SplitContentsByEmptyLine(contents)
 	metadata := parseMetadata(attributes)
@@ -75,5 +76,5 @@ func scan(manifest types.ManifestFile) {
 		component.AddRawMetadata(c, rawMetadata)
 	}
 
-	cdx.AddComponent(c)
+	cdx.AddComponent(c, payload.Address)
 }

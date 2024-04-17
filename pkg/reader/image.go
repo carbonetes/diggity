@@ -63,7 +63,7 @@ func GetImage(input string, config *types.RegistryConfig) (v1.Image, error) {
 
 // ReadFiles reads the layers of a given v1.Image and processes its contents.
 // It returns an error if there's any issue encountered while reading the layers or processing its contents.
-func ReadFiles(image v1.Image) error {
+func ReadFiles(image v1.Image, addr types.Address) error {
 	layers, err := image.Layers()
 	if err != nil {
 		return err
@@ -83,7 +83,7 @@ func ReadFiles(image v1.Image) error {
 				log.Errorf("Failed to uncompress layer: %s", err)
 			}
 
-			err = processLayerContents(contents, maxFileSize)
+			err = processLayerContents(contents, maxFileSize, addr)
 			if err != nil {
 				log.Errorf("Failed to process layer contents: %s", err)
 			}
@@ -98,7 +98,7 @@ func ReadFiles(image v1.Image) error {
 // It skips files that exceed the maximum file size and only processes regular files.
 // The processed files are hashed using the layerHash and stored for later use.
 // Returns an error if there was an issue reading or processing the tar file.
-func processLayerContents(contents io.ReadCloser, maxFileSize int64) error {
+func processLayerContents(contents io.ReadCloser, maxFileSize int64, addr types.Address) error {
 	defer contents.Close()
 	reader := tar.NewReader(contents)
 	for {
@@ -118,7 +118,7 @@ func processLayerContents(contents io.ReadCloser, maxFileSize int64) error {
 			if err != nil {
 				log.Error(err)
 			}
-			processArchive(bytes.NewReader(b), header.Size)
+			processArchive(bytes.NewReader(b), header.Size, addr)
 		}
 
 		if header.Typeflag == tar.TypeReg {
@@ -137,17 +137,26 @@ func processLayerContents(contents io.ReadCloser, maxFileSize int64) error {
 				// If it is, parse the binary file and emit a GoBinary object to the stream
 				build, isGolangBin := golang.Parse(bytes.NewReader(b))
 				if isGolangBin {
-					stream.Emit("golang", types.GoBinary{
-						File:      filepath.Base(header.Name),
-						Path:      header.Name,
-						BuildInfo: build,
-					})
+					// stream.Emit("golang", types.GoBinary{
+					// 	File:      filepath.Base(header.Name),
+					// 	Path:      header.Name,
+					// 	BuildInfo: build,
+					// })
+					payload := types.Payload{
+						Address: addr,
+						Body: types.GoBinary{
+							File:      filepath.Base(header.Name),
+							Path:      header.Name,
+							BuildInfo: build,
+						},
+					}
+					stream.Emit("golang", payload)
 					continue
 				}
 				continue
 			}
 
-			err = processTarHeader(header, reader)
+			err = processTarHeader(header, reader, addr)
 			if err != nil {
 				log.Error(err)
 			}
@@ -159,16 +168,17 @@ func processLayerContents(contents io.ReadCloser, maxFileSize int64) error {
 
 // processTarHeader processes a tar header and its contents, checking if the file size is within the limit and if it is a regular file.
 // If the file is a related file, it processes the file and returns an error if encountered.
-func processTarHeader(header *tar.Header, reader io.Reader) error {
+func processTarHeader(header *tar.Header, reader io.Reader, addr types.Address) error {
 	category, matched, readFlag := scanner.CheckRelatedFiles(header.Name)
 	if matched {
 		if !readFlag {
-			stream.Emit(category, types.ManifestFile{
-				Path: header.Name,
+			stream.Emit(category, types.Payload{
+				Address: addr,
+				Body: header.Name,
 			})
 			return nil
 		}
-		err := processFile(header.Name, reader, category)
+		err := processFile(header.Name, reader, category, addr)
 		if err != nil {
 			return err
 		}
@@ -182,7 +192,7 @@ func processTarHeader(header *tar.Header, reader io.Reader) error {
 // temporary file and emits a manifest file to a stream.
 // The manifest file contains the name of the file, the hash of the layer and the content of the file.
 // It returns an error if any of the operations fail.
-func processFile(name string, reader io.Reader, category string) error {
+func processFile(name string, reader io.Reader, category string, addr types.Address) error {
 	f, err := os.Create(os.TempDir() + string(os.PathSeparator) + "diggity-tmp-" + uuid.NewString())
 	if err != nil {
 		return err
@@ -194,12 +204,12 @@ func processFile(name string, reader io.Reader, category string) error {
 	}
 
 	if category == "rpm" {
-		err = handleRpmFile(f.Name(), category)
+		err = handleRpmFile(f.Name(), category, addr)
 		if err != nil {
 			return err
 		}
 	} else {
-		err = handleManifestFile(name, category, f)
+		err = handleManifestFile(name, category, f, addr)
 		if err != nil {
 			return err
 		}

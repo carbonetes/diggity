@@ -25,18 +25,19 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 }
 
 func Scan(data interface{}) interface{} {
-	manifest, ok := data.(types.ManifestFile)
+	payload, ok := data.(types.Payload)
 	if !ok {
 		log.Error("Composer Handler received unknown type")
 		return nil
 	}
 
-	scan(manifest)
+	scan(payload)
 
 	return data
 }
 
-func scan(manifest types.ManifestFile) {
+func scan(payload types.Payload) {
+	manifest := payload.Body.(types.ManifestFile)
 	metadata := readManifestFile(manifest.Content)
 
 	for _, pkg := range metadata.Packages {
@@ -71,7 +72,7 @@ func scan(manifest types.ManifestFile) {
 			}
 		}
 
-		cdx.AddComponent(c)
+		cdx.AddComponent(c, payload.Address)
 	}
 
 	for _, pkg := range metadata.PackagesDev {
@@ -108,6 +109,6 @@ func scan(manifest types.ManifestFile) {
 			}
 		}
 
-		cdx.AddComponent(c)
+		cdx.AddComponent(c, payload.Address)
 	}
 }
