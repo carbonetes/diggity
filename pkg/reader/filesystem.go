@@ -11,7 +11,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
-func FilesystemScanHandler(target string) error {
+func FilesystemScanHandler(target string, addr types.Address) error {
 	var paths []string
 	// recursive
 	err := filepath.Walk(target,
@@ -36,14 +36,15 @@ func FilesystemScanHandler(target string) error {
 		if matched {
 			switch category {
 			case "rpm":
-				err := handleRpmFile(path, category)
+				err := handleRpmFile(path, category, addr)
 				if err != nil {
 					log.Error(err)
 				}
 			default:
 				if !readFlag {
-					stream.Emit(category, types.ManifestFile{
-						Path: path,
+					stream.Emit(category, types.Payload{
+						Address: addr,
+						Body:    path,
 					})
 					continue
 				}
@@ -51,7 +52,7 @@ func FilesystemScanHandler(target string) error {
 				if err != nil {
 					log.Error(err)
 				}
-				err = handleManifestFile(path, category, file)
+				err = handleManifestFile(path, category, file, addr)
 				if err != nil {
 					log.Error(err)
 				}
@@ -61,19 +62,23 @@ func FilesystemScanHandler(target string) error {
 	return nil
 }
 
-func handleRpmFile(path, category string) error {
+func handleRpmFile(path, category string, addr types.Address) error {
 	rpmDb := types.RpmDB{
 		Path: path,
 	}
+
 	err := rpmDb.ReadDBFile(path)
 	if err != nil {
 		return err
 	}
-	stream.Emit(category, rpmDb)
+	stream.Emit(category, types.Payload{
+		Address: addr,
+		Body:    rpmDb,
+	})
 	return nil
 }
 
-func handleManifestFile(path, category string, file *os.File) error {
+func handleManifestFile(path, category string, file *os.File, addr types.Address) error {
 	manifest := types.ManifestFile{
 		Path: path,
 	}
@@ -81,7 +86,10 @@ func handleManifestFile(path, category string, file *os.File) error {
 	if err != nil {
 		return err
 	}
-	stream.Emit(category, manifest)
+	stream.Emit(category, types.Payload{
+		Address: addr,
+		Body:    manifest,
+	})
 
 	return nil
 }

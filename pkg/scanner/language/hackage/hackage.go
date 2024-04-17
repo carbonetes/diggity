@@ -25,18 +25,19 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 }
 
 func Scan(data interface{}) interface{} {
-	manifest, ok := data.(types.ManifestFile)
+	payload, ok := data.(types.Payload)
 	if !ok {
 		log.Error("Hackage Handler received unknown type")
 		return nil
 	}
 
-	scan(manifest)
+	scan(payload)
 
 	return data
 }
 
-func scan(manifest types.ManifestFile) {
+func scan(payload types.Payload) {
+	manifest := payload.Body.(types.ManifestFile)
 	if strings.Contains(manifest.Path, "stack.yaml") {
 		stackConfig := readStackConfigFile(manifest.Content)
 		for _, dep := range stackConfig.ExtraDeps {
@@ -63,7 +64,7 @@ func scan(manifest types.ManifestFile) {
 			component.AddType(c, Type)
 			component.AddRawMetadata(c, rawMetadata)
 
-			cdx.AddComponent(c)
+			cdx.AddComponent(c, payload.Address)
 		}
 	} else if strings.Contains(manifest.Path, "stack.yaml.lock") {
 		lockFile := readStackLockConfigFile(manifest.Content)
@@ -92,7 +93,7 @@ func scan(manifest types.ManifestFile) {
 			component.AddType(c, Type)
 			component.AddRawMetadata(c, rawMetadata)
 
-			cdx.AddComponent(c)
+			cdx.AddComponent(c, payload.Address)
 		}
 	} else if strings.Contains(manifest.Path, "cabal.project.freeze") {
 		packages := readManifestFile(manifest.Content)
@@ -120,7 +121,7 @@ func scan(manifest types.ManifestFile) {
 			component.AddType(c, Type)
 			component.AddRawMetadata(c, rawMetadata)
 
-			cdx.AddComponent(c)
+			cdx.AddComponent(c, payload.Address)
 		}
 	}
 }

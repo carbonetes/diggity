@@ -19,12 +19,19 @@ var (
 )
 
 func Scan(data interface{}) interface{} {
-	data, ok := data.(types.ManifestFile)
+	payload, ok := data.(types.Payload)
 	if !ok {
 		log.Error("Distro handler received unknown type")
 	}
 
-	Releases = append(Releases, parse(data.(types.ManifestFile)))
+	scan(payload)
+
+	return data
+}
+
+func scan(payload types.Payload) {
+	manifest := payload.Body.(types.ManifestFile)
+	Releases = append(Releases, parse(manifest))
 
 	for _, release := range Releases {
 		name, version, desc := release.Release["id"], release.Release["version_id"], release.Release["pretty_name"]
@@ -71,10 +78,8 @@ func Scan(data interface{}) interface{} {
 
 		addProperty(c, PropertyPrefix+"location", release.File)
 
-		cdx.AddComponent(c)
+		cdx.AddComponent(c, payload.Address)
 	}
-
-	return data
 }
 
 func CheckRelatedFile(file string) (string, bool, bool) {

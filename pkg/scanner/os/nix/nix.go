@@ -25,29 +25,30 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 }
 
 func Scan(data interface{}) interface{} {
-	manifest, ok := data.(types.ManifestFile)
+	payload, ok := data.(types.Payload)
 	if !ok {
 		log.Error("Nix Handler received unknown type")
 		return nil
 	}
 
-	scan(manifest)
+	scan(payload)
 
 	return data
 }
 
-func scan(manifest types.ManifestFile) {
-	if strings.Contains(filepath.Base(manifest.Path), ".nix") || strings.Contains(filepath.Base(manifest.Path), ".drv") {
+func scan(payload types.Payload) {
+	path := payload.Body.(string)
+	if strings.Contains(filepath.Base(path), ".nix") || strings.Contains(filepath.Base(path), ".drv") {
 		return
 	}
 
 	separator := "/"
-	if strings.Contains(manifest.Path, "\\") {
+	if strings.Contains(path, "\\") {
 		separator = "\\"
 	}
 
 	// Get the package name version
-	paths := strings.Split(manifest.Path, separator)
+	paths := strings.Split(path, separator)
 	var target string
 	for index, path := range paths {
 		if path == "nix" {
@@ -82,7 +83,7 @@ func scan(manifest types.ManifestFile) {
 		}
 	}
 
-	component.AddOrigin(c, manifest.Path)
+	component.AddOrigin(c, path)
 	component.AddType(c, Type)
 
 	rawMetadata, err := helper.ToJSON(metadata)
@@ -94,6 +95,6 @@ func scan(manifest types.ManifestFile) {
 		component.AddRawMetadata(c, rawMetadata)
 	}
 
-	cdx.AddComponent(c)
+	cdx.AddComponent(c, payload.Address)
 
 }

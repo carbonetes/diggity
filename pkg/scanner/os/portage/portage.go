@@ -25,22 +25,24 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 
 // TODO: Subject for thorough review and testing
 func Scan(data interface{}) interface{} {
-	manifest, ok := data.(types.ManifestFile)
+	payload, ok := data.(types.Payload)
 	if !ok {
 		log.Error("Portage Handler received unknown type")
 		return nil
 	}
 
-	if len(manifest.Path) == 0 {
-		return nil
-	}
-
-	scan(manifest)
+	scan(payload)
 
 	return data
 }
 
-func scan(manifest types.ManifestFile) {
+func scan(payload types.Payload) {
+	manifest := payload.Body.(types.ManifestFile)
+	
+	if len(manifest.Path) == 0 {
+		return
+	}
+
 	target := filepath.Dir(manifest.Path)
 	name, version := parseNameVersion(target)
 	if len(name) == 0 || len(version) == 0 {
@@ -61,7 +63,7 @@ func scan(manifest types.ManifestFile) {
 
 	// no metadata
 
-	cdx.AddComponent(c)
+	cdx.AddComponent(c, payload.Address)
 }
 
 func parseNameVersion(pkg string) (name string, version string) {

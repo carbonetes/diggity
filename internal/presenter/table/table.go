@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/CycloneDX/cyclonedx-go"
-	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -45,7 +44,7 @@ func (m model) View() string {
 	return baseStyle.Render(m.table.View()) + fmt.Sprintf("\nDuration: %.3f sec", m.duration) + "\n" + helpStyle.Render("Press esc to quit... 🐱🐓")
 }
 
-func Create() table.Model {
+func Create(bom *cyclonedx.BOM) table.Model {
 	columns := []table.Column{
 		{Title: "Component", Width: 30},
 		{Title: "Type", Width: 20},
@@ -54,7 +53,7 @@ func Create() table.Model {
 
 	var rows []table.Row
 	// components := stream.GetComponents()
-	components := cdx.BOM.Components
+	components := bom.Components
 	for _, component := range *components {
 
 		var componentType string

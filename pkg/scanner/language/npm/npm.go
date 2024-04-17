@@ -30,18 +30,19 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 }
 
 func Scan(data interface{}) interface{} {
-	manifest, ok := data.(types.ManifestFile)
+	payload, ok := data.(types.Payload)
 	if !ok {
 		log.Error("NPM Handler received unknown type")
 		return nil
 	}
 
-	scan(manifest)
+	scan(payload)
 
 	return data
 }
 
-func scan(manifest types.ManifestFile) {
+func scan(payload types.Payload) {
+	manifest := payload.Body.(types.ManifestFile)
 	if strings.Contains(manifest.Path, "package.json") {
 		metadata := readManifestFile(manifest.Content)
 		if metadata.Name == "" || metadata.Version == "" {
@@ -79,7 +80,7 @@ func scan(manifest types.ManifestFile) {
 			component.AddRawMetadata(c, rawMetadata)
 		}
 
-		cdx.AddComponent(c)
+		cdx.AddComponent(c, payload.Address)
 
 	} else if strings.Contains(manifest.Path, "package-lock.json") {
 		metadata := readPackageLockfile(manifest.Content)
@@ -103,7 +104,7 @@ func scan(manifest types.ManifestFile) {
 			component.AddOrigin(c, manifest.Path)
 			component.AddType(c, Type)
 
-			cdx.AddComponent(c)
+			cdx.AddComponent(c, payload.Address)
 		}
 	} else if strings.Contains(manifest.Path, "yarn.lock") {
 		lockfile, err := parseYarnLock(manifest.Content)
@@ -147,7 +148,7 @@ func scan(manifest types.ManifestFile) {
 						component.AddRawMetadata(c, rawMetadata)
 					}
 
-					cdx.AddComponent(c)
+					cdx.AddComponent(c, payload.Address)
 				}
 			}
 
@@ -184,7 +185,7 @@ func scan(manifest types.ManifestFile) {
 				component.AddRawMetadata(c, rawMetadata)
 			}
 
-			cdx.AddComponent(c)
+			cdx.AddComponent(c, payload.Address)
 		}
 	} else if strings.Contains(manifest.Path, "pnpm-lock.yaml") {
 		metadata := readPnpmLockfile(manifest.Content)
@@ -220,7 +221,7 @@ func scan(manifest types.ManifestFile) {
 			component.AddOrigin(c, manifest.Path)
 			component.AddType(c, Type)
 
-			cdx.AddComponent(c)
+			cdx.AddComponent(c, payload.Address)
 		}
 
 		separator := "/"
@@ -253,7 +254,7 @@ func scan(manifest types.ManifestFile) {
 			component.AddOrigin(c, manifest.Path)
 			component.AddType(c, Type)
 
-			cdx.AddComponent(c)
+			cdx.AddComponent(c, payload.Address)
 		}
 	}
 }

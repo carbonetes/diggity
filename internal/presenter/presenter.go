@@ -10,9 +10,8 @@ import (
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
-func DisplayResults(params types.Parameters, duration float64) {
-	cdx.SortComponents()
-	result := cdx.BOM
+func DisplayResults(params types.Parameters, duration float64, addr types.Address) {
+	result := cdx.SortComponents(addr)
 
 	format, filename := params.OutputFormat, params.SaveToFile
 	if !params.Quiet {
@@ -29,7 +28,7 @@ func DisplayResults(params types.Parameters, duration float64) {
 
 	switch format {
 	case types.Table:
-		table.Show(table.Create(), duration)
+		table.Show(table.Create(result), duration)
 	case types.JSON, types.CycloneDXJSON, types.SPDXJSON:
 		json.DisplayResults(result)
 	case types.CycloneDXXML, types.SPDXXML:
