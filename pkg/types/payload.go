@@ -8,21 +8,20 @@ import (
 )
 
 type Payload struct {
-	Address Address
+	Address *urn.URN
 	Body    interface{}
 }
 
-type Address urn.URN
+func NewAddress(input string) (*urn.URN, error) {
 
-func NewAddress(input string) (Address, error) {
-	addr, err := urn.New("bom", input, urn.WithQuery(uuid.NewString()))
-	if err != nil {
-		return Address(*addr), err
+	if input == "" {
+		return nil, fmt.Errorf("input is empty")
 	}
 
-	return Address(*addr), nil
-}
+	addr, err := urn.New("bom", input, urn.WithQuery(uuid.NewString()))
+	if err != nil {
+		return nil, err
+	}
 
-func (a Address) ToString() string {
-	return fmt.Sprintf("%s", a)
+	return addr, nil
 }

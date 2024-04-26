@@ -3,6 +3,7 @@ package cdx
 import (
 	"encoding/xml"
 	"fmt"
+	"log"
 	"sort"
 	"sync"
 	"time"
@@ -10,7 +11,7 @@ import (
 	"github.com/CycloneDX/cyclonedx-go"
 	diggity "github.com/carbonetes/diggity/internal/version"
 	"github.com/carbonetes/diggity/pkg/stream"
-	"github.com/carbonetes/diggity/pkg/types"
+	"github.com/golistic/urn"
 )
 
 var (
@@ -30,8 +31,8 @@ const (
 // 	BOM = New()
 // }
 
-func New(addr types.Address) {
-	stream.Set(addr.ToString(), &cyclonedx.BOM{
+func New(addr *urn.URN) {
+	stream.Set(addr.String(), &cyclonedx.BOM{
 		XMLName:     xml.Name{Local: cycloneDX},
 		XMLNS:       XMLN,
 		BOMFormat:   cycloneDX,
@@ -58,13 +59,16 @@ func getCDXMetadata(author, name, version string) *cyclonedx.Metadata {
 	}
 }
 
-func AddComponent(c *cyclonedx.Component, addr types.Address) {
+func AddComponent(c *cyclonedx.Component, addr *urn.URN) {
 	if c == nil {
 		return
 	}
 
-	data, _ := stream.Get(addr.ToString())
-	bom := data.(*cyclonedx.BOM)
+	data, _ := stream.Get(addr.String())
+	bom, ok := data.(*cyclonedx.BOM)
+	if !ok {
+		log.Fatal("Failed to get BOM from stream")
+	}
 
 	// Check if the component already exists in the BOM
 	for _, existingComponent := range *bom.Components {
@@ -77,20 +81,20 @@ func AddComponent(c *cyclonedx.Component, addr types.Address) {
 	// If the component does not exist, add it to the BOM
 	// *BOM.Components = append(*BOM.Components, *c)
 	*bom.Components = append(*bom.Components, *c)
-	stream.Set(addr.ToString(), bom)
+	stream.Set(addr.String(), bom)
 }
 
-func SortComponents(addr types.Address) *cyclonedx.BOM {
+func SortComponents(addr *urn.URN) *cyclonedx.BOM {
 	lock.Lock()
 	defer lock.Unlock()
 
-	data, _ := stream.Get(addr.ToString())
+	data, _ := stream.Get(addr.String())
 	bom := data.(*cyclonedx.BOM)
 
 	// Sort components by name
 	sort.Slice(*bom.Components, func(i, j int) bool {
 		return (*bom.Components)[i].Name < (*bom.Components)[j].Name
 	})
-	stream.Set(addr.ToString(), bom)
+	stream.Set(addr.String(), bom)
 	return bom
 }
