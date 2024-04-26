@@ -42,7 +42,16 @@ func scan(payload types.Payload) {
 	manifest := payload.Body.(types.ManifestFile)
 	if filepath.Ext(manifest.Path) == ".egg-info" || filepath.Base(manifest.Path) == "METADATA" || filepath.Base(manifest.Path) == "PKG-INFO" {
 		metadata := readManifestFile(manifest.Content)
-		name, version := metadata["Name"].(string), metadata["Version"].(string)
+
+		name, ok := metadata["Name"].(string)
+		if !ok {
+			return
+		}
+
+		version, ok := metadata["Version"].(string)
+		if !ok {
+			return
+		}
 
 		c := component.New(name, version, Type)
 
