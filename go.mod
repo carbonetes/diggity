@@ -13,6 +13,7 @@ require (
 	github.com/golistic/urn v0.0.0-20230504070933-711e86b5b7cb
 	github.com/google/go-containerregistry v0.17.0
 	github.com/google/uuid v1.5.0
+	github.com/hashicorp/go-version v1.6.0
 	github.com/knqyf263/go-rpmdb v0.0.0-20231206071317-a8af76a6220f
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/sirupsen/logrus v1.9.3
