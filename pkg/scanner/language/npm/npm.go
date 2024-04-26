@@ -13,6 +13,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/types"
+	"github.com/hashicorp/go-version"
 )
 
 const Type string = "npm"
@@ -50,8 +51,12 @@ func scan(payload types.Payload) {
 		if len(devDependencies) > 0 {
 			for name, version := range devDependencies {
 				n := parseYarnPackageName(name)
-				v := parseYarnVersion(version.(string))
+				v := cleanVersion(version.(string))
 				if n == "" || v == "" {
+					continue
+				}
+
+				if !validateVersion(v) {
 					continue
 				}
 
@@ -74,8 +79,12 @@ func scan(payload types.Payload) {
 		if len(dependencies) > 0 {
 			for name, version := range dependencies {
 				n := parseYarnPackageName(name)
-				v := parseYarnVersion(version.(string))
+				v := cleanVersion(version.(string))
 				if n == "" || v == "" {
+					continue
+				}
+
+				if !validateVersion(v) {
 					continue
 				}
 
@@ -99,7 +108,10 @@ func scan(payload types.Payload) {
 			return
 		}
 
-		c := component.New(metadata.Name, metadata.Version, Type)
+		n := cleanName(metadata.Name)
+		v := cleanVersion(metadata.Version)
+
+		c := component.New(n, v, Type)
 
 		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 		if len(cpes) > 0 {
@@ -142,7 +154,7 @@ func scan(payload types.Payload) {
 				continue
 			}
 
-			c := component.New(name, dependency.Version, Type)
+			c := component.New(parseYarnPackageName(name), cleanVersion(dependency.Version), Type)
 
 			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 			if len(cpes) > 0 {
@@ -337,4 +349,19 @@ func parseYarnVersion(s string) string {
 	}
 
 	return strings.TrimSpace(strings.ReplaceAll(parts[len(parts)-1], "^", ""))
+}
+
+func cleanName(name string) string {
+	return strings.TrimSpace(strings.ReplaceAll(name, "@", ""))
+}
+
+func cleanVersion(version string) string {
+	version = strings.TrimSpace(strings.ReplaceAll(version, "^", ""))
+	version = strings.TrimSpace(strings.ReplaceAll(version, "~", ""))
+	return version
+}
+
+func validateVersion(v string) bool {
+	_, err := version.NewVersion(v)
+	return err == nil
 }
