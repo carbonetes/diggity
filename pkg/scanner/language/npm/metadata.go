@@ -10,15 +10,16 @@ import (
 )
 
 // PackageJSON - packages.json model
-type Metadata struct {
+type Metadata struct {	
+	Name         string                 `json:"name"`
 	Version      string                 `json:"version"`
 	Latest       []string               `json:"latest"`
 	Contributors interface{}            `json:"contributors"`
 	License      interface{}            `json:"license"`
-	Name         string                 `json:"name"`
 	Homepage     string                 `json:"homepage"`
 	Description  string                 `json:"description"`
 	Dependencies map[string]interface{} `json:"dependencies"`
+	DevDependencies map[string]interface{} `json:"devDependencies"`
 	Repository   interface{}            `json:"repository"`
 	Author       interface{}            `json:"author"`
 }

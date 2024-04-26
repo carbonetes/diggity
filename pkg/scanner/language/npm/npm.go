@@ -45,6 +45,56 @@ func scan(payload types.Payload) {
 	manifest := payload.Body.(types.ManifestFile)
 	if strings.Contains(manifest.Path, "package.json") {
 		metadata := readManifestFile(manifest.Content)
+
+		devDependencies := metadata.DevDependencies
+		if len(devDependencies) > 0 {
+			for name, version := range devDependencies {
+				n := parseYarnPackageName(name)
+				v := parseYarnVersion(version.(string))
+				if n == "" || v == "" {
+					continue
+				}
+
+				c := component.New(n, v, Type)
+
+				cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+				if len(cpes) > 0 {
+					for _, cpe := range cpes {
+						component.AddCPE(c, cpe)
+					}
+				}
+
+				component.AddOrigin(c, manifest.Path)
+				component.AddType(c, Type)
+
+				cdx.AddComponent(c, payload.Address)
+			}
+		}
+		dependencies := metadata.Dependencies
+		if len(dependencies) > 0 {
+			for name, version := range dependencies {
+				n := parseYarnPackageName(name)
+				v := parseYarnVersion(version.(string))
+				if n == "" || v == "" {
+					continue
+				}
+
+				c := component.New(n, v, Type)
+
+				cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+				if len(cpes) > 0 {
+					for _, cpe := range cpes {
+						component.AddCPE(c, cpe)
+					}
+				}
+
+				component.AddOrigin(c, manifest.Path)
+				component.AddType(c, Type)
+
+				cdx.AddComponent(c, payload.Address)
+			}
+		}
+
 		if metadata.Name == "" || metadata.Version == "" {
 			return
 		}
