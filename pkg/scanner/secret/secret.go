@@ -8,6 +8,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/config"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
+	"github.com/golistic/urn"
 )
 
 const Type = "secret"
@@ -44,8 +45,10 @@ func init() {
 	}
 }
 
-func New(addr types.Address) {
-	stream.Set(addr.ToString(), []types.Secret{})
+func New(addr *urn.URN) {
+	secretAddr := *addr
+	secretAddr.NID = "secret"
+	stream.Set(secretAddr.String(), []types.Secret{})
 }
 
 func Scan(data interface{}) interface{} {
@@ -65,8 +68,8 @@ func Scan(data interface{}) interface{} {
 		return nil
 	}
 
-	addr := payload.Address
-	addr.NID = "secret"
+	secretAddr := *payload.Address
+	secretAddr.NID = "secret"
 
 	content := string(manifest.Content)
 	for _, matcher := range rules {
@@ -82,7 +85,7 @@ func Scan(data interface{}) interface{} {
 				Content:     match,
 				File:        manifest.Path,
 			}
-			AddSecret(addr, secret)
+			AddSecret(&secretAddr, secret)
 		}
 	}
 
@@ -103,9 +106,9 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 	return Type, true, true
 }
 
-func AddSecret(addr types.Address, secret types.Secret) {
-	data, _ := stream.Get(addr.ToString())
+func AddSecret(addr *urn.URN, secret types.Secret) {
+	data, _ := stream.Get(addr.String())
 	secrets, _ := data.([]types.Secret)
 	secrets = append(secrets, secret)
-	stream.Set(addr.ToString(), secrets)
+	stream.Set(addr.String(), secrets)
 }

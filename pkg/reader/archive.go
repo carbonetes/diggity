@@ -11,13 +11,14 @@ import (
 	"github.com/carbonetes/diggity/pkg/scanner"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
+	"github.com/golistic/urn"
 )
 
 // List of archive file types
 var archiveTypes = []string{".jar", ".war", ".ear", ".jpi", ".hpi"}
 
 // Process an archive file and check for manifest and related files
-func processArchive(reader io.ReaderAt, size int64, addr types.Address) {
+func processArchive(reader io.ReaderAt, size int64, addr *urn.URN) {
 	// Check if the file is a valid zip
 	// If it is, emit a FileListEvent for each file in the zip
 	// If not valid, return and skip the file
@@ -62,7 +63,7 @@ func processArchive(reader io.ReaderAt, size int64, addr types.Address) {
 }
 
 // handleArchiveFile processes a file in the archive and emits a manifest file event
-func handleArchiveFile(path, categoty string, file *zip.File, readFlag bool, addr types.Address) error {
+func handleArchiveFile(path, categoty string, file *zip.File, readFlag bool, addr *urn.URN) error {
 	payload := types.Payload{
 		Address: addr,
 	}

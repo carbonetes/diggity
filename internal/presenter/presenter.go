@@ -8,9 +8,10 @@ import (
 	"github.com/carbonetes/diggity/internal/presenter/table"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/types"
+	"github.com/golistic/urn"
 )
 
-func DisplayResults(params types.Parameters, duration float64, addr types.Address) {
+func DisplayResults(params types.Parameters, duration float64, addr *urn.URN) {
 	result := cdx.SortComponents(addr)
 
 	format, filename := params.OutputFormat, params.SaveToFile

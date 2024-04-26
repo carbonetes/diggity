@@ -17,6 +17,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/scanner/binary/golang"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
+	"github.com/golistic/urn"
 	"github.com/google/go-containerregistry/pkg/authn"
 	"github.com/google/go-containerregistry/pkg/name"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
@@ -63,7 +64,7 @@ func GetImage(input string, config *types.RegistryConfig) (v1.Image, error) {
 
 // ReadFiles reads the layers of a given v1.Image and processes its contents.
 // It returns an error if there's any issue encountered while reading the layers or processing its contents.
-func ReadFiles(image v1.Image, addr types.Address) error {
+func ReadFiles(image v1.Image, addr *urn.URN) error {
 	layers, err := image.Layers()
 	if err != nil {
 		return err
@@ -98,7 +99,7 @@ func ReadFiles(image v1.Image, addr types.Address) error {
 // It skips files that exceed the maximum file size and only processes regular files.
 // The processed files are hashed using the layerHash and stored for later use.
 // Returns an error if there was an issue reading or processing the tar file.
-func processLayerContents(contents io.ReadCloser, maxFileSize int64, addr types.Address) error {
+func processLayerContents(contents io.ReadCloser, maxFileSize int64, addr *urn.URN) error {
 	defer contents.Close()
 	reader := tar.NewReader(contents)
 	for {
@@ -168,13 +169,13 @@ func processLayerContents(contents io.ReadCloser, maxFileSize int64, addr types.
 
 // processTarHeader processes a tar header and its contents, checking if the file size is within the limit and if it is a regular file.
 // If the file is a related file, it processes the file and returns an error if encountered.
-func processTarHeader(header *tar.Header, reader io.Reader, addr types.Address) error {
+func processTarHeader(header *tar.Header, reader io.Reader, addr *urn.URN) error {
 	category, matched, readFlag := scanner.CheckRelatedFiles(header.Name)
 	if matched {
 		if !readFlag {
 			stream.Emit(category, types.Payload{
 				Address: addr,
-				Body: header.Name,
+				Body:    header.Name,
 			})
 			return nil
 		}
@@ -192,7 +193,7 @@ func processTarHeader(header *tar.Header, reader io.Reader, addr types.Address) 
 // temporary file and emits a manifest file to a stream.
 // The manifest file contains the name of the file, the hash of the layer and the content of the file.
 // It returns an error if any of the operations fail.
-func processFile(name string, reader io.Reader, category string, addr types.Address) error {
+func processFile(name string, reader io.Reader, category string, addr *urn.URN) error {
 	f, err := os.Create(os.TempDir() + string(os.PathSeparator) + "diggity-tmp-" + uuid.NewString())
 	if err != nil {
 		return err

@@ -9,9 +9,10 @@ import (
 	"github.com/carbonetes/diggity/pkg/scanner"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
+	"github.com/golistic/urn"
 )
 
-func FilesystemScanHandler(target string, addr types.Address) error {
+func FilesystemScanHandler(target string, addr *urn.URN) error {
 	var paths []string
 	// recursive
 	err := filepath.Walk(target,
@@ -62,7 +63,7 @@ func FilesystemScanHandler(target string, addr types.Address) error {
 	return nil
 }
 
-func handleRpmFile(path, category string, addr types.Address) error {
+func handleRpmFile(path, category string, addr *urn.URN) error {
 	rpmDb := types.RpmDB{
 		Path: path,
 	}
@@ -78,7 +79,7 @@ func handleRpmFile(path, category string, addr types.Address) error {
 	return nil
 }
 
-func handleManifestFile(path, category string, file *os.File, addr types.Address) error {
+func handleManifestFile(path, category string, file *os.File, addr *urn.URN) error {
 	manifest := types.ManifestFile{
 		Path: path,
 	}
