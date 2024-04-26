@@ -3,6 +3,7 @@ package pypi
 import (
 	"path/filepath"
 	"slices"
+	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
@@ -53,6 +54,10 @@ func scan(payload types.Payload) {
 			return
 		}
 
+		if name == "" || version == "" || strings.Contains(name, "=") || strings.Contains(version, "=") {
+			return
+		}
+
 		c := component.New(name, version, Type)
 
 		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
@@ -87,7 +92,15 @@ func scan(payload types.Payload) {
 	} else if filepath.Base(manifest.Path) == "requirements.txt" {
 		attributes := readRequirementsFile(manifest.Content)
 		for _, attribute := range attributes {
+			if len(attribute) != 2 {
+				continue
+			}
+
 			name, version := attribute[0], attribute[1]
+
+			if name == "" || version == "" || strings.Contains(name, "=") || strings.Contains(version, "=") {
+				continue
+			}
 
 			c := component.New(name, version, Type)
 
@@ -107,6 +120,10 @@ func scan(payload types.Payload) {
 		metadata := readPoetryLockFile(manifest.Content)
 		for _, packageInfo := range metadata.Packages {
 			name, version := packageInfo.Name, packageInfo.Version
+
+			if name == "" || version == "" || strings.Contains(name, "=") || strings.Contains(version, "=") {
+				continue
+			}
 
 			c := component.New(name, version, Type)
 
