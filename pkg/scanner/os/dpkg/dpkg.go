@@ -2,6 +2,7 @@ package dpkg
 
 import (
 	"slices"
+	"strings"
 
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
@@ -41,16 +42,29 @@ func scan(payload types.Payload) {
 
 	for _, info := range packages {
 		metadata := parseMetadata(info)
+
 		if metadata["package"] == nil || metadata["version"] == nil {
 			continue
 		}
+
+		n, ok := metadata["package"].(string)
+		if !ok {
+			continue
+		}
+
+		version, ok := metadata["version"].(string)
+		if !ok {
+			continue
+		}
+
+		name := cleanName(n)
 
 		var desc string
 		if val, ok := metadata["description"].(string); ok {
 			desc = val
 		}
 
-		c := component.New(metadata["package"].(string), metadata["version"].(string), Type)
+		c := component.New(name, version, Type)
 
 		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 		if len(cpes) > 0 {
@@ -79,7 +93,19 @@ func scan(payload types.Payload) {
 
 		if metadata["source"] != nil {
 
-			o := component.New(metadata["source"].(string), metadata["version"].(string), Type)
+			n, ok := metadata["source"].(string)
+			if !ok {
+				continue
+			}
+
+			version, ok := metadata["version"].(string)
+			if !ok {
+				continue
+			}
+
+			name := cleanName(n)
+
+			o := component.New(name, version, Type)
 
 			cpes := cpe.NewCPE23(o.Name, o.Name, o.Version, Type)
 			if len(cpes) > 0 {
@@ -103,4 +129,11 @@ func scan(payload types.Payload) {
 			cdx.AddComponent(o, payload.Address)
 		}
 	}
+}
+
+func cleanName(name string) string {
+	if strings.Contains(name, "(") {
+		return strings.TrimSpace(strings.Split(name, "(")[0])
+	}
+	return name
 }
