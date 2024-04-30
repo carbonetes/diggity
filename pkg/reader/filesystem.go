@@ -1,8 +1,11 @@
 package reader
 
 import (
+	"bytes"
+	"io"
 	"os"
 	"path/filepath"
+	"slices"
 
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/internal/presenter/status"
@@ -33,6 +36,27 @@ func FilesystemScanHandler(target string, addr *urn.URN) error {
 	}
 	for _, path := range paths {
 		status.AddFile(path)
+
+		// Check if the file is an archive file (e.g. *.jar, *.war, *.ear, *.jpi, *.hpi)
+		if slices.Contains(archiveTypes, filepath.Ext(path)) {
+			reader, err := os.Open(path)
+			if err != nil {
+				continue
+			}
+
+			stat, err := reader.Stat()
+			if err != nil {
+				continue
+			}
+
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				continue
+			}
+			processArchive(bytes.NewReader(b), stat.Size(), addr)
+			continue
+		}
+
 		category, matched, readFlag := scanner.CheckRelatedFiles(path)
 		if matched {
 			switch category {
