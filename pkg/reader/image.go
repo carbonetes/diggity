@@ -119,7 +119,7 @@ func processLayerContents(contents io.ReadCloser, maxFileSize int64, addr *urn.U
 			if err != nil {
 				log.Error(err)
 			}
-			processArchive(bytes.NewReader(b), header.Size, addr)
+			processArchive(bytes.NewReader(b), header.Name, header.Size, addr)
 		}
 
 		if header.Typeflag == tar.TypeReg {
