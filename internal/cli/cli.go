@@ -25,8 +25,7 @@ func Start(parameters types.Parameters) {
 	// Generate unique address for the scan
 	addr, err := types.NewAddress(parameters.Input)
 	if err != nil {
-		log.Error(err)
-		return
+		log.Fatal(err)
 	}
 
 	cdx.New(addr)
@@ -34,34 +33,28 @@ func Start(parameters types.Parameters) {
 	case 1: // Image Scan Type
 		image, err := reader.GetImage(parameters.Input, &config.Config.Registry)
 		if err != nil {
-			log.Error(err)
-			return
+			log.Fatal(err)
 		}
 		err = reader.ReadFiles(image, addr)
 		if err != nil {
-			log.Error(err)
-			return
+			log.Fatal(err)
 		}
 	case 2: // Tarball Scan Type
 		image, err := reader.ReadTarballAsImage(parameters.Input)
 		if err != nil {
-			log.Error(err)
-			return
+			log.Fatal(err)
 		}
 		err = reader.ReadFiles(image, addr)
 		if err != nil {
-			log.Error(err)
-			return
+			log.Fatal(err)
 		}
 	case 3: // Filesystem Scan Type
 		err := reader.FilesystemScanHandler(parameters.Input, addr)
 		if err != nil {
-			log.Error(err)
-			return
+			log.Fatal(err)
 		}
 	default:
-		log.Error("Unknown scan type")
-		return
+		log.Fatal("Unknown scan type")
 	}
 
 	presenter.DisplayResults(parameters, time.Since(start).Seconds(), addr)

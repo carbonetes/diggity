@@ -18,7 +18,7 @@ import (
 var archiveTypes = []string{".jar", ".war", ".ear", ".jpi", ".hpi"}
 
 // Process an archive file and check for manifest and related files
-func processArchive(reader io.ReaderAt, size int64, addr *urn.URN) {
+func processArchive(reader io.ReaderAt, path string, size int64, addr *urn.URN) {
 	// Check if the file is a valid zip
 	// If it is, emit a FileListEvent for each file in the zip
 	// If not valid, return and skip the file
@@ -49,7 +49,7 @@ func processArchive(reader io.ReaderAt, size int64, addr *urn.URN) {
 
 		category, matched, readFlag := scanner.CheckRelatedFiles(f.Name)
 		if matched {
-			err = handleArchiveFile(f.Name, category, f, readFlag, addr)
+			err = handleArchiveFile(f.Name, path, category, f, readFlag, addr)
 			if err != nil {
 				continue
 			}
@@ -57,19 +57,19 @@ func processArchive(reader io.ReaderAt, size int64, addr *urn.URN) {
 
 		//	if the file is a valid zip, process it as a nested archive
 		if slices.Contains(archiveTypes, filepath.Ext(f.Name)) {
-			processArchive(bytes.NewReader(data), f.FileInfo().Size(), addr)
+			processArchive(bytes.NewReader(data), path, f.FileInfo().Size(), addr)
 		}
 	}
 }
 
 // handleArchiveFile processes a file in the archive and emits a manifest file event
-func handleArchiveFile(path, categoty string, file *zip.File, readFlag bool, addr *urn.URN) error {
+func handleArchiveFile(path, parent, categoty string, file *zip.File, readFlag bool, addr *urn.URN) error {
 	payload := types.Payload{
 		Address: addr,
 	}
 
 	manifest := types.ManifestFile{
-		Path: path,
+		Path: parent + "/" + path,
 	}
 
 	if readFlag {

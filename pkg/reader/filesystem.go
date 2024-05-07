@@ -53,7 +53,7 @@ func FilesystemScanHandler(target string, addr *urn.URN) error {
 			if err != nil {
 				continue
 			}
-			processArchive(bytes.NewReader(b), stat.Size(), addr)
+			processArchive(bytes.NewReader(b), path, stat.Size(), addr)
 			continue
 		}
 
