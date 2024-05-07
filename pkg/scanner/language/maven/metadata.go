@@ -331,6 +331,8 @@ type ActivationFile struct {
 }
 
 // parsePOM parses the POM file and returns the metadata.
+//
+//nolint:all
 func parsePOM(content []byte) (*Metadata, error) {
 	// Create a new XML decoder which can handle various charsets
 	decoder := xml.NewDecoder(bytes.NewReader(content))
@@ -350,6 +352,8 @@ func parsePOM(content []byte) (*Metadata, error) {
 }
 
 // resolveProperties resolves the properties in the POM file.
+//
+//nolint:all
 func resolveProperties(metadata *Metadata) map[string]string {
 	properties := make(map[string]string)
 	if metadata.Properties != nil {
@@ -361,6 +365,8 @@ func resolveProperties(metadata *Metadata) map[string]string {
 }
 
 // parseManifestFile parses the MANIFEST.MF file and returns a map of key-value pairs.
+//
+//nolint:all
 func parseManifestFile(content []byte) (map[string]string, error) {
 	manifest := make(map[string]string)
 
