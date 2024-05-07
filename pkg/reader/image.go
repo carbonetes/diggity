@@ -3,6 +3,7 @@ package reader
 import (
 	"archive/tar"
 	"bytes"
+	"errors"
 	"io"
 	"os"
 	"path/filepath"
@@ -29,7 +30,7 @@ import (
 // GetImage retrieves a Docker image given its name or digest.
 // It first checks if the image exists locally, and if not, it pulls it from the remote registry.
 // Returns the image object and an error if any.
-func GetImage(input string, config *types.RegistryConfig) (v1.Image, error) {
+func GetImage(input string, config *types.RegistryConfig) (*v1.Image, error) {
 	ref, err := name.ParseReference(input)
 	if err != nil {
 		return nil, err
@@ -38,7 +39,7 @@ func GetImage(input string, config *types.RegistryConfig) (v1.Image, error) {
 	var image v1.Image
 	exists, image, _ := CheckIfImageExistsInLocal(ref)
 	if exists {
-		return image, nil
+		return &image, nil
 	}
 
 	if config != nil {
@@ -49,23 +50,27 @@ func GetImage(input string, config *types.RegistryConfig) (v1.Image, error) {
 			Password: config.Password,
 		}))
 		if err != nil {
-			log.Fatalf("Failed to load image: %s", err)
+			return nil, err
 		}
 	} else {
 		// Remotely load image from public registry
 		image, err = remote.Image(ref)
 		if err != nil {
-			log.Fatalf("Failed to load image anonymously: %s", err)
+			return nil, err
 		}
 	}
 
-	return image, nil
+	return &image, nil
 }
 
 // ReadFiles reads the layers of a given v1.Image and processes its contents.
 // It returns an error if there's any issue encountered while reading the layers or processing its contents.
-func ReadFiles(image v1.Image, addr *urn.URN) error {
-	layers, err := image.Layers()
+func ReadFiles(image *v1.Image, addr *urn.URN) error {
+	if image == nil {
+		return errors.New("image is nil")
+	}
+
+	layers, err := (*image).Layers()
 	if err != nil {
 		return err
 	}

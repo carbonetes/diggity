@@ -10,7 +10,7 @@ import (
 )
 
 // ReadTarballAsImage reads a tarball from the given path and returns it as a v1.Image.
-func ReadTarballAsImage(path string) (v1.Image, error) {
+func ReadTarballAsImage(path string) (*v1.Image, error) {
 	found, err := helper.IsFileExists(path)
 	if !found {
 		return nil, fmt.Errorf("file not found: %s", path)
@@ -25,5 +25,5 @@ func ReadTarballAsImage(path string) (v1.Image, error) {
 		log.Error(err)
 	}
 
-	return image, nil
+	return &image, nil
 }
