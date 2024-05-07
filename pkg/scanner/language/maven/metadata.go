@@ -1,11 +1,13 @@
 package maven
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/xml"
+	"errors"
 	"io"
+	"strings"
 
-	"github.com/carbonetes/diggity/internal/log"
 	"golang.org/x/net/html/charset"
 )
 
@@ -48,8 +50,13 @@ type Metadata struct {
 	Properties             *Properties             `xml:"properties" json:"properties,omitempty"`
 }
 
+type Property struct {
+	XMLName xml.Name
+	Value   string `xml:",chardata"`
+}
+
 type Properties struct {
-	Entries map[string]string `json:"entries,omitempty"`
+	Properties []Property `xml:",any"`
 }
 
 type Parent struct {
@@ -323,7 +330,8 @@ type ActivationFile struct {
 	Exists  string `xml:"exists" json:"exists,omitempty"`
 }
 
-func readManifestFile(content []byte) *Metadata {
+// parsePOM parses the POM file and returns the metadata.
+func parsePOM(content []byte) (*Metadata, error) {
 	// Create a new XML decoder which can handle various charsets
 	decoder := xml.NewDecoder(bytes.NewReader(content))
 	decoder.CharsetReader = charset.NewReaderLabel
@@ -333,10 +341,65 @@ func readManifestFile(content []byte) *Metadata {
 	err := decoder.Decode(&metadata)
 	if err != nil {
 		if err == io.EOF {
-			return nil
+			return nil, errors.New("empty POM file")
 		}
-		log.Fatal(err)
+		return nil, err
 	}
 
-	return &metadata
+	return &metadata, nil
+}
+
+// resolveProperties resolves the properties in the POM file.
+func resolveProperties(metadata *Metadata) map[string]string {
+	properties := make(map[string]string)
+	if metadata.Properties != nil {
+		for _, prop := range metadata.Properties.Properties {
+			properties["${"+prop.XMLName.Local+"}"] = prop.Value
+		}
+	}
+	return properties
+}
+
+// parseManifestFile parses the MANIFEST.MF file and returns a map of key-value pairs.
+func parseManifestFile(content []byte) (map[string]string, error) {
+	manifest := make(map[string]string)
+
+	scanner := bufio.NewScanner(bytes.NewReader(content))
+	for scanner.Scan() {
+		line := scanner.Text()
+		parts := strings.SplitN(line, ":", 2)
+		if len(parts) == 2 {
+			key := strings.TrimSpace(parts[0])
+			value := strings.TrimSpace(parts[1])
+			manifest[key] = value
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	return manifest, nil
+}
+
+// parsePOMProperties parses the pom.properties file and returns a map of key-value pairs.
+func parsePOMProperties(content []byte) (map[string]string, error) {
+	properties := make(map[string]string)
+
+	scanner := bufio.NewScanner(bytes.NewReader(content))
+	for scanner.Scan() {
+		line := scanner.Text()
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) == 2 {
+			key := strings.TrimSpace(parts[0])
+			value := strings.TrimSpace(parts[1])
+			properties[key] = value
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	return properties, nil
 }
