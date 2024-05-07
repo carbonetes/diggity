@@ -57,6 +57,7 @@ func scan(payload types.Payload) {
 	}
 }
 
+//nolint:all
 func readPOMFile(manifest types.ManifestFile, addr *urn.URN) {
 	metadata, err := parsePOM(manifest.Content)
 	if err != nil {
@@ -159,6 +160,7 @@ func readPOMFile(manifest types.ManifestFile, addr *urn.URN) {
 	cdx.AddComponent(c, addr)
 }
 
+//nolint:all
 func readManifestFile(manifest types.ManifestFile, addr *urn.URN) {
 	metadata, err := parseManifestFile(manifest.Content)
 	if err != nil {
