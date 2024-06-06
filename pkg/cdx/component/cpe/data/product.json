@@ -1,0 +1,8 @@
+{
+    "known_package_name":"product",
+    "spring-core": "spring_framework",
+    "spring-beans": "spring_framework",
+    "log4j-core": "log4j",
+    "log4j-api": "log4j",
+    "snakeyaml": "snakeyaml_project"
+}
