@@ -9,7 +9,6 @@ import (
 
 	"github.com/CycloneDX/cyclonedx-go"
 	diggity "github.com/carbonetes/diggity/internal/version"
-	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/cdx/component/cpe"
 	"github.com/carbonetes/diggity/pkg/cdx/dependency"
 	"github.com/carbonetes/diggity/pkg/stream"
@@ -90,7 +89,6 @@ func Finalize(addr *urn.URN) *cyclonedx.BOM {
 	bom := data.(*cyclonedx.BOM)
 
 	sortComponents(bom)
-	setAdditionalComponentAttachments(bom)
 	parseDependencies(addr, bom)
 
 	return bom
@@ -115,18 +113,18 @@ func parseDependencies(addr *urn.URN, bom *cyclonedx.BOM) {
 }
 
 // Locate and replace dependencies with BOMRefs
-func findDependencyRef(depndency *cyclonedx.Dependency, components *[]cyclonedx.Component) {
+func findDependencyRef(node *cyclonedx.Dependency, components *[]cyclonedx.Component) {
 	toBeRemoved := []int{}
-	for i, dep := range *depndency.Dependencies {
-		found := ""
+	for i, dep := range *node.Dependencies {
+		found := new(string)
 		for _, c := range *components {
 			if c.Name == dep {
-				found = c.BOMRef
+				found = &c.BOMRef
 				break
 			}
 		}
-		if found != "" {
-			(*depndency.Dependencies)[i] = found
+		if *found != "" {
+			(*node.Dependencies)[i] = *found
 		} else {
 			toBeRemoved = append(toBeRemoved, i)
 		}
@@ -134,26 +132,6 @@ func findDependencyRef(depndency *cyclonedx.Dependency, components *[]cyclonedx.
 
 	// Remove dependencies that are not found in the components
 	for i := len(toBeRemoved) - 1; i >= 0; i-- {
-		(*depndency.Dependencies) = append((*depndency.Dependencies)[:toBeRemoved[i]], (*depndency.Dependencies)[toBeRemoved[i]+1:]...)
-	}
-}
-
-func setAdditionalComponentAttachments(bom *cyclonedx.BOM) {
-	var os *cyclonedx.Component
-	for _, c := range *bom.Components {
-		if c.Type == cyclonedx.ComponentTypeOS {
-			os = &c
-			break
-		}
-	}
-
-	for i, c := range *bom.Components {
-		if c.Type == cyclonedx.ComponentTypeLibrary {
-			if os != nil {
-				component.AddRefQualifier(&c, map[string]string{"distro": fmt.Sprintf("%s-%s", os.Name, os.Version)})
-				c.Group = os.Name
-			}
-		}
-		(*bom.Components)[i] = c
+		(*node.Dependencies) = append((*node.Dependencies)[:toBeRemoved[i]], (*node.Dependencies)[toBeRemoved[i]+1:]...)
 	}
 }
