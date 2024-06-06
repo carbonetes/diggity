@@ -3,11 +3,13 @@ package apk
 import (
 	"strings"
 
+	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
+	"github.com/carbonetes/diggity/pkg/cdx/dependency"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -36,19 +38,18 @@ func Scan(data interface{}) interface{} {
 }
 
 func scan(payload types.Payload) {
-	manifest := payload.Body.(types.ManifestFile)
-	packages := strings.Split(string(manifest.Content), "\n\n")
+	apkDb := payload.Body.(types.ManifestFile)
+	records, err := ParseApkIndexFile(string(apkDb.Content))
+	if err != nil {
+		log.Errorf("error parsing apk index file: %s", err)
+		return
+	}
+	if len(records) == 0 {
+		return
+	}
 
-	for _, info := range packages {
-		info = strings.TrimSpace(info)
-		attributes := strings.Split(info, "\n")
-
-		metadata := parseMetadata(attributes)
-		if metadata["Name"] == nil || metadata["Version"] == nil {
-			continue
-		}
-
-		c := component.New(metadata["Name"].(string), metadata["Version"].(string), Type)
+	for _, record := range records {
+		c := component.New(record.Package, record.Version, Type)
 
 		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 		if len(cpes) > 0 {
@@ -57,21 +58,35 @@ func scan(payload types.Payload) {
 			}
 		}
 
-		component.AddOrigin(c, manifest.Path)
+		component.AddOrigin(c, apkDb.Path)
 		component.AddType(c, Type)
 
-		for _, license := range strings.Split(metadata["License"].(string), " ") {
-			if strings.Contains(strings.ToLower(license), "and") {
-				licenses := strings.Split(license, "and")
-				for _, l := range licenses {
-					component.AddLicense(c, l)
-				}
-			} else {
+		if record.Description != "" {
+			c.Description = record.Description
+		}
+
+		if record.Maintainer != "" {
+			c.Publisher = record.Maintainer
+		}
+
+		if len(record.Licenses) != 0 {
+			for _, license := range record.Licenses {
 				component.AddLicense(c, license)
 			}
 		}
 
-		rawMetadata, err := helper.ToJSON(metadata)
+		qs := map[string]string{}
+		if len(record.Architecture) > 0 {
+			qs["arch"] = record.Architecture
+		}
+
+		if len(record.Origin) > 0 {
+			qs["upstream"] = record.Origin
+		}
+
+		component.AddRefQualifier(c, qs)
+
+		rawMetadata, err := helper.ToJSON(record)
 		if err != nil {
 			log.Errorf("Error converting metadata to JSON: %s", err)
 		}
@@ -80,39 +95,51 @@ func scan(payload types.Payload) {
 			component.AddRawMetadata(c, rawMetadata)
 		}
 
-		cdx.AddComponent(c, payload.Address)
+		if len(payload.Layer) > 0 {
+			component.AddLayer(c, payload.Layer)
+		}
+		if len(record.URL) > 0 {
+			c.ExternalReferences = &[]cyclonedx.ExternalReference{}
+			*c.ExternalReferences = append(*c.ExternalReferences, cyclonedx.ExternalReference{
+				Type: cyclonedx.ERTypeDistribution,
+				URL:  record.URL,
+			})
+		}
 
-		// Add origin component
-		if metadata["Origin"] != nil {
+		dependencyNode := &cyclonedx.Dependency{
+			Ref:          c.BOMRef,
+			Dependencies: &[]string{},
+		}
 
-			name, version := metadata["Origin"].(string), metadata["Version"].(string)
-
-			if len(name) == 0 || len(version) == 0 {
-				continue
-			}
-
-			o := component.New(name, version, Type)
-
-			cpes := cpe.NewCPE23(o.Name, o.Name, o.Version, Type)
-			if len(cpes) > 0 {
-				for _, cpe := range cpes {
-					component.AddCPE(o, cpe)
+		if len(record.Dependencies) > 0 {
+			for _, dep := range record.Dependencies {
+				if strings.HasPrefix(dep, "so:") {
+					dep = findProvider(dep, records)
+				}
+				dep = helper.SplitAny(dep, "=<>")[0]
+				if !helper.StringSliceContains(*dependencyNode.Dependencies, dep) && !strings.Contains(dep, "/") {
+					*dependencyNode.Dependencies = append(*dependencyNode.Dependencies, dep)
 				}
 			}
 
-			component.AddOrigin(o, manifest.Path)
-			component.AddType(o, Type)
+		}
 
-			rawMetadata, err := helper.ToJSON(metadata)
-			if err != nil {
-				log.Errorf("Error converting metadata to JSON: %s", err)
+		if len(*dependencyNode.Dependencies) > 0 {
+			dependency.AddDependency(payload.Address, dependencyNode)
+		}
+
+		cdx.AddComponent(c, payload.Address)
+	}
+
+}
+
+func findProvider(so string, records []ApkIndexRecord) string {
+	for _, record := range records {
+		for _, provides := range record.Provides {
+			if strings.Contains(provides, so) {
+				return record.Package
 			}
-
-			if len(rawMetadata) > 0 {
-				component.AddRawMetadata(o, rawMetadata)
-			}
-
-			cdx.AddComponent(o, payload.Address)
 		}
 	}
+	return so
 }
