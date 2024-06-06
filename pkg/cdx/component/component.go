@@ -1,25 +1,47 @@
 package component
 
 import (
-	"fmt"
-
 	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/google/uuid"
+	"github.com/package-url/packageurl-go"
 )
 
 // New creates a new cyclonedx.Component with the given name, version, and category.
 func New(name, version, category string) *cyclonedx.Component {
-	purl := fmt.Sprintf("pkg:%s/%s@%s", category, name, version)
+	purl := packageurl.NewPackageURL(category, "", name, version, nil, "").ToString()
 	return &cyclonedx.Component{
 		Type:       cyclonedx.ComponentTypeLibrary,
-		BOMRef:     uuid.New().String(),
+		BOMRef:     purl,
 		Name:       helper.CleanValue(name).(string),
 		Version:    helper.CleanValue(version).(string),
-		PackageURL: helper.CleanValue(purl).(string),
+		PackageURL: purl,
 		Properties: &[]cyclonedx.Property{},
 	}
+}
+
+func AddRefQualifier(c *cyclonedx.Component, qualifiers map[string]string) {
+	if c == nil {
+		return
+	}
+
+	purl, err := packageurl.FromString(c.BOMRef)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+
+	qs := packageurl.Qualifiers{}
+	for k, v := range qualifiers {
+		q := packageurl.Qualifier{
+			Key:   k,
+			Value: v,
+		}
+		qs = append(qs, q)
+	}
+	purl.Qualifiers = append(purl.Qualifiers, qs...)
+
+	c.BOMRef = purl.ToString()
 }
 
 // AddCPE adds a CPE to the given cyclonedx.Component.
@@ -136,5 +158,22 @@ func AddLicense(c *cyclonedx.Component, license string) {
 		License: &cyclonedx.License{
 			ID: v.(string),
 		},
+	})
+}
+
+func AddLayer(c *cyclonedx.Component, layer string) {
+	if c.Properties == nil {
+		c.Properties = &[]cyclonedx.Property{}
+	}
+
+	if len(layer) == 0 {
+		return
+	}
+
+	v := helper.CleanValue(layer)
+
+	*c.Properties = append(*c.Properties, cyclonedx.Property{
+		Name:  "diggity:image:layer",
+		Value: v.(string),
 	})
 }

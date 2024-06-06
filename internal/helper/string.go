@@ -3,6 +3,7 @@ package helper
 import (
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/google/uuid"
 	"golang.org/x/text/cases"
@@ -53,6 +54,16 @@ func SplitAndAppendStrings(target []string) []string {
 	var result []string
 	for _, str := range target {
 		result = append(result, SplitString(str)...)
+	}
+	return result
+}
+
+func SplitAny(s string, seps string) []string {
+	result := strings.FieldsFunc(s, func(r rune) bool {
+		return strings.ContainsRune(seps, r)
+	})
+	if len(result) == 0 {
+		return []string{s}
 	}
 	return result
 }

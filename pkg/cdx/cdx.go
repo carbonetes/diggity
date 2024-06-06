@@ -6,10 +6,12 @@ import (
 	"log"
 	"sort"
 	"sync"
-	"time"
 
 	"github.com/CycloneDX/cyclonedx-go"
 	diggity "github.com/carbonetes/diggity/internal/version"
+	"github.com/carbonetes/diggity/pkg/cdx/component"
+	"github.com/carbonetes/diggity/pkg/cdx/component/cpe"
+	"github.com/carbonetes/diggity/pkg/cdx/dependency"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/golistic/urn"
 )
@@ -17,46 +19,30 @@ import (
 var (
 	// XMLN cyclonedx
 	XMLN = fmt.Sprintf("http://cyclonedx.org/schema/bom/%+v", cyclonedx.SpecVersion1_5)
-	lock sync.RWMutex
-	// BOM  *cyclonedx.BOM
+	lock *sync.RWMutex
+
+	diggityVersion = diggity.FromBuild().Version
 )
 
 const (
 	cycloneDX = "CycloneDX"
 	vendor    = "carbonetes"
+	author    = "Carbonetes Engineering Team"
 	name      = "diggity"
+	email     = "eng@carbonetes.com"
 )
-
-// func init() {
-// 	BOM = New()
-// }
 
 func New(addr *urn.URN) {
 	stream.Set(addr.String(), &cyclonedx.BOM{
-		XMLName:     xml.Name{Local: cycloneDX},
-		XMLNS:       XMLN,
-		BOMFormat:   cycloneDX,
-		Version:     1,
-		SpecVersion: cyclonedx.SpecVersion1_5,
-		Metadata:    getCDXMetadata(vendor, name, diggity.FromBuild().Version),
-		Components:  &[]cyclonedx.Component{},
+		XMLName:      xml.Name{Local: cycloneDX},
+		XMLNS:        XMLN,
+		BOMFormat:    cycloneDX,
+		Version:      1,
+		SpecVersion:  cyclonedx.SpecVersion1_5,
+		Metadata:     setBasicMetadata(),
+		Components:   &[]cyclonedx.Component{},
+		Dependencies: &[]cyclonedx.Dependency{},
 	})
-}
-
-func getCDXMetadata(author, name, version string) *cyclonedx.Metadata {
-	return &cyclonedx.Metadata{
-		Timestamp: time.Now().Format(time.RFC3339),
-		Tools: &cyclonedx.ToolsChoice{
-			Components: &[]cyclonedx.Component{
-				{
-					Type:    cyclonedx.ComponentTypeApplication,
-					Author:  author,
-					Name:    name,
-					Version: version,
-				},
-			},
-		},
-	}
 }
 
 func AddComponent(c *cyclonedx.Component, addr *urn.URN) {
@@ -70,20 +56,20 @@ func AddComponent(c *cyclonedx.Component, addr *urn.URN) {
 		log.Fatal("Failed to get BOM from stream")
 	}
 
-	// Check if the component already exists in the BOM
-	for _, existingComponent := range *bom.Components {
-		if existingComponent.Name == c.Name && existingComponent.Version == c.Version {
-			// If the component already exists, return without adding it
-			return
-		}
-	}
-
-	// If the component does not exist, add it to the BOM
-	// *BOM.Components = append(*BOM.Components, *c)
+	cpe.Make(c)
 	*bom.Components = append(*bom.Components, *c)
 	stream.Set(addr.String(), bom)
 }
 
+func SetMetadataComponent(addr *urn.URN, metadataComponent *cyclonedx.Component) {
+	data, _ := stream.Get(addr.String())
+	bom := data.(*cyclonedx.BOM)
+
+	bom.Metadata.Component = metadataComponent
+	stream.Set(addr.String(), bom)
+}
+
+// Deprecated: Use Finalize() instead
 func SortComponents(addr *urn.URN) *cyclonedx.BOM {
 	lock.Lock()
 	defer lock.Unlock()
@@ -97,4 +83,77 @@ func SortComponents(addr *urn.URN) *cyclonedx.BOM {
 	})
 	stream.Set(addr.String(), bom)
 	return bom
+}
+
+func Finalize(addr *urn.URN) *cyclonedx.BOM {
+	data, _ := stream.Get(addr.String())
+	bom := data.(*cyclonedx.BOM)
+
+	sortComponents(bom)
+	setAdditionalComponentAttachments(bom)
+	parseDependencies(addr, bom)
+
+	return bom
+}
+
+// Sort components by name
+func sortComponents(bom *cyclonedx.BOM) {
+	sort.Slice(*bom.Components, func(i, j int) bool {
+		return (*bom.Components)[i].Name < (*bom.Components)[j].Name
+	})
+}
+
+// Set Dependencies for each component in the BOM
+func parseDependencies(addr *urn.URN, bom *cyclonedx.BOM) {
+	dependencies := dependency.GetDependencyNodes(addr)
+	if dependencies != nil {
+		for _, d := range *dependencies {
+			findDependencyRef(&d, bom.Components)
+		}
+	}
+	bom.Dependencies = dependencies
+}
+
+// Locate and replace dependencies with BOMRefs
+func findDependencyRef(depndency *cyclonedx.Dependency, components *[]cyclonedx.Component) {
+	toBeRemoved := []int{}
+	for i, dep := range *depndency.Dependencies {
+		found := ""
+		for _, c := range *components {
+			if c.Name == dep {
+				found = c.BOMRef
+				break
+			}
+		}
+		if found != "" {
+			(*depndency.Dependencies)[i] = found
+		} else {
+			toBeRemoved = append(toBeRemoved, i)
+		}
+	}
+
+	// Remove dependencies that are not found in the components
+	for i := len(toBeRemoved) - 1; i >= 0; i-- {
+		(*depndency.Dependencies) = append((*depndency.Dependencies)[:toBeRemoved[i]], (*depndency.Dependencies)[toBeRemoved[i]+1:]...)
+	}
+}
+
+func setAdditionalComponentAttachments(bom *cyclonedx.BOM) {
+	var os *cyclonedx.Component
+	for _, c := range *bom.Components {
+		if c.Type == cyclonedx.ComponentTypeOS {
+			os = &c
+			break
+		}
+	}
+
+	for i, c := range *bom.Components {
+		if c.Type == cyclonedx.ComponentTypeLibrary {
+			if os != nil {
+				component.AddRefQualifier(&c, map[string]string{"distro": fmt.Sprintf("%s-%s", os.Name, os.Version)})
+				c.Group = os.Name
+			}
+		}
+		(*bom.Components)[i] = c
+	}
 }

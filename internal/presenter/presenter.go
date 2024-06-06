@@ -12,8 +12,7 @@ import (
 )
 
 func DisplayResults(params types.Parameters, duration float64, addr *urn.URN) {
-	result := cdx.SortComponents(addr)
-
+	result := cdx.Finalize(addr)
 	format, filename := params.OutputFormat, params.SaveToFile
 	if !params.Quiet {
 		status.Done()
