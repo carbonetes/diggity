@@ -9,6 +9,7 @@ import (
 
 type Payload struct {
 	Address *urn.URN
+	Layer   string
 	Body    interface{}
 }
 

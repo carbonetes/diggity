@@ -80,6 +80,10 @@ func scan(payload types.Payload) {
 			component.AddLicense(c, license)
 		}
 
+		if len(payload.Layer) > 0 {
+			component.AddLayer(c, payload.Layer)
+		}
+
 		cdx.AddComponent(c, payload.Address)
 
 	} else if strings.Contains(manifest.Path, "pubspec.lock") {
@@ -111,6 +115,10 @@ func scan(payload types.Payload) {
 
 			if len(rawMetadata) > 0 {
 				component.AddRawMetadata(c, rawMetadata)
+			}
+
+			if len(payload.Layer) > 0 {
+				component.AddLayer(c, payload.Layer)
 			}
 
 			cdx.AddComponent(c, payload.Address)
