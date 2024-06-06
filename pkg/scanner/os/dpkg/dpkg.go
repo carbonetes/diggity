@@ -4,11 +4,13 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
+	"github.com/carbonetes/diggity/pkg/cdx/dependency"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -38,33 +40,21 @@ func Scan(data interface{}) interface{} {
 func scan(payload types.Payload) {
 	manifest := payload.Body.(types.ManifestFile)
 	contents := string(manifest.Content)
-	packages := helper.SplitContentsByEmptyLine(contents)
 
-	for _, info := range packages {
-		metadata := parseMetadata(info)
+	records, err := ParseDpkgDatabase(contents)
+	if err != nil {
+		log.Errorf("error parsing dpkg database: %s", err)
+		return
+	}
 
-		if metadata["package"] == nil || metadata["version"] == nil {
+	for _, record := range records {
+		if record.Name == "" || record.Version == "" {
 			continue
 		}
 
-		n, ok := metadata["package"].(string)
-		if !ok {
-			continue
-		}
+		name := cleanName(record.Name)
 
-		version, ok := metadata["version"].(string)
-		if !ok {
-			continue
-		}
-
-		name := cleanName(n)
-
-		var desc string
-		if val, ok := metadata["description"].(string); ok {
-			desc = val
-		}
-
-		c := component.New(name, version, Type)
+		c := component.New(name, record.Version, Type)
 
 		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 		if len(cpes) > 0 {
@@ -76,11 +66,11 @@ func scan(payload types.Payload) {
 		component.AddOrigin(c, manifest.Path)
 		component.AddType(c, Type)
 
-		if desc != "" {
-			component.AddDescription(c, desc)
+		if record.Description != "" {
+			component.AddDescription(c, record.Description)
 		}
 
-		rawMetadata, err := helper.ToJSON(metadata)
+		rawMetadata, err := helper.ToJSON(record)
 		if err != nil {
 			log.Errorf("Error converting metadata to JSON: %s", err)
 		}
@@ -89,46 +79,67 @@ func scan(payload types.Payload) {
 			component.AddRawMetadata(c, rawMetadata)
 		}
 
-		cdx.AddComponent(c, payload.Address)
+		if len(payload.Layer) > 0 {
+			component.AddLayer(c, payload.Layer)
+		}
 
-		if metadata["source"] != nil {
+		if record.Maintainer != "" {
+			c.Publisher = record.Maintainer
+		}
 
-			n, ok := metadata["source"].(string)
-			if !ok {
-				continue
+		if record.Homepage != "" {
+			c.ExternalReferences = &[]cyclonedx.ExternalReference{
+				{
+					Type: "website",
+					URL:  record.Homepage,
+				},
 			}
+		}
 
-			version, ok := metadata["version"].(string)
-			if !ok {
-				continue
-			}
+		dependencyNode := &cyclonedx.Dependency{
+			Ref:          c.BOMRef,
+			Dependencies: &[]string{},
+		}
 
-			name := cleanName(n)
-
-			o := component.New(name, version, Type)
-
-			cpes := cpe.NewCPE23(o.Name, o.Name, o.Version, Type)
-			if len(cpes) > 0 {
-				for _, cpe := range cpes {
-					component.AddCPE(o, cpe)
+		if len(record.Depends) > 0 {
+			for _, entry := range record.Depends {
+				// *dependencyNode.Dependencies = append(*dependencyNode.Dependencies, entry...)
+				for _, dep := range entry {
+					*dependencyNode.Dependencies = append(*dependencyNode.Dependencies, findProvider(dep, records))
 				}
 			}
-
-			component.AddOrigin(o, manifest.Path)
-			component.AddType(o, Type)
-
-			rawMetadata, err := helper.ToJSON(metadata)
-			if err != nil {
-				log.Errorf("Error converting metadata to JSON: %s", err)
-			}
-
-			if len(rawMetadata) > 0 {
-				component.AddRawMetadata(o, rawMetadata)
-			}
-
-			cdx.AddComponent(o, payload.Address)
 		}
+
+		if len(record.PreDepends) > 0 {
+			for _, entry := range record.PreDepends {
+				for _, dep := range entry {
+					dependency := findProvider(dep, records)
+					if dependency != "" {
+						*dependencyNode.Dependencies = append(*dependencyNode.Dependencies, dependency)
+					}
+				}
+			}
+		}
+
+		if len(*dependencyNode.Dependencies) > 0 {
+			dependency.AddDependency(payload.Address, dependencyNode)
+		}
+
+		qm := make(map[string]string)
+		if record.Architecture != "" {
+			qm["arch"] = record.Architecture
+		}
+
+		if record.Source != "" {
+			qm["upstream"] = record.Source
+		}
+
+		component.AddRefQualifier(c, qm)
+
+		cdx.AddComponent(c, payload.Address)
+
 	}
+
 }
 
 func cleanName(name string) string {
@@ -136,4 +147,18 @@ func cleanName(name string) string {
 		return strings.TrimSpace(strings.Split(name, "(")[0])
 	}
 	return name
+}
+
+func findProvider(dep string, records []Package) string {
+	for _, record := range records {
+		if record.Provides == nil {
+			continue
+		}
+		for _, provider := range record.Provides {
+			if strings.Contains(provider, dep) {
+				return record.Name
+			}
+		}
+	}
+	return dep
 }
