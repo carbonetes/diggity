@@ -96,6 +96,17 @@ func scan(payload types.Payload) {
 			}
 		}
 
+		qm := make(map[string]string)
+		if record.Architecture != "" {
+			qm["arch"] = record.Architecture
+		}
+
+		if record.Source != "" {
+			qm["upstream"] = record.Source
+		}
+
+		component.AddRefQualifier(c, qm)
+
 		dependencyNode := &cyclonedx.Dependency{
 			Ref:          c.BOMRef,
 			Dependencies: &[]string{},
@@ -125,16 +136,7 @@ func scan(payload types.Payload) {
 			dependency.AddDependency(payload.Address, dependencyNode)
 		}
 
-		qm := make(map[string]string)
-		if record.Architecture != "" {
-			qm["arch"] = record.Architecture
-		}
 
-		if record.Source != "" {
-			qm["upstream"] = record.Source
-		}
-
-		component.AddRefQualifier(c, qm)
 
 		cdx.AddComponent(c, payload.Address)
 
