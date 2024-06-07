@@ -7,6 +7,7 @@ import (
 	"github.com/carbonetes/diggity/internal/presenter"
 	"github.com/carbonetes/diggity/internal/presenter/status"
 	"github.com/carbonetes/diggity/pkg/cdx"
+	"github.com/carbonetes/diggity/pkg/cdx/dependency"
 	"github.com/carbonetes/diggity/pkg/config"
 	"github.com/carbonetes/diggity/pkg/reader"
 	"github.com/carbonetes/diggity/pkg/types"
@@ -29,12 +30,17 @@ func Start(parameters types.Parameters) {
 	}
 
 	cdx.New(addr)
+	dependency.NewDependencyNodes(addr)
 	switch parameters.ScanType {
 	case 1: // Image Scan Type
-		image, err := reader.GetImage(parameters.Input, &config.Config.Registry)
+		target := parameters.Input
+		image, ref, err := reader.GetImage(target, &config.Config.Registry)
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		cdx.SetMetadataComponent(addr, cdx.SetImageMetadata(*image, *ref, target))
+
 		err = reader.ReadFiles(image, addr)
 		if err != nil {
 			log.Fatal(err)

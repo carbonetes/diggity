@@ -64,6 +64,10 @@ func scan(payload types.Payload) {
 			component.AddType(c, Type)
 			component.AddRawMetadata(c, rawMetadata)
 
+			if len(payload.Layer) > 0 {
+				component.AddLayer(c, payload.Layer)
+			}
+
 			cdx.AddComponent(c, payload.Address)
 		}
 	} else if strings.Contains(manifest.Path, "stack.yaml.lock") {
@@ -93,6 +97,10 @@ func scan(payload types.Payload) {
 			component.AddType(c, Type)
 			component.AddRawMetadata(c, rawMetadata)
 
+			if len(payload.Layer) > 0 {
+				component.AddLayer(c, payload.Layer)
+			}
+
 			cdx.AddComponent(c, payload.Address)
 		}
 	} else if strings.Contains(manifest.Path, "cabal.project.freeze") {
@@ -120,6 +128,10 @@ func scan(payload types.Payload) {
 			component.AddOrigin(c, manifest.Path)
 			component.AddType(c, Type)
 			component.AddRawMetadata(c, rawMetadata)
+
+			if len(payload.Layer) > 0 {
+				component.AddLayer(c, payload.Layer)
+			}
 
 			cdx.AddComponent(c, payload.Address)
 		}

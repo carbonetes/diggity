@@ -53,7 +53,7 @@ func scan(payload types.Payload) {
 	case "MANIFEST.MF":
 		// readManifestFile(manifest, payload.Address) // Temporary disabled
 	case "pom.properties":
-		readPOMPropertiesFile(manifest, payload.Address)
+		readPOMPropertiesFile(manifest, payload.Layer, payload.Address)
 	}
 }
 
@@ -200,7 +200,7 @@ func readManifestFile(manifest types.ManifestFile, addr *urn.URN) {
 
 }
 
-func readPOMPropertiesFile(manifest types.ManifestFile, addr *urn.URN) {
+func readPOMPropertiesFile(manifest types.ManifestFile, layer string, addr *urn.URN) {
 	metadata, err := parsePOMProperties(manifest.Content)
 	if err != nil {
 		log.Errorf("Failed to parse POM properties file: %v", err)
@@ -237,6 +237,10 @@ func readPOMPropertiesFile(manifest types.ManifestFile, addr *urn.URN) {
 
 	if len(rawMetadata) > 0 {
 		component.AddRawMetadata(c, rawMetadata)
+	}
+
+	if len(layer) > 0 {
+		component.AddLayer(c, layer)
 	}
 
 	cdx.AddComponent(c, addr)

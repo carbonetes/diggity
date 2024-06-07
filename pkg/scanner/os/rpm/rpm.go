@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"path/filepath"
 	"slices"
+	"strings"
 
+	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
+	"github.com/carbonetes/diggity/pkg/cdx/dependency"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -84,6 +87,58 @@ func scan(payload types.Payload) {
 
 		if len(rawMetadata) > 0 {
 			component.AddRawMetadata(c, rawMetadata)
+		}
+
+		if len(payload.Layer) > 0 {
+			component.AddLayer(c, payload.Layer)
+		}
+
+		qm := make(map[string]string)
+		if pkgInfo.Arch != "" {
+			qm["arch"] = pkgInfo.Arch
+		}
+
+		if pkgInfo.SourceRpm != "" {
+			qm["upstream"] = pkgInfo.SourceRpm
+		}
+
+		if pkgInfo.Vendor != "" {
+			c.Publisher = pkgInfo.Vendor
+		}
+
+		if pkgInfo.License != "" {
+			c.Licenses = &cyclonedx.Licenses{
+				{
+					License: &cyclonedx.License{
+						ID: pkgInfo.License,
+					},
+				},
+			}
+		}
+
+		component.AddRefQualifier(c, qm)
+
+		dependencyNode := &cyclonedx.Dependency{
+			Ref:          c.BOMRef,
+			Dependencies: &[]string{},
+		}
+
+		if len(pkgInfo.Requires) > 0 {
+			for _, dep := range pkgInfo.Requires {
+				for _, p := range rpmdb.PackageInfos {
+					for _, r := range p.Provides {
+						if strings.Contains(dep, r) {
+							if !slices.Contains(*dependencyNode.Dependencies, p.Name) {
+								*dependencyNode.Dependencies = append(*dependencyNode.Dependencies, p.Name)
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if len(*dependencyNode.Dependencies) > 0 {
+			dependency.AddDependency(payload.Address, dependencyNode)
 		}
 
 		cdx.AddComponent(c, payload.Address)

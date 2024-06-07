@@ -1,58 +1,101 @@
 package apk
 
-import "strings"
+import (
+	"bufio"
+	"regexp"
+	"strings"
 
-type Metadata map[string]interface{}
+	"github.com/mitchellh/mapstructure"
+)
 
-func parseMetadata(attributes []string) Metadata {
-	var value string
-	var key string
-	var metadata = make(Metadata)
+type ApkIndexRecord struct {
+	Checksum         string   `mapstructure:"C"`
+	Package          string   `mapstructure:"P"`
+	Version          string   `mapstructure:"V"`
+	Architecture     string   `mapstructure:"A"`
+	Size             string   `mapstructure:"S"`
+	InstalledSize    string   `mapstructure:"I"`
+	Description      string   `mapstructure:"T"`
+	URL              string   `mapstructure:"U"`
+	Licenses         []string `mapstructure:"L"`
+	Origin           string   `mapstructure:"o"`
+	Maintainer       string   `mapstructure:"m"`
+	BuildTimestamp   string   `mapstructure:"t"`
+	GitCommit        string   `mapstructure:"c"`
+	ProviderPriority string   `mapstructure:"k"`
+	Dependencies     []string `mapstructure:"D"`
+	Provides         []string `mapstructure:"p"`
+	Install          string   `mapstructure:"i"`
+}
 
-	for _, attribute := range attributes {
-		if strings.Contains(attribute, ":") && !strings.Contains(attribute, ":=") {
-			keyValues := strings.SplitN(attribute, ":", 2)
-			key = keyValues[0]
-			value = keyValues[1]
-		} else {
-			value = strings.TrimSpace(value + attribute)
+const licenseDelimiter = " AND "
+
+func ParseApkIndexFile(apkDBContent string) ([]ApkIndexRecord, error) {
+	var records []ApkIndexRecord
+	recordMap := make(map[string]interface{})
+	scanner := bufio.NewScanner(strings.NewReader(apkDBContent))
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			var record ApkIndexRecord
+			err := mapstructure.Decode(recordMap, &record)
+			if err != nil {
+				return nil, err
+			}
+			records = append(records, record)
+			recordMap = make(map[string]interface{})
+			continue
 		}
-		//Attribute values are based on https://gitlab.alpinelinux.org/alpine/apk-tools/-/blob/master/src/package.c
+
+		parts := strings.SplitN(line, ":", 2)
+		if len(parts) != 2 {
+			continue
+		}
+
+		key, value := parts[0], strings.TrimSpace(parts[1])
 		switch key {
-		case "A":
-			metadata["Architecture"] = value
-		case "C":
-			metadata["PullChecksum"] = value
-		case "D", "r":
-			metadata["PullDependencies"] = value
-		case "I":
-			metadata["PackageInstalledSize"] = value
-		case "L":
-			metadata["License"] = value
-		case "M":
-			metadata["Permissions"] = value
-		case "P":
-			metadata["Name"] = value
-		case "S":
-			metadata["Size"] = value
-		case "T":
-			metadata["Description"] = value
-		case "U":
-			metadata["URL"] = value
-		case "V":
-			metadata["Version"] = value
-		case "c":
-			metadata["GitCommitHashApk"] = value
-		case "m":
-			metadata["Maintainer"] = value
-		case "o":
-			metadata["Origin"] = value
-		case "p":
-			metadata["Provides"] = value
-		case "t":
-			metadata["BuildTimestamp"] = value
+		case "D", "p", "L":
+			recordMap[key] = splitValues(value)
+		default:
+			recordMap[key] = value
 		}
 	}
 
-	return metadata
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	return records, nil
+}
+
+func SplitLicense(license string) []string {
+	if !strings.Contains(license, licenseDelimiter) {
+		return []string{license}
+	}
+	return strings.Split(license, licenseDelimiter)
+}
+
+func splitValues(value string) (values []string) {
+	if strings.Contains(value, " ") {
+		return strings.Split(value, " ")
+	}
+
+	if strings.Contains(value, licenseDelimiter) {
+		return strings.Split(value, licenseDelimiter)
+	}
+
+	return []string{value}
+}
+
+func SplitDependencies(value string) (dependencies []string) {
+	props := strings.Split(value, " ")
+	constr := regexp.MustCompile(`[=><]`)
+	for _, p := range props {
+		if constr.MatchString(p) {
+			parts := constr.Split(p, 2)
+			packageName := parts[0]
+			dependencies = append(dependencies, packageName)
+		}
+	}
+	return dependencies
 }

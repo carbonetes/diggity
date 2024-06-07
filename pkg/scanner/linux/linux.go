@@ -1,13 +1,13 @@
 package linux
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/types"
-	"github.com/google/uuid"
 )
 
 var (
@@ -42,9 +42,17 @@ func scan(payload types.Payload) {
 
 		c := newOSComponent(name.(string), version.(string), desc.(string))
 
+		swid := cyclonedx.SWID{
+			TagID: name.(string),
+			Name:  name.(string),
+			Version: version.(string),
+
+		}
+
 		for key, value := range release.Release {
 			if key == "home_url" {
 				addExternalReference(c, value.(string), "website")
+				swid.URL = value.(string)
 				continue
 			}
 
@@ -96,11 +104,13 @@ func newOSComponent(name, version, desc string) *cyclonedx.Component {
 
 	c := &cyclonedx.Component{
 		Type:        cyclonedx.ComponentTypeOS,
-		BOMRef:      uuid.New().String(),
+		BOMRef:      fmt.Sprintf("os:%s@%s", name, version),
 		Name:        name,
 		Version:     version,
 		Description: desc,
 	}
+
+
 
 	return c
 }

@@ -85,6 +85,11 @@ func Scan(data interface{}) interface{} {
 				Content:     match,
 				File:        manifest.Path,
 			}
+
+			if len(payload.Layer) > 0 {
+				secret.Layer = payload.Layer
+			}
+
 			AddSecret(&secretAddr, secret)
 		}
 	}

@@ -68,5 +68,9 @@ func scan(payload types.Payload) {
 		component.AddRawMetadata(c, rawMetadata)
 	}
 
+	if len(payload.Layer) > 0 {
+		component.AddLayer(c, payload.Layer)
+	}
+
 	cdx.AddComponent(c, payload.Address)
 }

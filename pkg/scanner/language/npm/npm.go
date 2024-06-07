@@ -72,6 +72,10 @@ func scan(payload types.Payload) {
 				component.AddOrigin(c, manifest.Path)
 				component.AddType(c, Type)
 
+				if len(payload.Layer) > 0 {
+					component.AddLayer(c, payload.Layer)
+				}
+
 				cdx.AddComponent(c, payload.Address)
 			}
 		}
@@ -99,6 +103,10 @@ func scan(payload types.Payload) {
 
 				component.AddOrigin(c, manifest.Path)
 				component.AddType(c, Type)
+
+				if len(payload.Layer) > 0 {
+					component.AddLayer(c, payload.Layer)
+				}
 
 				cdx.AddComponent(c, payload.Address)
 			}
@@ -142,6 +150,10 @@ func scan(payload types.Payload) {
 			component.AddRawMetadata(c, rawMetadata)
 		}
 
+		if len(payload.Layer) > 0 {
+			component.AddLayer(c, payload.Layer)
+		}
+
 		cdx.AddComponent(c, payload.Address)
 
 	} else if strings.Contains(manifest.Path, "package-lock.json") {
@@ -165,6 +177,10 @@ func scan(payload types.Payload) {
 
 			component.AddOrigin(c, manifest.Path)
 			component.AddType(c, Type)
+
+			if len(payload.Layer) > 0 {
+				component.AddLayer(c, payload.Layer)
+			}
 
 			cdx.AddComponent(c, payload.Address)
 		}
@@ -210,6 +226,10 @@ func scan(payload types.Payload) {
 						component.AddRawMetadata(c, rawMetadata)
 					}
 
+					if len(payload.Layer) > 0 {
+						component.AddLayer(c, payload.Layer)
+					}
+
 					cdx.AddComponent(c, payload.Address)
 				}
 			}
@@ -245,6 +265,14 @@ func scan(payload types.Payload) {
 
 			if len(rawMetadata) > 0 {
 				component.AddRawMetadata(c, rawMetadata)
+			}
+
+			if len(payload.Layer) > 0 {
+				component.AddLayer(c, payload.Layer)
+			}
+
+			if len(payload.Layer) > 0 {
+				component.AddLayer(c, payload.Layer)
 			}
 
 			cdx.AddComponent(c, payload.Address)
@@ -283,6 +311,10 @@ func scan(payload types.Payload) {
 			component.AddOrigin(c, manifest.Path)
 			component.AddType(c, Type)
 
+			if len(payload.Layer) > 0 {
+				component.AddLayer(c, payload.Layer)
+			}
+
 			cdx.AddComponent(c, payload.Address)
 		}
 
@@ -315,6 +347,10 @@ func scan(payload types.Payload) {
 
 			component.AddOrigin(c, manifest.Path)
 			component.AddType(c, Type)
+
+			if len(payload.Layer) > 0 {
+				component.AddLayer(c, payload.Layer)
+			}
 
 			cdx.AddComponent(c, payload.Address)
 		}

@@ -61,7 +61,7 @@ func FilesystemScanHandler(target string, addr *urn.URN) error {
 		if matched {
 			switch category {
 			case "rpm":
-				err := handleRpmFile(path, category, addr)
+				err := handleRpmFile(path, category, "", addr)
 				if err != nil {
 					log.Error(err)
 				}
@@ -77,7 +77,7 @@ func FilesystemScanHandler(target string, addr *urn.URN) error {
 				if err != nil {
 					log.Error(err)
 				}
-				err = handleManifestFile(path, category, file, addr)
+				err = handleManifestFile(path, category, "",file, addr)
 				if err != nil {
 					log.Error(err)
 				}
@@ -87,7 +87,7 @@ func FilesystemScanHandler(target string, addr *urn.URN) error {
 	return nil
 }
 
-func handleRpmFile(path, category string, addr *urn.URN) error {
+func handleRpmFile(path, category, layer string, addr *urn.URN) error {
 	rpmDb := types.RpmDB{
 		Path: path,
 	}
@@ -98,12 +98,13 @@ func handleRpmFile(path, category string, addr *urn.URN) error {
 	}
 	stream.Emit(category, types.Payload{
 		Address: addr,
+		Layer:  layer,
 		Body:    rpmDb,
 	})
 	return nil
 }
 
-func handleManifestFile(path, category string, file *os.File, addr *urn.URN) error {
+func handleManifestFile(path, category, layer string, file *os.File, addr *urn.URN) error {
 	manifest := types.ManifestFile{
 		Path: path,
 	}
@@ -113,6 +114,7 @@ func handleManifestFile(path, category string, file *os.File, addr *urn.URN) err
 	}
 	stream.Emit(category, types.Payload{
 		Address: addr,
+		Layer:  layer,
 		Body:    manifest,
 	})
 

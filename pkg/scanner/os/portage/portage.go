@@ -63,6 +63,10 @@ func scan(payload types.Payload) {
 
 	// no metadata
 
+	if len(payload.Layer) > 0 {
+		component.AddLayer(c, payload.Layer)
+	}
+
 	cdx.AddComponent(c, payload.Address)
 }
 
