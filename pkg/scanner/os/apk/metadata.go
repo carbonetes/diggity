@@ -38,10 +38,7 @@ func ParseApkIndexFile(apkDBContent string) ([]ApkIndexRecord, error) {
 		line := scanner.Text()
 		if line == "" {
 			var record ApkIndexRecord
-			err := mapstructure.Decode(recordMap, &record)
-			if err != nil {
-				return nil, err
-			}
+			_ = mapstructure.Decode(recordMap, &record)
 			records = append(records, record)
 			recordMap = make(map[string]interface{})
 			continue

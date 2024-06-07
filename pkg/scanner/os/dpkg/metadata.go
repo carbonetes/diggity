@@ -100,10 +100,7 @@ func ParseDpkgDatabase(dpkgDbContent string) ([]Package, error) {
 		}
 
 		var pkg Package
-		err := mapstructure.Decode(m, &pkg)
-		if err != nil {
-			return nil, err
-		}
+		_ = mapstructure.Decode(m, &pkg)
 		packages = append(packages, pkg)
 
 	}
