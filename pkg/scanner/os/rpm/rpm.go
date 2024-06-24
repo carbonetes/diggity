@@ -80,6 +80,16 @@ func scan(payload types.Payload) {
 			}
 		}
 
+		// Remove unnecessary fields
+		pkgInfo.BaseNames = nil
+		pkgInfo.FileDigests = nil
+		pkgInfo.DirNames = nil
+		pkgInfo.DirIndexes = nil
+		pkgInfo.FileFlags = nil
+		pkgInfo.FileModes = nil
+		pkgInfo.GroupNames = nil
+		pkgInfo.UserNames = nil
+
 		rawMetadata, err := helper.ToJSON(pkgInfo)
 		if err != nil {
 			log.Errorf("Error converting metadata to JSON: %s", err)
