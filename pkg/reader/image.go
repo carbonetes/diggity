@@ -39,7 +39,7 @@ func GetImage(input string, config *types.RegistryConfig) (*v1.Image, *name.Refe
 	var image v1.Image
 	exists, image, _ := CheckIfImageExistsInLocal(ref)
 	if exists {
-		return nil, nil, err
+		return &image, &ref, nil
 	}
 
 	if config != nil {
