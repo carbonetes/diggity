@@ -48,6 +48,10 @@ func Scan(data interface{}) interface{} {
 func scan(payload types.Payload) {
 	manifest := payload.Body.(types.ManifestFile)
 	modFile := readManifestFile(manifest.Content, manifest.Path)
+	if modFile == nil {
+		return
+	}
+	
 	for _, pkg := range modFile.Require {
 		if pkg.Mod.Path == "" || pkg.Mod.Version == "" {
 			continue
