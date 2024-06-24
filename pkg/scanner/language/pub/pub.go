@@ -40,6 +40,10 @@ func scan(payload types.Payload) {
 	manifest := payload.Body.(types.ManifestFile)
 	if strings.Contains(manifest.Path, "pubspec.yaml") {
 		metadata := readManifestFile(manifest.Content)
+		if metadata == nil {
+			return
+		}
+		
 		var name, version, license string
 
 		name, ok := metadata["name"].(string)
@@ -88,6 +92,10 @@ func scan(payload types.Payload) {
 
 	} else if strings.Contains(manifest.Path, "pubspec.lock") {
 		metadata := readLockFile(manifest.Content)
+		if metadata == nil {
+			return
+		}
+
 		if len(metadata.Packages) == 0 {
 			return
 		}
