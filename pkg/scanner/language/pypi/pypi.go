@@ -126,6 +126,10 @@ func scan(payload types.Payload) {
 		}
 	} else if filepath.Base(manifest.Path) == "poetry.lock" {
 		metadata := readPoetryLockFile(manifest.Content)
+		if metadata == nil {
+			return
+		}
+
 		for _, packageInfo := range metadata.Packages {
 			name, version := packageInfo.Name, packageInfo.Version
 

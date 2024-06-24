@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/carbonetes/diggity/internal/log"
 )
 
 type PoetryLock struct {
@@ -76,10 +75,10 @@ func readRequirementsFile(content []byte) [][]string {
 	return attributes
 }
 
-func readPoetryLockFile(content []byte) PoetryLock {
+func readPoetryLockFile(content []byte) *PoetryLock {
 	var lockFile PoetryLock
 	if _, err := toml.Decode(string(content), &lockFile); err != nil {
-		log.Error("Failed to decode poetry.lock file")
+		return nil
 	}
-	return lockFile
+	return &lockFile
 }
