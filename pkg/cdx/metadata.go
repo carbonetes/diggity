@@ -67,7 +67,7 @@ func SetImageMetadata(image v1.Image, ref reader.Reference, imageTag string) *cy
 	}
 
 	qualifiers := map[string]string{}
-	purl := packageurl.NewPackageURL("pkg", packageurl.TypeOCI, name, version, nil, "")
+
 	properties := &[]cyclonedx.Property{}
 	arch, os, created = config.Architecture, config.OS, config.Created.String()
 	digest = hash.String()
@@ -97,8 +97,9 @@ func SetImageMetadata(image v1.Image, ref reader.Reference, imageTag string) *cy
 			Name:  "diggity:image:digest",
 			Value: digest,
 		})
-
+		qualifiers["digest"] = digest
 	}
+
 	hashes := &[]cyclonedx.Hash{
 		{
 			Algorithm: helper.DetectCDXHashAlgorithm(digest),
@@ -120,7 +121,7 @@ func SetImageMetadata(image v1.Image, ref reader.Reference, imageTag string) *cy
 			Value:     hash.String(),
 		})
 	}
-
+	purl := packageurl.NewPackageURL(packageurl.TypeOCI, "", name, version, packageurl.QualifiersFromMap(qualifiers), "")
 	return &cyclonedx.Component{
 		BOMRef:     purl.String(),
 		Type:       cyclonedx.ComponentTypeContainer,
