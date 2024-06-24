@@ -27,7 +27,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	payload, ok := data.(types.Payload)
 	if !ok {
-		log.Error("Composer Handler received unknown type")
+		log.Debug("Composer Handler received unknown type")
 		return nil
 	}
 
@@ -59,7 +59,7 @@ func scan(payload types.Payload) {
 
 		rawMetadata, err := helper.ToJSON(pkg)
 		if err != nil {
-			log.Errorf("Error converting metadata to JSON: %s", err)
+			log.Debugf("Error converting metadata to JSON: %s", err)
 		}
 
 		if len(rawMetadata) > 0 {
@@ -96,7 +96,7 @@ func scan(payload types.Payload) {
 
 		rawMetadata, err := helper.ToJSON(pkg)
 		if err != nil {
-			log.Errorf("Error converting metadata to JSON: %s", err)
+			log.Debugf("Error converting metadata to JSON: %s", err)
 		}
 
 		if len(rawMetadata) > 0 {

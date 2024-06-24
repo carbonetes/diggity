@@ -28,7 +28,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	payload, ok := data.(types.Payload)
 	if !ok {
-		log.Error("Dpkg received unknown file type")
+		log.Debug("Dpkg received unknown file type")
 		return nil
 	}
 
@@ -43,7 +43,7 @@ func scan(payload types.Payload) {
 
 	records, err := ParseDpkgDatabase(contents)
 	if err != nil {
-		log.Errorf("error parsing dpkg database: %s", err)
+		log.Debugf("error parsing dpkg database: %s", err)
 		return
 	}
 
@@ -72,7 +72,7 @@ func scan(payload types.Payload) {
 
 		rawMetadata, err := helper.ToJSON(record)
 		if err != nil {
-			log.Errorf("Error converting metadata to JSON: %s", err)
+			log.Debugf("Error converting metadata to JSON: %s", err)
 		}
 
 		if len(rawMetadata) > 0 {
@@ -135,8 +135,6 @@ func scan(payload types.Payload) {
 		if len(*dependencyNode.Dependencies) > 0 {
 			dependency.AddDependency(payload.Address, dependencyNode)
 		}
-
-
 
 		cdx.AddComponent(c, payload.Address)
 

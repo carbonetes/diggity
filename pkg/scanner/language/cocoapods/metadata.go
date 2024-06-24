@@ -21,7 +21,7 @@ func readManifestFile(content []byte) FileLockMetadata {
 	var metadata FileLockMetadata
 	err := yaml.Unmarshal(content, &metadata)
 	if err != nil {
-		log.Error("Failed to unmarshal Podfile.lock")
+		log.Debug("Failed to unmarshal Podfile.lock")
 	}
 	return metadata
 }

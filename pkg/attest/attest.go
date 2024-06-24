@@ -16,9 +16,9 @@ func Run(image string, opts types.AttestationOptions) {
 	err := checkCosign()
 	if err != nil {
 		if strings.Contains(err.Error(), "executable file not found") {
-			log.Error("Unable to run cosign. Make sure it is installed first.")
+			log.Debug("Unable to run cosign. Make sure it is installed first.")
 		} else {
-			log.Error(err)
+			log.Debug(err)
 		}
 		return
 	}
@@ -26,25 +26,25 @@ func Run(image string, opts types.AttestationOptions) {
 	log.Print("Running sbom attestation...")
 	found, err := helper.IsFileExists(opts.Predicate)
 	if err != nil {
-		log.Error(err)
+		log.Debug(err)
 		return
 	}
 
 	if !found {
-		log.Error("Predicate file not found.")
+		log.Debug("Predicate file not found.")
 		return
 	}
 	log.Print("Attestation Complete!")
 	err = attest(image, opts)
 	if err != nil {
-		log.Error(err)
+		log.Debug(err)
 		return
 	}
 
 	log.Print("Running verification...")
 	err = verify(image, opts)
 	if err != nil {
-		log.Errorf("Error occurred when verifying attestation. Please make sure that the paths or fields specified are correct. \n%s", err.Error())
+		log.Debugf("Error occurred when verifying attestation. Please make sure that the paths or fields specified are correct. \n%s", err.Error())
 		return
 	}
 	log.Print("Verification Done!")

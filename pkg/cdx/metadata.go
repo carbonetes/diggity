@@ -41,17 +41,17 @@ func setBasicMetadata() *cyclonedx.Metadata {
 func SetImageMetadata(image v1.Image, ref reader.Reference, imageTag string) *cyclonedx.Component {
 	config, err := image.ConfigFile()
 	if err != nil {
-		log.Errorf("error getting image config: %s", err)
+		log.Debugf("error getting image config: %s", err)
 	}
 
 	layers, err := image.Layers()
 	if err != nil {
-		log.Errorf("error getting image layers: %s", err)
+		log.Debugf("error getting image layers: %s", err)
 	}
 
 	hash, err := image.Digest()
 	if err != nil {
-		log.Errorf("error getting image digest: %s", err)
+		log.Debugf("error getting image digest: %s", err)
 	}
 
 	var name, version, digest, arch, os, created string
@@ -62,12 +62,12 @@ func SetImageMetadata(image v1.Image, ref reader.Reference, imageTag string) *cy
 	}
 
 	if len(name) == 0 || len(version) == 0 {
-		log.Errorf("error getting image name or version")
+		log.Debugf("error getting image name or version")
 		return nil
 	}
 
 	qualifiers := map[string]string{}
-	purl := packageurl.NewPackageURL("pkg", packageurl.TypeOCI, name, version, nil, "")
+
 	properties := &[]cyclonedx.Property{}
 	arch, os, created = config.Architecture, config.OS, config.Created.String()
 	digest = hash.String()
@@ -97,8 +97,9 @@ func SetImageMetadata(image v1.Image, ref reader.Reference, imageTag string) *cy
 			Name:  "diggity:image:digest",
 			Value: digest,
 		})
-
+		qualifiers["digest"] = digest
 	}
+
 	hashes := &[]cyclonedx.Hash{
 		{
 			Algorithm: helper.DetectCDXHashAlgorithm(digest),
@@ -108,7 +109,7 @@ func SetImageMetadata(image v1.Image, ref reader.Reference, imageTag string) *cy
 	for _, layer := range layers {
 		hash, err := layer.Digest()
 		if err != nil {
-			log.Errorf("error getting layer digest: %s", err)
+			log.Debugf("error getting layer digest: %s", err)
 		}
 		*properties = append(*properties, cyclonedx.Property{
 			Name:  "diggity:image:layer",
@@ -120,7 +121,7 @@ func SetImageMetadata(image v1.Image, ref reader.Reference, imageTag string) *cy
 			Value:     hash.String(),
 		})
 	}
-
+	purl := packageurl.NewPackageURL(packageurl.TypeOCI, "", name, version, packageurl.QualifiersFromMap(qualifiers), "")
 	return &cyclonedx.Component{
 		BOMRef:     purl.String(),
 		Type:       cyclonedx.ComponentTypeContainer,

@@ -34,7 +34,7 @@ func readManifestFile(content []byte) Metadata {
 	var metadata Metadata
 	err := json.Unmarshal(content, &metadata)
 	if err != nil {
-		log.Error("Failed to unmarshal package.resolved")
+		log.Debug("Failed to unmarshal package.resolved")
 	}
 
 	return metadata

@@ -21,7 +21,7 @@ var (
 
 func init() {
 	if err := json.Unmarshal(productEmbed, &productMap); err != nil {
-		log.Errorf("failed to unmarshal JSON: %v", err)
+		log.Debugf("failed to unmarshal JSON: %v", err)
 	}
 }
 

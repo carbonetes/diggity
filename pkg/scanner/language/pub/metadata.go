@@ -23,16 +23,17 @@ func readManifestFile(content []byte) map[string]interface{} {
 	var metadata map[string]interface{}
 	err := yaml.Unmarshal(content, &metadata)
 	if err != nil {
-		log.Error("Failed to unmarshal pubspec.yaml")
+		return nil
 	}
 	return metadata
 }
 
-func readLockFile(content []byte) Lockfile {
+func readLockFile(content []byte) *Lockfile {
 	var metadata Lockfile
 	err := yaml.Unmarshal(content, &metadata)
 	if err != nil {
-		log.Error("Failed to unmarshal pubspec.lock")
+		log.Debug("Failed to unmarshal pubspec.lock")
+		return nil
 	}
-	return metadata
+	return &metadata
 }

@@ -22,7 +22,7 @@ func ReadTarballAsImage(path string) (*v1.Image, error) {
 
 	image, err := tarball.ImageFromPath(path, nil)
 	if err != nil {
-		log.Error(err)
+		log.Debug(err)
 	}
 
 	return &image, nil

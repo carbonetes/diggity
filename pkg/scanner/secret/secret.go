@@ -54,13 +54,13 @@ func New(addr *urn.URN) {
 func Scan(data interface{}) interface{} {
 	payload, ok := data.(types.Payload)
 	if !ok {
-		log.Error("Secret received unknown file type")
+		log.Debug("Secret received unknown file type")
 		return nil
 	}
 
 	manifest, ok := payload.Body.(types.ManifestFile)
 	if !ok {
-		log.Error("Secret received unknown file type")
+		log.Debug("Secret received unknown file type")
 		return nil
 	}
 

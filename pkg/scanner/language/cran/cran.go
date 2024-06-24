@@ -29,7 +29,7 @@ func CheckRelatedFiles(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	payload, ok := data.(types.Payload)
 	if !ok {
-		log.Error("Cran Handler received unknown type")
+		log.Debug("Cran Handler received unknown type")
 		return nil
 	}
 
@@ -61,7 +61,7 @@ func scan(payload types.Payload) {
 
 	rawMetadata, err := helper.ToJSON(metadata)
 	if err != nil {
-		log.Errorf("Error converting metadata to JSON: %s", err)
+		log.Debugf("Error converting metadata to JSON: %s", err)
 	}
 
 	if len(rawMetadata) > 0 {

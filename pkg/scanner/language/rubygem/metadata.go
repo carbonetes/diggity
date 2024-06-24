@@ -6,7 +6,6 @@ import (
 
 func readManifestFile(content []byte) [][]string {
 	var attributes [][]string
-
 	lines := strings.Split(string(content), "\n")
 	for _, line := range lines {
 		line = strings.TrimSpace(line)

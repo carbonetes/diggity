@@ -11,7 +11,7 @@ import (
 func DisplayResults(result *cyclonedx.BOM) {
 	json, err := helper.ToJSON(result)
 	if err != nil {
-		log.Error("Error converting to JSON")
+		log.Debug("Error converting to JSON")
 	}
 	fmt.Println(string(json))
 }

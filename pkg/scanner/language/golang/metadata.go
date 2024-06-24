@@ -29,11 +29,12 @@ type GoDevelMetadata struct {
 	GoCompileRelease string `json:"goCompileRelease"`
 }
 
-func readManifestFile(content []byte, path string) modfile.File {
+func readManifestFile(content []byte, path string) *modfile.File {
 	modFile, err := modfile.Parse(path, content, nil)
 	if err != nil || modFile == nil {
-		log.Error("Failed to parse go.mod file")
+		log.Debug("Failed to parse go.mod file")
+		return nil
 	}
 
-	return *modFile
+	return modFile
 }

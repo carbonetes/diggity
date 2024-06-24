@@ -15,12 +15,12 @@ var Config types.Config
 func init() {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		log.Error(err)
+		log.Debug(err)
 	}
 	path := home + string(os.PathSeparator) + ".diggity.yaml"
 	exist, err := helper.IsFileExists(path)
 	if err != nil {
-		log.Error(err)
+		log.Debug(err)
 	}
 
 	if !exist {
@@ -33,7 +33,7 @@ func init() {
 		newConfig := New()
 		err := mapstructure.Decode(config, &newConfig)
 		if err != nil {
-			log.Error(err)
+			log.Debug(err)
 		}
 		newConfig.Version = types.ConfigVersion
 		ReplaceConfigFile(newConfig, path)
@@ -59,37 +59,37 @@ func MakeDefaultConfigFile(path string) {
 	defaultConfig := New()
 	err := helper.WriteYAML(defaultConfig, path)
 	if err != nil {
-		log.Error(err)
+		log.Debug(err)
 	}
 }
 
 func ReadConfigFile(config *types.Config, path string) {
 	configFile, err := os.ReadFile(path)
 	if err != nil {
-		log.Error(err)
+		log.Debug(err)
 	}
 
 	err = yaml.Unmarshal(configFile, config)
 	if err != nil {
-		log.Error(err)
+		log.Debug(err)
 	}
 }
 
 func ReplaceConfigFile(config types.Config, path string) {
 	exist, err := helper.IsFileExists(path)
 	if err != nil {
-		log.Error(err)
+		log.Debug(err)
 	}
 
 	if exist {
 		err = os.Remove(path)
 		if err != nil {
-			log.Error(err)
+			log.Debug(err)
 		}
 	}
 
 	err = helper.WriteYAML(config, path)
 	if err != nil {
-		log.Error(err)
+		log.Debug(err)
 	}
 }

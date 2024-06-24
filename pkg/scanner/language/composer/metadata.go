@@ -50,7 +50,7 @@ func readManifestFile(content []byte) ComposerMetadata {
 	var metadata ComposerMetadata
 	err := json.Unmarshal(content, &metadata)
 	if err != nil {
-		log.Error("Failed to unmarshal composer.lock")
+		log.Debug("Failed to unmarshal composer.lock")
 	}
 	return metadata
 }

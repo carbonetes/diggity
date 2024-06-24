@@ -127,7 +127,7 @@ func Run() {
 	exited = false
 	go func() {
 		if _, err := p.Run(); err != nil {
-			log.Errorf("Failed to start program: %v", err)
+			log.Debugf("Failed to start program: %v", err)
 		}
 	}()
 }

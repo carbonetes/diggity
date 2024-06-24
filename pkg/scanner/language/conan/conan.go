@@ -27,7 +27,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	payload, ok := data.(types.Payload)
 	if !ok {
-		log.Error("Conan Handler received unknown type")
+		log.Debug("Conan Handler received unknown type")
 		return nil
 	}
 
@@ -62,7 +62,7 @@ func scan(payload types.Payload) {
 
 			rawMetadata, err := helper.ToJSON(pkg)
 			if err != nil {
-				log.Errorf("Error converting metadata to JSON: %s", err)
+				log.Debugf("Error converting metadata to JSON: %s", err)
 			}
 
 			if len(rawMetadata) > 0 {
@@ -77,9 +77,14 @@ func scan(payload types.Payload) {
 		}
 	} else if strings.Contains(manifest.Path, "conan.lock") {
 		metadata := readLockFile(manifest.Content)
+		if metadata == nil {
+			return
+		}
+
 		if len(metadata.GraphLock.Nodes) == 0 {
 			return
 		}
+
 		for _, node := range metadata.GraphLock.Nodes {
 			if node.Ref == "" {
 				continue
@@ -118,7 +123,7 @@ func scan(payload types.Payload) {
 
 			rawMetadata, err := helper.ToJSON(node)
 			if err != nil {
-				log.Errorf("Error converting metadata to JSON: %s", err)
+				log.Debugf("Error converting metadata to JSON: %s", err)
 			}
 
 			if len(rawMetadata) > 0 {

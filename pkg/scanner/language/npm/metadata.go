@@ -10,18 +10,18 @@ import (
 )
 
 // PackageJSON - packages.json model
-type Metadata struct {	
-	Name         string                 `json:"name"`
-	Version      string                 `json:"version"`
-	Latest       []string               `json:"latest"`
-	Contributors interface{}            `json:"contributors"`
-	License      interface{}            `json:"license"`
-	Homepage     string                 `json:"homepage"`
-	Description  string                 `json:"description"`
-	Dependencies map[string]interface{} `json:"dependencies"`
+type Metadata struct {
+	Name            string                 `json:"name"`
+	Version         string                 `json:"version"`
+	Latest          []string               `json:"latest"`
+	Contributors    interface{}            `json:"contributors"`
+	License         interface{}            `json:"license"`
+	Homepage        string                 `json:"homepage"`
+	Description     string                 `json:"description"`
+	Dependencies    map[string]interface{} `json:"dependencies"`
 	DevDependencies map[string]interface{} `json:"devDependencies"`
-	Repository   interface{}            `json:"repository"`
-	Author       interface{}            `json:"author"`
+	Repository      interface{}            `json:"repository"`
+	Author          interface{}            `json:"author"`
 }
 
 // Contributors - PackageJSON contributors
@@ -73,32 +73,35 @@ type PnpmLockfile struct {
 	Packages        map[string]interface{} `yaml:"packages"`
 }
 
-func readManifestFile(content []byte) Metadata {
+func readManifestFile(content []byte) *Metadata {
 	var metadata Metadata
 	err := json.Unmarshal(content, &metadata)
 	if err != nil {
-		log.Error("Failed to unmarshal package.json")
+		log.Debug("Failed to unmarshal package.json")
+		return nil
 	}
-	return metadata
+	return &metadata
 }
 
-func readPackageLockfile(content []byte) PackageLock {
+func readPackageLockfile(content []byte) *PackageLock {
 	var metadata PackageLock
 	err := json.Unmarshal(content, &metadata)
 	if err != nil {
-		log.Error("Failed to unmarshal package-lock.json")
+		log.Debug("Failed to unmarshal package-lock.json")
+		return nil
 	}
 
-	return metadata
+	return &metadata
 }
 
-func readPnpmLockfile(content []byte) PnpmLockfile {
+func readPnpmLockfile(content []byte) *PnpmLockfile {
 	var metadata PnpmLockfile
 	err := yaml.Unmarshal(content, &metadata)
 	if err != nil {
-		log.Error("Failed to unmarshal pnpm-lock.yaml")
+		log.Debug("Failed to unmarshal pnpm-lock.yaml")
+		return nil
 	}
-	return metadata
+	return &metadata
 }
 
 type Package struct {
@@ -121,11 +124,13 @@ func parseYarnLock(content []byte) (map[string]YarnLockfile, error) {
 	r := bytes.NewReader(content)
 	data, err := io.ReadAll(r)
 	if err != nil {
+		log.Debug("Failed to read yarn.lock")
 		return nil, err
 	}
 
 	err = yaml.Unmarshal(data, &packages)
 	if err != nil {
+		log.Debug("Failed to unmarshal yarn.lock")
 		return nil, err
 	}
 

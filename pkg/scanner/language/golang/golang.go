@@ -29,7 +29,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	payload, ok := data.(types.Payload)
 	if !ok {
-		log.Error("Go Modules Handler received unknown type")
+		log.Debug("Go Modules Handler received unknown type")
 		return nil
 	}
 
@@ -48,6 +48,10 @@ func Scan(data interface{}) interface{} {
 func scan(payload types.Payload) {
 	manifest := payload.Body.(types.ManifestFile)
 	modFile := readManifestFile(manifest.Content, manifest.Path)
+	if modFile == nil {
+		return
+	}
+
 	for _, pkg := range modFile.Require {
 		if pkg.Mod.Path == "" || pkg.Mod.Version == "" {
 			continue
@@ -67,7 +71,7 @@ func scan(payload types.Payload) {
 
 		rawMetadata, err := helper.ToJSON(pkg)
 		if err != nil {
-			log.Errorf("Error converting metadata to JSON: %s", err)
+			log.Debugf("Error converting metadata to JSON: %s", err)
 		}
 
 		component.AddOrigin(c, manifest.Path)
@@ -99,7 +103,7 @@ func scan(payload types.Payload) {
 
 		rawMetadata, err := helper.ToJSON(pkg)
 		if err != nil {
-			log.Errorf("Error converting metadata to JSON: %s", err)
+			log.Debugf("Error converting metadata to JSON: %s", err)
 		}
 
 		if len(rawMetadata) > 0 {
@@ -136,7 +140,7 @@ func scanBinary(payload types.Payload) {
 
 			rawMetadata, err := helper.ToJSON(s)
 			if err != nil {
-				log.Errorf("Error converting metadata to JSON: %s", err)
+				log.Debugf("Error converting metadata to JSON: %s", err)
 			}
 
 			if len(rawMetadata) > 0 {
@@ -171,7 +175,7 @@ func scanBinary(payload types.Payload) {
 
 		rawMetadata, err := helper.ToJSON(dep)
 		if err != nil {
-			log.Errorf("Error converting metadata to JSON: %s", err)
+			log.Debugf("Error converting metadata to JSON: %s", err)
 		}
 
 		if len(rawMetadata) > 0 {

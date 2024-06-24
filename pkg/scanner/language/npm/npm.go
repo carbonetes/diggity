@@ -33,7 +33,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	payload, ok := data.(types.Payload)
 	if !ok {
-		log.Error("NPM Handler received unknown type")
+		log.Debug("NPM Handler received unknown type")
 		return nil
 	}
 
@@ -46,6 +46,9 @@ func scan(payload types.Payload) {
 	manifest := payload.Body.(types.ManifestFile)
 	if strings.Contains(manifest.Path, "package.json") {
 		metadata := readManifestFile(manifest.Content)
+		if metadata == nil {
+			return
+		}
 
 		devDependencies := metadata.DevDependencies
 		if len(devDependencies) > 0 {
@@ -143,7 +146,7 @@ func scan(payload types.Payload) {
 
 		rawMetadata, err := helper.ToJSON(metadata)
 		if err != nil {
-			log.Errorf("Error converting metadata to JSON: %s", err)
+			log.Debugf("Error converting metadata to JSON: %s", err)
 		}
 
 		if len(rawMetadata) > 0 {
@@ -158,6 +161,10 @@ func scan(payload types.Payload) {
 
 	} else if strings.Contains(manifest.Path, "package-lock.json") {
 		metadata := readPackageLockfile(manifest.Content)
+		if metadata == nil {
+			return
+		}
+
 		if len(metadata.Dependencies) == 0 {
 			return
 		}
@@ -187,7 +194,7 @@ func scan(payload types.Payload) {
 	} else if strings.Contains(manifest.Path, "yarn.lock") {
 		lockfile, err := parseYarnLock(manifest.Content)
 		if err != nil {
-			log.Errorf("Error parsing yarn.lock: %s", err)
+			return // skip
 		}
 		for id, pkg := range lockfile {
 			if strings.Contains(id, ",") {
@@ -219,7 +226,7 @@ func scan(payload types.Payload) {
 
 					rawMetadata, err := helper.ToJSON(metadata)
 					if err != nil {
-						log.Errorf("Error converting metadata to JSON: %s", err)
+						log.Debugf("Error converting metadata to JSON: %s", err)
 					}
 
 					if len(rawMetadata) > 0 {
@@ -260,7 +267,7 @@ func scan(payload types.Payload) {
 
 			rawMetadata, err := helper.ToJSON(pkg)
 			if err != nil {
-				log.Errorf("Error converting metadata to JSON: %s", err)
+				log.Debugf("Error converting metadata to JSON: %s", err)
 			}
 
 			if len(rawMetadata) > 0 {
@@ -279,6 +286,10 @@ func scan(payload types.Payload) {
 		}
 	} else if strings.Contains(manifest.Path, "pnpm-lock.yaml") {
 		metadata := readPnpmLockfile(manifest.Content)
+		if metadata == nil {
+			return
+		}
+
 		for name, info := range metadata.Dependencies {
 			if name == "" {
 				continue
@@ -319,11 +330,7 @@ func scan(payload types.Payload) {
 		}
 
 		separator := "/"
-		lockfileVersion, err := strconv.ParseFloat(metadata.LockFileVersion, 64)
-		if err != nil {
-			log.Errorf("Error parsing lockfile version: %s", err)
-		}
-
+		lockfileVersion, _ := strconv.ParseFloat(metadata.LockFileVersion, 64)
 		if lockfileVersion >= 6.0 {
 			separator = "@"
 		}

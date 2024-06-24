@@ -35,7 +35,7 @@ var (
 				params.Input = tarball
 			} else if len(filesystem) > 0 {
 				if found, _ := helper.IsDirExists(filesystem); !found {
-					log.Error("directory not found: " + filesystem)
+					log.Debug("directory not found: " + filesystem)
 					return
 				}
 				params.Input = filesystem
@@ -46,27 +46,27 @@ var (
 
 			quiet, err := cmd.Flags().GetBool("quiet")
 			if err != nil {
-				log.Error(err.Error())
+				log.Debug(err.Error())
 			}
 
 			err = params.GetScanType()
 			if err != nil {
-				log.Error(err.Error())
+				log.Debug(err.Error())
 			}
 
 			outputFormat, err := cmd.Flags().GetString("output")
 			if err != nil {
-				log.Error(err.Error())
+				log.Debug(err.Error())
 			}
 
 			file, err := cmd.Flags().GetString("file")
 			if err != nil {
-				log.Error(err.Error())
+				log.Debug(err.Error())
 			}
 
 			scanners, err := cmd.Flags().GetStringArray("scanners")
 			if err != nil {
-				log.Error(err.Error())
+				log.Debug(err.Error())
 			}
 
 			if len(file) > 0 {
@@ -75,7 +75,7 @@ var (
 
 			valid := types.IsValidOutputFormat(outputFormat)
 			if !valid {
-				log.Error("Invalid output format parameter")
+				log.Debug("Invalid output format parameter")
 			}
 
 			params.Quiet = quiet
@@ -83,7 +83,7 @@ var (
 			params.Scanners = helper.SplitAndAppendStrings(scanners)
 			params.OutputFormat = types.OutputFormat(outputFormat)
 			if err != nil {
-				log.Error(err.Error())
+				log.Debug(err.Error())
 			}
 
 			cli.Start(params)

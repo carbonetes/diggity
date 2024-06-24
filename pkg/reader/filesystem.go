@@ -63,7 +63,7 @@ func FilesystemScanHandler(target string, addr *urn.URN) error {
 			case "rpm":
 				err := handleRpmFile(path, category, "", addr)
 				if err != nil {
-					log.Error(err)
+					log.Debug(err)
 				}
 			default:
 				if !readFlag {
@@ -75,11 +75,11 @@ func FilesystemScanHandler(target string, addr *urn.URN) error {
 				}
 				file, err := os.Open(path)
 				if err != nil {
-					log.Error(err)
+					log.Debug(err)
 				}
-				err = handleManifestFile(path, category, "",file, addr)
+				err = handleManifestFile(path, category, "", file, addr)
 				if err != nil {
-					log.Error(err)
+					log.Debug(err)
 				}
 			}
 		}
@@ -98,7 +98,7 @@ func handleRpmFile(path, category, layer string, addr *urn.URN) error {
 	}
 	stream.Emit(category, types.Payload{
 		Address: addr,
-		Layer:  layer,
+		Layer:   layer,
 		Body:    rpmDb,
 	})
 	return nil
@@ -114,7 +114,7 @@ func handleManifestFile(path, category, layer string, file *os.File, addr *urn.U
 	}
 	stream.Emit(category, types.Payload{
 		Address: addr,
-		Layer:  layer,
+		Layer:   layer,
 		Body:    manifest,
 	})
 

@@ -21,7 +21,7 @@ var (
 func Scan(data interface{}) interface{} {
 	payload, ok := data.(types.Payload)
 	if !ok {
-		log.Error("Distro handler received unknown type")
+		log.Debug("Distro handler received unknown type")
 	}
 
 	scan(payload)
@@ -43,10 +43,9 @@ func scan(payload types.Payload) {
 		c := newOSComponent(name.(string), version.(string), desc.(string))
 
 		swid := cyclonedx.SWID{
-			TagID: name.(string),
-			Name:  name.(string),
+			TagID:   name.(string),
+			Name:    name.(string),
 			Version: version.(string),
-
 		}
 
 		for key, value := range release.Release {
@@ -109,8 +108,6 @@ func newOSComponent(name, version, desc string) *cyclonedx.Component {
 		Version:     version,
 		Description: desc,
 	}
-
-
 
 	return c
 }
