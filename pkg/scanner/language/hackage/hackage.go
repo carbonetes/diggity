@@ -27,7 +27,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	payload, ok := data.(types.Payload)
 	if !ok {
-		log.Error("Hackage Handler received unknown type")
+		log.Debug("Hackage Handler received unknown type")
 		return nil
 	}
 
@@ -40,6 +40,10 @@ func scan(payload types.Payload) {
 	manifest := payload.Body.(types.ManifestFile)
 	if strings.Contains(manifest.Path, "stack.yaml") {
 		stackConfig := readStackConfigFile(manifest.Content)
+		if stackConfig == nil {
+			return
+		}
+
 		for _, dep := range stackConfig.ExtraDeps {
 			name, version, _, _, _ := parseExtraDep(dep)
 			if name == "" || version == "" {
@@ -57,7 +61,7 @@ func scan(payload types.Payload) {
 
 			rawMetadata, err := helper.ToJSON(dep)
 			if err != nil {
-				log.Errorf("Error converting metadata to JSON: %s", err)
+				log.Debugf("Error converting metadata to JSON: %s", err)
 			}
 
 			component.AddOrigin(c, manifest.Path)
@@ -72,6 +76,9 @@ func scan(payload types.Payload) {
 		}
 	} else if strings.Contains(manifest.Path, "stack.yaml.lock") {
 		lockFile := readStackLockConfigFile(manifest.Content)
+		if lockFile == nil {
+			return
+		}
 
 		for _, pkg := range lockFile.Packages {
 			name, version, _, _, _ := parseExtraDep(pkg.Original.Hackage)
@@ -90,7 +97,7 @@ func scan(payload types.Payload) {
 
 			rawMetadata, err := helper.ToJSON(pkg)
 			if err != nil {
-				log.Errorf("Error converting metadata to JSON: %s", err)
+				log.Debugf("Error converting metadata to JSON: %s", err)
 			}
 
 			component.AddOrigin(c, manifest.Path)
@@ -105,6 +112,10 @@ func scan(payload types.Payload) {
 		}
 	} else if strings.Contains(manifest.Path, "cabal.project.freeze") {
 		packages := readManifestFile(manifest.Content)
+		if len(packages) == 0 {
+			return
+		}
+
 		for _, pkg := range packages {
 			name, version, _, _, _ := parseExtraDep(pkg)
 			if name == "" || version == "" {
@@ -122,7 +133,7 @@ func scan(payload types.Payload) {
 
 			rawMetadata, err := helper.ToJSON(pkg)
 			if err != nil {
-				log.Errorf("Error converting metadata to JSON: %s", err)
+				log.Debugf("Error converting metadata to JSON: %s", err)
 			}
 
 			component.AddOrigin(c, manifest.Path)

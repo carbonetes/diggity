@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
+	"github.com/carbonetes/diggity/internal/log"
 )
 
 type PoetryLock struct {
@@ -34,7 +35,6 @@ type Dependency struct {
 
 func readManifestFile(content []byte) map[string]interface{} {
 	metadata := make(map[string]interface{})
-
 	var key, value, prev string
 	lines := strings.Split(string(content), "\n")
 	for _, line := range lines {
@@ -78,6 +78,7 @@ func readRequirementsFile(content []byte) [][]string {
 func readPoetryLockFile(content []byte) *PoetryLock {
 	var lockFile PoetryLock
 	if _, err := toml.Decode(string(content), &lockFile); err != nil {
+		log.Debug("Failed to unmarshal poetry.lock")
 		return nil
 	}
 	return &lockFile

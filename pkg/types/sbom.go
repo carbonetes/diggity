@@ -44,7 +44,7 @@ func NewSBOM() SBOM {
 func (c Component) ToJSON() string {
 	data, err := json.MarshalIndent(c, "", " ")
 	if err != nil {
-		log.Error(err)
+		log.Debug(err)
 	}
 	return string(data)
 }
@@ -52,7 +52,7 @@ func (c Component) ToJSON() string {
 func (s SBOM) ToJSON() string {
 	data, err := json.MarshalIndent(s, "", " ")
 	if err != nil {
-		log.Error(err)
+		log.Debug(err)
 	}
 	return string(data)
 }

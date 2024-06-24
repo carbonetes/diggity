@@ -71,12 +71,13 @@ func readManifestFile(content []byte) []Metadata {
 	return packages
 }
 
-func readLockFile(content []byte) LockMetadata {
+func readLockFile(content []byte) *LockMetadata {
 	var metadata LockMetadata
 	err := json.Unmarshal(content, &metadata)
 	if err != nil {
-		log.Error("Failed to unmarshal conan.lock")
+		log.Debug("Failed to unmarshal conan.lock")
+		return nil
 	}
 
-	return metadata
+	return &metadata
 }

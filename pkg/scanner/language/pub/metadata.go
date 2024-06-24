@@ -1,6 +1,7 @@
 package pub
 
 import (
+	"github.com/carbonetes/diggity/internal/log"
 	"gopkg.in/yaml.v3"
 )
 
@@ -31,6 +32,7 @@ func readLockFile(content []byte) *Lockfile {
 	var metadata Lockfile
 	err := yaml.Unmarshal(content, &metadata)
 	if err != nil {
+		log.Debug("Failed to unmarshal pubspec.lock")
 		return nil
 	}
 	return &metadata

@@ -19,11 +19,12 @@ type DotnetLibrary struct {
 	HashPath string `json:"hashPath"`
 }
 
-func readManifestFile(content []byte) DotnetDeps {
+func readManifestFile(content []byte) *DotnetDeps {
 	var metadata DotnetDeps
 	err := json.Unmarshal(content, &metadata)
 	if err != nil {
-		log.Error("Failed to unmarshal .deps.json")
+		log.Debug("Failed to unmarshal project.assets.json")
+		return nil
 	}
-	return metadata
+	return &metadata
 }

@@ -28,7 +28,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	payload, ok := data.(types.Payload)
 	if !ok {
-		log.Error("Apk Handler received unknown type")
+		log.Debug("Apk Handler received unknown type")
 		return nil
 	}
 
@@ -41,7 +41,7 @@ func scan(payload types.Payload) {
 	apkDb := payload.Body.(types.ManifestFile)
 	records, err := ParseApkIndexFile(string(apkDb.Content))
 	if err != nil {
-		log.Errorf("error parsing apk index file: %s", err)
+		log.Debugf("error parsing apk index file: %s", err)
 		return
 	}
 	if len(records) == 0 {
@@ -88,7 +88,7 @@ func scan(payload types.Payload) {
 
 		rawMetadata, err := helper.ToJSON(record)
 		if err != nil {
-			log.Errorf("Error converting metadata to JSON: %s", err)
+			log.Debugf("Error converting metadata to JSON: %s", err)
 		}
 
 		if len(rawMetadata) > 0 {

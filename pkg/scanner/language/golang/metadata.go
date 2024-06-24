@@ -1,6 +1,7 @@
 package golang
 
 import (
+	"github.com/carbonetes/diggity/internal/log"
 	"golang.org/x/mod/modfile"
 )
 
@@ -31,7 +32,7 @@ type GoDevelMetadata struct {
 func readManifestFile(content []byte, path string) *modfile.File {
 	modFile, err := modfile.Parse(path, content, nil)
 	if err != nil || modFile == nil {
-		// log.Error("Failed to parse go.mod file")
+		log.Debug("Failed to parse go.mod file")
 		return nil
 	}
 

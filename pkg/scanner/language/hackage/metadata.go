@@ -38,22 +38,22 @@ type HackageMetadata struct {
 	SnapshotURL string `json:"snapshotURL,omitempty"`
 }
 
-func readStackConfigFile(content []byte) StackConfig {
+func readStackConfigFile(content []byte) *StackConfig {
 	var metadata StackConfig
 	err := yaml.Unmarshal(content, &metadata)
 	if err != nil {
-		log.Error("Failed to unmarshal stack.yaml")
+		log.Debug("Failed to unmarshal stack.yaml")
 	}
-	return metadata
+	return &metadata
 }
 
-func readStackLockConfigFile(content []byte) StackLockConfig {
+func readStackLockConfigFile(content []byte) *StackLockConfig {
 	var metadata StackLockConfig
 	err := yaml.Unmarshal(content, &metadata)
 	if err != nil {
-		log.Error("Failed to unmarshal stack.yaml.lock")
+		log.Debug("Failed to unmarshal stack.yaml.lock")
 	}
-	return metadata
+	return &metadata
 }
 
 func readManifestFile(content []byte) []string {

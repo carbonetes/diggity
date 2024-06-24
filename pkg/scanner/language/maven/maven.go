@@ -28,7 +28,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	payload, ok := data.(types.Payload)
 	if !ok {
-		log.Error("Java Archive received unknown file type")
+		log.Debug("Java Archive received unknown file type")
 		return nil
 	}
 
@@ -61,7 +61,7 @@ func scan(payload types.Payload) {
 func readPOMFile(manifest types.ManifestFile, addr *urn.URN) {
 	metadata, err := parsePOM(manifest.Content)
 	if err != nil {
-		log.Errorf("Failed to parse POM file: %v", err)
+		log.Debugf("Failed to parse POM file: %v", err)
 		return
 	}
 
@@ -111,7 +111,7 @@ func readPOMFile(manifest types.ManifestFile, addr *urn.URN) {
 
 			rawMetadata, err := helper.ToJSON(dependency)
 			if err != nil {
-				log.Errorf("Failed to convert metadata to JSON: %v", err)
+				log.Debugf("Failed to convert metadata to JSON: %v", err)
 			}
 
 			if len(rawMetadata) > 0 {
@@ -150,7 +150,7 @@ func readPOMFile(manifest types.ManifestFile, addr *urn.URN) {
 
 	rawMetadata, err := helper.ToJSON(meta)
 	if err != nil {
-		log.Errorf("Failed to convert metadata to JSON: %v", err)
+		log.Debugf("Failed to convert metadata to JSON: %v", err)
 	}
 
 	if len(rawMetadata) > 0 {
@@ -164,7 +164,7 @@ func readPOMFile(manifest types.ManifestFile, addr *urn.URN) {
 func readManifestFile(manifest types.ManifestFile, addr *urn.URN) {
 	metadata, err := parseManifestFile(manifest.Content)
 	if err != nil {
-		log.Errorf("Failed to parse manifest file: %v", err)
+		log.Debugf("Failed to parse manifest file: %v", err)
 		return
 	}
 
@@ -189,7 +189,7 @@ func readManifestFile(manifest types.ManifestFile, addr *urn.URN) {
 
 	rawMetadata, err := helper.ToJSON(metadata)
 	if err != nil {
-		log.Errorf("Failed to convert metadata to JSON: %v", err)
+		log.Debugf("Failed to convert metadata to JSON: %v", err)
 	}
 
 	if len(rawMetadata) > 0 {
@@ -203,7 +203,7 @@ func readManifestFile(manifest types.ManifestFile, addr *urn.URN) {
 func readPOMPropertiesFile(manifest types.ManifestFile, layer string, addr *urn.URN) {
 	metadata, err := parsePOMProperties(manifest.Content)
 	if err != nil {
-		log.Errorf("Failed to parse POM properties file: %v", err)
+		log.Debugf("Failed to parse POM properties file: %v", err)
 		return
 	}
 
@@ -232,7 +232,7 @@ func readPOMPropertiesFile(manifest types.ManifestFile, layer string, addr *urn.
 
 	rawMetadata, err := helper.ToJSON(metadata)
 	if err != nil {
-		log.Errorf("Failed to convert metadata to JSON: %v", err)
+		log.Debugf("Failed to convert metadata to JSON: %v", err)
 	}
 
 	if len(rawMetadata) > 0 {

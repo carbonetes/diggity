@@ -21,7 +21,7 @@ func DisplayResults(params types.Parameters, duration float64, addr *urn.URN) {
 	if len(filename) > 0 {
 		err := helper.SaveToFile(result, filename, string(types.JSON))
 		if err != nil {
-			log.Errorf("Failed to save results to file : %s", err.Error())
+			log.Debugf("Failed to save results to file : %s", err.Error())
 		}
 		return
 	}
@@ -32,9 +32,9 @@ func DisplayResults(params types.Parameters, duration float64, addr *urn.URN) {
 	case types.JSON, types.CycloneDXJSON, types.SPDXJSON:
 		json.DisplayResults(result)
 	case types.CycloneDXXML, types.SPDXXML:
-		log.Error("XML output is not supported yet")
+		log.Debug("XML output is not supported yet")
 	default:
-		log.Error("Unknown output format")
+		log.Debug("Unknown output format")
 	}
 
 }

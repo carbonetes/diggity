@@ -27,7 +27,7 @@ func AddRefQualifier(c *cyclonedx.Component, qualifiers map[string]string) {
 
 	purl, err := packageurl.FromString(c.BOMRef)
 	if err != nil {
-		log.Error(err)
+		log.Debug(err)
 		return
 	}
 
@@ -130,7 +130,7 @@ func AddRawMetadata(c *cyclonedx.Component, metadata []byte) {
 
 	v, err := helper.CleanJSON(string(metadata))
 	if err != nil {
-		log.Error(err)
+		log.Debug(err)
 	}
 
 	*c.Properties = append(*c.Properties, cyclonedx.Property{

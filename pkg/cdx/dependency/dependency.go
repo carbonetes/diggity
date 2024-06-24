@@ -31,7 +31,7 @@ func AddDependency(addr *urn.URN, node *cyclonedx.Dependency) {
 	// Get the current map
 	nodes := GetDependencyNodes(addr)
 	if nodes == nil {
-		log.Error("Dependency map not found")
+		log.Debug("Dependency map not found")
 		return
 	}
 
@@ -49,13 +49,13 @@ func GetDependencyNodes(addr *urn.URN) *[]cyclonedx.Dependency {
 	// Get the current map
 	data, ok := stream.Get(dependecyAddr.String())
 	if !ok {
-		log.Error("Dependency map not found")
+		log.Debug("Dependency map not found")
 		return nil
 	}
 
 	nodes, ok := data.(*[]cyclonedx.Dependency)
 	if !ok {
-		log.Error("Dependency map is not a map")
+		log.Debug("Dependency map is not a map")
 		return nil
 	}
 

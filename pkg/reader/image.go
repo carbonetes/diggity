@@ -84,18 +84,18 @@ func ReadFiles(image *v1.Image, addr *urn.URN) error {
 	for _, layer := range layers {
 		hash, err := layer.Digest()
 		if err != nil {
-			log.Errorf("failed to get layer digest: %s", err)
+			log.Debugf("failed to get layer digest: %s", err)
 		}
 		go func(layer v1.Layer) {
 			defer wg.Done()
 			contents, err := layer.Uncompressed()
 			if err != nil {
-				log.Errorf("Failed to uncompress layer: %s", err)
+				log.Debugf("Failed to uncompress layer: %s", err)
 			}
 
 			err = processLayerContents(hash.String(), contents, maxFileSize, addr)
 			if err != nil {
-				log.Errorf("Failed to process layer contents: %s", err)
+				log.Debugf("Failed to process layer contents: %s", err)
 			}
 		}(layer)
 
@@ -126,7 +126,7 @@ func processLayerContents(layer string, contents io.ReadCloser, maxFileSize int6
 		if slices.Contains(archiveTypes, filepath.Ext(header.Name)) {
 			b, err := io.ReadAll(reader)
 			if err != nil {
-				log.Error(err)
+				log.Debug(err)
 			}
 			processArchive(bytes.NewReader(b), header.Name, header.Size, addr)
 		}
@@ -140,7 +140,7 @@ func processLayerContents(layer string, contents io.ReadCloser, maxFileSize int6
 			if strings.Contains(header.Name, "usr/bin") || strings.Contains(header.Name, "usr/local/bin") {
 				b, err := io.ReadAll(reader)
 				if err != nil {
-					log.Error(err)
+					log.Debug(err)
 				}
 
 				// Check if the file is a Go binary file
@@ -169,7 +169,7 @@ func processLayerContents(layer string, contents io.ReadCloser, maxFileSize int6
 
 			err = processTarHeader(layer, header, reader, addr)
 			if err != nil {
-				log.Error(err)
+				log.Debug(err)
 			}
 		}
 	}

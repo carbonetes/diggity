@@ -27,7 +27,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	payload, ok := data.(types.Payload)
 	if !ok {
-		log.Error("Portage Handler received unknown type")
+		log.Debug("Portage Handler received unknown type")
 		return nil
 	}
 
@@ -38,7 +38,7 @@ func Scan(data interface{}) interface{} {
 
 func scan(payload types.Payload) {
 	manifest := payload.Body.(types.ManifestFile)
-	
+
 	if len(manifest.Path) == 0 {
 		return
 	}

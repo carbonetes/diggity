@@ -27,7 +27,7 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 func Scan(data interface{}) interface{} {
 	payload, ok := data.(types.Payload)
 	if !ok {
-		log.Error("Cocoapods Handler received unknown type")
+		log.Debug("Cocoapods Handler received unknown type")
 		return nil
 	}
 
@@ -65,7 +65,7 @@ func scan(payload types.Payload) {
 
 		rawMetadata, err := helper.ToJSON(metadata)
 		if err != nil {
-			log.Error("Failed to convert metadata to JSON")
+			log.Debug("Failed to convert metadata to JSON")
 		}
 
 		component.AddOrigin(c, manifest.Path)
