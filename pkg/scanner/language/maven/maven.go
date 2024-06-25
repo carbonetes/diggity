@@ -130,7 +130,6 @@ func readPOMFile(manifest types.ManifestFile, addr *urn.URN) {
 
 			if strings.Contains(dependency.Version, "${") {
 				dependency.Version = properties[dependency.Version]
-				log.Printf("Resolved version: %v", dependency.Version)
 			}
 
 			if strings.Contains(dependency.GroupID, "${") {
