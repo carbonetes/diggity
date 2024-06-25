@@ -5,11 +5,13 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
+	"github.com/carbonetes/diggity/pkg/cdx/dependency"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/golistic/urn"
 )
@@ -49,7 +51,7 @@ func scan(payload types.Payload) {
 
 	switch filepath.Base(manifest.Path) {
 	case "pom.xml":
-		// readPOMFile(manifest, payload.Address) // Temporary disabled
+		readPOMFile(manifest, payload.Address)
 	case "MANIFEST.MF":
 		// readManifestFile(manifest, payload.Address) // Temporary disabled
 	case "pom.properties":
@@ -73,53 +75,6 @@ func readPOMFile(manifest types.ManifestFile, addr *urn.URN) {
 	// Check if there are properties in the pom file
 	if metadata.Properties != nil && len(metadata.Properties.Properties) > 0 {
 		properties = resolveProperties(metadata)
-	}
-
-	if len(metadata.Dependencies) > 0 {
-		for _, dependency := range metadata.Dependencies {
-
-			if strings.Contains(dependency.Version, "${") {
-				dependency.Version = properties[dependency.Version]
-			}
-
-			if strings.Contains(dependency.GroupID, "${") {
-				dependency.GroupID = properties[dependency.GroupID]
-			}
-
-			if strings.Contains(dependency.ArtifactID, "${") {
-				dependency.ArtifactID = properties[dependency.ArtifactID]
-			}
-
-			if dependency.GroupID == "" || dependency.ArtifactID == "" || dependency.Version == "" {
-				continue
-			}
-
-			c := component.New(dependency.ArtifactID, dependency.Version, Type)
-
-			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
-			if len(cpes) > 0 {
-				for _, cpe := range cpes {
-					component.AddCPE(c, cpe)
-				}
-			}
-
-			// Correction for PackageURL
-			c.PackageURL = "pkg:maven/" + dependency.GroupID + "/" + dependency.ArtifactID + "@" + dependency.Version
-
-			component.AddOrigin(c, manifest.Path)
-			component.AddType(c, Type)
-
-			rawMetadata, err := helper.ToJSON(dependency)
-			if err != nil {
-				log.Debugf("Failed to convert metadata to JSON: %v", err)
-			}
-
-			if len(rawMetadata) > 0 {
-				component.AddRawMetadata(c, rawMetadata)
-			}
-
-			cdx.AddComponent(c, addr)
-		}
 	}
 
 	if metadata.ArtifactID == "" || metadata.Version == "" {
@@ -158,6 +113,81 @@ func readPOMFile(manifest types.ManifestFile, addr *urn.URN) {
 	}
 
 	cdx.AddComponent(c, addr)
+
+	if len(metadata.Dependencies) > 0 {
+		dependencyNode := &cyclonedx.Dependency{
+			Ref:          c.BOMRef,
+			Dependencies: &[]string{},
+		}
+
+		for _, dependency := range metadata.Dependencies {
+
+			if dependency.Version == "" {
+				if (metadata.Parent.GroupID != "" && metadata.Parent.Version != "") && (dependency.GroupID == metadata.Parent.GroupID) {
+					dependency.Version = metadata.Parent.Version
+				}
+			}
+
+			if strings.Contains(dependency.Version, "${") {
+				dependency.Version = properties[dependency.Version]
+				log.Printf("Resolved version: %v", dependency.Version)
+			}
+
+			if strings.Contains(dependency.GroupID, "${") {
+				dependency.GroupID = properties[dependency.GroupID]
+			}
+
+			if strings.Contains(dependency.ArtifactID, "${") {
+				dependency.ArtifactID = properties[dependency.ArtifactID]
+			}
+
+			if dependency.ArtifactID == "" || dependency.Version == "" {
+				continue
+			}
+
+			// Skip unresolved properties
+			if strings.Contains(dependency.Version, "${") || strings.Contains(dependency.ArtifactID, "${") {
+				continue
+			}
+
+			c := component.New(dependency.ArtifactID, dependency.Version, Type)
+
+			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+			if len(cpes) > 0 {
+				for _, cpe := range cpes {
+					component.AddCPE(c, cpe)
+				}
+			}
+
+			// Correction for PackageURL
+			c.PackageURL = "pkg:maven/" + dependency.GroupID + "/" + dependency.ArtifactID + "@" + dependency.Version
+			c.BOMRef = c.PackageURL
+
+			component.AddOrigin(c, manifest.Path)
+			component.AddType(c, Type)
+
+			if len(dependency.GroupID) > 0 {
+				c.Group = dependency.GroupID
+			}
+
+			rawMetadata, err := helper.ToJSON(dependency)
+			if err != nil {
+				log.Debugf("Failed to convert metadata to JSON: %v", err)
+			}
+
+			if len(rawMetadata) > 0 {
+				component.AddRawMetadata(c, rawMetadata)
+			}
+
+			*dependencyNode.Dependencies = append(*dependencyNode.Dependencies, dependency.ArtifactID)
+
+			cdx.AddComponent(c, addr)
+		}
+		if len(*dependencyNode.Dependencies) > 0 {
+			dependency.AddDependency(addr, dependencyNode)
+		}
+	}
+
 }
 
 //nolint:all
