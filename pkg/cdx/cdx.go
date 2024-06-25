@@ -88,6 +88,7 @@ func Finalize(addr *urn.URN) *cyclonedx.BOM {
 	data, _ := stream.Get(addr.String())
 	bom := data.(*cyclonedx.BOM)
 
+	deduplicateComponents(bom)
 	sortComponents(bom)
 	parseDependencies(addr, bom)
 
@@ -99,6 +100,18 @@ func sortComponents(bom *cyclonedx.BOM) {
 	sort.Slice(*bom.Components, func(i, j int) bool {
 		return (*bom.Components)[i].Name < (*bom.Components)[j].Name
 	})
+}
+
+func deduplicateComponents(bom *cyclonedx.BOM) {
+	seen := make(map[string]bool)
+	components := []cyclonedx.Component{}
+	for _, c := range *bom.Components {
+		if _, ok := seen[c.Name]; !ok {
+			components = append(components, c)
+			seen[c.Name] = true
+		}
+	}
+	*bom.Components = components
 }
 
 // Set Dependencies for each component in the BOM
