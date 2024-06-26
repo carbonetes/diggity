@@ -21,7 +21,7 @@ require (
 	github.com/spdx/tools-golang v0.5.4
 	github.com/spf13/cobra v1.8.1
 	github.com/t-tomalak/logrus-easy-formatter v0.0.0-20190827215021-c074f06c5816
-	gitlab.com/jhumel/grove v1.0.3
+	gitlab.com/jhumel/grove v1.0.4
 	golang.org/x/mod v0.18.0
 	golang.org/x/net v0.26.0
 	golang.org/x/text v0.16.0
