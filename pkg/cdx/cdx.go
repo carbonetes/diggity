@@ -3,13 +3,12 @@ package cdx
 import (
 	"encoding/xml"
 	"fmt"
-	"log"
 	"sort"
 	"sync"
 
 	"github.com/CycloneDX/cyclonedx-go"
+	"github.com/carbonetes/diggity/internal/log"
 	diggity "github.com/carbonetes/diggity/internal/version"
-	"github.com/carbonetes/diggity/pkg/cdx/component/cpe"
 	"github.com/carbonetes/diggity/pkg/cdx/dependency"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/golistic/urn"
@@ -55,8 +54,22 @@ func AddComponent(c *cyclonedx.Component, addr *urn.URN) {
 		log.Fatal("Failed to get BOM from stream")
 	}
 
-	cpe.Make(c)
 	*bom.Components = append(*bom.Components, *c)
+	stream.Set(addr.String(), bom)
+}
+
+func AddComponents(components *[]cyclonedx.Component, addr *urn.URN) {
+	if components == nil {
+		return
+	}
+
+	data, _ := stream.Get(addr.String())
+	bom, ok := data.(*cyclonedx.BOM)
+	if !ok {
+		log.Fatal("Failed to get BOM from stream")
+	}
+
+	*bom.Components = append(*bom.Components, *components...)
 	stream.Set(addr.String(), bom)
 }
 
