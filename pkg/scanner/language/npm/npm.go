@@ -47,22 +47,22 @@ func scan(payload types.Payload) {
 	switch filepath.Base(manifest.Path) {
 	case "package.json":
 		result := scanPackageJSON(payload)
-		if result != nil || len(*result) > 0 {
+		if result != nil && len(*result) > 0 {
 			components = append(components, *result...)
 		}
 	case "package-lock.json":
 		result := scanPackageLockfile(payload)
-		if result != nil || len(*result) > 0 {
+		if result != nil && len(*result) > 0 {
 			components = append(components, *result...)
 		}
 	case "yarn.lock":
 		result := scanYarnLockile(payload)
-		if result != nil || len(*result) > 0 {
+		if result != nil && len(*result) > 0 {
 			components = append(components, *result...)
 		}
 	case "pnpm-lock.yaml":
 		result := scanPnpmLockfile(payload)
-		if result != nil || len(*result) > 0 {
+		if result != nil && len(*result) > 0 {
 			components = append(components, *result...)
 		}
 	}
