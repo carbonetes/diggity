@@ -45,10 +45,11 @@ func scanPackageJSON(payload types.Payload) *[]cyclonedx.Component {
 			if len(payload.Layer) > 0 {
 				component.AddLayer(c, payload.Layer)
 			}
+
 			components = append(components, *c)
-			// cdx.AddComponent(c, payload.Address)
 		}
 	}
+
 	dependencies := metadata.Dependencies
 	if len(dependencies) > 0 {
 		for name, version := range dependencies {
@@ -78,7 +79,6 @@ func scanPackageJSON(payload types.Payload) *[]cyclonedx.Component {
 				component.AddLayer(c, payload.Layer)
 			}
 			components = append(components, *c)
-			// cdx.AddComponent(c, payload.Address)
 		}
 	}
 
@@ -124,7 +124,6 @@ func scanPackageJSON(payload types.Payload) *[]cyclonedx.Component {
 		component.AddLayer(c, payload.Layer)
 	}
 
-	// cdx.AddComponent(c, payload.Address)
 	components = append(components, *c)
 	return &components
 }
@@ -141,11 +140,11 @@ func scanPackageLockfile(payload types.Payload) *[]cyclonedx.Component {
 		return nil
 	}
 	for name, dependency := range metadata.Dependencies {
-		if name == "" || dependency.Version == "" {
+		c := component.New(parseYarnPackageName(name), cleanVersion(dependency.Version), Type)
+
+		if len(c.Name) == 0 || len(c.Version) == 0 {
 			continue
 		}
-
-		c := component.New(parseYarnPackageName(name), cleanVersion(dependency.Version), Type)
 
 		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 		if len(cpes) > 0 {
@@ -161,7 +160,6 @@ func scanPackageLockfile(payload types.Payload) *[]cyclonedx.Component {
 			component.AddLayer(c, payload.Layer)
 		}
 
-		// cdx.AddComponent(c, payload.Address)
 		components = append(components, *c)
 	}
 

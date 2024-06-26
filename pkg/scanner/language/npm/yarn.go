@@ -36,8 +36,6 @@ func scanYarnLockile(payload types.Payload) *[]cyclonedx.Component {
 					continue
 				}
 
-				// log.Debug("Scanning Yarn package: ", p)
-
 				name, version := parseYarnPackageName(p), parseYarnVersion(p)
 				if len(name) == 0 || len(version) == 0 {
 					continue
@@ -71,10 +69,6 @@ func scanYarnLockile(payload types.Payload) *[]cyclonedx.Component {
 					component.AddLayer(c, payload.Layer)
 				}
 
-				// log.Debug("Adding Yarn package to CycloneDX BOM: ", c.Name, c.Version)
-
-				// cdx.AddComponent(c, payload.Address)
-
 				components = append(components, *c)
 			}
 		}
@@ -93,6 +87,11 @@ func scanYarnLockile(payload types.Payload) *[]cyclonedx.Component {
 		}
 
 		c := component.New(name, version, Type)
+
+		if len(c.Name) == 0 || len(c.Version) == 0 {
+			continue
+		}
+
 		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
 		if len(cpes) > 0 {
 			for _, cpe := range cpes {
@@ -120,7 +119,6 @@ func scanYarnLockile(payload types.Payload) *[]cyclonedx.Component {
 			component.AddLayer(c, payload.Layer)
 		}
 
-		// cdx.AddComponent(c, payload.Address)
 		components = append(components, *c)
 	}
 
