@@ -3,6 +3,7 @@ package status
 import (
 	"os"
 	"strings"
+	"time"
 
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/charmbracelet/bubbles/spinner"
@@ -78,6 +79,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, cmd
 	case errorMsg:
 		m.errorM = msg
+		m.errorM.quit = true
 		return m, nil
 	default:
 		return m, nil
@@ -88,10 +90,9 @@ func (m model) View() string {
 	var s string
 
 	if m.errorM.err != nil {
-		s += appStyle.Render(m.errorM.err.Error())
-		if m.errorM.quit {
-			s += "\n"
-		}
+		// if m.errorM.quit {
+		// 	s += "\n"
+		// }
 		return s
 	}
 
@@ -137,6 +138,15 @@ func Done() {
 		return
 	}
 	p.Send(resultMsg{done: true})
+}
+
+func Error(err error) {
+	if !exited {
+		p.Send(errorMsg{err: err, quit: true})
+		time.Sleep(1 * time.Second)
+	}
+
+	log.Error(err)
 }
 
 func AddFile(file string) {
