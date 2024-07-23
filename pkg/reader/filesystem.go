@@ -10,10 +10,14 @@ import (
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/internal/presenter/status"
 	"github.com/carbonetes/diggity/pkg/scanner"
+	"github.com/carbonetes/diggity/pkg/scanner/os/apk"
+	"github.com/carbonetes/diggity/pkg/scanner/os/dpkg"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/golistic/urn"
 )
+
+var manifestFiles = []string{apk.RelatedFile, dpkg.RelatedFile}
 
 func FilesystemScanHandler(target string, addr *urn.URN) error {
 	var paths []string
@@ -112,6 +116,7 @@ func handleManifestFile(path, category, layer string, file *os.File, addr *urn.U
 	if err != nil {
 		return err
 	}
+
 	stream.Emit(category, types.Payload{
 		Address: addr,
 		Layer:   layer,

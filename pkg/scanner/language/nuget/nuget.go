@@ -10,7 +10,6 @@ import (
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
-	"github.com/carbonetes/diggity/pkg/scanner/binary/pe"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -22,6 +21,11 @@ func CheckRelatedFile(file string) (string, bool, bool) {
 	if slices.Contains(Manifests, filepath.Base(file)) {
 		return Type, true, true
 	}
+
+	if filepath.Ext(file) == ".dll" || filepath.Ext(file) == ".exe" {
+		return Type, true, true
+	}
+
 	return "", false, false
 }
 
@@ -32,11 +36,11 @@ func Scan(data interface{}) interface{} {
 		return nil
 	}
 
-	if payload.Body != nil {
-		if _, ok := payload.Body.(*pe.PEFile); ok {
-			scanPE(payload)
-			return data
+	if filepath.Ext(payload.Body.(types.ManifestFile).Path) == ".dll" || filepath.Ext(payload.Body.(types.ManifestFile).Path) == ".exe" {
+		if peFile, isPE := parsePE(payload.Body.(types.ManifestFile).Content); isPE {
+			scanPE(payload, peFile)
 		}
+		return data
 	}
 
 	scan(payload)

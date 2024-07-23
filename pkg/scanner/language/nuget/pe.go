@@ -5,15 +5,28 @@ import (
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
-	"github.com/carbonetes/diggity/pkg/scanner/binary/pe"
 	"github.com/carbonetes/diggity/pkg/types"
+
+	"github.com/saferwall/pe"
 )
 
-func scanPE(payload types.Payload) {
-	peFile := payload.Body.(*pe.PEFile)
+func parsePE(data []byte) (*pe.File, bool) {
+	file, err := pe.NewBytes(data, &pe.Options{})
+	if err != nil {
+		return nil, false
+	}
 
+	err = file.Parse()
+	if err != nil {
+		return nil, false
+	}
+
+	return file, true
+}
+
+func scanPE(payload types.Payload, peFile *pe.File) {
 	// parse version resource from the PE file
-	versionInfo, err := peFile.File.ParseVersionResources()
+	versionInfo, err := peFile.ParseVersionResources()
 	if err != nil {
 		log.Debug(err)
 		return
@@ -38,7 +51,8 @@ func scanPE(payload types.Payload) {
 	c := component.New(name, version, Type)
 
 	component.AddLayer(c, payload.Layer)
-	component.AddOrigin(c, peFile.Path)
+	component.AddOrigin(c, payload.Body.(types.ManifestFile).Path)
+	component.AddType(c, Type)
 
 	rawMetadata, err := helper.ToJSON(versionInfo)
 	if err != nil {
