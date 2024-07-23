@@ -2,10 +2,10 @@ package rubygem
 
 import (
 	"path/filepath"
-	"regexp"
 	"slices"
 	"strings"
 
+	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
@@ -72,20 +72,23 @@ func scan(payload types.Payload) {
 			cdx.AddComponent(c, payload.Address)
 		}
 	} else if strings.Contains(manifest.Path, ".gemspec") && strings.Contains(manifest.Path, "specifications") {
-		metadata := readGemspecFile(manifest.Content)
-		if _, ok := metadata["metadata"].(string); ok {
-			delete(metadata, "metadata")
-		}
-
-		if _, ok := metadata["version"].(string); !ok {
+		metadata, err := parseGemspec(manifest.Content)
+		if err != nil {
+			log.Debugf("error parsing gemspec: %s", err)
 			return
 		}
 
-		if _, ok := metadata["name"].(string); !ok {
+		if metadata == nil {
 			return
 		}
 
-		name, version := metadata["name"].(string), metadata["version"].(string)
+		cleanMetadata(metadata)
+
+		if metadata.Name == "" || metadata.Version == "" {
+			return
+		}
+
+		name, version := metadata.Name, metadata.Version
 
 		c := component.New(name, version, Type)
 
@@ -99,13 +102,21 @@ func scan(payload types.Payload) {
 		component.AddOrigin(c, manifest.Path)
 		component.AddType(c, Type)
 
-		if val, ok := metadata["licenses"].(string); ok {
-			license := regexp.MustCompile(`[^\w^,^ ]`).ReplaceAllString(val, "")
-			component.AddLicense(c, license)
+		if len(metadata.Authors) > 0 {
+			c.Authors = &[]cyclonedx.OrganizationalContact{}
+			for _, author := range metadata.Authors {
+				*c.Authors = append(*c.Authors, cyclonedx.OrganizationalContact{Name: author})
+			}
 		}
 
-		if val, ok := metadata["description"].(string); ok {
-			component.AddDescription(c, val)
+		if metadata.Description != "" {
+			c.Description = metadata.Description
+		}
+
+		if len(metadata.Licenses) > 0 {
+			for _, license := range metadata.Licenses {
+				component.AddLicense(c, license)
+			}
 		}
 
 		rawMetadata, err := helper.ToJSON(metadata)
