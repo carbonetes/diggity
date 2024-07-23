@@ -1,6 +1,7 @@
 package dpkg
 
 import (
+	"path/filepath"
 	"strings"
 
 	"github.com/CycloneDX/cyclonedx-go"
@@ -15,11 +16,14 @@ import (
 
 const Type string = "deb"
 
-var Manifests = []string{"/dpkg/status"}
+var (
+	RelatedPath = "dpkg/"
+	RelatedFile = "status"
+)
 
 func CheckRelatedFile(file string) (string, bool, bool) {
-	for _, manifest := range Manifests {
-		if strings.Contains(file, manifest) {
+	if strings.Contains(file, RelatedPath) {
+		if filepath.Base(file) == RelatedFile {
 			return Type, true, true
 		}
 	}
