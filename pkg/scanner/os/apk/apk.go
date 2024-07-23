@@ -1,6 +1,7 @@
 package apk
 
 import (
+	"path/filepath"
 	"strings"
 
 	"github.com/CycloneDX/cyclonedx-go"
@@ -15,12 +16,16 @@ import (
 
 const Type string = "apk"
 
-var RelatedPath = "lib/apk/db/installed"
+var (
+	RelatedPath = "apk/db/"
+	RelatedFile = "installed"
+)
 
 func CheckRelatedFile(file string) (string, bool, bool) {
 	if strings.Contains(file, RelatedPath) {
-
-		return Type, true, true
+		if filepath.Base(file) == RelatedFile {
+			return Type, true, true
+		}
 	}
 	return "", false, false
 }

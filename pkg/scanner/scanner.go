@@ -21,6 +21,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/scanner/os/apk"
 	"github.com/carbonetes/diggity/pkg/scanner/os/dpkg"
 	"github.com/carbonetes/diggity/pkg/scanner/os/nix"
+	"github.com/carbonetes/diggity/pkg/scanner/os/portage"
 	"github.com/carbonetes/diggity/pkg/scanner/os/rpm"
 	"github.com/carbonetes/diggity/pkg/scanner/secret"
 	"github.com/carbonetes/diggity/pkg/stream"
@@ -73,6 +74,7 @@ var FileCheckers = []FileChecker{
 	pub.CheckRelatedFile,
 	pypi.CheckRelatedFile,
 	rpm.CheckRelatedFiles,
+	portage.CheckRelatedFile,
 	rubygem.CheckRelatedFile,
 	secret.CheckRelatedFile,
 	swift.CheckRelatedFile,
@@ -97,6 +99,7 @@ func init() {
 	stream.Attach(nuget.Type, nuget.Scan)
 	stream.Attach(pub.Type, pub.Scan)
 	stream.Attach(pypi.Type, pypi.Scan)
+	stream.Attach(portage.Type, portage.Scan)
 	stream.Attach(rpm.Type, rpm.Scan)
 	stream.Attach(rubygem.Type, rubygem.Scan)
 	stream.Attach(secret.Type, secret.Scan)

@@ -112,6 +112,7 @@ func handleManifestFile(path, category, layer string, file *os.File, addr *urn.U
 	if err != nil {
 		return err
 	}
+
 	stream.Emit(category, types.Payload{
 		Address: addr,
 		Layer:   layer,

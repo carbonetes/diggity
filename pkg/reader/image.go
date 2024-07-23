@@ -16,8 +16,6 @@ import (
 	"github.com/carbonetes/diggity/internal/presenter/status"
 	"github.com/carbonetes/diggity/pkg/config"
 	"github.com/carbonetes/diggity/pkg/scanner"
-	"github.com/carbonetes/diggity/pkg/scanner/binary/golang"
-	"github.com/carbonetes/diggity/pkg/scanner/binary/pe"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/golistic/urn"
@@ -143,56 +141,6 @@ func processLayerContents(layer string, contents io.ReadCloser, maxFileSize int6
 
 		if header.Typeflag == tar.TypeReg {
 			if header.Size > maxFileSize {
-				continue
-			}
-
-			// Check if the file is a binary file
-			if strings.Contains(header.Name, "usr/bin") || strings.Contains(header.Name, "usr/local/bin") {
-				b, err := io.ReadAll(reader)
-				if err != nil {
-					log.Debug(err)
-				}
-
-				// Check if the file is a Go binary file
-				// If it is, parse the binary file and emit a GoBinary object to the stream
-				build, isGolangBin := golang.Parse(bytes.NewReader(b))
-				if isGolangBin {
-					// stream.Emit("golang", types.GoBinary{
-					// 	File:      filepath.Base(header.Name),
-					// 	Path:      header.Name,
-					// 	BuildInfo: build,
-					// })
-					payload := types.Payload{
-						Address: addr,
-						Layer:   layer,
-						Body: types.GoBinary{
-							File:      filepath.Base(header.Name),
-							Path:      header.Name,
-							BuildInfo: build,
-						},
-					}
-					stream.Emit("golang", payload)
-					continue
-				}
-				continue
-			}
-
-			if strings.Contains(filepath.Ext(header.Name), ".dll") || strings.Contains(filepath.Ext(header.Name), ".exe") {
-				b, err := io.ReadAll(reader)
-				if err != nil {
-					log.Debug(err)
-				}
-
-				// Check if the file is a PE file
-				// If it is, parse the PE file and emit a PE object to the stream
-				peFile, isPE := pe.ParsePE(b, header.Name)
-				if isPE {
-					stream.Emit("nuget", types.Payload{
-						Address: addr,
-						Layer:   layer,
-						Body:    peFile,
-					})
-				}
 				continue
 			}
 
