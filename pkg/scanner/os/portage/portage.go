@@ -14,11 +14,16 @@ import (
 
 const Type string = "gentoo"
 
-var RelatedPath = "var/db/pkg/"
+var (
+	RelatedPath = "/db/pkg/"
+	RelatedFile = "CONTENTS"
+)
 
 func CheckRelatedFile(file string) (string, bool, bool) {
-	if strings.Contains(RelatedPath, file) {
-		return Type, true, false
+	if strings.Contains(file, RelatedPath) {
+		if filepath.Base(file) == RelatedFile {
+			return Type, true, true
+		}
 	}
 	return "", false, false
 }
@@ -44,7 +49,9 @@ func scan(payload types.Payload) {
 	}
 
 	target := filepath.Dir(manifest.Path)
+	log.Debugf("Scanning %s", target)
 	name, version := parseNameVersion(target)
+	log.Debugf("Name: %s, Version: %s", name, version)
 	if len(name) == 0 || len(version) == 0 {
 		return
 	}
@@ -77,8 +84,7 @@ func parseNameVersion(pkg string) (name string, version string) {
 	version = r.FindString(pkgBase)
 
 	// parse name
-	namePath := strings.Split(pkg, RelatedPath)[1]
-	name = strings.Replace(namePath, "-"+version, "", -1)
+	name = strings.Replace(filepath.Base(pkg), "-"+version, "", -1)
 
 	return name, version
 }
