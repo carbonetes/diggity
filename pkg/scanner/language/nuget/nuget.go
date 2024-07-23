@@ -10,6 +10,7 @@ import (
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
+	"github.com/carbonetes/diggity/pkg/scanner/binary/pe"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -29,6 +30,13 @@ func Scan(data interface{}) interface{} {
 	if !ok {
 		log.Debug("Nuget Handler received unknown type")
 		return nil
+	}
+
+	if payload.Body != nil {
+		if _, ok := payload.Body.(*pe.PEFile); ok {
+			scanPE(payload)
+			return data
+		}
 	}
 
 	scan(payload)
