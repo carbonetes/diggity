@@ -57,7 +57,12 @@ func ParseDpkgDatabase(dpkgDbContent string) ([]Package, error) {
 
 			parts := strings.SplitN(line, ":", 2)
 			if len(parts) == 1 {
-				m[prevKey] = m[prevKey].(string) + "\n" + parts[0]
+				// m[prevKey] = m[prevKey].(string) + "\n" + parts[0]
+				if val, ok := m[prevKey].(string); ok {
+					m[prevKey] = val + "\n" + parts[0]
+				} else {
+					m[prevKey] = parts[0]
+				}
 				continue
 			}
 

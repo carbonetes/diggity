@@ -10,21 +10,27 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-var Config types.Config
+var (
+	Config types.Config
+	path   string
+)
 
 func init() {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		log.Debug(err)
-	}
-	path := home + string(os.PathSeparator) + ".diggity.yaml"
-	exist, err := helper.IsFileExists(path)
-	if err != nil {
-		log.Debug(err)
-	}
+	path = os.Getenv("CONFIG_PATH")
 
-	if !exist {
-		MakeDefaultConfigFile(path)
+	if path == "" {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			log.Debug(err)
+		}
+		path = home + string(os.PathSeparator) + ".diggity.yaml"
+		exist, err := helper.IsFileExists(path)
+		if err != nil {
+			log.Debug(err)
+		}
+		if !exist {
+			MakeDefaultConfigFile(path)
+		}
 	}
 
 	var config types.Config
@@ -92,4 +98,8 @@ func ReplaceConfigFile(config types.Config, path string) {
 	if err != nil {
 		log.Debug(err)
 	}
+}
+
+func GetConfigPath() string {
+	return path
 }

@@ -4,6 +4,7 @@ import (
 	"archive/tar"
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -50,8 +51,16 @@ func GetImage(input string, config *types.RegistryConfig) (*v1.Image, *name.Refe
 			Password: config.Password,
 		}))
 		if err != nil {
-			return nil, nil, err
+			if strings.Contains(err.Error(), "unsupported MediaType") {
+				return nil, nil, errors.New(fmt.Sprint(ErrUnsupportedMediaType))
+
+			} else if strings.Contains(err.Error(), "authentication required") {
+				return nil, nil, errors.New(ErrNotExistOrAuthenticationRequired)
+			} else {
+				return nil, nil, err
+			}
 		}
+
 	} else {
 		// Remotely load image from public registry
 		image, err = remote.Image(ref)

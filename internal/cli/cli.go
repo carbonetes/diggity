@@ -36,10 +36,15 @@ func Start(parameters types.Parameters) {
 		target := parameters.Input
 		image, ref, err := reader.GetImage(target, &config.Config.Registry)
 		if err != nil {
-			log.Fatal(err)
+			status.Error(err)
 		}
 
-		cdx.SetMetadataComponent(addr, cdx.SetImageMetadata(*image, *ref, target))
+		if image == nil {
+			return
+		}
+		if ref != nil {
+			cdx.SetMetadataComponent(addr, cdx.SetImageMetadata(*image, *ref, target))
+		}
 
 		err = reader.ReadFiles(image, addr)
 		if err != nil {
