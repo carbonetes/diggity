@@ -34,18 +34,29 @@ func scan(payload types.Payload) {
 	Releases = append(Releases, parse(manifest))
 
 	for _, release := range Releases {
-		name, version, desc := release.Release["id"], release.Release["version_id"], release.Release["pretty_name"]
+		var name, version, desc string
+		if val, ok := release.Release["id"].(string); ok {
+			name = val
+		}
 
-		if name == nil && version == nil {
+		if val, ok := release.Release["version_id"].(string); ok {
+			version = val
+		}
+
+		if val, ok := release.Release["pretty_name"].(string); ok {
+			desc = val
+		}
+
+		c := newOSComponent(name, version, desc)
+
+		if c == nil {
 			continue
 		}
 
-		c := newOSComponent(name.(string), version.(string), desc.(string))
-
 		swid := cyclonedx.SWID{
-			TagID:   name.(string),
-			Name:    name.(string),
-			Version: version.(string),
+			TagID:   name,
+			Name:    name,
+			Version: version,
 		}
 
 		for key, value := range release.Release {
