@@ -17,6 +17,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/config"
 	"github.com/carbonetes/diggity/pkg/scanner"
 	"github.com/carbonetes/diggity/pkg/scanner/binary/golang"
+	"github.com/carbonetes/diggity/pkg/scanner/binary/pe"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/golistic/urn"
@@ -172,6 +173,25 @@ func processLayerContents(layer string, contents io.ReadCloser, maxFileSize int6
 					}
 					stream.Emit("golang", payload)
 					continue
+				}
+				continue
+			}
+
+			if strings.Contains(filepath.Ext(header.Name), ".dll") || strings.Contains(filepath.Ext(header.Name), ".exe") {
+				b, err := io.ReadAll(reader)
+				if err != nil {
+					log.Debug(err)
+				}
+
+				// Check if the file is a PE file
+				// If it is, parse the PE file and emit a PE object to the stream
+				peFile, isPE := pe.ParsePE(b, header.Name)
+				if isPE {
+					stream.Emit("nuget", types.Payload{
+						Address: addr,
+						Layer:   layer,
+						Body:    peFile,
+					})
 				}
 				continue
 			}
