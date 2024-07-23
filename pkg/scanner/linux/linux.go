@@ -94,6 +94,7 @@ func scan(payload types.Payload) {
 			addProperty(c, PropertyPrefix+key, value.(string))
 		}
 
+		c.SWID = &swid
 		addProperty(c, PropertyPrefix+"location", release.File)
 
 		cdx.AddComponent(c, payload.Address)
