@@ -13,7 +13,7 @@ import (
 var (
 	helpStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("241")).Margin(1, 0)
 	baseStyle = lipgloss.NewStyle().
-			BorderStyle(lipgloss.NormalBorder()).
+			BorderStyle(lipgloss.HiddenBorder()).
 			BorderForeground(lipgloss.Color("240"))
 )
 
@@ -33,6 +33,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 	}
+
+	if len(m.table.Rows()) == 0 {
+		return m, tea.Quit
+	}
+
 	m.table, cmd = m.table.Update(msg)
 	return m, cmd
 }
@@ -41,18 +46,17 @@ func (m model) View() string {
 	if len(m.table.Rows()) == 0 {
 		return baseStyle.Render("No component had been found!") + fmt.Sprintf("\nDuration: %.3f sec", m.duration) + "\n" + helpStyle.Render("Press esc to quit... 🐱🐓")
 	}
-	return baseStyle.Render(m.table.View()) + fmt.Sprintf("\nDuration: %.3f sec", m.duration) + "\n" + helpStyle.Render("Press esc to quit... 🐱🐓")
+	return baseStyle.Render(m.table.View()) + helpStyle.Render("Use the ↑ and ↓ arrow keys to select different components in the table.\nPress esc to quit... 🐱🐓") + fmt.Sprintf("\nDuration: %.3f sec\n", m.duration)
 }
 
 func Create(bom *cyclonedx.BOM) table.Model {
 	columns := []table.Column{
-		{Title: "Component", Width: 30},
-		{Title: "Type", Width: 20},
-		{Title: "Version", Width: 24},
+		{Title: "Component", Width: 32},
+		{Title: "Type", Width: 16},
+		{Title: "Version", Width: 20},
 	}
 
 	var rows []table.Row
-	// components := stream.GetComponents()
 	components := bom.Components
 	for _, component := range *components {
 

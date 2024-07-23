@@ -4,6 +4,7 @@ import (
 	"archive/tar"
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -16,6 +17,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/config"
 	"github.com/carbonetes/diggity/pkg/scanner"
 	"github.com/carbonetes/diggity/pkg/scanner/binary/golang"
+	"github.com/carbonetes/diggity/pkg/scanner/binary/pe"
 	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/golistic/urn"
@@ -50,8 +52,16 @@ func GetImage(input string, config *types.RegistryConfig) (*v1.Image, *name.Refe
 			Password: config.Password,
 		}))
 		if err != nil {
-			return nil, nil, err
+			if strings.Contains(err.Error(), "unsupported MediaType") {
+				return nil, nil, errors.New(fmt.Sprint(ErrUnsupportedMediaType))
+
+			} else if strings.Contains(err.Error(), "authentication required") {
+				return nil, nil, errors.New(ErrNotExistOrAuthenticationRequired)
+			} else {
+				return nil, nil, err
+			}
 		}
+
 	} else {
 		// Remotely load image from public registry
 		image, err = remote.Image(ref)
@@ -163,6 +173,25 @@ func processLayerContents(layer string, contents io.ReadCloser, maxFileSize int6
 					}
 					stream.Emit("golang", payload)
 					continue
+				}
+				continue
+			}
+
+			if strings.Contains(filepath.Ext(header.Name), ".dll") || strings.Contains(filepath.Ext(header.Name), ".exe") {
+				b, err := io.ReadAll(reader)
+				if err != nil {
+					log.Debug(err)
+				}
+
+				// Check if the file is a PE file
+				// If it is, parse the PE file and emit a PE object to the stream
+				peFile, isPE := pe.ParsePE(b, header.Name)
+				if isPE {
+					stream.Emit("nuget", types.Payload{
+						Address: addr,
+						Layer:   layer,
+						Body:    peFile,
+					})
 				}
 				continue
 			}
