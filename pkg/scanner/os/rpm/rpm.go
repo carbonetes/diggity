@@ -2,7 +2,6 @@ package rpm
 
 import (
 	"fmt"
-	"path/filepath"
 	"slices"
 	"strings"
 
@@ -19,17 +18,16 @@ import (
 const Type string = "rpm"
 
 var (
-	ManifestFiles = []string{"Packages", "Packages.db", "rpmdb.sqlite"}
-	RelatedPaths  = []string{"var\\lib\\rpm", "usr\\lib\\rpm", "etc\\rpm"}
+	ManifestFiles = []string{"rpm/Packages", "rpm/Packages.db", "rpm/rpmdb.sqlite"}
 )
 
 func CheckRelatedFiles(file string) (string, bool, bool) {
-	if slices.Contains(RelatedPaths, filepath.Dir(file)) {
-		if slices.Contains(ManifestFiles, filepath.Base(file)) {
+	for _, manifest := range ManifestFiles {
+		if strings.Contains(file, manifest) {
 			return Type, true, true
 		}
-
 	}
+
 	return "", false, false
 }
 
