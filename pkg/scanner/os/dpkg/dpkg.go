@@ -1,7 +1,6 @@
 package dpkg
 
 import (
-	"slices"
 	"strings"
 
 	"github.com/CycloneDX/cyclonedx-go"
@@ -16,11 +15,13 @@ import (
 
 const Type string = "deb"
 
-var Manifests = []string{"var/lib/dpkg/status"}
+var Manifests = []string{"/dpkg/status"}
 
 func CheckRelatedFile(file string) (string, bool, bool) {
-	if slices.Contains(Manifests, file) {
-		return Type, true, true
+	for _, manifest := range Manifests {
+		if strings.Contains(file, manifest) {
+			return Type, true, true
+		}
 	}
 	return "", false, false
 }
