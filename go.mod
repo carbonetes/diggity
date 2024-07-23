@@ -17,6 +17,7 @@ require (
 	github.com/knqyf263/go-rpmdb v0.1.1
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/package-url/packageurl-go v0.1.3
+	github.com/saferwall/pe v1.5.4
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spdx/tools-golang v0.5.4
 	github.com/spf13/cobra v1.8.1
@@ -44,6 +45,7 @@ require (
 	github.com/docker/docker-credential-helpers v0.7.0 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
+	github.com/edsrzf/mmap-go v1.1.0 // indirect
 	github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f // indirect
 	github.com/geertjanvdk/xkit v0.9.0-beta.6 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
@@ -61,6 +63,7 @@ require (
 	github.com/opencontainers/image-spec v1.1.0-rc3 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
+	github.com/secDre4mer/pkcs7 v0.0.0-20240322103146-665324a4461d // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/vbatts/tar-split v0.11.3 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
