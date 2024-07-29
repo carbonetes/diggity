@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/carbonetes/diggity/internal/helper"
+	"github.com/google/go-containerregistry/pkg/name"
 )
 
 type ScanType int
@@ -32,7 +33,7 @@ type Parameters struct {
 	SaveToFile   string       `json:"save-to-file"`
 	Quiet        bool         `json:"quiet"`
 	Scanners     []string     `json:"scanners"`
-	Provenance  string `json:"provenance"`
+	Provenance   string       `json:"provenance"`
 }
 
 func (o OutputFormat) String() string {
@@ -44,9 +45,9 @@ func GetAllOutputFormat() string {
 }
 
 func (p *Parameters) GetScanType() error {
-	if strings.Contains(p.Input, ":") {
+	if _, err := name.ParseReference(p.Input); err == nil {
 		p.ScanType = Image
-	} else if strings.Contains(p.Input, ".tar") {
+	} else if strings.HasSuffix(p.Input, ".tar") {
 		p.ScanType = Tarball
 	} else if helper.IsDir(p.Input) {
 		exists, err := helper.IsDirExists(p.Input)
