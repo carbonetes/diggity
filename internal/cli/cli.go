@@ -24,7 +24,7 @@ func Start(parameters types.Parameters) {
 	}
 
 	// Generate unique address for the scan
-	addr, err := types.NewAddress(parameters.Input)
+	addr, err := types.NewAddress()
 	if err != nil {
 		log.Fatal(err)
 	}

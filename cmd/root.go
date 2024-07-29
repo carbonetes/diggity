@@ -7,7 +7,6 @@ import (
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/internal/version"
-	"github.com/carbonetes/diggity/pkg/scanner"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/spf13/cobra"
 )
@@ -26,7 +25,7 @@ var (
 			}
 
 			tarball, _ := cmd.Flags().GetString("tar")
-			filesystem, _ := cmd.Flags().GetString("directory")
+			filesystem, _ := cmd.Flags().GetString("dir")
 
 			params := types.DefaultParameters()
 			if len(args) > 0 {
@@ -35,7 +34,7 @@ var (
 				params.Input = tarball
 			} else if len(filesystem) > 0 {
 				if found, _ := helper.IsDirExists(filesystem); !found {
-					log.Debug("directory not found: " + filesystem)
+					log.Fatal("directory not found: " + filesystem)
 					return
 				}
 				params.Input = filesystem
@@ -99,12 +98,12 @@ func init() {
 	root.AddCommand(attestCmd)
 
 	// Tarball flag to scan a tarball
-	root.Flags().StringP("tar", "t", "", "Read a tarball from a path on disk for archives created from docker save (e.g. 'diggity path/to/image.tar)'")
+	root.Flags().StringP("tar", "t", "", "Read a tarball from a path on disk for archives created from docker save (e.g. 'diggity -t path/to/image.tar)'")
 
 	root.Flags().Bool("attest", false, "Add attestation to scan result")
 
 	// Directory flag to scan a directory
-	root.Flags().StringP("directory", "d", "", "Read directly from a path on disk (any directory) (e.g. 'diggity -fs path/to/directory)'")
+	root.Flags().StringP("dir", "d", "", "Read directly from a path on disk (any directory) (e.g. 'diggity -d path/to/directory)'")
 
 	// Output flag to specify the output format
 	root.Flags().StringP("output", "o", types.Table.String(), "Supported output types are: "+types.GetAllOutputFormat())
@@ -116,7 +115,7 @@ func init() {
 	root.Flags().BoolP("quiet", "q", false, "Suppress all output except for errors")
 
 	// Scanners flag to specify the selected scanners to run
-	root.Flags().StringArray("scanners", scanner.All, "Allow only selected scanners to run (e.g. --scanners apk,dpkg)")
+	// root.Flags().StringArray("scanners", scanner.All, "Allow only selected scanners to run (e.g. --scanners apk,dpkg)")
 
 	// Version flag to print the version of diggity
 	root.Flags().BoolP("version", "v", false, "Print the version of diggity")

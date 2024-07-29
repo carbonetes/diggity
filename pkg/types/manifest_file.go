@@ -17,7 +17,7 @@ type ManifestFile struct {
 func (m *ManifestFile) ReadContent(file *os.File) error {
 	_, err := file.Seek(0, io.SeekStart)
 	if err != nil {
-		return fmt.Errorf("Failed to seek to the start of the file: %v", err)
+		return fmt.Errorf("failed to seek to the start of the file: %v", err)
 	}
 
 	stat, err := file.Stat()
