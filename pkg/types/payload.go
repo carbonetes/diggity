@@ -1,8 +1,6 @@
 package types
 
 import (
-	"fmt"
-
 	"github.com/golistic/urn"
 	"github.com/google/uuid"
 )
@@ -13,13 +11,8 @@ type Payload struct {
 	Body    interface{}
 }
 
-func NewAddress(input string) (*urn.URN, error) {
-
-	if input == "" {
-		return nil, fmt.Errorf("input is empty")
-	}
-
-	addr, err := urn.New("bom", input, urn.WithQuery(uuid.NewString()))
+func NewAddress() (*urn.URN, error) {
+	addr, err := urn.New("bom", "diggity", urn.WithQuery(uuid.NewString()))
 	if err != nil {
 		return nil, err
 	}
