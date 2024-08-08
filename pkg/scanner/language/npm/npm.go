@@ -40,11 +40,16 @@ func Scan(data interface{}) interface{} {
 }
 
 func scan(payload types.Payload) {
-	manifest := payload.Body.(types.ManifestFile)
-	log.Debug("Scanning NPM manifest file: ", manifest.Path)
+	file, ok := payload.Body.(types.ManifestFile)
+	if !ok {
+		log.Debugf("Failed to convert payload body to manifest file")
+		return
+	}
+
+	log.Debug("Scanning NPM manifest file: ", file.Path)
 
 	components := []cyclonedx.Component{}
-	switch filepath.Base(manifest.Path) {
+	switch filepath.Base(file.Path) {
 	case "package.json":
 		result := scanPackageJSON(payload)
 		if result != nil && len(*result) > 0 {

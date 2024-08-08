@@ -44,7 +44,11 @@ func Scan(data interface{}) interface{} {
 }
 
 func scan(payload types.Payload) {
-	rpmdb := payload.Body.(types.RpmDB)
+	rpmdb, ok := payload.Body.(types.RpmDB)
+	if !ok {
+		log.Debugf("Failed to convert payload body to rpmdb")
+		return
+	}
 
 	if len(rpmdb.PackageInfos) == 0 {
 		return

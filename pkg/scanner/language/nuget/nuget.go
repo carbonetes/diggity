@@ -49,8 +49,14 @@ func Scan(data interface{}) interface{} {
 }
 
 func scan(payload types.Payload) {
-	manifest := payload.Body.(types.ManifestFile)
-	metadata := readManifestFile(manifest.Content)
+	file, ok := payload.Body.(types.ManifestFile)
+	if !ok {
+		log.Debugf("Failed to convert payload body to manifest file")
+		return
+	}
+
+	metadata := readManifestFile(file.Content)
+
 	if len(metadata.Libraries) == 0 {
 		return
 	}
@@ -67,6 +73,10 @@ func scan(payload types.Payload) {
 
 		name, version := attributes[0], attributes[1]
 
+		if name == "" || version == "" {
+			continue
+		}
+
 		c := component.New(name, version, Type)
 
 		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
@@ -76,7 +86,7 @@ func scan(payload types.Payload) {
 			}
 		}
 
-		component.AddOrigin(c, manifest.Path)
+		component.AddOrigin(c, file.Path)
 		component.AddType(c, Type)
 
 		rawMetadata, err := helper.ToJSON(pkg)

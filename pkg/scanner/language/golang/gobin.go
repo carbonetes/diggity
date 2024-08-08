@@ -26,14 +26,17 @@ func parseGoBin(data []byte) (*buildinfo.BuildInfo, bool) {
 }
 
 func scanBinary(payload types.Payload, buildInfo *debug.BuildInfo) {
-	goBinary := payload.Body.(types.GoBinary)
-	// buildInfo := goBinary.BuildInfo
+	file, ok := payload.Body.(types.ManifestFile)
+	if !ok {
+		log.Debugf("Failed to convert payload body to manifest file")
+		return
+	}
 
 	for _, s := range buildInfo.Settings {
 		// locate version
 		v := parseVersion(s.Value)
 		if v != "" {
-			c := component.New(goBinary.File, v, Type)
+			c := component.New(file.Path, v, Type)
 
 			cpes := GenerateCpes(c.Version, SplitPath(c.Name))
 			if len(cpes) > 0 {
@@ -42,7 +45,7 @@ func scanBinary(payload types.Payload, buildInfo *debug.BuildInfo) {
 				}
 			}
 
-			component.AddOrigin(c, goBinary.Path)
+			component.AddOrigin(c, file.Path)
 			component.AddType(c, Type)
 
 			rawMetadata, err := helper.ToJSON(s)
@@ -77,7 +80,7 @@ func scanBinary(payload types.Payload, buildInfo *debug.BuildInfo) {
 			}
 		}
 
-		component.AddOrigin(c, goBinary.Path)
+		component.AddOrigin(c, file.Path)
 		component.AddType(c, Type)
 
 		rawMetadata, err := helper.ToJSON(dep)

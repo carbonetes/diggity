@@ -36,9 +36,13 @@ func Scan(data interface{}) interface{} {
 }
 
 func scan(payload types.Payload) {
-	manifest := payload.Body.(types.ManifestFile)
-	contents := string(manifest.Content)
-	attributes := helper.SplitContentsByEmptyLine(contents)
+	file, ok := payload.Body.(types.ManifestFile)
+	if !ok {
+		log.Debugf("Failed to convert payload body to manifest file")
+		return
+	}
+
+	attributes := helper.SplitContentsByEmptyLine(string(file.Content))
 	metadata := parseMetadata(attributes)
 
 	if metadata["name"] == nil || metadata["name"] == "" {
@@ -56,7 +60,7 @@ func scan(payload types.Payload) {
 		}
 	}
 
-	component.AddOrigin(c, manifest.Path)
+	component.AddOrigin(c, file.Path)
 	component.AddType(c, Type)
 	component.AddDescription(c, desc)
 

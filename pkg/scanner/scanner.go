@@ -55,6 +55,8 @@ var All = []string{
 }
 
 var FileCheckers = []FileChecker{
+	rpm.CheckRelatedFiles,
+	portage.CheckRelatedFile,
 	apk.CheckRelatedFile,
 	cargo.CheckRelatedFile,
 	cran.CheckRelatedFiles,
@@ -73,8 +75,6 @@ var FileCheckers = []FileChecker{
 	nuget.CheckRelatedFile,
 	pub.CheckRelatedFile,
 	pypi.CheckRelatedFile,
-	rpm.CheckRelatedFiles,
-	portage.CheckRelatedFile,
 	rubygem.CheckRelatedFile,
 	secret.CheckRelatedFile,
 	swift.CheckRelatedFile,

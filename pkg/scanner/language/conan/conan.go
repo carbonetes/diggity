@@ -37,9 +37,14 @@ func Scan(data interface{}) interface{} {
 }
 
 func scan(payload types.Payload) {
-	manifest := payload.Body.(types.ManifestFile)
-	if strings.Contains(manifest.Path, "conanfile.txt") {
-		packages := readManifestFile(manifest.Content)
+	file, ok := payload.Body.(types.ManifestFile)
+	if !ok {
+		log.Debugf("Failed to convert payload body to manifest file")
+		return
+	}
+
+	if strings.Contains(file.Path, "conanfile.txt") {
+		packages := readManifestFile(file.Content)
 		if len(packages) == 0 {
 			return
 		}
@@ -57,7 +62,7 @@ func scan(payload types.Payload) {
 				}
 			}
 
-			component.AddOrigin(c, manifest.Path)
+			component.AddOrigin(c, file.Path)
 			component.AddType(c, Type)
 
 			rawMetadata, err := helper.ToJSON(pkg)
@@ -75,8 +80,8 @@ func scan(payload types.Payload) {
 
 			cdx.AddComponent(c, payload.Address)
 		}
-	} else if strings.Contains(manifest.Path, "conan.lock") {
-		metadata := readLockFile(manifest.Content)
+	} else if strings.Contains(file.Path, "conan.lock") {
+		metadata := readLockFile(file.Content)
 		if metadata == nil {
 			return
 		}
@@ -118,7 +123,7 @@ func scan(payload types.Payload) {
 				}
 			}
 
-			component.AddOrigin(c, manifest.Path)
+			component.AddOrigin(c, file.Path)
 			component.AddType(c, Type)
 
 			rawMetadata, err := helper.ToJSON(node)

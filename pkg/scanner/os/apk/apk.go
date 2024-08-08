@@ -43,8 +43,13 @@ func Scan(data interface{}) interface{} {
 }
 
 func scan(payload types.Payload) {
-	apkDb := payload.Body.(types.ManifestFile)
-	records, err := ParseApkIndexFile(string(apkDb.Content))
+	file, ok := payload.Body.(types.ManifestFile)
+	if !ok {
+		log.Debugf("Failed to convert payload body to manifest file")
+		return
+	}
+
+	records, err := ParseApkIndexFile(string(file.Content))
 	if err != nil {
 		log.Debugf("error parsing apk index file: %s", err)
 		return
@@ -63,7 +68,7 @@ func scan(payload types.Payload) {
 			}
 		}
 
-		component.AddOrigin(c, apkDb.Path)
+		component.AddOrigin(c, file.Path)
 		component.AddType(c, Type)
 
 		if record.Description != "" {

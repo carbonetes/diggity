@@ -18,7 +18,6 @@ var RelatedPath = "nix/store/"
 
 func CheckRelatedFile(file string) (string, bool, bool) {
 	if strings.Contains(RelatedPath, file) {
-		log.Debugf("Found %s file", file)
 		return Type, true, false
 	}
 	return "", false, false
@@ -37,7 +36,11 @@ func Scan(data interface{}) interface{} {
 }
 
 func scan(payload types.Payload) {
-	path := payload.Body.(string)
+	path, ok := payload.Body.(string)
+	if !ok {
+		log.Debugf("Failed to convert payload body to path")
+		return
+	}
 	if strings.Contains(filepath.Base(path), ".nix") || strings.Contains(filepath.Base(path), ".drv") {
 		return
 	}

@@ -47,15 +47,19 @@ TODO: Implement the following functions
 */
 
 func scan(payload types.Payload) {
-	manifest := payload.Body.(types.ManifestFile)
+	file, ok := payload.Body.(types.ManifestFile)
+	if !ok {
+		log.Debugf("Failed to convert payload body to manifest file")
+		return
+	}
 
-	switch filepath.Base(manifest.Path) {
+	switch filepath.Base(file.Path) {
 	case "pom.xml":
-		readPOMFile(manifest, payload.Address)
+		readPOMFile(file, payload.Address)
 	case "MANIFEST.MF":
 		// readManifestFile(manifest, payload.Address) // Temporary disabled
 	case "pom.properties":
-		readPOMPropertiesFile(manifest, payload.Layer, payload.Address)
+		readPOMPropertiesFile(file, payload.Layer, payload.Address)
 	}
 }
 

@@ -37,9 +37,14 @@ func Scan(data interface{}) interface{} {
 }
 
 func scan(payload types.Payload) {
-	manifest := payload.Body.(types.ManifestFile)
-	if strings.Contains(manifest.Path, "stack.yaml") {
-		stackConfig := readStackConfigFile(manifest.Content)
+	file, ok := payload.Body.(types.ManifestFile)
+	if !ok {
+		log.Debugf("Failed to convert payload body to manifest file")
+		return
+	}
+
+	if strings.Contains(file.Path, "stack.yaml") {
+		stackConfig := readStackConfigFile(file.Content)
 		if stackConfig == nil {
 			return
 		}
@@ -64,7 +69,7 @@ func scan(payload types.Payload) {
 				log.Debugf("Error converting metadata to JSON: %s", err)
 			}
 
-			component.AddOrigin(c, manifest.Path)
+			component.AddOrigin(c, file.Path)
 			component.AddType(c, Type)
 			component.AddRawMetadata(c, rawMetadata)
 
@@ -74,8 +79,8 @@ func scan(payload types.Payload) {
 
 			cdx.AddComponent(c, payload.Address)
 		}
-	} else if strings.Contains(manifest.Path, "stack.yaml.lock") {
-		lockFile := readStackLockConfigFile(manifest.Content)
+	} else if strings.Contains(file.Path, "stack.yaml.lock") {
+		lockFile := readStackLockConfigFile(file.Content)
 		if lockFile == nil {
 			return
 		}
@@ -100,7 +105,7 @@ func scan(payload types.Payload) {
 				log.Debugf("Error converting metadata to JSON: %s", err)
 			}
 
-			component.AddOrigin(c, manifest.Path)
+			component.AddOrigin(c, file.Path)
 			component.AddType(c, Type)
 			component.AddRawMetadata(c, rawMetadata)
 
@@ -110,8 +115,8 @@ func scan(payload types.Payload) {
 
 			cdx.AddComponent(c, payload.Address)
 		}
-	} else if strings.Contains(manifest.Path, "cabal.project.freeze") {
-		packages := readManifestFile(manifest.Content)
+	} else if strings.Contains(file.Path, "cabal.project.freeze") {
+		packages := readManifestFile(file.Content)
 		if len(packages) == 0 {
 			return
 		}
@@ -136,7 +141,7 @@ func scan(payload types.Payload) {
 				log.Debugf("Error converting metadata to JSON: %s", err)
 			}
 
-			component.AddOrigin(c, manifest.Path)
+			component.AddOrigin(c, file.Path)
 			component.AddType(c, Type)
 			component.AddRawMetadata(c, rawMetadata)
 
