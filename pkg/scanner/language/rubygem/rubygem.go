@@ -38,9 +38,14 @@ func Scan(data interface{}) interface{} {
 }
 
 func scan(payload types.Payload) {
-	manifest := payload.Body.(types.ManifestFile)
-	if strings.Contains(manifest.Path, "Gemfile.lock") {
-		attributes := readManifestFile(manifest.Content)
+	file, ok := payload.Body.(types.ManifestFile)
+	if !ok {
+		log.Debugf("Failed to convert payload body to manifest file")
+		return
+	}
+
+	if strings.Contains(file.Path, "Gemfile.lock") {
+		attributes := readManifestFile(file.Content)
 		for _, attribute := range attributes {
 			name, version := attribute[0], attribute[1]
 
@@ -53,7 +58,7 @@ func scan(payload types.Payload) {
 				}
 			}
 
-			component.AddOrigin(c, manifest.Path)
+			component.AddOrigin(c, file.Path)
 			component.AddType(c, Type)
 
 			rawMetadata, err := helper.ToJSON(attribute)
@@ -71,8 +76,8 @@ func scan(payload types.Payload) {
 
 			cdx.AddComponent(c, payload.Address)
 		}
-	} else if strings.Contains(manifest.Path, ".gemspec") && strings.Contains(manifest.Path, "specifications") {
-		metadata, err := parseGemspec(manifest.Content)
+	} else if strings.Contains(file.Path, ".gemspec") && strings.Contains(file.Path, "specifications") {
+		metadata, err := parseGemspec(file.Content)
 		if err != nil {
 			log.Debugf("error parsing gemspec: %s", err)
 			return
@@ -99,7 +104,7 @@ func scan(payload types.Payload) {
 			}
 		}
 
-		component.AddOrigin(c, manifest.Path)
+		component.AddOrigin(c, file.Path)
 		component.AddType(c, Type)
 
 		if len(metadata.Authors) > 0 {

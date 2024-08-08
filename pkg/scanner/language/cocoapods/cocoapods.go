@@ -37,8 +37,13 @@ func Scan(data interface{}) interface{} {
 }
 
 func scan(payload types.Payload) {
-	manifest := payload.Body.(types.ManifestFile)
-	metadata := readManifestFile(manifest.Content)
+	file, ok := payload.Body.(types.ManifestFile)
+	if !ok {
+		log.Debugf("Failed to convert payload body to manifest file")
+		return
+	}
+
+	metadata := readManifestFile(file.Content)
 	for _, pod := range metadata.Pods {
 		var pods string
 		switch c := pod.(type) {
@@ -68,7 +73,7 @@ func scan(payload types.Payload) {
 			log.Debug("Failed to convert metadata to JSON")
 		}
 
-		component.AddOrigin(c, manifest.Path)
+		component.AddOrigin(c, file.Path)
 		component.AddType(c, Type)
 
 		if len(rawMetadata) > 0 {

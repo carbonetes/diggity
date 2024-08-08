@@ -40,9 +40,14 @@ func Scan(data interface{}) interface{} {
 }
 
 func scan(payload types.Payload) {
-	manifest := payload.Body.(types.ManifestFile)
-	if filepath.Ext(manifest.Path) == ".egg-info" || filepath.Base(manifest.Path) == "METADATA" || filepath.Base(manifest.Path) == "PKG-INFO" {
-		metadata := readManifestFile(manifest.Content)
+	file, ok := payload.Body.(types.ManifestFile)
+	if !ok {
+		log.Debugf("Failed to convert payload body to manifest file")
+		return
+	}
+
+	if filepath.Ext(file.Path) == ".egg-info" || filepath.Base(file.Path) == "METADATA" || filepath.Base(file.Path) == "PKG-INFO" {
+		metadata := readManifestFile(file.Content)
 
 		name, ok := metadata["Name"].(string)
 		if !ok {
@@ -67,7 +72,7 @@ func scan(payload types.Payload) {
 			}
 		}
 
-		component.AddOrigin(c, manifest.Path)
+		component.AddOrigin(c, file.Path)
 		component.AddType(c, Type)
 
 		if val, ok := metadata["Summary"].(string); ok {
@@ -93,8 +98,8 @@ func scan(payload types.Payload) {
 
 		cdx.AddComponent(c, payload.Address)
 
-	} else if filepath.Base(manifest.Path) == "requirements.txt" {
-		attributes := readRequirementsFile(manifest.Content)
+	} else if filepath.Base(file.Path) == "requirements.txt" {
+		attributes := readRequirementsFile(file.Content)
 		for _, attribute := range attributes {
 			if len(attribute) != 2 {
 				continue
@@ -115,7 +120,7 @@ func scan(payload types.Payload) {
 				}
 			}
 
-			component.AddOrigin(c, manifest.Path)
+			component.AddOrigin(c, file.Path)
 			component.AddType(c, Type)
 
 			if len(payload.Layer) > 0 {
@@ -124,8 +129,8 @@ func scan(payload types.Payload) {
 
 			cdx.AddComponent(c, payload.Address)
 		}
-	} else if filepath.Base(manifest.Path) == "poetry.lock" {
-		metadata := readPoetryLockFile(manifest.Content)
+	} else if filepath.Base(file.Path) == "poetry.lock" {
+		metadata := readPoetryLockFile(file.Content)
 		if metadata == nil {
 			return
 		}
@@ -146,7 +151,7 @@ func scan(payload types.Payload) {
 				}
 			}
 
-			component.AddOrigin(c, manifest.Path)
+			component.AddOrigin(c, file.Path)
 			component.AddType(c, Type)
 
 			rawMetadata, err := helper.ToJSON(packageInfo)

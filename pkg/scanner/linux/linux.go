@@ -30,8 +30,13 @@ func Scan(data interface{}) interface{} {
 }
 
 func scan(payload types.Payload) {
-	manifest := payload.Body.(types.ManifestFile)
-	Releases = append(Releases, parse(manifest))
+	file, ok := payload.Body.(types.ManifestFile)
+	if !ok {
+		log.Debugf("Failed to convert payload body to manifest file")
+		return
+	}
+
+	Releases = append(Releases, parse(file))
 
 	for _, release := range Releases {
 		var name, version, desc string

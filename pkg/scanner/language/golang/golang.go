@@ -47,8 +47,13 @@ func Scan(data interface{}) interface{} {
 }
 
 func scan(payload types.Payload) {
-	manifest := payload.Body.(types.ManifestFile)
-	modFile := readManifestFile(manifest.Content, manifest.Path)
+	file, ok := payload.Body.(types.ManifestFile)
+	if !ok {
+		log.Debugf("Failed to convert payload body to manifest file")
+		return
+	}
+
+	modFile := readManifestFile(file.Content, file.Path)
 	if modFile == nil {
 		return
 	}
@@ -75,7 +80,7 @@ func scan(payload types.Payload) {
 			log.Debugf("Error converting metadata to JSON: %s", err)
 		}
 
-		component.AddOrigin(c, manifest.Path)
+		component.AddOrigin(c, file.Path)
 		component.AddType(c, Type)
 		component.AddRawMetadata(c, rawMetadata)
 
@@ -99,7 +104,7 @@ func scan(payload types.Payload) {
 			}
 		}
 
-		component.AddOrigin(c, manifest.Path)
+		component.AddOrigin(c, file.Path)
 		component.AddType(c, Type)
 
 		rawMetadata, err := helper.ToJSON(pkg)
