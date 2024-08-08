@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"regexp"
 	"strings"
+
+	"github.com/aquasecurity/go-gem-version"
 )
 
 type Gemspec struct {
@@ -58,6 +60,9 @@ func cleanMetadata(metadata *Gemspec) {
 
 	if len(metadata.Version) > 0 {
 		metadata.Version = cleanStringField(metadata.Version)
+		if _, err := gem.NewVersion(metadata.Version); err != nil {
+			metadata.Version = "0.0.0"
+		}
 	}
 
 	if len(metadata.Description) > 0 {
