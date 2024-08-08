@@ -1,6 +1,8 @@
 package nuget
 
 import (
+	"strings"
+
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
@@ -43,7 +45,7 @@ func scanPE(payload types.Payload, peFile *pe.File) {
 		}
 	}
 
-	if name == "" || version == "" {
+	if len(strings.TrimSpace(name)) == 0 || len(version) == 0 {
 		return
 	}
 

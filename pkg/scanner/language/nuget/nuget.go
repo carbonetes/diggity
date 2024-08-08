@@ -73,6 +73,10 @@ func scan(payload types.Payload) {
 
 		name, version := attributes[0], attributes[1]
 
+		if name == "" || version == "" {
+			continue
+		}
+
 		c := component.New(name, version, Type)
 
 		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
