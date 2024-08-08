@@ -52,10 +52,7 @@ func scan(payload types.Payload) {
 		return
 	}
 
-	target := filepath.Dir(file.Path)
-	log.Debugf("Scanning %s", target)
-	name, version := parseNameVersion(target)
-	log.Debugf("Name: %s, Version: %s", name, version)
+	name, version := parseNameVersion(filepath.Dir(file.Path))
 	if len(name) == 0 || len(version) == 0 {
 		return
 	}
