@@ -3,10 +3,10 @@ package licenses
 	// Source URL : https://spdx.org/licenses/licenses.json
 	// Helpers for validating SPDX licenses.
 	// Needs to be updated regularly, possibly with automation.
-	// Last Updated: 2024-06-07 13:55:11.5153565 +0800 +08 m=+1.256267601
+	// Last Updated: 2024-09-19 11:08:50.7393612 +0800 +08 m=+1.462357101
 
 	// LicenseListVersion is the current implemented version for SPDX.
-	const ListVersion = "3.24.0"
+	const ListVersion = "3.25.0"
 
 	// LicenseList contains the referece licenses from the source URL.
 	var List = map[string]string{
@@ -460,6 +460,8 @@ package licenses
 		"dl-de-by-2.0.0": "DL-DE-BY-2.0",
 		"dl-de-zero-2.0": "DL-DE-ZERO-2.0",
 		"doc": "DOC",
+		"docbook-schema": "DocBook-Schema",
+		"docbook-xml": "DocBook-XML",
 		"dotseqn": "Dotseqn",
 		"drl-1": "DRL-1.0",
 		"drl-1.0": "DRL-1.0",
@@ -649,6 +651,7 @@ package licenses
 		"gutmann": "Gutmann",
 		"haskellreport": "HaskellReport",
 		"hdparm": "hdparm",
+		"hidapi": "HIDAPI",
 		"hippocratic-2": "Hippocratic-2.1",
 		"hippocratic-2.1": "Hippocratic-2.1",
 		"hippocratic-2.1.0": "Hippocratic-2.1",
@@ -669,6 +672,7 @@ package licenses
 		"hpnd-markus-kuhn": "HPND-Markus-Kuhn",
 		"hpnd-merchantability-variant": "HPND-merchantability-variant",
 		"hpnd-mit-disclaimer": "HPND-MIT-disclaimer",
+		"hpnd-netrek": "HPND-Netrek",
 		"hpnd-pbmplus": "HPND-Pbmplus",
 		"hpnd-sell-mit-disclaimer-xserver": "HPND-sell-MIT-disclaimer-xserver",
 		"hpnd-sell-regexpr": "HPND-sell-regexpr",
@@ -1068,6 +1072,7 @@ package licenses
 		"rsa-md": "RSA-MD",
 		"rscpl": "RSCPL",
 		"ruby": "Ruby",
+		"ruby-pty": "Ruby-pty",
 		"sax-pd": "SAX-PD",
 		"sax-pd-2.0": "SAX-PD-2.0",
 		"saxpath": "Saxpath",
@@ -1158,6 +1163,7 @@ package licenses
 		"tu-berlin-2": "TU-Berlin-2.0",
 		"tu-berlin-2.0": "TU-Berlin-2.0",
 		"tu-berlin-2.0.0": "TU-Berlin-2.0",
+		"ubuntu-font-1.0": "Ubuntu-font-1.0",
 		"ucar": "UCAR",
 		"ucl-1": "UCL-1.0",
 		"ucl-1.0": "UCL-1.0",
@@ -1200,6 +1206,7 @@ package licenses
 		"wxwindows": "wxWindows",
 		"x11": "X11",
 		"x11-distribute-modifications-variant": "X11-distribute-modifications-variant",
+		"x11-swapped": "X11-swapped",
 		"xdebug-1.03": "Xdebug-1.03",
 		"xerox": "Xerox",
 		"xfig": "Xfig",
