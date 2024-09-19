@@ -28,30 +28,59 @@ var (
 			filesystem, _ := cmd.Flags().GetString("dir")
 
 			params := types.DefaultParameters()
-			if len(args) > 0 {
-				params.Input = helper.FormatImage(args[0])
-			} else if len(tarball) > 0 {
-				params.Input = tarball
-			} else if len(filesystem) > 0 {
+			if filesystem != "" {
 				if found, _ := helper.IsDirExists(filesystem); !found {
 					log.Fatal("directory not found: " + filesystem)
 					return
 				}
+				params.ScanType = types.Filesystem
 				params.Input = filesystem
-			} else {
-				_ = cmd.Help()
-				os.Exit(0)
 			}
+
+			if tarball != "" {
+				if found, _ := helper.IsFileExists(tarball); !found {
+					log.Fatal("tarball not found: " + tarball)
+					return
+				}
+				params.Input = tarball
+				params.ScanType = types.Tarball
+				log.Print("Scanning tarball: " + tarball)
+			}
+
+			if filesystem == "" && tarball == "" {
+				if len(args) > 0 {
+					params.Input = helper.FormatImage(args[0])
+					params.ScanType = types.Image
+				} else {
+					_ = cmd.Help()
+					os.Exit(0)
+				}
+			}
+
+			// if len(args) > 0 {
+			// 	params.Input = helper.FormatImage(args[0])
+			// } else if len(tarball) > 0 {
+			// 	params.Input = tarball
+			// } else if len(filesystem) > 0 {
+			// 	if found, _ := helper.IsDirExists(filesystem); !found {
+			// 		log.Fatal("directory not found: " + filesystem)
+			// 		return
+			// 	}
+			// 	params.Input = filesystem
+			// } else {
+			// 	_ = cmd.Help()
+			// 	os.Exit(0)
+			// }
 
 			quiet, err := cmd.Flags().GetBool("quiet")
 			if err != nil {
 				log.Debug(err.Error())
 			}
 
-			err = params.GetScanType()
-			if err != nil {
-				log.Debug(err.Error())
-			}
+			// err = params.GetScanType()
+			// if err != nil {
+			// 	log.Debug(err.Error())
+			// }
 
 			outputFormat, err := cmd.Flags().GetString("output")
 			if err != nil {
@@ -63,10 +92,10 @@ var (
 				log.Debug(err.Error())
 			}
 
-			scanners, err := cmd.Flags().GetStringArray("scanners")
-			if err != nil {
-				log.Debug(err.Error())
-			}
+			// scanners, err := cmd.Flags().GetStringArray("scanners")
+			// if err != nil {
+			// 	log.Debug(err.Error())
+			// }
 
 			if len(file) > 0 {
 				params.SaveToFile = file
@@ -79,12 +108,14 @@ var (
 
 			params.Quiet = quiet
 			params.SaveToFile = file
-			params.Scanners = helper.SplitAndAppendStrings(scanners)
+			// params.Scanners = helper.SplitAndAppendStrings(scanners)
 			params.OutputFormat = types.OutputFormat(outputFormat)
 			if err != nil {
 				log.Debug(err.Error())
 			}
-
+			if len(params.Input) == 0 {
+				log.Fatal("No input provided")
+			}
 			cli.Start(params)
 		},
 	}
