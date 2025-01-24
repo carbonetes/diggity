@@ -33,6 +33,7 @@ func scanProjectFile(payload types.Payload) {
 	if c != nil {
 		component.AddLayer(c, payload.Layer)
 		component.AddOrigin(c, file.Path)
+		component.AddType(c, Type)
 		cdx.AddComponent(c, payload.Address)
 		dependencyNode = &cyclonedx.Dependency{
 			Ref:          c.BOMRef,
@@ -59,6 +60,7 @@ func scanProjectFile(payload types.Payload) {
 					component.AddRawMetadata(c, rawMetadata)
 				}
 
+				component.AddType(c, Type)
 				component.AddLayer(c, payload.Layer)
 				component.AddOrigin(c, file.Path)
 				cdx.AddComponent(c, payload.Address)
@@ -76,6 +78,7 @@ func scanProjectFile(payload types.Payload) {
 		for _, reference := range metadata.ItemGroup.References {
 			c := processReference(reference)
 			if c != nil {
+				component.AddType(c, Type)
 				component.AddLayer(c, payload.Layer)
 				component.AddOrigin(c, file.Path)
 				cdx.AddComponent(c, payload.Address)
