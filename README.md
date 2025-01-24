@@ -149,8 +149,6 @@ Diggity extends its support to various programming languages, allowing it to sca
 - Haskell
 - Erlang
 - R
-- Visual Basic
-- C#
 
 ## Available Commands and their flags with description:
 Diggity offers a range of commands and flags to customize its behavior and cater to different use cases. Below, you'll find a summary of available commands along with their respective flags and brief descriptions:
