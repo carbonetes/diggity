@@ -13,6 +13,7 @@ before:
 builds:
   - id: linux-builds
     binary: diggity
+    dir: cmd/diggity
     goos:
       - linux
     goarch:
@@ -30,6 +31,7 @@ builds:
         -X github.com/carbonetes/diggity/cmd/diggity/build.gitDesc={{.Summary}}
 
   - id: darwin-builds
+    dir: cmd/diggity
     binary: diggity
     goos:
       - darwin
@@ -47,6 +49,7 @@ builds:
         -X github.com/carbonetes/diggity/cmd/diggity/build.gitDesc={{.Summary}}
 
   - id: windows-build
+    dir: cmd/diggity
     binary: diggity
     goos:
       - windows
