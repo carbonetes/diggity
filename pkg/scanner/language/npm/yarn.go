@@ -15,114 +15,92 @@ func scanYarnLockile(payload types.Payload) *[]cyclonedx.Component {
 	components := []cyclonedx.Component{}
 	manifest := payload.Body.(types.ManifestFile)
 	lockfile, err := parseYarnLock(manifest.Content)
-	if err != nil {
+	if err != nil || len(lockfile) == 0 {
 		return nil // skip
-	}
-
-	if len(lockfile) == 0 {
-		return nil
 	}
 
 	for id, pkg := range lockfile {
 		id = strings.TrimSpace(id)
 		if strings.Contains(id, ",") {
-			pkgs := strings.Split(id, ",")
-			if len(pkgs) == 0 {
-				continue
-			}
-			log.Debug("Found multiple packages in Yarn lockfile: ", pkgs)
-			for _, p := range pkgs {
-				if p == pkg.Resolution {
-					continue
-				}
-
-				name, version := parseYarnPackageName(p), parseYarnVersion(p)
-				if len(name) == 0 || len(version) == 0 {
-					continue
-				}
-
-				metadata := pkg
-				metadata.Version = version
-
-				c := component.New(name, pkg.Version, Type)
-
-				cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
-				if len(cpes) > 0 {
-					for _, cpe := range cpes {
-						component.AddCPE(c, cpe)
-					}
-				}
-
-				component.AddOrigin(c, manifest.Path)
-				component.AddType(c, Type)
-
-				rawMetadata, err := helper.ToJSON(metadata)
-				if err != nil {
-					log.Debugf("Error converting metadata to JSON: %s", err)
-				}
-
-				if len(rawMetadata) > 0 {
-					component.AddRawMetadata(c, rawMetadata)
-				}
-
-				if len(payload.Layer) > 0 {
-					component.AddLayer(c, payload.Layer)
-				}
-
-				components = append(components, *c)
-			}
-		}
-
-		if pkg.Resolution == "" || pkg.Version == "" {
-			continue
-		}
-
-		name := parseYarnPackageName(pkg.Resolution)
-
-		var version string
-		if pkg.Version == "" {
-			version = parseYarnVersion(pkg.Resolution)
+			processMultiplePackages(id, pkg, manifest, payload, &components)
 		} else {
-			version = pkg.Version
+			processSinglePackage(pkg, manifest, payload, &components)
 		}
-
-		c := component.New(name, version, Type)
-
-		if len(c.Name) == 0 || len(c.Version) == 0 {
-			continue
-		}
-
-		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
-		if len(cpes) > 0 {
-			for _, cpe := range cpes {
-				component.AddCPE(c, cpe)
-			}
-		}
-
-		component.AddOrigin(c, manifest.Path)
-		component.AddType(c, Type)
-
-		rawMetadata, err := helper.ToJSON(pkg)
-		if err != nil {
-			log.Debugf("Error converting metadata to JSON: %s", err)
-		}
-
-		if len(rawMetadata) > 0 {
-			component.AddRawMetadata(c, rawMetadata)
-		}
-
-		if len(payload.Layer) > 0 {
-			component.AddLayer(c, payload.Layer)
-		}
-
-		if len(payload.Layer) > 0 {
-			component.AddLayer(c, payload.Layer)
-		}
-
-		components = append(components, *c)
 	}
 
 	return &components
+}
+
+func processMultiplePackages(id string, pkg YarnLockfile, manifest types.ManifestFile, payload types.Payload, components *[]cyclonedx.Component) {
+	pkgs := strings.Split(id, ",")
+	if len(pkgs) == 0 {
+		return
+	}
+
+	for _, p := range pkgs {
+		if p == pkg.Resolution {
+			continue
+		}
+
+		name, version := parseYarnPackageName(p), parseYarnVersion(p)
+		if len(name) == 0 || len(version) == 0 {
+			continue
+		}
+
+		metadata := pkg
+		metadata.Version = version
+
+		c := createYarnComponent(name, pkg.Version, metadata, manifest, payload)
+		*components = append(*components, *c)
+	}
+}
+
+func processSinglePackage(pkg YarnLockfile, manifest types.ManifestFile, payload types.Payload, components *[]cyclonedx.Component) {
+	if pkg.Resolution == "" || pkg.Version == "" {
+		return
+	}
+
+	name := parseYarnPackageName(pkg.Resolution)
+	version := pkg.Version
+	if version == "" {
+		version = parseYarnVersion(pkg.Resolution)
+	}
+
+	c := createYarnComponent(name, version, pkg, manifest, payload)
+	if len(c.Name) == 0 || len(c.Version) == 0 {
+		return
+	}
+
+	*components = append(*components, *c)
+}
+
+func createYarnComponent(name, version string, metadata YarnLockfile, manifest types.ManifestFile, payload types.Payload) *cyclonedx.Component {
+	c := component.New(name, version, Type)
+
+	cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+	if len(cpes) > 0 {
+		for _, cpe := range cpes {
+			component.AddCPE(c, cpe)
+		}
+	}
+
+	component.AddOrigin(c, manifest.Path)
+	component.AddType(c, Type)
+
+	rawMetadata, err := helper.ToJSON(metadata)
+	if err != nil {
+		log.Debugf("Error converting metadata to JSON: %s", err)
+	}
+
+	if len(rawMetadata) > 0 {
+		component.AddRawMetadata(c, rawMetadata)
+	}
+
+	if len(payload.Layer) > 0 {
+		component.AddLayer(c, payload.Layer)
+	}
+
+	return c
 }
 
 func parseYarnPackageName(name string) string {

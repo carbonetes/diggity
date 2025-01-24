@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"slices"
 
-	"github.com/carbonetes/diggity/internal/presenter/status"
+	stream "github.com/carbonetes/diggity/cmd/diggity/grove"
+	"github.com/carbonetes/diggity/cmd/diggity/ui"
 	"github.com/carbonetes/diggity/pkg/scanner"
-	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/golistic/urn"
 )
@@ -29,7 +29,7 @@ func processArchive(reader io.ReaderAt, path string, size int64, addr *urn.URN) 
 
 	// Loop through each file in the zip and emit a FileListEvent for each file
 	for _, f := range r.File {
-		status.AddFile(f.Name)
+		ui.AddFile(f.Name)
 
 		// If the file is a directory, skip it
 		if f.FileInfo().IsDir() {

@@ -5,7 +5,7 @@ import (
 
 	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/stream"
+	stream "github.com/carbonetes/diggity/cmd/diggity/grove"
 	"github.com/golistic/urn"
 )
 

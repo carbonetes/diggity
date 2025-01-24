@@ -7,84 +7,95 @@ import (
 	"path/filepath"
 	"slices"
 
+	stream "github.com/carbonetes/diggity/cmd/diggity/grove"
+	"github.com/carbonetes/diggity/cmd/diggity/ui"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/internal/presenter/status"
 	"github.com/carbonetes/diggity/pkg/scanner"
-	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/golistic/urn"
 )
 
 func FilesystemScanHandler(target string, addr *urn.URN) error {
-	var paths []string
-	// recursive
-	err := filepath.Walk(target,
-		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-
-			if info.IsDir() && (info.Name() == ".git" || info.Name() == ".vscode") {
-				return filepath.SkipDir
-			}
-
-			paths = append(paths, filepath.ToSlash(path))
-			return nil
-		})
+	paths, err := collectPaths(target)
 	if err != nil {
 		return err
 	}
+
 	for _, path := range paths {
-		status.AddFile(path)
-
-		// Check if the file is an archive file (e.g. *.jar, *.war, *.ear, *.jpi, *.hpi)
-		if slices.Contains(archiveTypes, filepath.Ext(path)) {
-			reader, err := os.Open(path)
-			if err != nil {
-				continue
-			}
-
-			stat, err := reader.Stat()
-			if err != nil {
-				continue
-			}
-
-			b, err := io.ReadAll(reader)
-			if err != nil {
-				continue
-			}
-			processArchive(bytes.NewReader(b), path, stat.Size(), addr)
-			continue
-		}
-
-		category, matched, readFlag := scanner.CheckRelatedFiles(path)
-		if matched {
-			switch category {
-			case "rpm":
-				err := handleRpmFile(path, category, "", addr)
-				if err != nil {
-					log.Debug(err)
-				}
-			default:
-				if !readFlag {
-					stream.Emit(category, types.Payload{
-						Address: addr,
-						Body:    path,
-					})
-					continue
-				}
-				file, err := os.Open(path)
-				if err != nil {
-					log.Debug(err)
-				}
-				err = handleManifestFile(path, category, "", file, addr)
-				if err != nil {
-					log.Debug(err)
-				}
-			}
+		ui.AddFile(path)
+		if err := processPath(path, addr); err != nil {
+			log.Debug(err)
 		}
 	}
 	return nil
+}
+
+func collectPaths(target string) ([]string, error) {
+	var paths []string
+	err := filepath.Walk(target, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() && (info.Name() == ".git" || info.Name() == ".vscode") {
+			return filepath.SkipDir
+		}
+		paths = append(paths, filepath.ToSlash(path))
+		return nil
+	})
+	return paths, err
+}
+
+func processPath(path string, addr *urn.URN) error {
+	if slices.Contains(archiveTypes, filepath.Ext(path)) {
+		return processArchiveFile(path, addr)
+	}
+
+	category, matched, readFlag := scanner.CheckRelatedFiles(path)
+	if matched {
+		return processMatchedFile(path, category, readFlag, addr)
+	}
+	return nil
+}
+
+func processArchiveFile(path string, addr *urn.URN) error {
+	reader, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	defer reader.Close()
+
+	stat, err := reader.Stat()
+	if err != nil {
+		return err
+	}
+
+	b, err := io.ReadAll(reader)
+	if err != nil {
+		return err
+	}
+	processArchive(bytes.NewReader(b), path, stat.Size(), addr)
+	return nil
+}
+
+func processMatchedFile(path, category string, readFlag bool, addr *urn.URN) error {
+	switch category {
+	case "rpm":
+		return handleRpmFile(path, category, "", addr)
+	default:
+		if !readFlag {
+			stream.Emit(category, types.Payload{
+				Address: addr,
+				Body:    path,
+			})
+			return nil
+		}
+		file, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+		return handleManifestFile(path, category, "", file, addr)
+	}
 }
 
 func handleRpmFile(path, category, layer string, addr *urn.URN) error {

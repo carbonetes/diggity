@@ -12,11 +12,11 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/carbonetes/diggity/cmd/diggity/config"
+	stream "github.com/carbonetes/diggity/cmd/diggity/grove"
+	"github.com/carbonetes/diggity/cmd/diggity/ui"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/internal/presenter/status"
-	"github.com/carbonetes/diggity/pkg/config"
 	"github.com/carbonetes/diggity/pkg/scanner"
-	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/golistic/urn"
 	"github.com/google/go-containerregistry/pkg/authn"
@@ -128,29 +128,37 @@ func processLayerContents(layer string, contents io.ReadCloser, maxFileSize int6
 			return err
 		}
 
-		status.AddFile(header.Name)
+		ui.AddFile(header.Name)
 
-		// Check if the file is an archive file (e.g. *.jar, *.war, *.ear, *.jpi, *.hpi)
-		if slices.Contains(archiveTypes, filepath.Ext(header.Name)) {
-			b, err := io.ReadAll(reader)
-			if err != nil {
-				log.Debug(err)
-			}
-			processArchive(bytes.NewReader(b), header.Name, header.Size, addr)
-		}
-
-		if header.Typeflag == tar.TypeReg {
-			if header.Size > maxFileSize {
-				continue
-			}
-
-			err = processTarHeader(layer, header, reader, addr)
-			if err != nil {
-				log.Debug(err)
-			}
+		if err := processHeader(header, reader, layer, maxFileSize, addr); err != nil {
+			log.Debug(err)
 		}
 	}
 
+	return nil
+}
+
+func processHeader(header *tar.Header, reader io.Reader, layer string, maxFileSize int64, addr *urn.URN) error {
+	if slices.Contains(archiveTypes, filepath.Ext(header.Name)) {
+		return processArchiveFileFromLayer(header, reader, addr)
+	}
+
+	if header.Typeflag == tar.TypeReg {
+		if header.Size > maxFileSize {
+			return nil
+		}
+		return processTarHeader(layer, header, reader, addr)
+	}
+
+	return nil
+}
+
+func processArchiveFileFromLayer(header *tar.Header, reader io.Reader, addr *urn.URN) error {
+	b, err := io.ReadAll(reader)
+	if err != nil {
+		return err
+	}
+	processArchive(bytes.NewReader(b), header.Name, header.Size, addr)
 	return nil
 }
 

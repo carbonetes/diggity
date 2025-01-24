@@ -4,9 +4,9 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/carbonetes/diggity/cmd/diggity/config"
+	stream "github.com/carbonetes/diggity/cmd/diggity/grove"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/config"
-	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/golistic/urn"
 )

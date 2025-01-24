@@ -367,26 +367,26 @@ func resolveProperties(metadata *Metadata) map[string]string {
 // parseManifestFile parses the MANIFEST.MF file and returns a map of key-value pairs.
 //
 //nolint:all
-func parseManifestFile(content []byte) (map[string]string, error) {
-	manifest := make(map[string]string)
+// func parseManifestFile(content []byte) (map[string]string, error) {
+// 	manifest := make(map[string]string)
 
-	scanner := bufio.NewScanner(bytes.NewReader(content))
-	for scanner.Scan() {
-		line := scanner.Text()
-		parts := strings.SplitN(line, ":", 2)
-		if len(parts) == 2 {
-			key := strings.TrimSpace(parts[0])
-			value := strings.TrimSpace(parts[1])
-			manifest[key] = value
-		}
-	}
+// 	scanner := bufio.NewScanner(bytes.NewReader(content))
+// 	for scanner.Scan() {
+// 		line := scanner.Text()
+// 		parts := strings.SplitN(line, ":", 2)
+// 		if len(parts) == 2 {
+// 			key := strings.TrimSpace(parts[0])
+// 			value := strings.TrimSpace(parts[1])
+// 			manifest[key] = value
+// 		}
+// 	}
 
-	if err := scanner.Err(); err != nil {
-		return nil, err
-	}
+// 	if err := scanner.Err(); err != nil {
+// 		return nil, err
+// 	}
 
-	return manifest, nil
-}
+// 	return manifest, nil
+// }
 
 // parsePOMProperties parses the pom.properties file and returns a map of key-value pairs.
 func parsePOMProperties(content []byte) (map[string]string, error) {

@@ -24,10 +24,10 @@ builds:
     mod_timestamp: '{{ .CommitTimestamp }}'
     ldflags:
       - |
-        -X github.com/carbonetes/diggity/internal/version.version={{.Version}}
-        -X github.com/carbonetes/diggity/internal/version.buildDate={{.Date}}
-        -X github.com/carbonetes/diggity/internal/version.gitCommit={{.Commit}}
-        -X github.com/carbonetes/diggity/internal/version.gitDesc={{.Summary}}
+        -X github.com/carbonetes/diggity/cmd/diggity/build.version={{.Version}}
+        -X github.com/carbonetes/diggity/cmd/diggity/build.buildDate={{.Date}}
+        -X github.com/carbonetes/diggity/cmd/diggity/build.gitCommit={{.Commit}}
+        -X github.com/carbonetes/diggity/cmd/diggity/build.gitDesc={{.Summary}}
 
   - id: darwin-builds
     binary: diggity
@@ -41,10 +41,10 @@ builds:
       - CGO_ENABLED=0
     ldflags:
       - |
-        -X github.com/carbonetes/diggity/internal/version.version={{.Version}}
-        -X github.com/carbonetes/diggity/internal/version.buildDate={{.Date}}
-        -X github.com/carbonetes/diggity/internal/version.gitCommit={{.Commit}}
-        -X github.com/carbonetes/diggity/internal/version.gitDesc={{.Summary}}
+        -X github.com/carbonetes/diggity/cmd/diggity/build.version={{.Version}}
+        -X github.com/carbonetes/diggity/cmd/diggity/build.buildDate={{.Date}}
+        -X github.com/carbonetes/diggity/cmd/diggity/build.gitCommit={{.Commit}}
+        -X github.com/carbonetes/diggity/cmd/diggity/build.gitDesc={{.Summary}}
 
   - id: windows-build
     binary: diggity
@@ -57,10 +57,10 @@ builds:
       - CGO_ENABLED=0
     ldflags:
       - |
-        -X github.com/carbonetes/diggity/internal/version.version={{.Version}}
-        -X github.com/carbonetes/diggity/internal/version.buildDate={{.Date}}
-        -X github.com/carbonetes/diggity/internal/version.gitCommit={{.Commit}}
-        -X github.com/carbonetes/diggity/internal/version.gitDesc={{.Summary}}
+        -X github.com/carbonetes/diggity/cmd/diggity/build.version={{.Version}}
+        -X github.com/carbonetes/diggity/cmd/diggity/build.buildDate={{.Date}}
+        -X github.com/carbonetes/diggity/cmd/diggity/build.gitCommit={{.Commit}}
+        -X github.com/carbonetes/diggity/cmd/diggity/build.gitDesc={{.Summary}}
 
 archives:
   - id: tar-archives
@@ -102,7 +102,6 @@ brews:
       owner: carbonetes
       name: homebrew-diggity
       branch: main
-    folder: Formula
     ids:
       - tar-archives
     commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"

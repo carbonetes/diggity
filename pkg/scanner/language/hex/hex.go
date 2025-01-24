@@ -5,6 +5,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
@@ -44,81 +45,75 @@ func scan(payload types.Payload) {
 	}
 
 	if strings.Contains(file.Path, "rebar.lock") {
-		packages := readRebarFile(file.Content)
-		if len(packages) == 0 {
-			return
-		}
-
-		for _, pkg := range packages {
-			if pkg.Name == "" || pkg.Version == "" {
-				continue
-			}
-
-			c := component.New(pkg.Name, pkg.Version, Type)
-
-			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
-			if len(cpes) > 0 {
-				for _, cpe := range cpes {
-					component.AddCPE(c, cpe)
-				}
-			}
-
-			component.AddOrigin(c, file.Path)
-			component.AddType(c, Type)
-
-			rawMetadata, err := helper.ToJSON(pkg)
-			if err != nil {
-				log.Debugf("Error converting metadata to JSON: %s", err)
-			}
-
-			if len(rawMetadata) > 0 {
-				component.AddRawMetadata(c, rawMetadata)
-			}
-
-			if len(payload.Layer) > 0 {
-				component.AddLayer(c, payload.Layer)
-			}
-
-			cdx.AddComponent(c, payload.Address)
-		}
-
+		processRebarFile(file, payload)
 	} else if strings.Contains(file.Path, "mix.lock") {
-		packages := readMixFile(file.Content)
-		if len(packages) == 0 {
-			return
+		processMixFile(file, payload)
+	}
+}
+
+func processRebarFile(file types.ManifestFile, payload types.Payload) {
+	metadata := readRebarFile(file.Content)
+	if len(metadata) == 0 {
+		return
+	}
+
+	for _, pkg := range metadata {
+		if pkg.Name == "" || pkg.Version == "" {
+			continue
 		}
 
-		for _, pkg := range packages {
-			if pkg.Name == "" || pkg.Version == "" {
-				continue
-			}
+		c := createComponent(pkg, file.Path)
+		addCPEs(c, c.Name, c.Version)
+		addMetadata(c, pkg, payload.Layer)
+		cdx.AddComponent(c, payload.Address)
+	}
+}
 
-			c := component.New(pkg.Name, pkg.Version, Type)
+func processMixFile(file types.ManifestFile, payload types.Payload) {
+	metadata := readMixFile(file.Content)
+	if len(metadata) == 0 {
+		return
+	}
 
-			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
-			if len(cpes) > 0 {
-				for _, cpe := range cpes {
-					component.AddCPE(c, cpe)
-				}
-			}
-
-			component.AddOrigin(c, file.Path)
-			component.AddType(c, Type)
-
-			rawMetadata, err := helper.ToJSON(pkg)
-			if err != nil {
-				log.Debugf("Error converting metadata to JSON: %s", err)
-			}
-
-			if len(rawMetadata) > 0 {
-				component.AddRawMetadata(c, rawMetadata)
-			}
-
-			if len(payload.Layer) > 0 {
-				component.AddLayer(c, payload.Layer)
-			}
-
-			cdx.AddComponent(c, payload.Address)
+	for _, m := range metadata {
+		if m.Name == "" || m.Version == "" {
+			continue
 		}
+
+		c := createComponent(m, file.Path)
+		addCPEs(c, c.Name, c.Version)
+		addMetadata(c, m, payload.Layer)
+		cdx.AddComponent(c, payload.Address)
+	}
+}
+
+func createComponent(m HexMetadata, filePath string) *cyclonedx.Component {
+	c := component.New(m.Name, m.Version, Type)
+	component.AddOrigin(c, filePath)
+	component.AddType(c, Type)
+	return c
+}
+
+func addCPEs(c *cyclonedx.Component, name, version string) {
+	cpes := cpe.NewCPE23(name, name, version, Type)
+	if len(cpes) > 0 {
+		for _, cpe := range cpes {
+			component.AddCPE(c, cpe)
+		}
+	}
+}
+
+func addMetadata(c *cyclonedx.Component, m HexMetadata, layer string) {
+	rawMetadata, err := helper.ToJSON(m)
+	if err != nil {
+		log.Debugf("Error converting metadata to JSON: %s", err)
+	}
+
+	if len(rawMetadata) > 0 {
+		component.AddRawMetadata(c, rawMetadata)
+	}
+
+	if len(layer) > 0 {
+		component.AddLayer(c, layer)
 	}
 }
