@@ -113,8 +113,7 @@ These are the supported package managers, build tools, and plugins for generatin
 | **Pub Package Manager (Dart)**                       | Package manager for Dart using `pubspec.yaml`, `pubspec.lock` |
 | **NPM (Node Package Manager)**                       | Package manager for Node.js using `package.json`, `package-lock.json` |
 | **Yarn (JavaScript Dependency Manager)**              | Dependency manager for JavaScript using `yarn.json`           |
-| **PNPM (Alternative Package Manager for Node.js)** | Fast and space-efficient package manager using `pnpm-lock.yaml` |
-| **NuGet (.Net)**                               | Package manager for .NET using `.deps.json`                   |
+| **NuGet (.NET Package Manager)**               | NuGet is the package manager for .NET, used to manage dependencies and libraries in .NET projects. It supports `.deps.json` files for dependency information, as well as project files like `.vbproj` and `.csproj` for Visual Basic and C# projects, respectively. |
 | **Go Modules (Go)**                                 | Dependency management for Go using `go.mod`, `/gobin/*`   |
 | **Cabal (Haskell Package Manager)**                  | Package manager for Haskell using `stack.yaml`, `stack.yaml.lock`, `cabal.project.freeze` |
 | **Hex (Erlang Package Manager)**                     | Package manager for the Erlang ecosystem using `rebar.lock`, `mix.lock` |

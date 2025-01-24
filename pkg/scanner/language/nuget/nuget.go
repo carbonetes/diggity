@@ -18,12 +18,18 @@ const Type string = "nuget"
 
 var Manifests = []string{".deps.json"}
 
+var projectFiles = []string{".csproj", ".vbproj"}	
+
 func CheckRelatedFile(file string) (string, bool, bool) {
 	if slices.Contains(Manifests, filepath.Base(file)) {
 		return Type, true, true
 	}
 
 	if filepath.Ext(file) == ".dll" || filepath.Ext(file) == ".exe" {
+		return Type, true, true
+	}
+
+	if slices.Contains(projectFiles, filepath.Ext(file)) {
 		return Type, true, true
 	}
 
@@ -43,6 +49,12 @@ func Scan(data interface{}) interface{} {
 		}
 		return data
 	}
+
+	if slices.Contains(projectFiles, filepath.Ext(payload.Body.(types.ManifestFile).Path)) {
+		scanProjectFile(payload)
+		return data
+	}
+
 
 	scan(payload)
 
