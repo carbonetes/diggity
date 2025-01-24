@@ -5,6 +5,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
@@ -45,46 +46,55 @@ func scan(payload types.Payload) {
 
 	metadata := readManifestFile(file.Content)
 	for _, pod := range metadata.Pods {
-		var pods string
-		switch c := pod.(type) {
-		case string:
-			pods = c
-		case map[string]interface{}:
-			val := pod.(map[string]interface{})
-			for all := range val {
-				pods = all
-			}
+		processPod(pod, file, metadata, payload)
+	}
+}
+
+func processPod(pod interface{}, file types.ManifestFile, metadata FileLockMetadata, payload types.Payload) {
+	var pods string
+	switch c := pod.(type) {
+	case string:
+		pods = c
+	case map[string]interface{}:
+		val := pod.(map[string]interface{})
+		for all := range val {
+			pods = all
 		}
-
-		attributes := strings.Split(pods, " ")
-		name, version := attributes[0], strings.TrimSuffix(strings.TrimPrefix(attributes[1], "("), ")")
-
-		c := component.New(name, version, Type)
-
-		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
-		if len(cpes) > 0 {
-			for _, cpe := range cpes {
-				component.AddCPE(c, cpe)
-			}
-		}
-
-		rawMetadata, err := helper.ToJSON(metadata)
-		if err != nil {
-			log.Debug("Failed to convert metadata to JSON")
-		}
-
-		component.AddOrigin(c, file.Path)
-		component.AddType(c, Type)
-
-		if len(rawMetadata) > 0 {
-			component.AddRawMetadata(c, rawMetadata)
-		}
-
-		if len(payload.Layer) > 0 {
-			component.AddLayer(c, payload.Layer)
-		}
-
-		cdx.AddComponent(c, payload.Address)
 	}
 
+	attributes := strings.Split(pods, " ")
+	name, version := attributes[0], strings.TrimSuffix(strings.TrimPrefix(attributes[1], "("), ")")
+
+	c := component.New(name, version, Type)
+
+	addCPEs(c, Type)
+	addMetadata(c, file, metadata, payload)
+	cdx.AddComponent(c, payload.Address)
+}
+
+func addCPEs(c *cyclonedx.Component, Type string) {
+	cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+	if len(cpes) > 0 {
+		for _, cpe := range cpes {
+			component.AddCPE(c, cpe)
+		}
+	}
+}
+
+func addMetadata(c *cyclonedx.Component, file types.ManifestFile, metadata FileLockMetadata, payload types.Payload) {
+	rawMetadata, err := helper.ToJSON(metadata)
+	if err != nil {
+		log.Debug("Failed to convert metadata to JSON")
+	}
+
+	component.AddOrigin(c, file.Path)
+	component.AddType(c, Type)
+
+	if len(rawMetadata) > 0 {
+		component.AddRawMetadata(c, rawMetadata)
+	}
+
+	if len(payload.Layer) > 0 {
+		component.AddLayer(c, payload.Layer)
+	}
 }

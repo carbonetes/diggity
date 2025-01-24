@@ -7,12 +7,14 @@ import (
 	"runtime/debug"
 	"strings"
 
+	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/types"
+	"github.com/golistic/urn"
 	"golang.org/x/mod/modfile"
 )
 
@@ -32,72 +34,64 @@ func scanBinary(payload types.Payload, buildInfo *debug.BuildInfo) {
 		return
 	}
 
-	for _, s := range buildInfo.Settings {
+	processSettings(file, payload, buildInfo.Settings)
+	processDependencies(file, payload, buildInfo.Deps)
+}
+
+func processSettings(file types.ManifestFile, payload types.Payload, settings []debug.BuildSetting) {
+	for _, s := range settings {
 		// locate version
 		v := parseVersion(s.Value)
 		if v != "" {
 			c := component.New(file.Path, v, Type)
 
-			cpes := GenerateCpes(c.Version, SplitPath(c.Name))
-			if len(cpes) > 0 {
-				for _, cpe := range cpes {
-					component.AddCPE(c, cpe)
-				}
-			}
-
-			component.AddOrigin(c, file.Path)
-			component.AddType(c, Type)
-
-			rawMetadata, err := helper.ToJSON(s)
-			if err != nil {
-				log.Debugf("Error converting metadata to JSON: %s", err)
-			}
-
-			if len(rawMetadata) > 0 {
-				component.AddRawMetadata(c, rawMetadata)
-			}
-
-			if len(payload.Layer) > 0 {
-				component.AddLayer(c, payload.Layer)
-			}
-
-			cdx.AddComponent(c, payload.Address)
+			addCPEs(c)
+			addComponentDetails(c, file.Path, payload.Layer, s, payload.Address)
 			break
 		}
 	}
+}
 
-	for _, dep := range buildInfo.Deps {
+func processDependencies(file types.ManifestFile, payload types.Payload, deps []*debug.Module) {
+	for _, dep := range deps {
 		if dep.Path == "" || dep.Version == "" {
 			continue
 		}
 
 		c := component.New(dep.Path, dep.Version, Type)
 
-		cpes := GenerateCpes(c.Version, SplitPath(c.Name))
-		if len(cpes) > 0 {
-			for _, cpe := range cpes {
-				component.AddCPE(c, cpe)
-			}
-		}
-
-		component.AddOrigin(c, file.Path)
-		component.AddType(c, Type)
-
-		rawMetadata, err := helper.ToJSON(dep)
-		if err != nil {
-			log.Debugf("Error converting metadata to JSON: %s", err)
-		}
-
-		if len(rawMetadata) > 0 {
-			component.AddRawMetadata(c, rawMetadata)
-		}
-
-		if len(payload.Layer) > 0 {
-			component.AddLayer(c, payload.Layer)
-		}
-
-		cdx.AddComponent(c, payload.Address)
+		addCPEs(c)
+		addComponentDetails(c, file.Path, payload.Layer, dep, payload.Address)
 	}
+}
+
+func addCPEs(c *cyclonedx.Component) {
+	cpes := GenerateCpes(c.Version, SplitPath(c.Name))
+	if len(cpes) > 0 {
+		for _, cpe := range cpes {
+			component.AddCPE(c, cpe)
+		}
+	}
+}
+
+func addComponentDetails(c *cyclonedx.Component, filePath, layer string, metadata interface{}, address *urn.URN) {
+	component.AddOrigin(c, filePath)
+	component.AddType(c, Type)
+
+	rawMetadata, err := helper.ToJSON(metadata)
+	if err != nil {
+		log.Debugf("Error converting metadata to JSON: %s", err)
+	}
+
+	if len(rawMetadata) > 0 {
+		component.AddRawMetadata(c, rawMetadata)
+	}
+
+	if len(layer) > 0 {
+		component.AddLayer(c, layer)
+	}
+
+	cdx.AddComponent(c, address)
 }
 
 func checkIfExcluded(excludeList []*modfile.Exclude, name string) bool {

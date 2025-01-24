@@ -4,7 +4,7 @@ WORKDIR /diggity
 
 COPY / /diggity
 
-RUN go build .
+RUN cmd/diggity/main.go
 
 FROM scratch
 

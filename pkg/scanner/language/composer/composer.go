@@ -5,12 +5,14 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/component"
 	"github.com/carbonetes/diggity/pkg/types"
+	"github.com/golistic/urn"
 )
 
 const Type string = "composer"
@@ -45,79 +47,68 @@ func scan(payload types.Payload) {
 
 	metadata := readManifestFile(file.Content)
 
-	for _, pkg := range metadata.Packages {
+	processPackages(metadata.Packages, file.Path, payload.Address)
+	processDevPackages(metadata.PackagesDev, file.Path, payload.Layer, payload.Address)
+}
+
+func processPackages(packages []ComposerPackage, filePath string, address *urn.URN) {
+	for _, pkg := range packages {
 		if pkg.Name == "" {
 			continue
 		}
 
 		c := component.New(pkg.Name, pkg.Version, Type)
-
-		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
-		if len(cpes) > 0 {
-			for _, cpe := range cpes {
-				component.AddCPE(c, cpe)
-			}
-		}
-
-		component.AddOrigin(c, file.Path)
-		component.AddType(c, Type)
-
-		rawMetadata, err := helper.ToJSON(pkg)
-		if err != nil {
-			log.Debugf("Error converting metadata to JSON: %s", err)
-		}
-
-		if len(rawMetadata) > 0 {
-			component.AddRawMetadata(c, rawMetadata)
-		}
-
-		if len(pkg.License) > 0 {
-			for _, license := range pkg.License {
-				component.AddLicense(c, license)
-			}
-		}
-
-		cdx.AddComponent(c, payload.Address)
+		addCPEs(c, c.Name, c.Name, c.Version)
+		addCommonAttributes(c, filePath, pkg)
+		cdx.AddComponent(c, address)
 	}
+}
 
-	for _, pkg := range metadata.PackagesDev {
+func processDevPackages(packagesDev []ComposerPackage, filePath, layer string, address *urn.URN) {
+	for _, pkg := range packagesDev {
 		if pkg.Name == "" {
 			continue
 		}
 
 		c := component.New(pkg.Name, pkg.Version, Type)
-
 		props := strings.Split(pkg.Name, "/")
 		vendor, product := props[0], props[1]
-		cpes := cpe.NewCPE23(vendor, product, pkg.Version, Type)
-		if len(cpes) > 0 {
-			for _, cpe := range cpes {
-				component.AddCPE(c, cpe)
-			}
+		addCPEs(c, vendor, product, pkg.Version)
+		addCommonAttributes(c, filePath, pkg)
+
+		if len(layer) > 0 {
+			component.AddLayer(c, layer)
 		}
 
-		component.AddOrigin(c, file.Path)
-		component.AddType(c, Type)
+		cdx.AddComponent(c, address)
+	}
+}
 
-		rawMetadata, err := helper.ToJSON(pkg)
-		if err != nil {
-			log.Debugf("Error converting metadata to JSON: %s", err)
+func addCPEs(c *cyclonedx.Component, vendor, product, version string) {
+	cpes := cpe.NewCPE23(vendor, product, version, Type)
+	if len(cpes) > 0 {
+		for _, cpe := range cpes {
+			component.AddCPE(c, cpe)
 		}
+	}
+}
 
-		if len(rawMetadata) > 0 {
-			component.AddRawMetadata(c, rawMetadata)
+func addCommonAttributes(c *cyclonedx.Component, filePath string, pkg ComposerPackage) {
+	component.AddOrigin(c, filePath)
+	component.AddType(c, Type)
+
+	rawMetadata, err := helper.ToJSON(pkg)
+	if err != nil {
+		log.Debugf("Error converting metadata to JSON: %s", err)
+	}
+
+	if len(rawMetadata) > 0 {
+		component.AddRawMetadata(c, rawMetadata)
+	}
+
+	if len(pkg.License) > 0 {
+		for _, license := range pkg.License {
+			component.AddLicense(c, license)
 		}
-
-		if len(pkg.License) > 0 {
-			for _, license := range pkg.License {
-				component.AddLicense(c, license)
-			}
-		}
-
-		if len(payload.Layer) > 0 {
-			component.AddLayer(c, payload.Layer)
-		}
-
-		cdx.AddComponent(c, payload.Address)
 	}
 }

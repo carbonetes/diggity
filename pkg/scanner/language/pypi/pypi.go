@@ -5,6 +5,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
@@ -46,21 +47,84 @@ func scan(payload types.Payload) {
 		return
 	}
 
-	if filepath.Ext(file.Path) == ".egg-info" || filepath.Base(file.Path) == "METADATA" || filepath.Base(file.Path) == "PKG-INFO" {
-		metadata := readManifestFile(file.Content)
+	switch filepath.Base(file.Path) {
+	case "METADATA", "PKG-INFO":
+		processMetadataFile(file, payload)
+	case "requirements.txt":
+		processRequirementsFile(file, payload)
+	case "poetry.lock":
+		processPoetryLockFile(file, payload)
+	default:
+		if filepath.Ext(file.Path) == ".egg-info" {
+			processMetadataFile(file, payload)
+		}
+	}
+}
 
-		name, ok := metadata["Name"].(string)
-		if !ok {
-			return
+func processMetadataFile(file types.ManifestFile, payload types.Payload) {
+	metadata := readManifestFile(file.Content)
+
+	name, ok := metadata["Name"].(string)
+	if !ok {
+		return
+	}
+
+	version, ok := metadata["Version"].(string)
+	if !ok {
+		return
+	}
+
+	if name == "" || version == "" || strings.Contains(name, "=") || strings.Contains(version, "=") {
+		return
+	}
+
+	c := component.New(name, version, Type)
+
+	cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+	if len(cpes) > 0 {
+		for _, cpe := range cpes {
+			component.AddCPE(c, cpe)
+		}
+	}
+
+	component.AddOrigin(c, file.Path)
+	component.AddType(c, Type)
+
+	if val, ok := metadata["Summary"].(string); ok {
+		component.AddDescription(c, val)
+	}
+
+	if val, ok := metadata["License"].(string); ok {
+		component.AddLicense(c, val)
+	}
+
+	rawMetadata, err := helper.ToJSON(metadata)
+	if err != nil {
+		log.Debugf("Error converting metadata to JSON: %s", err)
+	}
+
+	if len(rawMetadata) > 0 {
+		component.AddRawMetadata(c, rawMetadata)
+	}
+
+	if len(payload.Layer) > 0 {
+		component.AddLayer(c, payload.Layer)
+	}
+
+	cdx.AddComponent(c, payload.Address)
+}
+
+func processRequirementsFile(file types.ManifestFile, payload types.Payload) {
+	attributes := readRequirementsFile(file.Content)
+	for _, attribute := range attributes {
+		if len(attribute) != 2 {
+			continue
 		}
 
-		version, ok := metadata["Version"].(string)
-		if !ok {
-			return
-		}
+		name, version := attribute[0], attribute[1]
 
 		if name == "" || version == "" || strings.Contains(name, "=") || strings.Contains(version, "=") {
-			return
+			continue
 		}
 
 		c := component.New(name, version, Type)
@@ -75,99 +139,59 @@ func scan(payload types.Payload) {
 		component.AddOrigin(c, file.Path)
 		component.AddType(c, Type)
 
-		if val, ok := metadata["Summary"].(string); ok {
-			component.AddDescription(c, val)
-		}
-
-		if val, ok := metadata["License"].(string); ok {
-			component.AddLicense(c, val)
-		}
-
-		rawMetadata, err := helper.ToJSON(metadata)
-		if err != nil {
-			log.Debugf("Error converting metadata to JSON: %s", err)
-		}
-
-		if len(rawMetadata) > 0 {
-			component.AddRawMetadata(c, rawMetadata)
-		}
-
 		if len(payload.Layer) > 0 {
 			component.AddLayer(c, payload.Layer)
 		}
 
 		cdx.AddComponent(c, payload.Address)
+	}
+}
 
-	} else if filepath.Base(file.Path) == "requirements.txt" {
-		attributes := readRequirementsFile(file.Content)
-		for _, attribute := range attributes {
-			if len(attribute) != 2 {
-				continue
-			}
+func processPoetryLockFile(file types.ManifestFile, payload types.Payload) {
+	metadata := readPoetryLockFile(file.Content)
+	if metadata == nil {
+		return
+	}
 
-			name, version := attribute[0], attribute[1]
+	for _, packageInfo := range metadata.Packages {
+		processPackageInfo(packageInfo, file, payload)
+	}
+}
 
-			if name == "" || version == "" || strings.Contains(name, "=") || strings.Contains(version, "=") {
-				continue
-			}
+func processPackageInfo(packageInfo Package, file types.ManifestFile, payload types.Payload) {
+	name, version := packageInfo.Name, packageInfo.Version
 
-			c := component.New(name, version, Type)
+	if name == "" || version == "" || strings.Contains(name, "=") || strings.Contains(version, "=") {
+		return
+	}
 
-			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
-			if len(cpes) > 0 {
-				for _, cpe := range cpes {
-					component.AddCPE(c, cpe)
-				}
-			}
+	c := component.New(name, version, Type)
 
-			component.AddOrigin(c, file.Path)
-			component.AddType(c, Type)
+	addCPEs(c, Type)
+	component.AddOrigin(c, file.Path)
+	component.AddType(c, Type)
 
-			if len(payload.Layer) > 0 {
-				component.AddLayer(c, payload.Layer)
-			}
+	rawMetadata, err := helper.ToJSON(packageInfo)
+	if err != nil {
+		log.Debugf("Error converting metadata to JSON: %s", err)
+	}
 
-			cdx.AddComponent(c, payload.Address)
-		}
-	} else if filepath.Base(file.Path) == "poetry.lock" {
-		metadata := readPoetryLockFile(file.Content)
-		if metadata == nil {
-			return
-		}
+	if len(rawMetadata) > 0 {
+		component.AddRawMetadata(c, rawMetadata)
+	}
 
-		for _, packageInfo := range metadata.Packages {
-			name, version := packageInfo.Name, packageInfo.Version
+	if len(payload.Layer) > 0 {
+		component.AddLayer(c, payload.Layer)
+	}
 
-			if name == "" || version == "" || strings.Contains(name, "=") || strings.Contains(version, "=") {
-				continue
-			}
+	cdx.AddComponent(c, payload.Address)
+}
 
-			c := component.New(name, version, Type)
-
-			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
-			if len(cpes) > 0 {
-				for _, cpe := range cpes {
-					component.AddCPE(c, cpe)
-				}
-			}
-
-			component.AddOrigin(c, file.Path)
-			component.AddType(c, Type)
-
-			rawMetadata, err := helper.ToJSON(packageInfo)
-			if err != nil {
-				log.Debugf("Error converting metadata to JSON: %s", err)
-			}
-
-			if len(rawMetadata) > 0 {
-				component.AddRawMetadata(c, rawMetadata)
-			}
-
-			if len(payload.Layer) > 0 {
-				component.AddLayer(c, payload.Layer)
-			}
-
-			cdx.AddComponent(c, payload.Address)
+func addCPEs(c *cyclonedx.Component, Type string) {
+	cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+	if len(cpes) > 0 {
+		for _, cpe := range cpes {
+			component.AddCPE(c, cpe)
 		}
 	}
 }

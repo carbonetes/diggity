@@ -8,9 +8,9 @@ import (
 
 	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/log"
-	diggity "github.com/carbonetes/diggity/internal/version"
+	diggity "github.com/carbonetes/diggity/cmd/diggity/build"
 	"github.com/carbonetes/diggity/pkg/cdx/dependency"
-	"github.com/carbonetes/diggity/pkg/stream"
+	stream "github.com/carbonetes/diggity/cmd/diggity/grove"
 	"github.com/golistic/urn"
 )
 

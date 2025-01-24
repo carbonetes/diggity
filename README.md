@@ -1,6 +1,6 @@
 
 <p align="center">
-<img src="material/diggity-black.png" alt="BOM Diggity" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
+<img src="assets/diggity-black.png" alt="BOM Diggity" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
 </p>
 
 <div align="center">
@@ -13,7 +13,7 @@
 
 BOM Diggity is an open-source tool developed to streamline the critical process of generating a comprehensive Software Bill of Materials (SBOM) for [Container Images](#getting-started) and [File Systems](#scanning-tarball-and-directory) across various [supported ecosystems](#supported-ecosystems). 
 
-  <img src="material/diggity.gif" alt="animated" />
+  <img src="assets/diggity_scan_sample.gif" alt="animated" width="800" />
 </div>
 
 ## Integration with Jacked
@@ -71,12 +71,6 @@ diggity --version
 
 ## Getting Started
 
-**Note**: Before you begin, make sure you have both Diggity and Docker installed on your system.
-
-Start by pulling the container image for which you want to generate an SBOM. You can use the docker pull command to retrieve the image from a container registry. Replace `your-image:tag` with the actual image and tag you want to analyze.
-```bash
-docker pull your-image:tag
-```
 **Note**: Diggity will automatically pull the image from the registry if it is not found in your local. But for large images, you need to do `docker pull` first before analyzing.
 
 Diggity can now analyze your container image to identify its software components and generate an SBOM. Run the following command to perform the analysis:
@@ -91,7 +85,7 @@ Diggity will inspect the container image's file system and metadata to identify 
 ## Scanning Tarball and Directory
 Use the following command to analyze the contents of the Tar file:
 ```bash
-diggity /path/to/your/file.tar
+diggity -t /path/to/your/file.tar
 ```
 - `/path/to/your/file.tar`: Replace this with the actual path to your Tar file.
 <br />
@@ -99,7 +93,7 @@ Diggity will inspect the contents of the Tar file and identify software componen
 
 And, to analyze the contents of the directory:
 ```bash
-diggity /path/to/your/directory
+diggity -d /path/to/your/directory
 ```
 - `/path/to/your/directory`: Replace this with the actual path to your directory.
 <br />
@@ -135,6 +129,7 @@ These are the supported package managers, build tools, and plugins for generatin
 | **Swift Package Manager (Swift)**                    | Package manager for Swift projects using `Package.resolved`, `.package.resolved` |
 | **Nix (Package Manager and Build Tool)**             | Versatile package manager and build tool using `/nix/store/*` |
 | **Jenkins Plugins (CI/CD)**                                 | Enhance Jenkins functionality with plugins for CI/CD automation and integrations with various tools and services. Supported file extensions: `*.jpi`, `*.hpi`. |
+| **CRAN (Comprehensive R Archive Network)**            | Package manager for R, a language and environment for statistical computing and graphics, using `DESCRIPTION`, `NAMESPACE` files located in `/R/` directory. |
 
 Diggity's support for these manifest files ensures accurate SBOM generation and comprehensive component analysis for a wide range of ecosystems and technologies.
 
@@ -154,6 +149,7 @@ Diggity extends its support to various programming languages, allowing it to sca
 - C#/F#/Visual Basic
 - Haskell
 - Erlang
+- R
 
 ## Available Commands and their flags with description:
 Diggity offers a range of commands and flags to customize its behavior and cater to different use cases. Below, you'll find a summary of available commands along with their respective flags and brief descriptions:
@@ -189,30 +185,6 @@ diggity <target> -o <output-format>
 
 With these output formats, Diggity provides flexibility to cater to your specific needs, whether it's for sharing, integration, compliance reporting, or further analysis of your software components.
 
-## Secret detection
-Diggity includes a powerful secret detection feature that scans for sensitive information within your software components. This functionality is crucial for identifying and mitigating security risks associated with the presence of secrets, credentials, or sensitive data in your codebase.
-- **User-Defined Patterns**: Customize secret detection by specifying regex patterns for secrets you want to identify, such as API keys, access tokens, or sensitive configuration information.
-- **Efficient Scanning of Container Images**: Diggity efficiently scans container images for secrets, ensuring that your deployment artifacts remain free from potentially harmful information.
-
-```json
-"secrets": {
-  "applied-configuration": {
-   "disabled": false,
-   "secretRegex": "API_KEY|SECRET_KEY|DOCKER_AUTH",
-   "excludesFilenames": [],
-   "maxFileSize": 10485760
-  },
-  "secrets": [
-   {
-    "contentRegexName": "SECRET_KEY",
-    "fileName": "gpg",
-    "filePath": "usr/bin/gpg",
-    "lineNumber": "2921"
-   },
-  ]
- },
-```
-
 ## Configuration
 Diggity provides a versatile configuration system that allows you to fine-tune the tool's behavior to suit your specific requirements. With the ability to customize settings, you can optimize Diggity to seamlessly integrate with your development workflow and meet your project's unique needs.
 
@@ -230,45 +202,32 @@ The Diggity configuration file is typically located at `<HOME>/.diggity.yaml`. Y
 Configuration options (example values are the default):
 
 ```yaml
-secret-config:
-  # enables/disables parsing of secrets
-  disabled: false
-  # secret content regex are searched within files that match the provided regular expression
-  secret-regex: API_KEY|SECRET_KEY|DOCKER_AUTH
-  # excludes/includes secret searching for each specified filename
-  excludes-filenames: []
-  # exclude files exceeding the specified size
-  max-file-size: 10485760
-  # explicitly define file extensions to consider for secret search. 
-  extensions: []  # default extensions are added upon config file generation.
-# specify enabled parsers ([apk debian java npm composer python gem rpm dart nuget go rust conan hackage pod hex portage alpmdb]) (default all)
-enabled-parsers: []
-# disables file listing from package metadata
-disable-file-listing: false
-# disables the timeout when pulling an image from server
-disable-pull-timeout: false
-# disable all output except SBOM result
-quiet: false
-# save the sbom result to the output file instead of writing to the standard output
-output-file: ""
-# supported output types: [json table cyclonedx-xml cyclonedx-json spdx-json spdx-tag-value spdx-yml github-json] (default [table])
-output: []
-registry: 
-  # registry uri endpoint
-  uri: ""
-  # username credential for private registry access
-  username: ""
-  # password credential for private registry access
-  password: ""
-  # access token for private registry access
-  token: ""
+ # configuration file version
+version: "1.0"
+ # exclude files exceeding the specified size
+max_file_size: 52428800
+# configuration for accessing private container registries
+registry:
+    # username credential for private registry access
+    username: ""
+    # password credential for private registry access
+    password: ""
+ # attesting SBOMs using cosign key-pair and password
 attestation:
-  # path to generated cosign.key
-  key: cosign.key
-  # path to generated cosign.pub
-  pub: cosign.pub
-  # password associated with the generated cosign key-pair
-  password: ""
+    # path to generated cosign.key
+    key: ""
+    # path to generated cosign.pub
+    pub: ""
+    # password associated with the generated cosign key-pair
+    password: ""
+ # user defined settings for secret scanning
+secret_config:
+    # contains patterns and keywords to exclude specific files or data from secret detection scans. 
+    whitelist:
+        patterns:
+        keywords: []
+    # custom rules for detecting sensitive information in files.
+    rules: []
 ```
 ## Private Registry Authentication
 Diggity enables you to pull container images from private registries securely, ensuring seamless access to the images you need for analysis. Depending on your registry provider, you can configure authentication settings to authenticate with private registries. Below, we provide guidance for common private registry providers:
@@ -278,68 +237,60 @@ When a container image runtime is not present in the local machine, Diggity can 
 An example `.diggity.yaml` looks something like this:
 ```yaml
 registry:
-  uri: "https://index.docker.io"
   username: "docker_username"
   password: "docker_password"
-  token: ""
 ```
 
 ### AWS ECR Credentials
-To pull images from AWS Elastic Container Registry (ECR), provide your account credentials in your diggity config. 
-The URI follows the `<aws_account_id>.dkr.ecr.<region>.amazonaws.com` format and the username would be  `AWS`. 
-For the password, run the following command via AWS CLI to obtain your authentication token:
+To scan images from AWS Elastic Container Registry (ECR), you need to provide your account credentials in your Diggity configuration file.
+
+First, obtain your authentication token by running the following command via AWS CLI:
 ```bash
 aws ecr get-login-password
 ```
-Output:
-```bash
-<password>
-```
-Note that the authentication token is valid for 12 hours. 
-For more information, check this [reference](https://docs.aws.amazon.com/cli/latest/reference/ecr/get-login-password.html).
+This command will output a password that is valid for 12 hours.
 
-Your `.diggity.yaml` should look something like this:
+For more information, refer to the [AWS CLI documentation](https://docs.aws.amazon.com/cli/latest/reference/ecr/get-login-password.html).
+
+Next, update your `.diggity.yaml` configuration file with the following details:
 ```yaml
 registry:
-  uri: "<aws_account_id>.dkr.ecr.<region>.amazonaws.com"
   username: "AWS"
   password: "<password>"
-  token: ""
 ```
+Replace `<password>` with the password obtained from the AWS CLI command.
+
 ### Google Container Registry Credentials
-To pull images from Google Container Registry, provide your account credentials in your diggity config. 
-The URI follows the `gcr.io, us.gcr.io, eu.gcr.io, or asia.gcr.io`, format depending on your service account, and the username would be  `oauth2accesstoken`. 
-For the password, run the following command via the Google CLI tool to obtain your authentication token:
-```
+To pull images from Google Container Registry, provide your account credentials in your Diggity configuration file. The username should be `oauth2accesstoken`. Obtain your authentication token by running the following command via the Google CLI tool:
+```bash
 gcloud auth print-access-token
 ```
-Note that the authentication token is valid for about an hour only. 
-For more information, check this [reference](https://cloud.google.com/container-registry/docs/advanced-authentication).
+Note that the authentication token is valid for about an hour only. For more information, check this [reference](https://cloud.google.com/container-registry/docs/advanced-authentication).
 
 Your `.diggity.yaml` should look something like this:
 ```yaml
 registry:
-  uri: "gcr.io"
   username: "oauth2accesstoken"
   password: "<token>"
-  token: ""
 ```
+Replace `<token>` with the token obtained from the Google CLI command.
+
 ### JFrog Container Registry Credentials
-To pull images from JFrog Container Registry, provide your account credentials in your diggity config. 
-The URI follows the `<server-name>.jfrog.io` format. 
-For the password, run the following command in your terminal `docker login -u[username] [server-name].jfrog.io`:
+To pull images from JFrog Container Registry, provide your account credentials in your Diggity configuration file. The username should be your JFrog username, and the password should be your JFrog API key or password.
 
-Note that the authentication token is valid for about an hour only. 
-For more information, check this [reference](https://www.jfrog.com/confluence/display/JFROG/Getting+Started+with+Artifactory+as+a+Docker+Registry).
+First, obtain your JFrog API key by following the instructions in the [JFrog documentation](https://www.jfrog.com/confluence/display/JFROG/User+Profile#UserProfile-APIKey).
 
-Your `.diggity.yaml` should look something like this:
+Next, update your `.diggity.yaml` configuration file with the following details:
 ```yaml
 registry:
-  uri: "diggity.jfrog.io"
-  username: "diggity@carbonetes.com"
-  password: "<token>"
-  token: ""
- ```
+  username: "your-jfrog-username"
+  password: "your-jfrog-api-key"
+```
+
+Replace `your-jfrog-username` with your actual JFrog username and `your-jfrog-api-key` with the API key you obtained.
+
+For more information, refer to the [JFrog documentation](https://www.jfrog.com/confluence/display/JFROG/Getting+Started+with+Artifactory+as+a+Docker+Registry).
+
 ## Attestation
 Diggity is integrated with [Cosign](https://docs.sigstore.dev/cosign/overview/), which allows you to sign and verify SBOM attestations on images you own. To run attestations, make sure to install Cosign on your machine. Then, generate your cosign key-pair associated with a password using the following command:
 
@@ -394,6 +345,41 @@ You can also include your provenance metadata in SBOM attestations using the fol
 
 ```
  diggity attest <image> --provenance <path/to/provenance_file>
+```
+
+## Secret detection
+Diggity includes a powerful secret detection feature that scans for sensitive information within your software components. This functionality is crucial for identifying and mitigating security risks associated with the presence of secrets, credentials, or sensitive data in your codebase.
+- **User-Defined Patterns**: Customize secret detection by specifying regex patterns for secrets you want to identify, such as API keys, access tokens, or sensitive configuration information.
+- **Efficient Scanning of File Systems**: Diggity efficiently scans container images for secrets, ensuring that your deployment artifacts remain free from potentially harmful information.
+
+```json
+    whitelist:
+        patterns:
+            - (.*?)(jpg|gif|doc|docx|zip|xls|pdf|bin|svg|socket|vsidx|v2|suo|wsuo|.dll|pdb|exe)$
+        keywords: []
+    rules:
+        - id: AWS_ACCESS_KEY_ID
+          description: Access Key is part of the security credentials used to authenticate and authorize activities with AWS (Amazon Web Services). These credentials are used to sign programmatic requests that you make to AWS, whether you're using the AWS Management Console, AWS CLI, or AWS SDKs.
+          pattern: \b(?:A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}\b
+          keywords:
+            - akia
+            - agpa
+            - aida
+            - aroa
+            - aipa
+            - anpa
+            - anva
+            - asia
+        - id: PRIVATE_KEY
+          description: A private key, also known as a secret key, is a variable in cryptography that is used with an algorithm to encrypt and decrypt data. Secret keys should only be shared with the key's generator or parties authorized to decrypt the data.
+          pattern: (?i)-----BEGIN[ A-Z0-9_-]{0,100}PRIVATE KEY( BLOCK)?-----[\s\S-]*KEY( BLOCK)?----
+          keywords:
+            - '-----BEGIN'
+        - id: JWT_TOKEN
+          description: JSON Web Token is a compact, URL-safe means of representing claims to be transferred between two parties.
+          pattern: \b(ey[a-zA-Z0-9]{17,}\.ey[a-zA-Z0-9\/\\_-]{17,}\.(?:[a-zA-Z0-9\/\\_-]{10,}={0,2})?)(?:['|\"|\n|\r|\s|\x60|;]|$)
+          keywords:
+            - ey
 ```
 
 ## Contribute to the Project

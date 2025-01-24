@@ -17,89 +17,36 @@ func scanPackageJSON(payload types.Payload) *[]cyclonedx.Component {
 		return nil
 	}
 
-	devDependencies := metadata.DevDependencies
-	if len(devDependencies) > 0 {
-		for name, version := range devDependencies {
-			n := parseYarnPackageName(name)
-			v := cleanVersion(version.(string))
-			if n == "" || v == "" {
-				continue
-			}
+	processDependencies(metadata.DevDependencies, manifest, payload, &components)
+	processDependencies(metadata.Dependencies, manifest, payload, &components)
 
-			if !validateVersion(v) {
-				continue
-			}
+	if metadata.Name != "" && metadata.Version != "" {
+		processMainComponent(metadata, manifest, payload, &components)
+	}
 
-			c := component.New(n, v, Type)
+	return &components
+}
 
-			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
-			if len(cpes) > 0 {
-				for _, cpe := range cpes {
-					component.AddCPE(c, cpe)
-				}
-			}
-
-			component.AddOrigin(c, manifest.Path)
-			component.AddType(c, Type)
-
-			if len(payload.Layer) > 0 {
-				component.AddLayer(c, payload.Layer)
-			}
-
-			components = append(components, *c)
+func processDependencies(dependencies map[string]interface{}, manifest types.ManifestFile, payload types.Payload, components *[]cyclonedx.Component) {
+	for name, version := range dependencies {
+		n := parseYarnPackageName(name)
+		v := cleanVersion(version.(string))
+		if n == "" || v == "" || !validateVersion(v) {
+			continue
 		}
+
+		c := component.New(n, v, Type)
+		addComponentDetails(c, manifest, payload)
+		*components = append(*components, *c)
 	}
+}
 
-	dependencies := metadata.Dependencies
-	if len(dependencies) > 0 {
-		for name, version := range dependencies {
-			n := parseYarnPackageName(name)
-			v := cleanVersion(version.(string))
-			if n == "" || v == "" {
-				continue
-			}
-
-			if !validateVersion(v) {
-				continue
-			}
-
-			c := component.New(n, v, Type)
-
-			cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
-			if len(cpes) > 0 {
-				for _, cpe := range cpes {
-					component.AddCPE(c, cpe)
-				}
-			}
-
-			component.AddOrigin(c, manifest.Path)
-			component.AddType(c, Type)
-
-			if len(payload.Layer) > 0 {
-				component.AddLayer(c, payload.Layer)
-			}
-			components = append(components, *c)
-		}
-	}
-
-	if metadata.Name == "" || metadata.Version == "" {
-		return &components
-	}
-
+func processMainComponent(metadata *Metadata, manifest types.ManifestFile, payload types.Payload, components *[]cyclonedx.Component) {
 	n := cleanName(metadata.Name)
 	v := cleanVersion(metadata.Version)
 
 	c := component.New(n, v, Type)
-
-	cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
-	if len(cpes) > 0 {
-		for _, cpe := range cpes {
-			component.AddCPE(c, cpe)
-		}
-	}
-
-	component.AddOrigin(c, manifest.Path)
-	component.AddType(c, Type)
+	addComponentDetails(c, manifest, payload)
 
 	switch metadata.License.(type) {
 	case string:
@@ -120,12 +67,21 @@ func scanPackageJSON(payload types.Payload) *[]cyclonedx.Component {
 		component.AddRawMetadata(c, rawMetadata)
 	}
 
+	*components = append(*components, *c)
+}
+
+func addComponentDetails(c *cyclonedx.Component, manifest types.ManifestFile, payload types.Payload) {
+	cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
+	for _, cpe := range cpes {
+		component.AddCPE(c, cpe)
+	}
+
+	component.AddOrigin(c, manifest.Path)
+	component.AddType(c, Type)
+
 	if len(payload.Layer) > 0 {
 		component.AddLayer(c, payload.Layer)
 	}
-
-	components = append(components, *c)
-	return &components
 }
 
 func scanPackageLockfile(payload types.Payload) *[]cyclonedx.Component {

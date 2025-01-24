@@ -5,6 +5,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/cpe"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
@@ -48,44 +49,58 @@ func scan(payload types.Payload) {
 	packages := readManifestFile(file.Content)
 
 	for _, pkg := range packages {
-		if !strings.Contains(pkg, "[[package]]") {
-			continue
+		processPackage(pkg, file.Path, payload)
+	}
+}
+
+func processPackage(pkg, filePath string, payload types.Payload) {
+	if !strings.Contains(pkg, "[[package]]") {
+		return
+	}
+
+	metadata := parseMetadata(pkg)
+	if metadata == nil {
+		return
+	}
+
+	if metadata["Name"] == nil {
+		return
+	}
+
+	c := component.New(metadata["Name"].(string), metadata["Version"].(string), Type)
+
+	addCPEs(c, c.Name, c.Version)
+	component.AddOrigin(c, filePath)
+	component.AddType(c, Type)
+
+	addRawMetadata(c, metadata)
+	addLayer(c, payload.Layer)
+
+	cdx.AddComponent(c, payload.Address)
+}
+
+func addCPEs(c *cyclonedx.Component, name, version string) {
+	cpes := cpe.NewCPE23(name, name, version, Type)
+	if len(cpes) > 0 {
+		for _, cpe := range cpes {
+			component.AddCPE(c, cpe)
 		}
+	}
+}
 
-		metadata := parseMetadata(pkg)
-		if metadata == nil {
-			continue
-		}
+func addRawMetadata(c *cyclonedx.Component, metadata map[string]interface{}) {
+	rawMetadata, err := helper.ToJSON(metadata)
+	if err != nil {
+		log.Debugf("Error converting metadata to JSON: %s", err)
+	}
 
-		if metadata["Name"] == nil {
-			return
-		}
+	if len(rawMetadata) > 0 {
+		component.AddRawMetadata(c, rawMetadata)
+	}
+}
 
-		c := component.New(metadata["Name"].(string), metadata["Version"].(string), Type)
-
-		cpes := cpe.NewCPE23(c.Name, c.Name, c.Version, Type)
-		if len(cpes) > 0 {
-			for _, cpe := range cpes {
-				component.AddCPE(c, cpe)
-			}
-		}
-
-		component.AddOrigin(c, file.Path)
-		component.AddType(c, Type)
-
-		rawMetadata, err := helper.ToJSON(metadata)
-		if err != nil {
-			log.Debugf("Error converting metadata to JSON: %s", err)
-		}
-
-		if len(rawMetadata) > 0 {
-			component.AddRawMetadata(c, rawMetadata)
-		}
-
-		if len(payload.Layer) > 0 {
-			component.AddLayer(c, payload.Layer)
-		}
-
-		cdx.AddComponent(c, payload.Address)
+func addLayer(c *cyclonedx.Component, layer string) {
+	if len(layer) > 0 {
+		component.AddLayer(c, layer)
 	}
 }
