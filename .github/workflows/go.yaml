@@ -25,5 +25,9 @@ jobs:
             echo "Run 'go mod tidy' and push it"
             exit 1
           fi
-      - name: go test
+      - name: Unit tests
         run: go test -v ./...
+      - name: Lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.61
