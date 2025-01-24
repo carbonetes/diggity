@@ -3,10 +3,10 @@ package licenses
 	// Source URL : https://spdx.org/licenses/licenses.json
 	// Helpers for validating SPDX licenses.
 	// Needs to be updated regularly, possibly with automation.
-	// Last Updated: 2024-09-19 11:08:50.7393612 +0800 +08 m=+1.462357101
+	// Last Updated: 2025-01-24 10:57:25.7616177 +0800 +08 m=+1.540779601
 
 	// LicenseListVersion is the current implemented version for SPDX.
-	const ListVersion = "3.25.0"
+	const ListVersion = "3.26.0"
 
 	// LicenseList contains the referece licenses from the source URL.
 	var List = map[string]string{
@@ -63,6 +63,7 @@ package licenses
 		"antlr-pd": "ANTLR-PD",
 		"antlr-pd-fallback": "ANTLR-PD-fallback",
 		"any-osi": "any-OSI",
+		"any-osi-perl-modules": "any-OSI-perl-modules",
 		"apache-1": "Apache-1.0",
 		"apache-1.0": "Apache-1.0",
 		"apache-1.0.0": "Apache-1.0",
@@ -120,6 +121,7 @@ package licenses
 		"blueoak-1.0": "BlueOak-1.0.0",
 		"blueoak-1.0.0": "BlueOak-1.0.0",
 		"boehm-gc": "Boehm-GC",
+		"boehm-gc-without-fee": "Boehm-GC-without-fee",
 		"borceux": "Borceux",
 		"brian-gladman-2-clause": "Brian-Gladman-2-Clause",
 		"brian-gladman-3-clause": "Brian-Gladman-3-Clause",
@@ -363,6 +365,8 @@ package licenses
 		"cc-by-sa-4.0": "CC-BY-SA-4.0",
 		"cc-by-sa-4.0.0": "CC-BY-SA-4.0",
 		"cc-pddc": "CC-PDDC",
+		"cc-pdm-1.0": "CC-PDM-1.0",
+		"cc-sa-1.0": "CC-SA-1.0",
 		"cc0-1": "CC0-1.0",
 		"cc0-1.0": "CC0-1.0",
 		"cc0-1.0.0": "CC0-1.0",
@@ -461,6 +465,7 @@ package licenses
 		"dl-de-zero-2.0": "DL-DE-ZERO-2.0",
 		"doc": "DOC",
 		"docbook-schema": "DocBook-Schema",
+		"docbook-stylesheet": "DocBook-Stylesheet",
 		"docbook-xml": "DocBook-XML",
 		"dotseqn": "Dotseqn",
 		"drl-1": "DRL-1.0",
@@ -531,6 +536,7 @@ package licenses
 		"fwlw": "fwlw",
 		"gcr-docs": "GCR-docs",
 		"gd": "GD",
+		"generic-xts": "generic-xts",
 		"gfdl-1": "GFDL-1.1",
 		"gfdl-1-invariants-only": "GFDL-1.1-invariants-only",
 		"gfdl-1-invariants-or-later": "GFDL-1.1-invariants-or-later",
@@ -692,6 +698,7 @@ package licenses
 		"imlib2": "Imlib2",
 		"info-zip": "Info-ZIP",
 		"inner-net-2.0": "Inner-Net-2.0",
+		"innosetup": "InnoSetup",
 		"intel": "Intel",
 		"intel-acpi": "Intel-ACPI",
 		"interbase-1": "Interbase-1.0",
@@ -814,10 +821,12 @@ package licenses
 		"mcphee-slideshow": "McPhee-slideshow",
 		"metamail": "metamail",
 		"minpack": "Minpack",
+		"mips": "MIPS",
 		"miros": "MirOS",
 		"mit": "MIT",
 		"mit-0": "MIT-0",
 		"mit-advertising": "MIT-advertising",
+		"mit-click": "MIT-Click",
 		"mit-cmu": "MIT-CMU",
 		"mit-enna": "MIT-enna",
 		"mit-feh": "MIT-feh",
@@ -1082,6 +1091,7 @@ package licenses
 		"sendmail-8": "Sendmail-8.23",
 		"sendmail-8.23": "Sendmail-8.23",
 		"sendmail-8.23.0": "Sendmail-8.23",
+		"sendmail-open-source-1.1": "Sendmail-Open-Source-1.1",
 		"sgi-b-1": "SGI-B-1.0",
 		"sgi-b-1.0": "SGI-B-1.0",
 		"sgi-b-1.0.0": "SGI-B-1.0",
@@ -1105,6 +1115,7 @@ package licenses
 		"sissl-1.2.0": "SISSL-1.2",
 		"sl": "SL",
 		"sleepycat": "Sleepycat",
+		"smail-gpl": "SMAIL-GPL",
 		"smlnj": "SMLNJ",
 		"smppl": "SMPPL",
 		"snia": "SNIA",
@@ -1147,6 +1158,7 @@ package licenses
 		"tcp-wrappers": "TCP-wrappers",
 		"termreadkey": "TermReadKey",
 		"tgppl-1.0": "TGPPL-1.0",
+		"thirdeye": "ThirdEye",
 		"threeparttable": "threeparttable",
 		"tmate": "TMate",
 		"torque-1": "TORQUE-1.1",
@@ -1155,6 +1167,7 @@ package licenses
 		"tosl": "TOSL",
 		"tpdl": "TPDL",
 		"tpl-1.0": "TPL-1.0",
+		"trustedqsl": "TrustedQSL",
 		"ttwl": "TTWL",
 		"ttyp0": "TTYP0",
 		"tu-berlin-1": "TU-Berlin-1.0",
@@ -1203,6 +1216,7 @@ package licenses
 		"widget-workshop": "Widget-Workshop",
 		"wsuipa": "Wsuipa",
 		"wtfpl": "WTFPL",
+		"wwl": "wwl",
 		"wxwindows": "wxWindows",
 		"x11": "X11",
 		"x11-distribute-modifications-variant": "X11-distribute-modifications-variant",
