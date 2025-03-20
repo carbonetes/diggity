@@ -18,6 +18,7 @@ require (
 	github.com/knqyf263/go-rpmdb v0.1.1
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/package-url/packageurl-go v0.1.3
+	github.com/pelletier/go-toml v1.9.4
 	github.com/saferwall/pe v1.5.6
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.1
