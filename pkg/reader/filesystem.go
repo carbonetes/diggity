@@ -50,10 +50,16 @@ func processPath(path string, addr *urn.URN) error {
 		return processArchiveFile(path, addr)
 	}
 
-	category, matched, readFlag := scanner.CheckRelatedFiles(path)
-	if matched {
-		return processMatchedFile(path, category, readFlag, addr)
+	for _, checker := range scanner.FileCheckers {
+		category, matched, readFlag := checker(path)
+		if matched {
+			err := processMatchedFile(path, category, readFlag, addr)
+			if err != nil {
+				log.Print(err)
+			}
+		}
 	}
+
 	return nil
 }
 

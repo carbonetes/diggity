@@ -47,11 +47,13 @@ func processArchive(reader io.ReaderAt, path string, size int64, addr *urn.URN) 
 			continue
 		}
 
-		category, matched, readFlag := scanner.CheckRelatedFiles(f.Name)
-		if matched {
-			err = handleArchiveFile(f.Name, path, category, f, readFlag, addr)
-			if err != nil {
-				continue
+		for _, checker := range scanner.FileCheckers {
+			category, matched, readFlag := checker(f.Name)
+			if matched {
+				err = handleArchiveFile(f.Name, path, category, f, readFlag, addr)
+				if err != nil {
+					continue
+				}
 			}
 		}
 
