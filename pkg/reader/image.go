@@ -165,19 +165,21 @@ func processArchiveFileFromLayer(header *tar.Header, reader io.Reader, addr *urn
 // processTarHeader processes a tar header and its contents, checking if the file size is within the limit and if it is a regular file.
 // If the file is a related file, it processes the file and returns an error if encountered.
 func processTarHeader(layer string, header *tar.Header, reader io.Reader, addr *urn.URN) error {
-	category, matched, readFlag := scanner.CheckRelatedFiles(header.Name)
-	if matched {
-		if !readFlag {
-			stream.Emit(category, types.Payload{
-				Address: addr,
-				Layer:   layer,
-				Body:    header.Name,
-			})
-			return nil
-		}
-		err := processFile(header.Name, layer, reader, category, addr)
-		if err != nil {
-			return err
+	for _, checker := range scanner.FileCheckers {
+		category, matched, readFlag := checker(header.Name)
+		if matched {
+			if !readFlag {
+				stream.Emit(category, types.Payload{
+					Address: addr,
+					Layer:   layer,
+					Body:    header.Name,
+				})
+				return nil
+			}
+			err := processFile(header.Name, layer, reader, category, addr)
+			if err != nil {
+				return err
+			}
 		}
 	}
 

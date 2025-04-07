@@ -18,6 +18,7 @@ import (
 	"github.com/carbonetes/diggity/pkg/scanner/language/pypi"
 	"github.com/carbonetes/diggity/pkg/scanner/language/rubygem"
 	"github.com/carbonetes/diggity/pkg/scanner/language/swift"
+	"github.com/carbonetes/diggity/pkg/scanner/language/terraform"
 	"github.com/carbonetes/diggity/pkg/scanner/linux"
 	"github.com/carbonetes/diggity/pkg/scanner/os/apk"
 	"github.com/carbonetes/diggity/pkg/scanner/os/dpkg"
@@ -52,6 +53,7 @@ var All = []string{
 	rubygem.Type,
 	secret.Type,
 	swift.Type,
+	terraform.Type,
 }
 
 var FileCheckers = []FileChecker{
@@ -78,6 +80,7 @@ var FileCheckers = []FileChecker{
 	rubygem.CheckRelatedFile,
 	secret.CheckRelatedFile,
 	swift.CheckRelatedFile,
+	terraform.CheckRelatedFile,
 }
 
 func init() {
@@ -104,6 +107,7 @@ func init() {
 	stream.Attach(rubygem.Type, rubygem.Scan)
 	stream.Attach(secret.Type, secret.Scan)
 	stream.Attach(swift.Type, swift.Scan)
+	stream.Attach(terraform.Type, terraform.Scan)
 }
 
 func CheckRelatedFiles(file string) (string, bool, bool) {
