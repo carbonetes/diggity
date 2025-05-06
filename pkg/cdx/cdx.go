@@ -7,10 +7,10 @@ import (
 	"sync"
 
 	"github.com/CycloneDX/cyclonedx-go"
-	"github.com/carbonetes/diggity/internal/log"
 	diggity "github.com/carbonetes/diggity/cmd/diggity/build"
-	"github.com/carbonetes/diggity/pkg/cdx/dependency"
 	stream "github.com/carbonetes/diggity/cmd/diggity/grove"
+	"github.com/carbonetes/diggity/internal/log"
+	"github.com/carbonetes/diggity/pkg/cdx/dependency"
 	"github.com/golistic/urn"
 )
 
@@ -41,6 +41,10 @@ func New(addr *urn.URN) {
 		Components:   &[]cyclonedx.Component{},
 		Dependencies: &[]cyclonedx.Dependency{},
 	})
+}
+
+func Clear(addr *urn.URN) {
+	stream.Clear(addr.String())
 }
 
 func AddComponent(c *cyclonedx.Component, addr *urn.URN) {
