@@ -19,7 +19,7 @@ func Start(parameters types.Parameters) {
 
 	if parameters.CI {
 		// Start Personal Access Token Public API
-		// ci.PersonalAccessToken(params.Token, params.Plugin)
+		ci.PersonalAccessToken(parameters.Token, parameters.Plugin)
 		// End Personal Access Token Public API
 	}
 	start := time.Now()
@@ -79,7 +79,7 @@ func Start(parameters types.Parameters) {
 	if parameters.CI {
 		bom := cdx.Finalize(addr)
 		// Start Analysis Saving Public API
-		// ci.SavePluginRepository(bom, params.Diggity.Input, params.Plugin, start)
+		ci.SavePluginRepository(bom, parameters.Input, parameters.Plugin, start)
 		// End Analysis Saving Public API
 
 		// Run CI
