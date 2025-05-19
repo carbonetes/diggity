@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"os"
 	"time"
 
 	"github.com/carbonetes/diggity/internal/log"
@@ -8,12 +9,19 @@ import (
 	"github.com/carbonetes/diggity/internal/presenter/status"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/dependency"
+	"github.com/carbonetes/diggity/pkg/ci"
 	"github.com/carbonetes/diggity/pkg/config"
 	"github.com/carbonetes/diggity/pkg/reader"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
 func Start(parameters types.Parameters) {
+
+	if parameters.CI {
+		// Start Personal Access Token Public API
+		// ci.PersonalAccessToken(params.Token, params.Plugin)
+		// End Personal Access Token Public API
+	}
 	start := time.Now()
 	if !parameters.Quiet {
 		status.Run()
@@ -66,6 +74,17 @@ func Start(parameters types.Parameters) {
 		}
 	default:
 		log.Fatal("Unknown scan type")
+	}
+
+	if parameters.CI {
+		bom := cdx.Finalize(addr)
+		// Start Analysis Saving Public API
+		// ci.SavePluginRepository(bom, params.Diggity.Input, params.Plugin, start)
+		// End Analysis Saving Public API
+
+		// Run CI
+		ci.Run(bom)
+		os.Exit(0)
 	}
 
 	presenter.DisplayResults(parameters, time.Since(start).Seconds(), addr)

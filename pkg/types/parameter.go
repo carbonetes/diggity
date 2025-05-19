@@ -34,6 +34,10 @@ type Parameters struct {
 	Quiet        bool         `json:"quiet"`
 	Scanners     []string     `json:"scanners"`
 	Provenance   string       `json:"provenance"`
+	// CI Mode
+	CI     bool
+	Token  string
+	Plugin string
 }
 
 func (o OutputFormat) String() string {

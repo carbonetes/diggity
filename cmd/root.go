@@ -85,6 +85,26 @@ var (
 				log.Debug(err.Error())
 			}
 
+			// CI Mode
+			params.CI, _ = cmd.Flags().GetBool("ci")
+			params.Token, _ = cmd.Flags().GetString("token")
+			params.Plugin, _ = cmd.Flags().GetString("plugin")
+
+			// If CI mode is enabled, suppress all output except for errors
+			if params.CI {
+				params.Quiet = true
+				if params.Token == "" {
+					log.Fatal("Token is required. Please generate a token at https://app.carbonetes.com/personal-access-token and set it using the --token flag.")
+					os.Exit(1)
+				}
+			}
+			if params.Quiet {
+				params.OutputFormat = types.OutputFormat("json")
+			}
+			if !(len(params.Plugin) > 0) {
+				params.Plugin = "diggity"
+			}
+
 			cli.Start(params)
 		},
 	}
@@ -119,4 +139,10 @@ func init() {
 
 	// Version flag to print the version of diggity
 	root.Flags().BoolP("version", "v", false, "Print the version of diggity")
+
+	// CI flag to enable CI mode
+	// CI mode is a mode that is used to run jacked in a CI/CD pipeline
+	root.Flags().BoolP("ci", "", false, "Enable CI mode [experimental] (e.g. --ci)")
+	root.Flags().StringP("token", "", "", "CI mode requires a personal access token. Sign up at https://app.carbonetes.com/ and generate your token to enable integration.")
+	root.Flags().StringP("plugin", "", "", "CI mode set plugin type. (default jacked)")
 }
