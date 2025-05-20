@@ -12,6 +12,8 @@ import (
 	"github.com/carbonetes/diggity/pkg/ci"
 	"github.com/carbonetes/diggity/pkg/config"
 	"github.com/carbonetes/diggity/pkg/reader"
+	"github.com/carbonetes/diggity/pkg/scanner/secret"
+	"github.com/carbonetes/diggity/pkg/stream"
 	"github.com/carbonetes/diggity/pkg/types"
 )
 
@@ -19,7 +21,7 @@ func Start(parameters types.Parameters) {
 
 	if parameters.CI {
 		// Start Personal Access Token Public API
-		ci.PersonalAccessToken(parameters.Token, parameters.Plugin)
+		// ci.PersonalAccessToken(parameters.Token, parameters.Plugin)
 		// End Personal Access Token Public API
 	}
 	start := time.Now()
@@ -77,10 +79,26 @@ func Start(parameters types.Parameters) {
 	}
 
 	if parameters.CI {
+		// CDX
 		bom := cdx.Finalize(addr)
+
+		// Secrets
+		cdx.New(addr)
+		secretAddr := *addr
+		secretAddr.NID = "secret"
+		secret.New(&secretAddr)
+
+		// --- Retrieve secrets ---
+		s, _ := stream.Get(secretAddr.String())
+		secrets := s.([]types.Secret)
+		// -----------------------
+
 		// Start Analysis Saving Public API
-		ci.SavePluginRepository(bom, parameters.Input, parameters.Plugin, start)
+		ci.SavePluginRepository(bom, parameters.Input, parameters.Plugin, start, secrets)
 		// End Analysis Saving Public API
+
+		stream.Set(addr.String(), nil)
+		stream.Set(secretAddr.String(), []types.Secret{})
 
 		// Run CI
 		ci.Run(bom)
