@@ -21,7 +21,7 @@ func Start(parameters types.Parameters) {
 
 	if parameters.CI {
 		// Start Personal Access Token Public API
-		// ci.PersonalAccessToken(parameters.Token, parameters.Plugin)
+		ci.PersonalAccessToken(parameters.Token, parameters.Plugin)
 		// End Personal Access Token Public API
 	}
 	start := time.Now()
@@ -81,7 +81,6 @@ func Start(parameters types.Parameters) {
 	if parameters.CI {
 		// CDX
 		bom := cdx.Finalize(addr)
-
 		// Secrets
 		cdx.New(addr)
 		secretAddr := *addr
@@ -97,11 +96,11 @@ func Start(parameters types.Parameters) {
 		ci.SavePluginRepository(bom, parameters.Input, parameters.Plugin, start, secrets)
 		// End Analysis Saving Public API
 
+		// Run CI
+		ci.Run(bom, secrets)
+
 		stream.Set(addr.String(), nil)
 		stream.Set(secretAddr.String(), []types.Secret{})
-
-		// Run CI
-		ci.Run(bom)
 		os.Exit(0)
 	}
 

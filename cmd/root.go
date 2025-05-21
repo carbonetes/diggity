@@ -102,7 +102,7 @@ var (
 				params.OutputFormat = types.OutputFormat("json")
 			}
 			if !(len(params.Plugin) > 0) {
-				params.Plugin = "diggity"
+				params.Plugin = "oss"
 			}
 
 			cli.Start(params)

@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	tokenURL = "http://localhost:3001/personal-access-token/is-expired"
-	saveURL  = "http://localhost:3001/integrations/bom/plugin/save"
+	tokenURL = "https://tent-api.carbonetes.com/personal-access-token/is-expired"
+	saveURL  = "https://tent-api.carbonetes.com/integrations/bom/plugin/save"
 )
 
 var tokenId = "0"
@@ -61,7 +61,6 @@ func SavePluginRepository(bom *cyclonedx.BOM, repoName string, pluginName string
 	}
 	secretsJSONString := string(secretsBytes)
 	fmt.Println("Secrets JSON String:", secretsJSONString)
-	os.Exit(1)
 
 	var bomJSONString string
 	if bom == nil || bom.Components == nil {

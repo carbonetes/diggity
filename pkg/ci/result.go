@@ -5,8 +5,10 @@ import (
 
 	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/alexeyco/simpletable"
+	"github.com/carbonetes/diggity/pkg/types"
 )
 
+// Result Table
 func ResultTable(cdx *cyclonedx.BOM) string {
 
 	var table = simpletable.New()
@@ -39,6 +41,41 @@ func resultRows(cdx *cyclonedx.BOM, table *simpletable.Table) {
 			{Align: simpletable.AlignLeft, Text: c.Name},
 			{Text: fmt.Sprintf("%v", componentType)},
 			{Text: fmt.Sprintf("%v", c.Version)},
+		}
+		table.Body.Cells = append(table.Body.Cells, r)
+	}
+}
+
+// Secret Table
+func SecretTable(secrets []types.Secret) string {
+	var table = simpletable.New()
+	secretHeader(table)
+	secretRows(&secrets, table)
+	fmt.Println(table.String())
+
+	return table.String()
+}
+
+func secretHeader(table *simpletable.Table) {
+	table.Header = &simpletable.Header{
+		Cells: []*simpletable.Cell{
+			{Align: simpletable.AlignCenter, Text: "Secret"},
+			{Align: simpletable.AlignCenter, Text: "File"},
+			{Align: simpletable.AlignCenter, Text: "Line"},
+			{Align: simpletable.AlignCenter, Text: "Content"},
+			{Align: simpletable.AlignCenter, Text: "Type"},
+		},
+	}
+}
+
+func secretRows(secrets *[]types.Secret, table *simpletable.Table) {
+	for _, s := range *secrets {
+		r := []*simpletable.Cell{
+			{Align: simpletable.AlignLeft, Text: s.Match},
+			{Text: fmt.Sprintf("%v", s.File)},
+			{Text: fmt.Sprintf("%v", s.Line)},
+			{Text: fmt.Sprintf("%v", s.Content)},
+			{Text: fmt.Sprintf("%v", s.Description)},
 		}
 		table.Body.Cells = append(table.Body.Cells, r)
 	}
