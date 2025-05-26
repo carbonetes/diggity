@@ -60,7 +60,6 @@ func SavePluginRepository(bom *cyclonedx.BOM, repoName string, pluginName string
 		os.Exit(1)
 	}
 	secretsJSONString := string(secretsBytes)
-	fmt.Println("Secrets JSON String:", secretsJSONString)
 
 	var bomJSONString string
 	if bom == nil || bom.Components == nil {
@@ -84,6 +83,7 @@ func SavePluginRepository(bom *cyclonedx.BOM, repoName string, pluginName string
 		"pluginName":            pluginName,
 		"bom":                   bomJSONString,
 		"duration":              fmt.Sprintf("%.2f", time.Since(start).Seconds()),
+		"secrets":               secretsJSONString,
 	}
 	// Perform HTTP POST request
 	resp, body := apiRequest(payload, saveURL)

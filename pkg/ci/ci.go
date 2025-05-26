@@ -25,6 +25,7 @@ func Run(cdx *cyclonedx.BOM, secrets interface{}) {
 	log.Printf("\nTotal Secrets Found: %v", totalSecrets)
 	if totalSecrets > 0 {
 		SecretTable(secretList)
+		log.Print("\nAssessment Failed: Exposed Secrets!")
 	}
 
 }
