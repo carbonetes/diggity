@@ -18,6 +18,7 @@ const (
 )
 
 var tokenId = "0"
+var permitted = false
 
 func PersonalAccessToken(token string, pluginType string) {
 	// Payload
@@ -34,6 +35,22 @@ func PersonalAccessToken(token string, pluginType string) {
 	var result TokenCheckResponse
 	if err := json.Unmarshal(body, &result); err != nil {
 		fmt.Println("Failed to parse response:", err)
+		os.Exit(1)
+	}
+
+	for _, p := range result.Permissions {
+		if p.Label == "Pipelines" {
+			for _, lp := range p.Permissions {
+				if lp == "write" {
+					permitted = true
+				}
+			}
+		}
+	}
+
+	if !permitted {
+		fmt.Println("Status Code:", 401)
+		fmt.Println("Error: You do not have pipeline write permission.")
 		os.Exit(1)
 	}
 
