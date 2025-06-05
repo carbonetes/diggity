@@ -10,6 +10,12 @@ type TokenCheckResponse struct {
 	// Code string `json:"code"`
 }
 
+type ApplicationErrorResponse struct {
+	Code    int      `json:"code"`
+	Message string   `json:"message"`
+	Details []string `json:"details"`
+}
+
 type PluginRepo struct {
 	PersonalAccessTokenID string `gorm:"column:personal_access_token_id;" json:",omitempty"`
 	RepoName              string `gorm:"column:repo_name;" json:",omitempty"`

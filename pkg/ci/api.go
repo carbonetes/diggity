@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/CycloneDX/cyclonedx-go"
+	"github.com/carbonetes/diggity/internal/log"
 )
 
 const (
@@ -31,10 +32,19 @@ func PersonalAccessToken(token string, pluginType string) {
 	resp, body := apiRequest(payload, tokenURL)
 	// ---------------
 
+	if resp.StatusCode != 200 {
+		var appError ApplicationErrorResponse
+		if err := json.Unmarshal(body, &appError); err != nil {
+			log.Fatal("Failed to parse response:", err)
+			os.Exit(1)
+		}
+		log.Print("Error: ", appError.Message)
+		os.Exit(1)
+	}
 	// Unmarshal the body into the struct
 	var result TokenCheckResponse
 	if err := json.Unmarshal(body, &result); err != nil {
-		fmt.Println("Failed to parse response:", err)
+		log.Fatal("Failed to parse response:", err)
 		os.Exit(1)
 	}
 
@@ -49,20 +59,14 @@ func PersonalAccessToken(token string, pluginType string) {
 	}
 
 	if !permitted {
-		fmt.Println("Status Code:", 401)
-		fmt.Println("Error: You do not have pipeline write permission.")
+		log.Fatal("Error: You do not have pipeline write permission.")
 		os.Exit(1)
 	}
 
-	if resp.StatusCode != 200 {
-		fmt.Println("Status Code:", resp.StatusCode)
-		fmt.Println("Response Body:", string(body))
-		os.Exit(1)
-	}
 	tokenId = result.PersonalAccessTokenId
 	if result.PersonalAccessTokenId == "" {
-		fmt.Println("Status Code:", resp.StatusCode)
-		fmt.Println("Error: Unable to fetch token id.")
+		log.Fatal("Status Code:", resp.StatusCode)
+		log.Fatal("Error: Unable to fetch token id.")
 		os.Exit(1)
 	}
 
@@ -73,7 +77,7 @@ func SavePluginRepository(bom *cyclonedx.BOM, repoName string, pluginName string
 	// Secrets
 	secretsBytes, err := json.Marshal(secrets)
 	if err != nil {
-		fmt.Println("Failed to marshal secrets:", err)
+		log.Fatal("Failed to marshal secrets:", err)
 		os.Exit(1)
 	}
 	secretsJSONString := string(secretsBytes)
@@ -87,7 +91,7 @@ func SavePluginRepository(bom *cyclonedx.BOM, repoName string, pluginName string
 		// BOM
 		bomBytes, err := json.Marshal(bom)
 		if err != nil {
-			fmt.Println("Failed to marshal components:", err)
+			log.Fatal("Failed to marshal components:", err)
 			os.Exit(1)
 		}
 		bomJSONString = string(bomBytes)
@@ -109,13 +113,13 @@ func SavePluginRepository(bom *cyclonedx.BOM, repoName string, pluginName string
 	var result PluginRepo
 
 	if err := json.Unmarshal(body, &result); err != nil {
-		fmt.Println("Failed to parse response:", err)
+		log.Fatal("Failed to parse response:", err)
 		os.Exit(1)
 	}
 
 	if resp.StatusCode != 200 {
-		fmt.Println("Status Code:", resp.StatusCode)
-		fmt.Println("Response Body:", string(body))
+		log.Fatal("Status Code:", resp.StatusCode)
+		log.Fatal("Response Body:", string(body))
 		os.Exit(1)
 	}
 
