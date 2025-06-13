@@ -166,6 +166,7 @@ func processDependencies(metadata *Metadata, properties map[string]string, path 
 		c.BOMRef = c.PackageURL
 
 		component.AddOrigin(c, path)
+		component.AddType(c, Type)
 
 		if len(dependency.GroupID) > 0 {
 			c.Group = dependency.GroupID
