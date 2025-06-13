@@ -46,6 +46,26 @@ func scanCmd(c *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
+	// CI Mode
+	params.CI, _ = c.Flags().GetBool("ci")
+	params.Token, _ = c.Flags().GetString("token")
+	params.Plugin, _ = c.Flags().GetString("plugin")
+
+	// If CI mode is enabled, suppress all output except for errors
+	if params.CI {
+		params.Quiet = true
+		if params.Token == "" {
+			log.Fatal("Token is required. Please generate a token at https://app.carbonetes.com/personal-access-token and set it using the --token flag.")
+			os.Exit(1)
+		}
+	}
+	if params.Quiet {
+		params.OutputFormat = types.OutputFormat("json")
+	}
+	if !(len(params.Plugin) > 0) {
+		params.Plugin = "oss"
+	}
+
 	quiet, err := c.Flags().GetBool("quiet")
 	if err != nil {
 		log.Debug(err.Error())

@@ -28,4 +28,10 @@ func init() {
 
 	// Version flag to print the version of diggity
 	scan.Flags().BoolP("version", "v", false, "Print the version of diggity")
+
+	// CI flag to enable CI mode
+	// CI mode is a mode that is used to run jacked in a CI/CD pipeline
+	scan.Flags().BoolP("ci", "", false, "Enable CI mode [experimental] (e.g. --ci)")
+	scan.Flags().StringP("token", "", "", "CI mode requires a personal access token. Sign up at https://tapp.carbonetes.com/ and generate your token to enable integration.")
+	scan.Flags().StringP("plugin", "", "", "CI mode set plugin type. (default oss)")
 }
