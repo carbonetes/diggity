@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/carbonetes/ci/api"
 	"github.com/carbonetes/diggity/cmd/diggity/build"
 	"github.com/carbonetes/diggity/cmd/diggity/config"
 	"github.com/carbonetes/diggity/cmd/diggity/ui"
@@ -46,6 +47,10 @@ func scanCmd(c *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
+	if params.Quiet {
+		params.OutputFormat = types.OutputFormat("json")
+	}
+
 	quiet, err := c.Flags().GetBool("quiet")
 	if err != nil {
 		log.Debug(err.Error())
@@ -67,6 +72,28 @@ func scanCmd(c *cobra.Command, args []string) {
 
 	if !types.IsValidOutputFormat(outputFormat) {
 		log.Debug("Invalid output format parameter")
+	}
+
+	// CI Mode
+	params.CI, _ = c.Flags().GetBool("ci")
+	params.Token, _ = c.Flags().GetString("token")
+	params.Plugin, _ = c.Flags().GetString("plugin")
+
+	if !(len(params.Plugin) > 0) {
+		params.Plugin = "oss"
+	}
+
+	// If CI mode is enabled, suppress all output except for errors
+	if params.CI {
+		params.Quiet = true
+		quiet = true
+		if params.Token == "" {
+			log.Fatal("Token is required. Please generate a token at https://app.carbonetes.com/personal-access-token and set it using the --token flag.")
+			os.Exit(1)
+		} else {
+			// Carbonetes CI API
+			api.PersonalAccessToken(params.Token, params.Plugin, 1)
+		}
 	}
 
 	params.Quiet = quiet
