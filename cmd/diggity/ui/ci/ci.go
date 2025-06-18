@@ -2,8 +2,10 @@ package ci
 
 import (
 	"os"
+	"time"
 
 	"github.com/CycloneDX/cyclonedx-go"
+	"github.com/carbonetes/ci/api"
 	stream "github.com/carbonetes/diggity/cmd/diggity/grove"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
@@ -12,7 +14,10 @@ import (
 	"github.com/golistic/urn"
 )
 
-func Run(result *cyclonedx.BOM, addr *urn.URN) {
+func Run(result *cyclonedx.BOM, addr *urn.URN, params types.Parameters, duration float64) {
+	// Carbonetes CI API
+	start := time.Now().Add(-time.Duration(duration * float64(time.Second)))
+	api.SavePluginRepository(result, params.Input, params.Plugin, start, 1, 0)
 	// Secrets
 	evaluateSecrets(addr)
 	// Components

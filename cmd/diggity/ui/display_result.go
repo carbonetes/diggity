@@ -15,7 +15,7 @@ func DisplayResult(params types.Parameters, duration float64, addr *urn.URN) {
 
 	// CI Mode Display Result
 	if params.CI {
-		ci.Run(result, addr)
+		ci.Run(result, addr, params, duration)
 	}
 	if !params.Quiet {
 		Done()
