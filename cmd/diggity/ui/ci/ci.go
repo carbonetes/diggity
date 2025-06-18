@@ -8,8 +8,6 @@ import (
 	"github.com/carbonetes/ci/api"
 	stream "github.com/carbonetes/diggity/cmd/diggity/grove"
 	"github.com/carbonetes/diggity/internal/log"
-	"github.com/carbonetes/diggity/pkg/cdx"
-	"github.com/carbonetes/diggity/pkg/scanner/secret"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/golistic/urn"
 )
@@ -26,13 +24,11 @@ func Run(result *cyclonedx.BOM, addr *urn.URN, params types.Parameters, duration
 }
 
 func evaluateSecrets(addr *urn.URN) {
-	cdx.New(addr)
 	secretAddr := *addr
 	secretAddr.NID = "secret"
-	secret.New(&secretAddr)
 	s, _ := stream.Get(secretAddr.String())
-	secrets := s.([]types.Secret)
-	if len(secrets) == 0 {
+	secrets, ok := s.([]types.Secret)
+	if !ok || len(secrets) == 0 {
 		log.Printf("Assessment Passed: No Secrets Found.")
 	} else {
 		log.Printf("Total Secrets Found: %v", len(secrets))
