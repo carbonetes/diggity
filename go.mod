@@ -5,6 +5,7 @@ go 1.23.3
 require (
 	github.com/BurntSushi/toml v1.2.1
 	github.com/CycloneDX/cyclonedx-go v0.9.2
+	github.com/alexeyco/simpletable v1.0.0
 	github.com/aquasecurity/go-gem-version v0.0.0-20201115065557-8eed6fe000ce
 	github.com/charmbracelet/bubbles v0.20.0
 	github.com/charmbracelet/bubbletea v1.2.4

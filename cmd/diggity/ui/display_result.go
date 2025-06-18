@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"github.com/carbonetes/diggity/cmd/diggity/ui/ci"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
@@ -11,6 +12,11 @@ import (
 func DisplayResult(params types.Parameters, duration float64, addr *urn.URN) {
 	result := cdx.Finalize(addr)
 	format, filename := params.OutputFormat, params.SaveToFile
+
+	// CI Mode Display Result
+	if params.CI {
+		ci.Run(result, addr)
+	}
 	if !params.Quiet {
 		Done()
 	}
