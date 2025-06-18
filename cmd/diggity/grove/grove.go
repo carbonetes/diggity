@@ -33,3 +33,7 @@ func Set(key string, value interface{}) {
 func Get(key string) (interface{}, bool) {
 	return store.Get(key)
 }
+
+func Clear(key string) {
+	store.Set(key, nil)
+}
