@@ -31,7 +31,9 @@ func rows(cdx *cyclonedx.BOM, table *simpletable.Table) {
 		var componentType string
 		for _, p := range *c.Properties {
 			if p.Name == "diggity:package:type" {
-				componentType = p.Value
+				if p.Value != "" {
+					componentType = p.Value
+				}
 			}
 		}
 		r := []*simpletable.Cell{
