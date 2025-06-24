@@ -14,20 +14,20 @@ import (
 
 func Run(result *cyclonedx.BOM, addr *urn.URN, params types.Parameters, duration float64) {
 	// Carbonetes CI API
+	secretAddr := *addr
+	secretAddr.NID = "secret"
+	s, _ := stream.Get(secretAddr.String())
+	secrets, ok := s.([]types.Secret)
 	start := time.Now().Add(-time.Duration(duration * float64(time.Second)))
-	api.SavePluginRepository(result, params.Input, params.Plugin, start, 1, 0)
+	api.SavePluginRepository(result, params.Input, params.Plugin, start, 1, 0, secrets)
 	// Secrets
-	evaluateSecrets(addr)
+	evaluateSecrets(secrets, ok)
 	// Components
 	showComponentsResult(result)
 	os.Exit(0)
 }
 
-func evaluateSecrets(addr *urn.URN) {
-	secretAddr := *addr
-	secretAddr.NID = "secret"
-	s, _ := stream.Get(secretAddr.String())
-	secrets, ok := s.([]types.Secret)
+func evaluateSecrets(secrets []types.Secret, ok bool) {
 	if !ok || len(secrets) == 0 {
 		log.Printf("Assessment Passed: No Secrets Found.")
 	} else {
