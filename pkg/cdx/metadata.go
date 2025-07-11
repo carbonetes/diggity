@@ -1,9 +1,7 @@
 package cdx
 
 import (
-	"fmt"
 	"strings"
-	"time"
 
 	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/helper"
@@ -13,31 +11,7 @@ import (
 	"github.com/package-url/packageurl-go"
 )
 
-func setBasicMetadata() *cyclonedx.Metadata {
-	return &cyclonedx.Metadata{
-		Timestamp: time.Now().Format(time.RFC3339),
-		Tools: &cyclonedx.ToolsChoice{
-			Components: &[]cyclonedx.Component{
-				{
-					BOMRef:  fmt.Sprintf("pkg:%s/%s@%s", vendor, name, diggityVersion),
-					Group:   vendor,
-					Type:    cyclonedx.ComponentTypeApplication,
-					Author:  author,
-					Name:    name,
-					Version: diggityVersion,
-				},
-			},
-		},
-		Authors: &[]cyclonedx.OrganizationalContact{
-			{
-				Name:  author,
-				Email: email,
-			},
-		},
-		Component: &cyclonedx.Component{},
-	}
-}
-
+// SetImageMetadata creates metadata for container images
 func SetImageMetadata(image v1.Image, ref reader.Reference, imageTag string) *cyclonedx.Component {
 	config, err := image.ConfigFile()
 	if err != nil {

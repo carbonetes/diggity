@@ -7,13 +7,11 @@ import (
 
 	"github.com/carbonetes/ci/api"
 	"github.com/carbonetes/diggity/cmd/diggity/build"
-	"github.com/carbonetes/diggity/cmd/diggity/config"
 	"github.com/carbonetes/diggity/cmd/diggity/ui"
 	"github.com/carbonetes/diggity/internal/helper"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx"
 	"github.com/carbonetes/diggity/pkg/cdx/dependency"
-	"github.com/carbonetes/diggity/pkg/reader"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/golistic/urn"
 	"github.com/spf13/cobra"
@@ -184,45 +182,16 @@ func Scan(parameters types.Parameters) (*urn.URN, error) {
 }
 
 func handleImageScan(parameters types.Parameters, addr *urn.URN) error {
-	target := parameters.Input
-	image, ref, err := reader.GetImage(target, &config.Config.Registry)
-	if err != nil {
-		return err
-	}
-
-	if image == nil {
-		return errors.New("image not found")
-	}
-	if ref != nil {
-		cdx.SetMetadataComponent(addr, cdx.SetImageMetadata(*image, *ref, target))
-	}
-
-	err = reader.ReadFiles(image, addr)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	// Reader package removed - image scanning not implemented
+	return errors.New("image scanning functionality has been removed (reader package dependency)")
 }
 
 func handleTarballScan(parameters types.Parameters, addr *urn.URN) error {
-	image, err := reader.ReadTarball(parameters.Input)
-	if err != nil {
-		return err
-	}
-	err = reader.ReadFiles(image, addr)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	// Reader package removed - tarball scanning not implemented
+	return errors.New("tarball scanning functionality has been removed (reader package dependency)")
 }
 
 func handleFilesystemScan(parameters types.Parameters, addr *urn.URN) error {
-	err := reader.FilesystemScanHandler(parameters.Input, addr)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	// Reader package removed - filesystem scanning not implemented
+	return errors.New("filesystem scanning functionality has been removed (reader package dependency)")
 }

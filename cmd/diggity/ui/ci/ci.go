@@ -6,7 +6,6 @@ import (
 
 	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/ci/api"
-	stream "github.com/carbonetes/diggity/cmd/diggity/grove"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/types"
 	"github.com/golistic/urn"
@@ -16,12 +15,14 @@ func Run(result *cyclonedx.BOM, addr *urn.URN, params types.Parameters, duration
 	// Carbonetes CI API
 	secretAddr := *addr
 	secretAddr.NID = "secret"
-	s, _ := stream.Get(secretAddr.String())
-	secrets, ok := s.([]types.Secret)
+
+	// Grove system removed - create empty secrets slice
+	var secrets []types.Secret
+
 	start := time.Now().Add(-time.Duration(duration * float64(time.Second)))
 	api.SavePluginRepository(result, params.Input, params.Plugin, start, 1, 0, secrets)
 	// Secrets
-	evaluateSecrets(secrets, ok)
+	evaluateSecrets(secrets, true)
 	// Components
 	showComponentsResult(result)
 	os.Exit(0)

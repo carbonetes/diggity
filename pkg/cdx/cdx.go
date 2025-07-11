@@ -5,19 +5,20 @@ import (
 	"fmt"
 	"sort"
 	"sync"
+	"time"
 
 	"github.com/CycloneDX/cyclonedx-go"
 	diggity "github.com/carbonetes/diggity/cmd/diggity/build"
-	stream "github.com/carbonetes/diggity/cmd/diggity/grove"
 	"github.com/carbonetes/diggity/internal/log"
 	"github.com/carbonetes/diggity/pkg/cdx/dependency"
 	"github.com/golistic/urn"
 )
 
 var (
-	// XMLN cyclonedx
-	XMLN = fmt.Sprintf("http://cyclonedx.org/schema/bom/%+v", cyclonedx.SpecVersion1_5)
-	lock *sync.RWMutex
+	// XMLN cyclonedx namespace
+	XMLN       = fmt.Sprintf("http://cyclonedx.org/schema/bom/%s", cyclonedx.SpecVersion1_5)
+	mu         sync.RWMutex
+	bomStorage = make(map[string]*cyclonedx.BOM)
 
 	diggityVersion = diggity.FromBuild().Version
 )
@@ -30,8 +31,12 @@ const (
 	email     = "eng@carbonetes.com"
 )
 
+// New creates a new CycloneDX BOM
 func New(addr *urn.URN) {
-	stream.Set(addr.String(), &cyclonedx.BOM{
+	mu.Lock()
+	defer mu.Unlock()
+
+	bomStorage[addr.String()] = &cyclonedx.BOM{
 		XMLName:      xml.Name{Local: cycloneDX},
 		XMLNS:        XMLN,
 		BOMFormat:    cycloneDX,
@@ -40,70 +45,57 @@ func New(addr *urn.URN) {
 		Metadata:     setBasicMetadata(),
 		Components:   &[]cyclonedx.Component{},
 		Dependencies: &[]cyclonedx.Dependency{},
-	})
+	}
 }
 
+// Clear removes the BOM from storage
 func Clear(addr *urn.URN) {
-	stream.Clear(addr.String())
+	mu.Lock()
+	defer mu.Unlock()
+	delete(bomStorage, addr.String())
 }
 
+// AddComponent adds a single component to the BOM
 func AddComponent(c *cyclonedx.Component, addr *urn.URN) {
 	if c == nil {
 		return
 	}
 
-	data, _ := stream.Get(addr.String())
-	bom, ok := data.(*cyclonedx.BOM)
-	if !ok {
-		log.Fatal("Failed to get BOM from stream")
-	}
+	mu.Lock()
+	defer mu.Unlock()
 
+	bom := getBOMUnsafe(addr)
 	*bom.Components = append(*bom.Components, *c)
-	stream.Set(addr.String(), bom)
 }
 
+// AddComponents adds multiple components to the BOM
 func AddComponents(components *[]cyclonedx.Component, addr *urn.URN) {
-	if components == nil {
+	if components == nil || len(*components) == 0 {
 		return
 	}
 
-	data, _ := stream.Get(addr.String())
-	bom, ok := data.(*cyclonedx.BOM)
-	if !ok {
-		log.Fatal("Failed to get BOM from stream")
-	}
+	mu.Lock()
+	defer mu.Unlock()
 
+	bom := getBOMUnsafe(addr)
 	*bom.Components = append(*bom.Components, *components...)
-	stream.Set(addr.String(), bom)
 }
 
+// SetMetadataComponent sets the metadata component
 func SetMetadataComponent(addr *urn.URN, metadataComponent *cyclonedx.Component) {
-	data, _ := stream.Get(addr.String())
-	bom := data.(*cyclonedx.BOM)
+	mu.Lock()
+	defer mu.Unlock()
 
+	bom := getBOMUnsafe(addr)
 	bom.Metadata.Component = metadataComponent
-	stream.Set(addr.String(), bom)
 }
 
-// Deprecated: Use Finalize() instead
-func SortComponents(addr *urn.URN) *cyclonedx.BOM {
-	lock.Lock()
-	defer lock.Unlock()
-
-	data, _ := stream.Get(addr.String())
-	bom := data.(*cyclonedx.BOM)
-
-	// Sort components by name
-	sort.Slice(*bom.Components, func(i, j int) bool {
-		return (*bom.Components)[i].Name < (*bom.Components)[j].Name
-	})
-	stream.Set(addr.String(), bom)
-	return bom
-}
-
+// Finalize processes the BOM (deduplicate, sort, dependencies)
 func Finalize(addr *urn.URN) *cyclonedx.BOM {
-	data, _ := stream.Get(addr.String())
-	bom := data.(*cyclonedx.BOM)
+	mu.Lock()
+	defer mu.Unlock()
+
+	bom := getBOMUnsafe(addr)
 
 	deduplicateComponents(bom)
 	sortComponents(bom)
@@ -112,56 +104,105 @@ func Finalize(addr *urn.URN) *cyclonedx.BOM {
 	return bom
 }
 
-// Sort components by name
+// getBOM safely retrieves BOM from storage
+func getBOM(addr *urn.URN) *cyclonedx.BOM {
+	mu.RLock()
+	defer mu.RUnlock()
+	return getBOMUnsafe(addr)
+}
+
+// getBOMUnsafe retrieves BOM without locking (for internal use when already locked)
+func getBOMUnsafe(addr *urn.URN) *cyclonedx.BOM {
+	bom, exists := bomStorage[addr.String()]
+	if !exists {
+		log.Fatal("BOM not found in storage for address: %s", addr.String())
+	}
+	return bom
+}
+
+// sortComponents sorts components by name
 func sortComponents(bom *cyclonedx.BOM) {
+	if bom.Components == nil || len(*bom.Components) == 0 {
+		return
+	}
+
 	sort.Slice(*bom.Components, func(i, j int) bool {
 		return (*bom.Components)[i].Name < (*bom.Components)[j].Name
 	})
 }
 
+// deduplicateComponents removes duplicate components
 func deduplicateComponents(bom *cyclonedx.BOM) {
+	if bom.Components == nil || len(*bom.Components) == 0 {
+		return
+	}
+
 	seen := make(map[string]bool)
 	components := []cyclonedx.Component{}
+
 	for _, c := range *bom.Components {
-		if _, ok := seen[c.Name]; !ok {
+		key := fmt.Sprintf("%s-%s", c.Name, c.Version)
+		if !seen[key] {
 			components = append(components, c)
-			seen[c.Name] = true
+			seen[key] = true
 		}
 	}
+
 	*bom.Components = components
 }
 
-// Set Dependencies for each component in the BOM
+// parseDependencies sets dependencies for components
 func parseDependencies(addr *urn.URN, bom *cyclonedx.BOM) {
 	dependencies := dependency.GetDependencyNodes(addr)
-	if dependencies != nil {
-		for _, d := range *dependencies {
-			findDependencyRef(&d, bom.Components)
-		}
+	if dependencies == nil {
+		return
 	}
+
+	for i := range *dependencies {
+		findDependencyRef(&(*dependencies)[i], bom.Components)
+	}
+
 	bom.Dependencies = dependencies
 }
 
-// Locate and replace dependencies with BOMRefs
+// findDependencyRef locates and replaces dependencies with BOMRefs
 func findDependencyRef(node *cyclonedx.Dependency, components *[]cyclonedx.Component) {
-	toBeRemoved := []int{}
-	for i, dep := range *node.Dependencies {
-		found := new(string)
+	if node.Dependencies == nil || len(*node.Dependencies) == 0 {
+		return
+	}
+
+	validDeps := []string{}
+
+	for _, dep := range *node.Dependencies {
 		for _, c := range *components {
-			if c.Name == dep {
-				found = &c.BOMRef
+			if c.Name == dep && c.BOMRef != "" {
+				validDeps = append(validDeps, c.BOMRef)
 				break
 			}
 		}
-		if *found != "" {
-			(*node.Dependencies)[i] = *found
-		} else {
-			toBeRemoved = append(toBeRemoved, i)
-		}
 	}
 
-	// Remove dependencies that are not found in the components
-	for i := len(toBeRemoved) - 1; i >= 0; i-- {
-		(*node.Dependencies) = append((*node.Dependencies)[:toBeRemoved[i]], (*node.Dependencies)[toBeRemoved[i]+1:]...)
+	*node.Dependencies = validDeps
+}
+
+// setBasicMetadata creates basic metadata for the BOM
+func setBasicMetadata() *cyclonedx.Metadata {
+	return &cyclonedx.Metadata{
+		Timestamp: time.Now().Format(time.RFC3339),
+		Tools: &cyclonedx.ToolsChoice{
+			Tools: &[]cyclonedx.Tool{
+				{
+					Vendor:  vendor,
+					Name:    name,
+					Version: diggityVersion,
+				},
+			},
+		},
+		Authors: &[]cyclonedx.OrganizationalContact{
+			{
+				Name:  author,
+				Email: email,
+			},
+		},
 	}
 }

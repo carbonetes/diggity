@@ -5,20 +5,23 @@ import (
 
 	"github.com/CycloneDX/cyclonedx-go"
 	"github.com/carbonetes/diggity/internal/log"
-	stream "github.com/carbonetes/diggity/cmd/diggity/grove"
 	"github.com/golistic/urn"
 )
 
 var lock *sync.RWMutex = &sync.RWMutex{}
+var storage = make(map[string]*[]cyclonedx.Dependency)
 
 const Type = "dependency"
 
 func NewDependencyNodes(addr *urn.URN) {
+	lock.Lock()
+	defer lock.Unlock()
+
 	dependecyAddr := *addr
 	dependecyAddr.NID = Type
 
 	// Set the new map
-	stream.Set(dependecyAddr.String(), &[]cyclonedx.Dependency{})
+	storage[dependecyAddr.String()] = &[]cyclonedx.Dependency{}
 }
 
 func AddDependency(addr *urn.URN, node *cyclonedx.Dependency) {
@@ -29,7 +32,7 @@ func AddDependency(addr *urn.URN, node *cyclonedx.Dependency) {
 	dependecyAddr.NID = Type
 
 	// Get the current map
-	nodes := GetDependencyNodes(addr)
+	nodes := getDependencyNodesUnsafe(&dependecyAddr)
 	if nodes == nil {
 		log.Debug("Dependency map not found")
 		return
@@ -38,24 +41,25 @@ func AddDependency(addr *urn.URN, node *cyclonedx.Dependency) {
 	// Add the new node
 	*nodes = append(*nodes, *node)
 
-	// Set the new map
-	stream.Set(dependecyAddr.String(), nodes)
+	// Store the updated map
+	storage[dependecyAddr.String()] = nodes
 }
 
 func GetDependencyNodes(addr *urn.URN) *[]cyclonedx.Dependency {
+	lock.RLock()
+	defer lock.RUnlock()
+
 	dependecyAddr := *addr
 	dependecyAddr.NID = Type
 
+	return getDependencyNodesUnsafe(&dependecyAddr)
+}
+
+func getDependencyNodesUnsafe(addr *urn.URN) *[]cyclonedx.Dependency {
 	// Get the current map
-	data, ok := stream.Get(dependecyAddr.String())
+	nodes, ok := storage[addr.String()]
 	if !ok {
 		log.Debug("Dependency map not found")
-		return nil
-	}
-
-	nodes, ok := data.(*[]cyclonedx.Dependency)
-	if !ok {
-		log.Debug("Dependency map is not a map")
 		return nil
 	}
 

@@ -94,3 +94,43 @@ func Fatal(arg ...interface{}) {
 func Fatalf(format string, args ...interface{}) {
 	log.Fatalf(format, args...)
 }
+
+// SetLevel sets the logging level
+func SetLevel(level string) {
+	switch level {
+	case "debug":
+		log.SetLevel(logrus.DebugLevel)
+	case "info":
+		log.SetLevel(logrus.InfoLevel)
+	case "warn", "warning":
+		log.SetLevel(logrus.WarnLevel)
+	case "error":
+		log.SetLevel(logrus.ErrorLevel)
+	case "fatal":
+		log.SetLevel(logrus.FatalLevel)
+	case "panic":
+		log.SetLevel(logrus.PanicLevel)
+	default:
+		log.SetLevel(logrus.InfoLevel)
+	}
+}
+
+// GetLevel returns the current logging level
+func GetLevel() string {
+	switch log.Level {
+	case logrus.DebugLevel:
+		return "debug"
+	case logrus.InfoLevel:
+		return "info"
+	case logrus.WarnLevel:
+		return "warn"
+	case logrus.ErrorLevel:
+		return "error"
+	case logrus.FatalLevel:
+		return "fatal"
+	case logrus.PanicLevel:
+		return "panic"
+	default:
+		return "info"
+	}
+}
